@@ -1,0 +1,36 @@
+.App {
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.Home {
+    text-align: center;
+}
+
+.App-header {
+  height: 50px;
+  padding: 20px;
+}
+
+.App-title {
+  font-size: 1.5em;
+}
+
+
+.columns {
+    display: flex;
+}
+
+.profile-image {
+    border-radius: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.contact {
+    width: 200px;
+}
+
+.about {
+    padding: 20px;
+}
