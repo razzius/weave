@@ -13,9 +13,13 @@
 }
 
 .App-title {
-  font-size: 1.5em;
+  color: black;
+  text-decoration: none;
 }
 
+.App-title h1 {
+  font-size: 1.5em;
+}
 
 .columns {
     display: flex;
@@ -33,4 +37,58 @@
 
 .about {
     padding: 20px;
+}
+
+.profile-result {
+    cursor: pointer;
+    display: flex;
+    text-decoration: none;
+    transition: all .4s;
+    color: black;
+}
+
+.profile-result-right {
+    margin-left: auto;
+    padding: 10px;
+}
+
+.profile-result:hover {
+    box-shadow: 0 0 2px rgba(35, 173, 255, 1);
+}
+
+.interest {
+    border: 1px solid #b9d7fd;
+    line-height: 1.4em;
+    vertical-align: middle;
+    padding: 2px 5px;
+    margin: 2px;
+    background: #edf4fe;
+    color: #007eff;
+}
+
+
+.clinical-interest {
+    border: 1px solid #b9d7fd;
+    line-height: 1.4em;
+    vertical-align: middle;
+    padding: 2px 5px;
+    margin: 2px;
+    background: #D5F5E3;
+    color: #186A3B;
+}
+
+.search {
+    margin-bottom: 1em;
+}
+
+.search-input {
+    line-height: 34px;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.search-submit {
+    margin: 5px;
+    line-height: 24px;
+    vertical-align: middle;
 }

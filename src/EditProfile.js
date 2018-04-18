@@ -1,16 +1,7 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
-import tags from './tags'
-import hospitals from './hospitals'
 import 'react-select/dist/react-select.css'
-
-const interestOptions = tags.map(tag => ({
-  label: tag, value: tag
-}))
-
-const hospitalOptions = hospitals.map(hospital => ({
-  label: hospital, value: hospital
-}))
+import { interestOptions, hospitalOptions } from './options'
 
 function placehold(size) {
   return `//placehold.it/${size}`
