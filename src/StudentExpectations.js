@@ -13,9 +13,9 @@ export default () => (
 <li>Mentees are encouraged to share their career plans/ specialty interests with the mentor, recount their initiatives for professional development, ask for advice, and reflect on the mentor’s observations.</li>
 <li>Refrain from asking mentors for evaluative advice; rather, take advantage of the mentor’s suggestions about resources for feedback and objective evaluation.</li>
 <li>Follow through on commitments and allocate time and energy for the mentoring relationship and opportunities.</li>
-<li>Respect the privacy and time commitments of your mentee. </li>
-<li>Keep the content of discussions within the mentoring relationship confidential. All your exchanges with your mentee--both personal and professional--are subject to the expectations of professional confidentiality. Although this confidentiality is legally limited, neither of you should discuss the contents of your discussions with anyone else without the written permission of the other.</li>
-<li>Don’t be afraid to end the relationship if either you or your mentee are unable to keep the terms of the contract. Remember, the “no fault” separation policy. </li>
+<li>Respect the privacy and time commitments of your mentor. </li>
+<li>Keep the content of discussions within the mentoring relationship confidential. All your exchanges with your mentor--both personal and professional--are subject to the expectations of professional confidentiality. Although this confidentiality is legally limited, neither of you should discuss the contents of your discussions with anyone else without the written permission of the other.</li>
+<li>Don’t be afraid to end the relationship if either you or your mentor are unable to keep the terms of the contract. Remember, the “no fault” separation policy. </li>
 <li>Review your mentoring relationship goals and expectations on an annual basis. Most mentoring relationships end naturally when the relationship is no longer beneficial for both parties. </li>
     </ul>
     <Link to="/browse">I accept</Link>
