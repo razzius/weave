@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, send_from_directory
 from marshmallow import fields
 
 from flask_sqlalchemy import SQLAlchemy
@@ -9,7 +9,11 @@ from sqlalchemy.ext.declarative import declared_attr
 from marshmallow_sqlalchemy import ModelSchema
 
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    static_url_path='/static',
+    static_folder='build/static'
+)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
@@ -70,6 +74,11 @@ class ProfileSchema(ModelSchema):
 
 profile_schema = ProfileSchema()
 profiles_schema = ProfileSchema(many=True)
+
+
+@app.route('/')
+def index():
+    return send_from_directory('build', 'index.html')
 
 
 @app.route('/api/profiles')
