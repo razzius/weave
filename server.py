@@ -1,17 +1,18 @@
 from datetime import datetime
 
 from flask import Flask, jsonify
+from marshmallow import fields
 
 from flask_sqlalchemy import SQLAlchemy
-from flask_marshmallow import Marshmallow
 from sqlalchemy import PrimaryKeyConstraint
+from sqlalchemy.ext.declarative import declared_attr
+from marshmallow_sqlalchemy import ModelSchema
 
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/test.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
-ma = Marshmallow(app)
 
 
 class Profile(db.Model):
@@ -26,33 +27,45 @@ class Profile(db.Model):
         return f'<Profile id={self.id} name={self.name}>'
 
 
-class ProfileInterest(db.Model):
+class Interest():
     interest = db.Column(db.String(120))
 
-    clinical = db.Column(db.Boolean)
+    @declared_attr
+    def profile_id(cls):
+        return db.Column(db.Integer, db.ForeignKey(Profile.id), nullable=False)
 
-    profile_id = db.Column(db.Integer, db.ForeignKey(Profile.id), nullable=False)
-    profile = db.relationship('Profile', backref=db.backref('posts', lazy=True))
-
-    __table_args__ = (
-        PrimaryKeyConstraint('interest', 'clinical', 'profile_id', name='interest_pk'),
-    )
-
-
-class SchemaFieldsMeta(ma.Schema.__class__):
-    def __new__(cls, name, bases, attrs):
-        if 'Meta' in attrs:
-            attrs['Meta'].fields = [column.name for column in attrs['Meta'].model.__table__.columns]
-        return super().__new__(cls, name, bases, attrs)
+    @declared_attr
+    def __table_args__(cls):
+        return (
+            PrimaryKeyConstraint('interest', 'profile_id', name='interest_pk'),
+        )
 
 
-class MagicSchema(ma.Schema, metaclass=SchemaFieldsMeta):
-    pass
+class PersonalInterest(db.Model, Interest):
+    profile = db.relationship('Profile', backref=db.backref('personal_interests', lazy=True))
 
 
-class ProfileSchema(MagicSchema):
+class ClinicalInterest(db.Model, Interest):
+    profile = db.relationship('Profile', backref=db.backref('clinical_interests', lazy=True))
+
+
+class PersonalInterestSchema(ModelSchema):
+    class Meta:
+        model = PersonalInterest
+
+
+class ClinicalInterestSchema(ModelSchema):
+    class Meta:
+        model = ClinicalInterest
+
+
+class ProfileSchema(ModelSchema):
+    personal_interests = fields.Nested(PersonalInterestSchema, many=True, exclude=('profile',))
+    clinical_interests = fields.Nested(ClinicalInterestSchema, many=True, exclude=('profile',))
+
     class Meta:
         model = Profile
+        fields = ['id', 'name', 'email', 'personal_interests', 'clinical_interests']
 
 
 profile_schema = ProfileSchema()
@@ -61,7 +74,7 @@ profiles_schema = ProfileSchema(many=True)
 
 @app.route('/api/profiles')
 def get_profiles():
-    return profiles_schema.jsonify(Profile.query.all())
+    return jsonify(profiles_schema.dump(Profile.query.all()).data)
 
 
 @app.route('/api/profile/<profile_id>')
