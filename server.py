@@ -1,12 +1,12 @@
 from datetime import datetime
 
-from flask import Flask, jsonify, send_from_directory
-from marshmallow import fields
+from flask import Flask, jsonify, request, send_from_directory, Response
 
 from flask_sqlalchemy import SQLAlchemy
+from marshmallow import fields
+from marshmallow_sqlalchemy import ModelSchema
 from sqlalchemy import PrimaryKeyConstraint
 from sqlalchemy.ext.declarative import declared_attr
-from marshmallow_sqlalchemy import ModelSchema
 
 
 app = Flask(
@@ -77,7 +77,8 @@ profiles_schema = ProfileSchema(many=True)
 
 
 @app.route('/')
-def index():
+@app.route('/<path:path>')
+def index(path=None):
     return send_from_directory('build', 'index.html')
 
 
@@ -91,13 +92,23 @@ def get_profile(profile_id=None):
     return {}
 
 
-@app.route('/api/profile/<profile_id>', methods=['POST'])
+@app.route('/api/profile', methods=['POST'])
 def create_profile(profile_id=None):
-    profile = Profile({})
+    data = request.json
+    errors = profile_schema.validate(data, session=db.session)
+
+    if errors:
+        return Response(errors, status=400, content_type='application/json')
+
+    if Profile.query.filter(Profile.email == data['email']).count > 0:
+        return Response({'email': ['This email already exists in the database']},
+                        status=400,
+                        content_type='application/json')
+
+    profile = Profile(**data)
     db.session.add(profile)
     db.session.commit()
 
-    profile_schema = ProfileSchema()
     return profile_schema.dump(profile).data
 
 

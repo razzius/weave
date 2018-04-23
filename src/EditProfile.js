@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
 import 'react-select/dist/react-select.css'
+import { createProfile } from './api'
 import { interestOptions, hospitalOptions } from './options'
 
 function placehold(size) {
@@ -22,6 +23,10 @@ export default class EditProfile extends Component {
 
   handleSelectHospitalAffiliations(affiliations) {
     this.setState({affiliations})
+  }
+
+  submit() {
+    createProfile(this.state)
   }
 
   render() {
@@ -59,7 +64,7 @@ export default class EditProfile extends Component {
         <div>
           <h2>Expectations</h2>
           <h2>Cadence</h2>
-          <button>Save changes</button>
+          <button onClick={this.submit}>Save changes</button>
         </div>
       </div>
     )
