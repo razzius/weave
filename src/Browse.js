@@ -5,42 +5,60 @@ import ProfileResult from './ProfileResult'
 import 'react-select/dist/react-select.css'
 import SearchInput from './SearchInput'
 import profiles from './profiles'
+import { getProfiles } from './api'
+import AppScreen from './AppScreen'
 
+function pluralizeResults(length) {
+  if (length === 1) {
+    return 'result'
+  } else {
+    return 'results'
+  }
+}
 export default class Browse extends Component {
   constructor(props) {
     super(props)
+
     this.state = {
       search: '',
-      results: profiles
+      results: null,
+      error: null
     }
 
-    this.handleSearch = this.handleSearch.bind(this)
-    this.handleChange = this.handleChange.bind(this)
+    getProfiles().then(
+      results => this.setState({results})
+    ).catch(
+      () => this.setState({error: 'Unable to load profiles. Try again later.'})
+    )
   }
 
-  handleSearch() {
-    this.setState({
-      results: profiles.filter(
-        result => result.name.toLowerCase().includes(this.state.search.toLowerCase())
-      )
-    })
+  handleSearch = () => {
+    getProfiles({search: this.state.search}).then(
+      results => this.setState({results})
+    )
   }
 
-  handleChange(event) {
+  handleChange = (event) => {
     this.setState({ search: event.target.value })
   }
 
   render() {
     return (
-      <div>
+      <AppScreen>
         <SearchInput value={this.state.search} onChange={this.handleChange} onSubmit={this.handleSearch}/>
-        <p>Showing {this.state.results.length} results.</p>
-        <div>
-          {
-            this.state.results.map(result => <ProfileResult key={result.id} {...result}/>)
-          }
-        </div>
-      </div>
+        {
+          this.state.error !== null ? this.state.error :
+          this.state.results === null ? 'Loading...' :
+            <div>
+              <p>Showing {this.state.results.length} {pluralizeResults(this.state.results.length)}.</p>
+              <div>
+                {
+                  this.state.results.map(result => <ProfileResult key={result.id} {...result}/>)
+                }
+              </div>
+            </div>
+        }
+      </AppScreen>
     )
   }
 }

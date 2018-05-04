@@ -1,15 +1,58 @@
-.App {
+:root {
+    --primary: #434D59;
+    --secondary: #F3E2D8;
+}
+body, html {
+    height: 100%;
+}
+.App-body {
     max-width: 700px;
     margin: 0 auto;
+    padding: 20px;
 }
 
+#background {
+    background: url("/harvard-campus.png");
+    background-size: cover;
+    height: calc(100% - 50px);
+    position: absolute;
+    width: 100%;
+    overflow: auto;
+    z-index: -1;
+}
 .Home {
     text-align: center;
 }
+.top-padding {
+    padding: 50px;
+}
 
+a.button {
+    border: 1px solid black;
+    text-decoration: none;
+    color: black;
+    line-height: 1.5em;
+    display: inline-block;
+    font-size: 16px;
+    padding: 15px 32px;
+    background: white;
+}
+.button:hover {
+    background: var(--secondary);
+}
+
+.header-inner {
+    /* max-width: 700px; */
+    margin: 0 auto;
+}
+.App-intro {
+    background: rgba(255, 255, 255, .8);
+    padding: 3em;
+    max-width: 700px;
+    margin: 0 auto;
+}
 .App-header {
-  height: 50px;
-  padding: 20px;
+  border-bottom: 3px solid var(--primary);
 }
 
 .App-title {
@@ -19,6 +62,7 @@
 
 .App-title h1 {
   font-size: 1.5em;
+  padding-left: 1em;
 }
 
 .columns {
@@ -29,6 +73,12 @@
     border-radius: 100%;
     padding: 20px;
     box-sizing: border-box;
+}
+
+.edit-profile input[type="text"], input[type="email"] {
+    box-sizing: border-box;
+    font-size: 22px;
+    width: 100%;
 }
 
 .contact {

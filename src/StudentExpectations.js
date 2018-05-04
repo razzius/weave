@@ -1,9 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom'
+import AppScreen from './AppScreen'
 const welcomeMessage = `Please take a moment to read the following expectations for mentees.`
 
 export default () => (
-  <div>
+  <AppScreen>
     <p>{welcomeMessage}</p>
     <h1>Expectations of Mentees</h1>
     <ul>
@@ -18,6 +19,6 @@ export default () => (
 <li>Don’t be afraid to end the relationship if either you or your mentor are unable to keep the terms of the contract. Remember, the “no fault” separation policy. </li>
 <li>Review your mentoring relationship goals and expectations on an annual basis. Most mentoring relationships end naturally when the relationship is no longer beneficial for both parties. </li>
     </ul>
-    <Link to="/browse">I accept</Link>
-  </div>
+    <Link className="button" to="/browse">I accept</Link>
+  </AppScreen>
 )

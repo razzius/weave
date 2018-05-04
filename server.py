@@ -5,10 +5,9 @@ from flask import Flask, Response, jsonify, request, send_from_directory
 
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
-from marshmallow import Schema, ValidationError, fields, pre_load
-from sqlalchemy import PrimaryKeyConstraint
-from sqlalchemy.ext.declarative import declared_attr
+from marshmallow import Schema, ValidationError, fields
 from sqlalchemy.sql import exists
+from sqlalchemy.types import TypeDecorator, VARCHAR
 
 
 app = Flask(__name__, static_url_path="/static", static_folder="build/static")
@@ -18,12 +17,28 @@ db = SQLAlchemy(app)
 CORS(app)
 
 
+class StringEncodedList(TypeDecorator):
+
+    impl = VARCHAR
+
+    def process_bind_param(self, value, dialect):
+        return ','.join(value)
+
+    def process_result_value(self, value, dialect):
+        if value == '':
+            return []
+        else:
+            return value.split(',')
+
+
 class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
-    personal_interests = db.Column(db.String(1000))
+    clinical_interests = db.Column(StringEncodedList(1024))
+    additional_interests = db.Column(StringEncodedList(1024))
+    affiliations = db.Column(StringEncodedList(1024))
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -32,57 +47,16 @@ class Profile(db.Model):
         return f"<Profile id={self.id} name={self.name}>"
 
 
-# class Interest():
-#     interest = db.Column(db.String(120))
+class RenderedList(fields.List):
+    def _serialize(self, value, attr, obj):
+        if value is None:
+            return []
+        return super()._serialize(value, attr, obj)
 
-#     @declared_attr
-#     def profile_id(cls):
-#         return db.Column(db.Integer, db.ForeignKey(Profile.id), nullable=False)
-
-#     @declared_attr
-#     def __table_args__(cls):
-#         return (PrimaryKeyConstraint("interest", "profile_id", name="interest_pk"),)
-
-
-# class PersonalInterest(db.Model, Interest):
-#     profile = db.relationship(
-#         "Profile", backref=db.backref("personal_interests", lazy=True)
-#     )
-
-
-# class ClinicalInterest(db.Model, Interest):
-#     profile = db.relationship(
-#         "Profile", backref=db.backref("clinical_interests", lazy=True)
-#     )
-
-
-# class Affiliation(db.Model):
-#     affiliation = db.Column(db.String(120))
-
-#     profile_id = db.Column(db.Integer, db.ForeignKey(Profile.id), nullable=False)
-#     profile = db.relationship("Profile", backref=db.backref("affiliations", lazy='dynamic'))
-
-#     @declared_attr
-#     def __table_args__(cls):
-#         return (PrimaryKeyConstraint("affiliation", "profile_id", name="interest_pk"),)
-
-
-class PersonalInterestSchema(Schema):
-
-    class Meta:
-        model = PersonalInterest
-
-
-class ClinicalInterestSchema(Schema):
-
-    class Meta:
-        model = ClinicalInterest
-
-
-class AffiliationSchema(Schema):
-
-    class Meta:
-        model = Affiliation
+    def _deserialize(self, value, attr, data):
+        if value is None:
+            return ''
+        return super()._deserialize(value, attr, data)
 
 
 class ProfileSchema(Schema):
@@ -90,20 +64,9 @@ class ProfileSchema(Schema):
     name = fields.String()
     email = fields.String()
 
-    # personal_interests = fields.Nested(
-    #     PersonalInterestSchema, many=True, exclude=("profile",)
-    # )
-    # clinical_interests = fields.Nested(
-    #     ClinicalInterestSchema, many=True, exclude=("profile",)
-    # )
-    # affiliations = fields.Nested(AffiliationSchema, many=True, exclude=("profile",))
-
-    @pre_load
-    def process_personal_interests(self, data):
-        data['personal_interests'] = [
-            {'interest': interest} for interest in data['personal_interests']
-        ]
-        return data
+    clinical_interests = RenderedList(fields.String, required=True)
+    additional_interests = RenderedList(fields.String, required=True)
+    affiliations = RenderedList(fields.String, required=True)
 
 
 profile_schema = ProfileSchema()
@@ -121,9 +84,13 @@ def get_profiles():
     return jsonify(profiles_schema.dump(Profile.query.all()))
 
 
-@app.route("/api/profile/<profile_id>")
+@app.route("/api/profiles/<profile_id>")
 def get_profile(profile_id=None):
-    return {}
+    return jsonify(
+        profile_schema.dump(
+            Profile.query.filter(Profile.id == profile_id).one_or_none()
+        )
+    )
 
 
 def error(reason):
@@ -146,7 +113,7 @@ def create_profile(profile_id=None):
     db.session.add(profile)
     db.session.commit()
 
-    return profile_schema.dump(profile).data
+    return jsonify(profile_schema.dump(profile))
 
 
 @app.route("/api/profile/<profile_id>", methods=["PUT"])

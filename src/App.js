@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Link, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 
 import './App.css';
 import Home from './Home'
@@ -9,6 +9,8 @@ import StudentExpectations from './StudentExpectations'
 import EditProfile from './EditProfile'
 import Profile from './Profile'
 
+import 'slick-carousel/slick/slick.css'
+import 'slick-carousel/slick/slick-theme.css'
 
 export default class App extends Component {
   render() {
@@ -16,19 +18,22 @@ export default class App extends Component {
       <Router>
         <div className="App">
           <header className="App-header">
-            <Link to="/" className="App-title">
-              <h1>HMS Advises</h1>
-            </Link>
+            <div className="header-inner">
+              <Link to="/" className="App-title">
+                <h1>HMS Advises</h1>
+              </Link>
+            </div>
           </header>
-          <div>
+          <Switch>
             <Route exact path="/" component={Home}/>
             <Route path="/student-expectations" component={StudentExpectations}/>
             <Route path="/faculty-expectations" component={FacultyExpectations}/>
             <Route path="/edit-profile" component={EditProfile}/>
             <Route path="/browse" component={Browse}/>
-            <Route path="/faculty/:id" component={Profile}/>
-          </div>
-      </div>
+            <Route path="/profiles/:id" render={(props) => <Profile {...props}/>}/>
+              <Route component={() => <p>404 Not found</p>} />
+          </Switch>
+        </div>
       </Router>
     )
   }
