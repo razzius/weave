@@ -1,10 +1,9 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import {interestOptions, hospitalOptions} from './options'
 
 export default (props) => {
   return <Link to={`/profiles/${props.id}`} className="profile-result" params={{test: "tricky"}}>
-    <img className="profile-image" src="//placehold.it/150"/>
+    <img alt="Profile"className="profile-image" src="//placehold.it/150"/>
     <div>
       <h2>{props.name}</h2>
       <p>{props.clinical_interests.map(

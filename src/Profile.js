@@ -1,5 +1,4 @@
 import React, { Component } from "react"
-import profiles from "./profiles"
 import { getProfile } from "./api"
 
 export default class Profile extends Component {
@@ -18,6 +17,7 @@ export default class Profile extends Component {
           <div className="columns">
             <div className="column contact">
               <img
+                alt="Profile"
                 className="profile-image column"
                 src="http://placehold.it/150"
               />
@@ -32,7 +32,9 @@ export default class Profile extends Component {
           </div>
           <div>
             <h2>Expectations</h2>
+            <p>TODO</p>
             <h2>Cadence</h2>
+            <p>TODO</p>
           </div>
         </div>
       )

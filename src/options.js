@@ -1,10 +1,16 @@
-import tags from './tags'
-import hospitals from './hospitals'
+import additionalInterests from "./additionalInterests"
+import hospitals from "./hospitals"
+import clinicalSpecialties from "./clinicalSpecialties"
 
-export const interestOptions = tags.map(tag => ({
-  label: tag, value: tag
-}))
+function makeOptions(list) {
+  return list.map(item => ({
+    label: item,
+    value: item
+  }))
+}
 
-export const hospitalOptions = hospitals.map(hospital => ({
-  label: hospital, value: hospital
-}))
+export const clinicalSpecialtyOptions = makeOptions(clinicalSpecialties)
+
+export const additionalInterestOptions = makeOptions(additionalInterests)
+
+export const hospitalOptions = makeOptions(hospitals)

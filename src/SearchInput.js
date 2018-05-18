@@ -4,6 +4,7 @@ export default class SearchInput extends Component {
   constructor(props) {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
+    this.autocompleteWords = props.autocompleteWords
   }
 
   handleSubmit(e) {
@@ -21,7 +22,9 @@ export default class SearchInput extends Component {
           placeholder="Search"
           onChange={this.props.onChange}
         />
-        <button className="search-submit" type="submit">Submit</button>
+        <button className="search-submit" type="submit">
+          Submit
+        </button>
       </form>
     )
   }

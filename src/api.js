@@ -17,6 +17,7 @@ export async function getProfiles(query = {}) {
 export async function getProfile(id) {
   return await http(buildURL(`api/profiles/${id}`))
 }
+
 export async function createProfile(data) {
   try{
     return await http(buildURL('api/profile'), {
@@ -31,11 +32,11 @@ export async function createProfile(data) {
   }
 }
 // todo use auth
-async function updateProfile(id, profile) {
+export async function updateProfile(id, profile) {
   // await put(`/api/profiles/${id}`, profile)
 }
 
-async function uploadPicture(id, imageData) {
+export async function uploadPicture(id, imageData) {
   // serializedData = encode(imageData)
   // const { url } = await uploadImageData(id, imageData)
   // return url

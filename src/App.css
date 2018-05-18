@@ -27,7 +27,7 @@ body, html {
     padding: 50px;
 }
 
-a.button {
+.button {
     border: 1px solid black;
     text-decoration: none;
     color: black;
@@ -36,6 +36,7 @@ a.button {
     font-size: 16px;
     padding: 15px 32px;
     background: white;
+    cursor: pointer;
 }
 .button:hover {
     background: var(--secondary);
@@ -75,7 +76,7 @@ a.button {
     box-sizing: border-box;
 }
 
-.edit-profile input[type="text"], input[type="email"] {
+input[type="text"], input[type="email"] {
     box-sizing: border-box;
     font-size: 22px;
     width: 100%;
@@ -141,4 +142,22 @@ a.button {
     margin: 5px;
     line-height: 24px;
     vertical-align: middle;
+}
+
+.next-button {
+    float: right;
+    /* temporary */
+    margin-top: 1em;
+}
+
+.slick-dots li button:before {
+    font-size: 10px !important;
+}
+
+.slick-slider {
+  margin: 40px;
+}
+
+.expectation div {
+    margin: 50px;
 }

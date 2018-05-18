@@ -2,27 +2,44 @@ import React, { Component } from "react"
 import Select from "react-select"
 import "react-select/dist/react-select.css"
 import { createProfile } from "./api"
-import { interestOptions, hospitalOptions } from "./options"
-import AppScreen from './AppScreen'
-import AvatarEditor from 'react-avatar-editor'
-import Dropzone from 'react-dropzone'
+import {
+  clinicalSpecialtyOptions,
+  additionalInterestOptions,
+  hospitalOptions
+} from "./options"
+import AppScreen from "./AppScreen"
+import AvatarEditor from "react-avatar-editor"
+import Dropzone from "react-dropzone"
 
 export default class EditProfile extends Component {
   constructor(props) {
     super(props)
     this.state = {
       name: "",
-      interests: [],
-      affiliations: []
+      email: "",
+      image: null,
+      clinicalSpecialties: [],
+      affiliations: [],
+      additionalInterests: []
     }
   }
 
-  handleSelectInterests = (interests) => {
-    this.setState({ interests: interests.map(interest => interest.value) })
+  handleSelectClinicalSpecialties = specialties => {
+    this.setState({
+      clinicalSpecialties: specialties.map(specialty => specialty.value)
+    })
   }
 
-  handleSelectAffiliations = (affiliations) => {
-    this.setState({ affiliations: affiliations.map(affiliation => affiliation.value) })
+  handleSelectAffiliations = affiliations => {
+    this.setState({
+      affiliations: affiliations.map(affiliation => affiliation.value)
+    })
+  }
+
+  handleSelectAdditionalInterests = interests => {
+    this.setState({
+      additionalInterests: interests.map(interest => interest.value)
+    })
   }
 
   submit = () => {
@@ -58,38 +75,43 @@ export default class EditProfile extends Component {
             <Dropzone
               onDrop={this.handleDropImage}
               disableClick
-              style={{ width: '150px', height: '150px', marginBottom: '55px'}} >
+              style={{ width: "150px", height: "150px", marginBottom: "55px" }}
+            >
               <AvatarEditor
                 image={this.state.image}
                 scale={parseFloat(this.state.scale)}
                 width={150}
-                height={150}/>
+                height={150}
+              />
             </Dropzone>
             <input name="newImage" type="file" onChange={this.handleNewImage} />
             <input
               name="scale"
               type="range"
               onChange={this.handleScale}
-              min={this.state.allowZoomOut ? '0.1' : '1'}
+              min={this.state.allowZoomOut ? "0.1" : "1"}
               max="2"
               step="0.01"
               defaultValue="1"
             />
           </div>
-          <div className="about" style={{ width: "450px", paddingLeft: "50px" }}>
+          <div
+            className="about"
+            style={{ width: "450px", paddingLeft: "50px" }}
+          >
             <p>Name</p>
             <input type="text" name="name" onChange={this.setName} />
 
             <p>Preferred contact email</p>
             <input name="email" type="email" onChange={this.setEmail} />
 
-            <p>Interests</p>
+            <p>Clinical Interests</p>
             <Select
               className="column"
               multi
-              options={interestOptions}
-              value={this.state.interests}
-              onChange={this.handleSelectInterests}
+              options={clinicalSpecialtyOptions}
+              value={this.state.clinicalSpecialties}
+              onChange={this.handleSelectClinicalSpecialties}
             />
 
             <p>Hospital Affiliations</p>
@@ -100,12 +122,28 @@ export default class EditProfile extends Component {
               value={this.state.affiliations}
               onChange={this.handleSelectAffiliations}
             />
+
+            <p>Additional Interests</p>
+            <Select
+              className="column"
+              multi
+              options={additionalInterestOptions}
+              value={this.state.additionalInterests}
+              onChange={this.handleSelectAdditionalInterests}
+            />
+
+            <p>Additional Information</p>
+            <textarea />
           </div>
         </div>
         <div>
           <h2>Expectations</h2>
+          <p>TODO</p>
           <h2>Cadence</h2>
-          <button onClick={this.submit}>Save changes</button>
+          <p>TODO</p>
+          <button className="button" onClick={this.submit}>
+            Save changes
+          </button>
         </div>
       </AppScreen>
     )

@@ -1,0 +1,119 @@
+export default `\
+Abdominal Radiology
+Addiction Psychiatry
+Adolescent Medicine
+Adult Cardiothoracic Anesthesiology
+Adult Reconstructive Orthopaedics
+Advanced Heart Failure & Transplant Cardiology
+Allergy & Immunology
+Anesthesiology
+Biochemical Genetics
+Blood Banking - Transfusion Medicine
+Cardiothoracic Radiology
+Cardiovascular Disease
+Chemical Pathology
+Child & Adolescent Psychiatry
+Child Abuse Pediatrics
+Child Neurology
+Clinical & Laboratory Immunology
+Clinical Cardiac Electrophysiology
+Clinical Neurophysiology
+Colon & Rectal Surgery
+Congenital Cardiac Surgery
+Craniofacial Surgery
+Critical Care Medicine
+Critical Care Medicine
+Cytopathology
+Dermatology
+Dermatopathology
+Developmental-Behavioral Pediatrics
+Emergency Medicine
+Endocrinology, Diabetes & Metabolism
+Endovascular Surgical Neuroradiology
+Family Medicine
+Family Practice
+Female Pelvic Medicine & Reconstructive Surgery
+Foot & Ankle Orthopaedics
+Forensic Pathology
+Forensic Psychiatry
+Gastroenterology
+Geriatric Medicine
+Geriatric Psychiatry
+Hand Surgery
+Hematology
+Hematology & Oncology
+Infectious Disease
+Internal Medicine
+Internal Medicine-Pediatrics
+Interventional Cardiology
+Medical Genetics
+Medical Microbiology
+Medical Toxicology
+Molecular Genetic Pathology
+Musculoskeletal Radiology
+Musculoskeletal Oncology
+Neonatal-Perinatal Medicine
+Nephrology
+Neurological Surgery
+Neurology
+Neuromuscular Medicine
+Neuropathology
+Neuroradiology
+Nuclear Medicine
+Nuclear Radiology
+Obstetric Anesthesiology
+Obstetrics & Gynecology
+Oncology
+Ophthalmic Plastic & Reconstructive Surgery
+Ophthalmology
+Orthopaedic Sports Medicine
+Orthopaedic Surgery
+Orthopaedic Surgery of the Spine
+Orthopaedic Trauma
+Otolaryngology
+Otology - Neurotology
+Pain Medicine
+Pathology-Anatomic & Clinical
+Pediatric Anesthesiology
+Pediatric Cardiology
+Pediatric Critical Care Medicine
+Pediatric Emergency Medicine
+Pediatric Emergency Medicine
+Pediatric Endocrinology
+Pediatric Gastroenterology
+Pediatric Hematology-Oncology
+Pediatric Infectious Diseases
+Pediatric Nephrology
+Pediatric Orthopaedics
+Pediatric Otolaryngology
+Pediatric Pathology
+Pediatric Pulmonology
+Pediatric Radiology
+Pediatric Rheumatology
+Pediatric Sports Medicine
+Pediatric Surgery
+Pediatric Transplant Hepatology
+Pediatric Urology
+Pediatrics
+Physical Medicine & Rehabilitation
+Plastic Surgery
+Preventive Medicine
+Procedural Dermatology
+Psychiatry
+Pulmonary Disease
+Pulmonary Disease & Critical Care Medicine
+Radiation Oncology
+Radiology-Diagnostic
+Rheumatology
+Sleep Medicine
+Spinal Cord Injury Medicine
+Sports Medicine
+Surgery-General
+Surgical Critical Care
+Thoracic Surgery
+Thoracic Surgery-Integrated
+Transplant Hepatology
+Urology
+Vascular & Interventional Radiology
+Vascular Surgery
+`.split("\n")
