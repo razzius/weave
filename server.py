@@ -87,7 +87,7 @@ def index(path=None):
 
 @app.route("/api/profiles")
 def get_profiles():
-    return jsonify(profiles_schema.dump(Profile.query.all()))
+    return jsonify(profiles_schema.dump(Profile.query.all()).data)
 
 
 @app.route("/api/profiles/<profile_id>")
