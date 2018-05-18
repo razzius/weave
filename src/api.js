@@ -1,4 +1,4 @@
-const serverUrl = 'localhost:5000'
+const serverUrl = "localhost:5000"
 
 function buildURL(path) {
   return new URL(`${window.location.protocol}//${serverUrl}/${path}`)
@@ -9,7 +9,7 @@ async function http(url, options) {
 }
 
 export async function getProfiles(query = {}) {
-  const url = buildURL('api/profiles')
+  const url = buildURL("api/profiles")
   Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
   return await http(url)
 }
@@ -18,16 +18,25 @@ export async function getProfile(id) {
   return await http(buildURL(`api/profiles/${id}`))
 }
 
-export async function createProfile(data) {
-  try{
-    return await http(buildURL('api/profile'), {
-      method: 'POST',
+export async function createProfile(profile) {
+  const payload = {
+    name: profile.name,
+    email: profile.email,
+    additional_interests: profile.additionalInterests,
+    affiliations: profile.affiliations,
+    clinical_specialties: profile.clinicalSpecialties,
+    additional_information: profile.additionalInformation
+  }
+
+  try {
+    return await http(buildURL("api/profile"), {
+      method: "POST",
       headers: {
-        'content-type': 'application/json'
+        "content-type": "application/json"
       },
-      body: JSON.stringify(data)
+      body: JSON.stringify(payload)
     })
-  } catch(e) {
+  } catch (e) {
     console.log(e)
   }
 }

@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import { getProfile } from "./api"
+import AppScreen from "./AppScreen"
 
 export default class Profile extends Component {
   constructor(props) {
@@ -11,32 +12,41 @@ export default class Profile extends Component {
   }
 
   render() {
+    const { data } = this.state
     return (
       this.state.data !== null && (
-        <div className="profile-contact">
-          <div className="columns">
-            <div className="column contact">
-              <img
-                alt="Profile"
-                className="profile-image column"
-                src="http://placehold.it/150"
-              />
-              <p>{this.state.data.name}</p>
+        <AppScreen>
+          <div className="profile-contact">
+            <div className="columns">
+              <div className="column contact">
+                <img
+                  alt="Profile"
+                  className="profile-image column"
+                  src="http://placehold.it/150"
+                />
+              </div>
+              <div className="about" style={{ width: "450px" }}>
+                <h1>{data.name}</h1>
+                <a href={`mailto:${data.email}`}>{data.email}</a>
+                <p>Affiliations: {data.affiliations.join(', ')}</p>
+                <p>Clinical specialties: {data.clinical_specialties.join(', ')}</p>
+                <p>Additional interests: {data.additional_interests.join(', ')}</p>
+                {data.additional_information && <div>
+                    <p>Additional Information:</p>
+                    <p>{data.additional_information}</p>
+                </div>}
+
+
+              </div>
             </div>
-            <div className="about" style={{ width: "450px" }}>
-              <p>Interests</p>
-              <p>Hospital Affiliations</p>
-              <p>Clinical</p>
-              <p>Non-clinical</p>
+            <div>
+              <h2>Expectations</h2>
+              <p>TODO</p>
+              <h2>Cadence</h2>
+              <p>TODO</p>
             </div>
           </div>
-          <div>
-            <h2>Expectations</h2>
-            <p>TODO</p>
-            <h2>Cadence</h2>
-            <p>TODO</p>
-          </div>
-        </div>
+        </AppScreen>
       )
     )
   }

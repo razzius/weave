@@ -145,9 +145,7 @@ input[type="text"], input[type="email"] {
 }
 
 .next-button {
-    float: right;
-    /* temporary */
-    margin-top: 1em;
+    text-align: center;
 }
 
 .slick-dots li button:before {

@@ -82,12 +82,14 @@ export default class FacultyExpectationsSlider extends React.Component {
             </div>
           </div>
         </Slider>
-        <NextButton
-          href={this.state.nextHref}
-          style={{ float: "right" }}
-          onClick={this.next}
-          text={this.state.nextText}
-        />
+        <div style={{textAlign: 'center'}}>
+          <NextButton
+            href={this.state.nextHref}
+            style={{ float: "right" }}
+            onClick={this.next}
+            text={this.state.nextText}
+          />
+        </div>
       </div>
     )
   }

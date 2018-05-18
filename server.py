@@ -36,12 +36,14 @@ class Profile(db.Model):
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
 
-    clinical_interests = db.Column(StringEncodedList(1024))
-    additional_interests = db.Column(StringEncodedList(1024))
+    clinical_specialties = db.Column(StringEncodedList(1024))
     affiliations = db.Column(StringEncodedList(1024))
+    additional_interests = db.Column(StringEncodedList(1024))
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+
+    additional_information = db.Column(db.String(500), nullable=False)
 
     def __repr__(self):
         return f"<Profile id={self.id} name={self.name}>"
@@ -64,9 +66,11 @@ class ProfileSchema(Schema):
     name = fields.String()
     email = fields.String()
 
-    clinical_interests = RenderedList(fields.String, required=True)
+    clinical_specialties = RenderedList(fields.String, required=True)
     additional_interests = RenderedList(fields.String, required=True)
     affiliations = RenderedList(fields.String, required=True)
+
+    additional_information = fields.String()
 
 
 profile_schema = ProfileSchema()
@@ -89,7 +93,7 @@ def get_profile(profile_id=None):
     return jsonify(
         profile_schema.dump(
             Profile.query.filter(Profile.id == profile_id).one_or_none()
-        )
+        ).data
     )
 
 
@@ -102,18 +106,21 @@ def create_profile(profile_id=None):
     json_data = request.get_json()
 
     try:
-        data = profile_schema.load(json_data)
+        schema = profile_schema.load(json_data)
     except ValidationError as err:
         return jsonify(err.messages), 422
 
-    if db.session.query(exists().where(Profile.email == data["email"])).scalar():
+    if schema.errors:
+        return jsonify(schema.errors), 422
+
+    if db.session.query(exists().where(Profile.email == schema.data["email"])).scalar():
         return error({"email": ["This email already exists in the database"]})
 
-    profile = Profile(**data)
+    profile = Profile(**schema.data)
     db.session.add(profile)
     db.session.commit()
 
-    return jsonify(profile_schema.dump(profile))
+    return jsonify(profile_schema.dump(profile).data)
 
 
 @app.route("/api/profile/<profile_id>", methods=["PUT"])
