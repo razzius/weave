@@ -1,3 +1,4 @@
+import os
 import json
 from datetime import datetime
 
@@ -11,7 +12,7 @@ from sqlalchemy.types import TypeDecorator, VARCHAR
 
 
 app = Flask(__name__, static_url_path="/static", static_folder="build/static")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:////tmp/test.db"
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db = SQLAlchemy(app)
 CORS(app)
@@ -22,13 +23,13 @@ class StringEncodedList(TypeDecorator):
     impl = VARCHAR
 
     def process_bind_param(self, value, dialect):
-        return ','.join(value)
+        return ",".join(value)
 
     def process_result_value(self, value, dialect):
-        if value == '':
+        if value == "":
             return []
         else:
-            return value.split(',')
+            return value.split(",")
 
 
 class Profile(db.Model):
@@ -50,6 +51,7 @@ class Profile(db.Model):
 
 
 class RenderedList(fields.List):
+
     def _serialize(self, value, attr, obj):
         if value is None:
             return []
@@ -57,7 +59,7 @@ class RenderedList(fields.List):
 
     def _deserialize(self, value, attr, data):
         if value is None:
-            return ''
+            return ""
         return super()._deserialize(value, attr, data)
 
 
