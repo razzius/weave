@@ -1,12 +1,15 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-export default (props) => {
+export default props => {
   return <Link to={`/profiles/${props.id}`} className="profile-result" params={{test: "tricky"}}>
     <img alt="Profile"className="profile-image" src="//placehold.it/150"/>
     <div>
       <h2>{props.name}</h2>
-      <p>{props.clinical_interests.map(
+    <p>{props.affiliations.map(
+        affiliation => <span key={affiliation} className="affiliation"> {affiliation} </span>
+      )}</p>
+      <p>{props.clinical_specialties.map(
         interest => <span key={interest} className="clinical interest"> {interest} </span>
       )}</p>
       <p>{props.additional_interests.map(
