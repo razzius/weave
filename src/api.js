@@ -1,4 +1,4 @@
-const serverUrl = "localhost:5000"
+const serverUrl = "frozen-journey-66437.herokuapp.com"
 
 function buildURL(path) {
   return new URL(`${window.location.protocol}//${serverUrl}/${path}`)
