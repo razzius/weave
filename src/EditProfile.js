@@ -43,18 +43,16 @@ export default class EditProfile extends Component {
     })
   }
 
-  setAdditionalInformation = ({target}) => {
+  setAdditionalInformation = ({ target }) => {
     this.setState({
       additionalInformation: target.value
     })
   }
 
   submit = () => {
-    createProfile(this.state).then(
-      profile => {
-        window.location = `/profiles/${profile.id}`
-      }
-    )
+    createProfile(this.state).then(profile => {
+      window.location = `/profiles/${profile.id}`
+    })
   }
 
   setName = ({ target }) => {
@@ -123,7 +121,7 @@ export default class EditProfile extends Component {
               options={hospitalOptions}
               value={this.state.affiliations}
               onChange={this.handleSelectAffiliations}
-              />
+            />
 
             <p>Clinical Interests</p>
             <Select
@@ -148,10 +146,11 @@ export default class EditProfile extends Component {
               onChange={this.setAdditionalInformation}
               maxLength={500}
               style={{
-                      width: '100%',
-                      height: '3em',
-                      fontSize: '18px'
-                    }} />
+                width: "100%",
+                height: "3em",
+                fontSize: "18px"
+              }}
+            />
           </div>
         </div>
         <div>

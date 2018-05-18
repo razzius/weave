@@ -1,56 +1,57 @@
 :root {
-    --primary: #434D59;
-    --secondary: #F3E2D8;
+  --primary: #434d59;
+  --secondary: #f3e2d8;
 }
-body, html {
-    height: 100%;
+body,
+html {
+  height: 100%;
 }
 .App-body {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 #background {
-    background: url("https://i.imgur.com/sfsm06I.png");
-    background-size: cover;
-    height: calc(100% - 50px);
-    position: absolute;
-    width: 100%;
-    overflow: auto;
-    z-index: -1;
+  background: url("https://i.imgur.com/sfsm06I.png");
+  background-size: cover;
+  height: calc(100% - 50px);
+  position: absolute;
+  width: 100%;
+  overflow: auto;
+  z-index: -1;
 }
 .Home {
-    text-align: center;
+  text-align: center;
 }
 .top-padding {
-    padding: 50px;
+  padding: 50px;
 }
 
 .button {
-    border: 1px solid black;
-    text-decoration: none;
-    color: black;
-    line-height: 1.5em;
-    display: inline-block;
-    font-size: 16px;
-    padding: 15px 32px;
-    background: white;
-    cursor: pointer;
+  border: 1px solid black;
+  text-decoration: none;
+  color: black;
+  line-height: 1.5em;
+  display: inline-block;
+  font-size: 16px;
+  padding: 15px 32px;
+  background: white;
+  cursor: pointer;
 }
 .button:hover {
-    background: var(--secondary);
+  background: var(--secondary);
 }
 
 .header-inner {
-    /* max-width: 700px; */
-    margin: 0 auto;
+  /* max-width: 700px; */
+  margin: 0 auto;
 }
 .App-intro {
-    background: rgba(255, 255, 255, .8);
-    padding: 3em;
-    max-width: 700px;
-    margin: 0 auto;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 3em;
+  max-width: 700px;
+  margin: 0 auto;
 }
 .App-header {
   border-bottom: 3px solid var(--primary);
@@ -67,89 +68,89 @@ body, html {
 }
 
 .columns {
-    display: flex;
+  display: flex;
 }
 
 .profile-image {
-    border-radius: 100%;
-    padding: 20px;
-    box-sizing: border-box;
+  border-radius: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-input[type="text"], input[type="email"] {
-    box-sizing: border-box;
-    font-size: 22px;
-    width: 100%;
+input[type="text"],
+input[type="email"] {
+  box-sizing: border-box;
+  font-size: 22px;
+  width: 100%;
 }
 
 .contact {
-    width: 200px;
+  width: 200px;
 }
 
 .about {
-    padding: 20px;
+  padding: 20px;
 }
 
 .profile-result {
-    cursor: pointer;
-    display: flex;
-    text-decoration: none;
-    transition: all .4s;
-    color: black;
+  cursor: pointer;
+  display: flex;
+  text-decoration: none;
+  transition: all 0.4s;
+  color: black;
 }
 
 .profile-result-right {
-    margin-left: auto;
-    padding: 10px;
+  margin-left: auto;
+  padding: 10px;
 }
 
 .profile-result:hover {
-    box-shadow: 0 0 2px rgba(35, 173, 255, 1);
+  box-shadow: 0 0 2px rgba(35, 173, 255, 1);
 }
 
 .interest {
-    border: 1px solid #b9d7fd;
-    line-height: 1.4em;
-    vertical-align: middle;
-    padding: 2px 5px;
-    margin: 2px;
-    background: #edf4fe;
-    color: #007eff;
+  border: 1px solid #b9d7fd;
+  line-height: 1.4em;
+  vertical-align: middle;
+  padding: 2px 5px;
+  margin: 2px;
+  background: #edf4fe;
+  color: #007eff;
 }
 
-
 .clinical-interest {
-    border: 1px solid #b9d7fd;
-    line-height: 1.4em;
-    vertical-align: middle;
-    padding: 2px 5px;
-    margin: 2px;
-    background: #D5F5E3;
-    color: #186A3B;
+  border: 1px solid #b9d7fd;
+  line-height: 1.4em;
+  vertical-align: middle;
+  padding: 2px 5px;
+  margin: 2px;
+  background: #d5f5e3;
+  color: #186a3b;
 }
 
 .search {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 
 .search-input {
-    line-height: 34px;
-    font-size: 16px;
-    vertical-align: middle;
+  line-height: 34px;
+  font-size: 16px;
+  vertical-align: middle;
 }
 
 .search-submit {
-    margin: 5px;
-    line-height: 24px;
-    vertical-align: middle;
+  margin: 5px;
+  line-height: 24px;
+  vertical-align: middle;
 }
 
 .next-button {
-    text-align: center;
+  text-align: center;
 }
 
 .slick-dots li button:before {
-    font-size: 10px !important;
+  font-size: 10px !important;
 }
 
 .slick-slider {
@@ -157,5 +158,5 @@ input[type="text"], input[type="email"] {
 }
 
 .expectation div {
-    margin: 50px;
+  margin: 50px;
 }

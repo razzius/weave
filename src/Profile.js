@@ -28,15 +28,19 @@ export default class Profile extends Component {
               <div className="about" style={{ width: "450px" }}>
                 <h1>{data.name}</h1>
                 <a href={`mailto:${data.email}`}>{data.email}</a>
-                <p>Affiliations: {data.affiliations.join(', ')}</p>
-                <p>Clinical specialties: {data.clinical_specialties.join(', ')}</p>
-                <p>Additional interests: {data.additional_interests.join(', ')}</p>
-                {data.additional_information && <div>
+                <p>Affiliations: {data.affiliations.join(", ")}</p>
+                <p>
+                  Clinical specialties: {data.clinical_specialties.join(", ")}
+                </p>
+                <p>
+                  Additional interests: {data.additional_interests.join(", ")}
+                </p>
+                {data.additional_information && (
+                  <div>
                     <p>Additional Information:</p>
                     <p>{data.additional_information}</p>
-                </div>}
-
-
+                  </div>
+                )}
               </div>
             </div>
             <div>
