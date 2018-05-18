@@ -80,13 +80,9 @@ profiles_schema = ProfileSchema(many=True)
 
 
 @app.route("/")
+@app.route("/<path:path>")  # Enable any url redirecting to home for SPA
 def index(path=None):
     return send_from_directory("build", "index.html")
-
-
-@app.route("/<path:path>")
-def resource(path):
-    return send_from_directory("public", path)
 
 
 @app.route("/api/profiles")
