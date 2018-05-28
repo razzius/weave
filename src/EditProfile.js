@@ -12,17 +12,21 @@ import AvatarEditor from "react-avatar-editor"
 import Dropzone from "react-dropzone"
 
 export default class EditProfile extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      name: "",
-      email: "",
-      image: null,
-      affiliations: [],
-      clinicalSpecialties: [],
-      additionalInterests: [],
-      additionalInformation: ""
-    }
+  state = {
+    position: { x: 0.5, y: 0.5 },
+    scale: 1,
+    rotate: 0,
+    borderRadius: 100,
+    preview: null,
+    width: 200,
+    height: 200,
+    name: "",
+    email: "",
+    image: null,
+    affiliations: [],
+    clinicalSpecialties: [],
+    additionalInterests: [],
+    additionalInformation: ""
   }
 
   handleSelectClinicalSpecialties = specialties => {
@@ -63,8 +67,8 @@ export default class EditProfile extends Component {
     this.setState({ email: target.value })
   }
 
-  handleDropImage = ([image]) => {
-    this.setState({ image })
+  handleDrop = acceptedFiles => {
+    this.setState({ image: acceptedFiles[0] })
   }
 
   handleNewImage = e => {
@@ -82,15 +86,17 @@ export default class EditProfile extends Component {
         <div className="columns">
           <div className="column contact">
             <Dropzone
-              onDrop={this.handleDropImage}
+              onDrop={this.handleDrop}
               disableClick
-              style={{ width: "150px", height: "150px", marginBottom: "55px" }}
+              multiple={false}
+              style={{ width: "200px", height: "200px", marginBottom: "55px" }}
             >
               <AvatarEditor
+                borderRadius={100}
                 image={this.state.image}
                 scale={parseFloat(this.state.scale)}
-                width={150}
-                height={150}
+                width={180}
+                height={180}
               />
             </Dropzone>
             <input name="newImage" type="file" onChange={this.handleNewImage} />
