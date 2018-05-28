@@ -1,6 +1,13 @@
 :root {
   --primary: #434d59;
   --secondary: #f3e2d8;
+  --burnt-orange: #b23322;
+  --crimson: #9c2b1c;
+  --pastel-yellow: #f1e4b8;
+  --teal-gray: #6e8c8e;
+  --off-black: #343a49;
+  --dark: #1c2231;
+  --gray: #666a76;
 }
 body,
 html {
@@ -40,7 +47,7 @@ html {
   cursor: pointer;
 }
 .button:hover {
-  background: var(--secondary);
+  background: var(--pastel-yellow);
 }
 
 .header-inner {
@@ -54,17 +61,19 @@ html {
   margin: 0 auto;
 }
 .App-header {
-  border-bottom: 3px solid var(--primary);
+  border-bottom: 3px solid var(--crimson);
+  background: var(--crimson)
 }
 
 .App-title {
-  color: black;
+  color: white;
   text-decoration: none;
 }
 
 .App-title h1 {
   font-size: 1.5em;
-  padding-left: 1em;
+  padding: 1em;
+  margin: 0px;
 }
 
 .columns {
