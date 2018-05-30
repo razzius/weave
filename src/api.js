@@ -22,6 +22,7 @@ export async function getProfile(id) {
 export async function createProfile(profile) {
   const payload = {
     name: profile.name,
+    profile_image_url: profile.imageUrl,
     email: profile.email,
     additional_interests: profile.additionalInterests,
     affiliations: profile.affiliations,
@@ -47,19 +48,11 @@ export async function createProfile(profile) {
   // await put(`/api/profiles/${id}`, profile)
 // }
 
-export async function uploadPicture(id, file) {
+export async function uploadPicture(file) {
   const url = buildURL("api/upload-image")
-
-  const data = new FormData()
-
-  data.append('files', file, file.name)
-  data.append('user', 'hubot')
 
   return http(url, {
     method: 'POST',
-    body: data
+    body: file
   })
-  // serializedData = encode(imageData)
-  // const { url } = await uploadImageData(id, imageData)
-  // return url
 }

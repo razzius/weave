@@ -8,7 +8,7 @@ export default props => {
       className="profile-result"
       params={{ test: "tricky" }}
     >
-      <img alt="Profile" className="profile-image" src="//placehold.it/150" />
+      <img alt="Profile" className="profile-image" src={props.profile_image_url} />
       <div>
         <h2>{props.name}</h2>
         <p>

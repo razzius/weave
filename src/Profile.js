@@ -22,7 +22,7 @@ export default class Profile extends Component {
                 <img
                   alt="Profile"
                   className="profile-image column"
-                  src="http://placehold.it/150"
+                  src={data.profile_image_url}
                 />
               </div>
               <div className="about" style={{ width: "450px" }}>

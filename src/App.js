@@ -1,5 +1,8 @@
-import React, { Component } from "react"
+import React from "react"
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom"
+
+import "slick-carousel/slick/slick.css"
+import "slick-carousel/slick/slick-theme.css"
 
 import "./App.css"
 import Home from "./Home"
@@ -9,8 +12,6 @@ import StudentExpectations from "./StudentExpectations"
 import EditProfile from "./EditProfile"
 import Profile from "./Profile"
 
-import "slick-carousel/slick/slick.css"
-import "slick-carousel/slick/slick-theme.css"
 
 const App = () => (
   <Router>

@@ -71,7 +71,6 @@ body,
 .App-header {
   border-bottom: 3px solid var(--crimson);
   background: var(--crimson);
-  position: absolute;
   width: 100%;
 }
 
@@ -96,6 +95,8 @@ body,
   border-radius: 100%;
   padding: 20px;
   box-sizing: border-box;
+  width: 200px;
+  height: 200px;
 }
 
 input[type='text'],

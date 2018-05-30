@@ -21,7 +21,9 @@ export default class EditProfile extends Component {
     height: 200,
     name: "",
     email: "",
-    image: null,
+    imageUrl: null,
+    imageSuccess: false,
+    uploadingImage: false,
     affiliations: [],
     clinicalSpecialties: [],
     additionalInterests: [],
@@ -81,7 +83,14 @@ export default class EditProfile extends Component {
 
   saveImage = () => {
     const { image } = this.state
-    uploadPicture(1, image)
+    this.setState({uploadingImage: true})
+    uploadPicture(image).then(response => {
+      this.setState({
+        imageUrl: response.image_url,
+        imageSuccess: true,
+        uploadingImage: false
+      })
+    })
   }
 
   render() {
@@ -113,7 +122,10 @@ export default class EditProfile extends Component {
               step="0.01"
               defaultValue="1"
             />
-            <input value="Save image" type="submit" onClick={this.saveImage}/>
+            <input value={this.state.uploadingImage ? "Uploading..." : "Save image"}
+                   type="submit"
+                   onClick={this.saveImage}/>
+            {this.state.imageSuccess ? 'Image uploaded' : null}
           </div>
           <div
             className="about"

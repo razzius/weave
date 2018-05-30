@@ -10,6 +10,8 @@ from marshmallow import Schema, ValidationError, fields
 from sqlalchemy.sql import exists
 from sqlalchemy.types import TypeDecorator, VARCHAR
 
+from cloudinary import uploader
+
 
 app = Flask(__name__, static_url_path="/static", static_folder="build/static")
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
@@ -36,6 +38,8 @@ class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
+
+    profile_image_url = db.Column(db.String(255))
 
     clinical_specialties = db.Column(StringEncodedList(1024))
     affiliations = db.Column(StringEncodedList(1024))
@@ -67,6 +71,7 @@ class ProfileSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.String()
     email = fields.String()
+    profile_image_url = fields.String()
 
     clinical_specialties = RenderedList(fields.String, required=True)
     additional_interests = RenderedList(fields.String, required=True)
@@ -132,3 +137,15 @@ def update_profile(profile_id=None):
     db.session.commit()
 
     return jsonify(ProfileSchema().dump(profile).data)
+
+
+@app.route("/api/upload-image", methods=["POST"])
+def upload_image():
+    data = request.data
+
+    if not data:
+        return error({'file': 'No image sent'})
+
+    response = uploader.upload(data, eager=[{'width': 200, 'height': 200, 'crop': 'crop'}])
+
+    return jsonify({'image_url': response['eager'][0]['secure_url']})
