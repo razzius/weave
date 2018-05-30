@@ -1,21 +1,22 @@
-const serverUrl = "frozen-journey-66437.herokuapp.com"
+const serverUrl = process.env.REACT_APP_SERVER_URL
 
 function buildURL(path) {
   return new URL(`${window.location.protocol}//${serverUrl}/${path}`)
 }
+
 async function http(url, options) {
   const response = await fetch(url, options)
-  return await response.json()
+  return response.json()
 }
 
 export async function getProfiles(query = {}) {
   const url = buildURL("api/profiles")
   Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
-  return await http(url)
+  return http(url)
 }
 
 export async function getProfile(id) {
-  return await http(buildURL(`api/profiles/${id}`))
+  return http(buildURL(`api/profiles/${id}`))
 }
 
 export async function createProfile(profile) {
@@ -38,14 +39,24 @@ export async function createProfile(profile) {
     })
   } catch (e) {
     console.log(e)
+    return e
   }
 }
 // todo use auth
-export async function updateProfile(id, profile) {
+// export async function updateProfile(id, profile) {
   // await put(`/api/profiles/${id}`, profile)
-}
+// }
 
-export async function uploadPicture(id, imageData) {
+export async function uploadPicture(id, file) {
+  const url = buildURL("api/upload-image")
+
+  return http(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'image/png'
+    },
+    body: file
+  })
   // serializedData = encode(imageData)
   // const { url } = await uploadImageData(id, imageData)
   // return url

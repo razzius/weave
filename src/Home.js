@@ -3,8 +3,7 @@ import { Link } from "react-router-dom"
 
 export default () => (
   <div className="Home">
-    <div id="background" />
-    <div className="top-padding">
+    <main id="background">
       <div className="App-intro">
         <h1>Students</h1>
         <Link className="button" to="student-expectations">
@@ -15,6 +14,10 @@ export default () => (
           Register as a mentor
         </Link>
       </div>
-    </div>
+    </main>
+    <section className="about">
+      <h1>About</h1>
+      This mentorship program and platform was developed to provide a customized way for students to find invested mentors for professional and/or personal interests. While resources for faculty contact information exist, there are often unclear guidelines about what a relationship will constitute after a student reaches out and varying degrees of involvement with which faculty may feel comfortable engaging in a mentorship role. This program provides an opt-in mentoring structure with clarified expectations for both mentors and mentees that may encourage more longitudinal and hopefully meaningful mentoring experiences. Through personalizing their profiles, mentors may share a preferred cadence for meeting with students, and may indicate in what areas and in what capacities they would like to mentor students. Furthermore, the “clinical interests” and “additional interests” tags and search feature provide opportunities for students to find mentors with whom they may discuss career interests, the process of discovering and developing these interests, and integrating additional aspects such as balancing family life, passion for social justice advocacy, and more.
+    </section>
   </div>
 )

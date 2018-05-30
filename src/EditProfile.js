@@ -1,23 +1,22 @@
 import React, { Component } from "react"
+import AvatarEditor from "react-avatar-editor"
 import Select from "react-select"
+import Dropzone from "react-dropzone"
 import "react-select/dist/react-select.css"
-import { createProfile } from "./api"
+
+import { createProfile, uploadPicture } from "./api"
 import {
   clinicalSpecialtyOptions,
   additionalInterestOptions,
   hospitalOptions
 } from "./options"
 import AppScreen from "./AppScreen"
-import AvatarEditor from "react-avatar-editor"
-import Dropzone from "react-dropzone"
 
 export default class EditProfile extends Component {
   state = {
     position: { x: 0.5, y: 0.5 },
     scale: 1,
     rotate: 0,
-    borderRadius: 100,
-    preview: null,
     width: 200,
     height: 200,
     name: "",
@@ -80,6 +79,11 @@ export default class EditProfile extends Component {
     this.setState({ scale })
   }
 
+  saveImage = () => {
+    const { image } = this.state
+    uploadPicture(1, image)
+  }
+
   render() {
     return (
       <AppScreen className="edit-profile">
@@ -109,6 +113,7 @@ export default class EditProfile extends Component {
               step="0.01"
               defaultValue="1"
             />
+            <input value="Save image" type="submit" onClick={this.saveImage}/>
           </div>
           <div
             className="about"

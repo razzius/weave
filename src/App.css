@@ -9,8 +9,9 @@
   --dark: #1c2231;
   --gray: #666a76;
 }
+html,
 body,
-html {
+#root {
   height: 100%;
 }
 .App-body {
@@ -20,19 +21,16 @@ html {
 }
 
 #background {
-  background: url("https://i.imgur.com/sfsm06I.png");
+  height: 100%;
+  background: url('https://i.imgur.com/sfsm06I.png');
   background-size: cover;
-  height: calc(100% - 50px);
-  position: absolute;
   width: 100%;
   overflow: auto;
   z-index: -1;
 }
+
 .Home {
-  text-align: center;
-}
-.top-padding {
-  padding: 50px;
+  height: 100%;
 }
 
 .button {
@@ -54,15 +52,26 @@ html {
   /* max-width: 700px; */
   margin: 0 auto;
 }
+
+.App {
+  height: 100%;
+  width: 100%;
+  background-size: cover;
+}
 .App-intro {
   background: rgba(255, 255, 255, 0.8);
   padding: 3em;
+  margin-top: 150px;
   max-width: 700px;
-  margin: 0 auto;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 .App-header {
   border-bottom: 3px solid var(--crimson);
-  background: var(--crimson)
+  background: var(--crimson);
+  position: absolute;
+  width: 100%;
 }
 
 .App-title {
@@ -86,8 +95,8 @@ html {
   box-sizing: border-box;
 }
 
-input[type="text"],
-input[type="email"] {
+input[type='text'],
+input[type='email'] {
   box-sizing: border-box;
   font-size: 22px;
   width: 100%;
@@ -168,4 +177,8 @@ input[type="email"] {
 
 .expectation div {
   margin: 50px;
+}
+.about {
+  max-width: 700px;
+  margin: 0 auto;
 }
