@@ -103,13 +103,19 @@ input[type='text'],
 input[type='email'] {
   box-sizing: border-box;
   font-size: 22px;
+}
+
+.fullWidth {
   width: 100%;
 }
 
 .contact {
-  width: 200px;
+  width: 250px;
 }
 
+.expectation {
+    margin-bottom: 1em;
+}
 .about {
   padding: 20px;
 }
@@ -194,4 +200,12 @@ input[type='email'] {
 
 #additional-resources li {
     padding: .5em;
+}
+
+.cadence {
+    margin-bottom: 20px;
+}
+
+.cadence label {
+    margin: 10px;
 }

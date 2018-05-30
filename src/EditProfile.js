@@ -155,32 +155,71 @@ export default class EditProfile extends Component {
                 rotate={this.state.rotate}
               />
             </Dropzone>
-            <input name="newImage" type="file" onChange={this.handleNewImage} />
-            <input
-              name="scale"
-              type="range"
-              onChange={this.handleScale}
-              min={this.state.allowZoomOut ? "0.1" : "1"}
-              max="2"
-              step="0.01"
-              defaultValue="1"
-            />
-            <button onClick={this.rotateRight}>Rotate</button>
-            <input value={this.state.uploadingImage ? "Uploading..." : "Save image"}
-                   disabled={!this.state.image}
-                   type="submit"
-                   onClick={this.saveImage}/>
-            {this.state.imageSuccess ? 'Image uploaded' : null}
+            <div>
+              <input name="newImage" type="file" onChange={this.handleNewImage} />
+              <input
+                name="scale"
+                type="range"
+                onChange={this.handleScale}
+                min={this.state.allowZoomOut ? "0.1" : "1"}
+                max="2"
+                step="0.01"
+                defaultValue="1"
+                />
+              <button onClick={this.rotateRight}>Rotate</button>
+              <input value={this.state.uploadingImage ? "Uploading..." : "Save image"}
+                     disabled={!this.state.image}
+                     type="submit"
+                     onClick={this.saveImage}/>
+              {this.state.imageSuccess ? 'Image uploaded' : null}
+            </div>
+
+            <div className="expectations">
+              <h4>Optional expectations</h4>
+
+              <div className="expectation">
+                <label>
+                  <input type="checkbox"/>
+                  Will allow shadowing opportunities for mentee(s).
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label>
+                  <input type="checkbox"/>
+                  Will help mentee(s) with networking as deemed appropriate.
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label>
+                  <input type="checkbox"/>
+                  Will help mentee(s) with goal setting.
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label>
+                  <input type="checkbox"/>
+                  Willing to discuss personal as well as professional life.
+                </label>
+              </div>
+            </div>
           </div>
+
           <div
             className="about"
             style={{ width: "450px", paddingLeft: "50px" }}
           >
             <p>Name</p>
-            <input type="text" name="name" onChange={this.setName} />
+            <input type="text" name="name"
+                   className="fullWidth"
+                   onChange={this.setName} />
 
             <p>Preferred contact email</p>
-            <input name="email" type="email" onChange={this.setEmail} />
+            <input name="email" type="email"
+                   className="fullWidth"
+                   onChange={this.setEmail} />
 
             <p>Hospital Affiliations</p>
             <Select
@@ -222,10 +261,29 @@ export default class EditProfile extends Component {
           </div>
         </div>
         <div>
-          <h2>Expectations</h2>
-          <p>TODO</p>
-          <h2>Cadence</h2>
-          <p>TODO</p>
+          <div className="cadence">
+            <h2>Cadence</h2>
+            <label>
+              <input name="cadence" type="radio" value="biweekly"/>
+              Every 2 weeks
+            </label>
+
+            <label>
+              <input defaultChecked name="cadence" type="radio" value="monthly"/>
+              Monthly
+            </label>
+
+            <label>
+              <input name="cadence" type="radio" value="quarterly"/>
+              Quarterly
+            </label>
+
+            <label>
+              <input name="cadence" type="radio" value="other"/>
+              Other <input type="text"/>
+            </label>
+          </div>
+
           <button className="button" onClick={this.submit}>
             Save changes
           </button>
