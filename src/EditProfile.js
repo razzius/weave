@@ -111,20 +111,27 @@ export default class EditProfile extends Component {
 
     const scaled = scaleCanvas(canvas)
 
-    return scaled.toBlob(blob => (
-      uploadPicture(blob).then(response => {
-        this.setState({
-          imageUrl: response.image_url,
-          imageSuccess: true,
-          uploadingImage: false
+    return new Promise((resolve) => {
+      scaled.toBlob(blob => (
+        uploadPicture(blob).then(response => {
+          this.setState({
+            imageUrl: response.image_url,
+            imageSuccess: true,
+            uploadingImage: false
+          })
+          resolve(response)
         })
-        return response
-      })
-    ))
+      ))
+    })
   }
 
   setEditorRef = (editor) => {
     this.editor = editor
+  }
+
+  rotateRight = () => {
+    const rotation = (90 + this.state.rotate) % 360
+    this.setState({rotate: rotation})
   }
 
   render() {
@@ -145,6 +152,7 @@ export default class EditProfile extends Component {
                 scale={parseFloat(this.state.scale)}
                 width={180}
                 height={180}
+                rotate={this.state.rotate}
               />
             </Dropzone>
             <input name="newImage" type="file" onChange={this.handleNewImage} />
@@ -157,6 +165,7 @@ export default class EditProfile extends Component {
               step="0.01"
               defaultValue="1"
             />
+            <button onClick={this.rotateRight}>Rotate</button>
             <input value={this.state.uploadingImage ? "Uploading..." : "Save image"}
                    disabled={!this.state.image}
                    type="submit"
