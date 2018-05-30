@@ -1,6 +1,6 @@
 {
   "name": "hms-advise",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "dependencies": {
     "react": "^16.3.2",
