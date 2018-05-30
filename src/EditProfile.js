@@ -12,6 +12,16 @@ import {
 } from "./options"
 import AppScreen from "./AppScreen"
 
+function scaleCanvas(canvas) {
+  const scaled = document.createElement('canvas')
+  const size = 200
+  scaled.width = size
+  scaled.height = size
+  const context = scaled.getContext('2d')
+  context.drawImage(canvas, 0, 0, size, size)
+  return scaled
+}
+
 export default class EditProfile extends Component {
   state = {
     position: { x: 0.5, y: 0.5 },
@@ -95,16 +105,26 @@ export default class EditProfile extends Component {
   }
 
   saveImage = () => {
-    const { image } = this.state
     this.setState({uploadingImage: true})
 
-    return uploadPicture(image).then(response => {
-      this.setState({
-        imageUrl: response.image_url,
-        imageSuccess: true,
-        uploadingImage: false
+    const canvas = this.editor.getImage()
+
+    const scaled = scaleCanvas(canvas)
+
+    return scaled.toBlob(blob => (
+      uploadPicture(blob).then(response => {
+        this.setState({
+          imageUrl: response.image_url,
+          imageSuccess: true,
+          uploadingImage: false
+        })
+        return response
       })
-    })
+    ))
+  }
+
+  setEditorRef = (editor) => {
+    this.editor = editor
   }
 
   render() {
@@ -119,6 +139,7 @@ export default class EditProfile extends Component {
               style={{ width: "200px", height: "200px", marginBottom: "55px" }}
             >
               <AvatarEditor
+                ref={this.setEditorRef}
                 borderRadius={100}
                 image={this.state.image}
                 scale={parseFloat(this.state.scale)}
