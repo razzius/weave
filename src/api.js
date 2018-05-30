@@ -50,12 +50,14 @@ export async function createProfile(profile) {
 export async function uploadPicture(id, file) {
   const url = buildURL("api/upload-image")
 
+  const data = new FormData()
+
+  data.append('files', file, file.name)
+  data.append('user', 'hubot')
+
   return http(url, {
     method: 'POST',
-    headers: {
-      'Content-Type': 'image/png'
-    },
-    body: file
+    body: data
   })
   // serializedData = encode(imageData)
   // const { url } = await uploadImageData(id, imageData)
