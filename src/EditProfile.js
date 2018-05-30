@@ -21,6 +21,7 @@ export default class EditProfile extends Component {
     height: 200,
     name: "",
     email: "",
+    image: null,
     imageUrl: null,
     imageSuccess: false,
     uploadingImage: false,
@@ -55,8 +56,20 @@ export default class EditProfile extends Component {
   }
 
   submit = () => {
-    createProfile(this.state).then(profile => {
-      window.location = `/profiles/${profile.id}`
+    let promise
+
+    if (!this.state.imageSuccess && this.state.image !== null) {
+      promise = this.saveImage()
+    } else {
+      promise = Promise.resolve(true)
+    }
+
+    return promise.then(() => {
+      createProfile(this.state).then(profile => {
+        window.location = `/profiles/${profile.id}`
+      }).catch(error => {
+        console.error(error)
+      })
     })
   }
 
@@ -84,7 +97,8 @@ export default class EditProfile extends Component {
   saveImage = () => {
     const { image } = this.state
     this.setState({uploadingImage: true})
-    uploadPicture(image).then(response => {
+
+    return uploadPicture(image).then(response => {
       this.setState({
         imageUrl: response.image_url,
         imageSuccess: true,
@@ -123,6 +137,7 @@ export default class EditProfile extends Component {
               defaultValue="1"
             />
             <input value={this.state.uploadingImage ? "Uploading..." : "Save image"}
+                   disabled={!this.state.image}
                    type="submit"
                    onClick={this.saveImage}/>
             {this.state.imageSuccess ? 'Image uploaded' : null}

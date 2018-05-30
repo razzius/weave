@@ -6,6 +6,11 @@ function buildURL(path) {
 
 async function http(url, options) {
   const response = await fetch(url, options)
+
+  if (!response.ok) {
+    throw await response.json()
+  }
+
   return response.json()
 }
 
@@ -30,18 +35,13 @@ export async function createProfile(profile) {
     additional_information: profile.additionalInformation
   }
 
-  try {
-    return await http(buildURL("api/profile"), {
-      method: "POST",
-      headers: {
-        "content-type": "application/json"
-      },
-      body: JSON.stringify(payload)
-    })
-  } catch (e) {
-    console.log(e)
-    return e
-  }
+  return http(buildURL("api/profile"), {
+    method: "POST",
+    headers: {
+      "content-type": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
 }
 // todo use auth
 // export async function updateProfile(id, profile) {
