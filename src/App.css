@@ -27,6 +27,7 @@ body,
   width: 100%;
   overflow: auto;
   z-index: -1;
+  margin-bottom: 3em;
 }
 
 .Home {
@@ -75,7 +76,8 @@ body,
 }
 
 .App-title {
-  color: white;
+    color: white;
+    display: inline;
   text-decoration: none;
 }
 
@@ -83,6 +85,7 @@ body,
   font-size: 1.5em;
   padding: 1em;
   margin: 0px;
+  display: inline-block;
 }
 
 .columns {
@@ -178,7 +181,16 @@ input[type='email'] {
 .expectation div {
   margin: 50px;
 }
-.about {
+#about {
   max-width: 700px;
   margin: 0 auto;
+}
+
+#additional-resources {
+    max-width: 700px;
+    margin: 3em auto;
+}
+
+#additional-resources li {
+    padding: .5em;
 }
