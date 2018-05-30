@@ -204,6 +204,13 @@ export default class EditProfile extends Component {
                   Willing to discuss personal as well as professional life.
                 </label>
               </div>
+
+              <div className="expectation">
+                <label>
+                  <input type="checkbox"/>
+                  Willing to advise for residency application.
+                </label>
+              </div>
             </div>
           </div>
 
