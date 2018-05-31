@@ -8,6 +8,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, ValidationError, fields
 from sqlalchemy.sql import exists
+from sqlalchemy import or_
 from sqlalchemy.types import TypeDecorator, VARCHAR
 
 from cloudinary import uploader
@@ -16,6 +17,7 @@ from cloudinary import uploader
 app = Flask(__name__, static_url_path='/static', static_folder='build/static')
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = app.debug
 db = SQLAlchemy(app)
 CORS(app)
 
@@ -25,6 +27,9 @@ class StringEncodedList(TypeDecorator):
     impl = VARCHAR
 
     def process_bind_param(self, value, dialect):
+        if isinstance(value, str):
+            return value
+
         return ','.join(value)
 
     def process_result_value(self, value, dialect):
@@ -107,16 +112,28 @@ def index(path=None):
     return send_from_directory('build', 'index.html')
 
 
+def matching_profiles(query):
+    if query is None:
+        return Profile.query.all()
+
+    searchable_fields = [
+        Profile.name,
+        Profile.additional_information,
+        Profile.clinical_specialties,
+        Profile.additional_interests,
+        Profile.affiliations,
+    ]
+
+    filters = [field.contains(query) for field in searchable_fields]
+
+    return Profile.query.filter(or_(*filters))
+
+
 @app.route('/api/profiles')
 def get_profiles():
-    query = 'salamander'
-    searchable_fields = [
-        'additional_information',
-        'clinical_specialties',
-        'additional_interests',
-        'affiliations',
-    ]
-    return jsonify(profiles_schema.dump(Profile.query.all()).data)
+    query = request.args.get('query')
+
+    return jsonify(profiles_schema.dump(matching_profiles(query)).data)
 
 
 @app.route('/api/profiles/<profile_id>')

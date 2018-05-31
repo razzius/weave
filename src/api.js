@@ -14,9 +14,11 @@ async function http(url, options) {
   return response.json()
 }
 
-export async function getProfiles(query = {}) {
+export async function getProfiles(search = null) {
   const url = buildURL("api/profiles")
-  Object.keys(query).forEach(key => url.searchParams.append(key, query[key]))
+  if (search !== null) {
+    url.searchParams.append('query', search)
+  }
   return http(url)
 }
 

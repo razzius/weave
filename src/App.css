@@ -168,10 +168,20 @@ input[type='email'] {
 }
 
 .search-submit {
-  margin: 5px;
-  line-height: 24px;
-  vertical-align: middle;
+  margin: 0px 10px;
+  border: 1px solid black;
+  text-decoration: none;
+  color: black;
+  display: inline-block;
+  font-size: 16px;
+  padding: 10px 32px;
+  background: white;
+  cursor: pointer;
 }
+.search-submit:hover {
+    background: var(--pastel-yellow);
+}
+
 
 .next-button {
   text-align: center;

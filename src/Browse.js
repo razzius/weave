@@ -10,10 +10,10 @@ import AppScreen from "./AppScreen"
 function pluralizeResults(length) {
   if (length === 1) {
     return "result"
-  } else {
-    return "results"
   }
+  return "results"
 }
+
 export default class Browse extends Component {
   constructor(props) {
     super(props)
@@ -32,7 +32,7 @@ export default class Browse extends Component {
   }
 
   handleSearch = () => {
-    getProfiles({ search: this.state.search }).then(results =>
+    getProfiles(this.state.search).then(results =>
       this.setState({ results })
     )
   }

@@ -4,7 +4,7 @@ export default class SearchInput extends Component {
   constructor(props) {
     super(props)
     this.handleSubmit = this.handleSubmit.bind(this)
-    this.autocompleteWords = props.autocompleteWords
+    this.autocompleteWords = []  // props.autocompleteWords
   }
 
   handleSubmit(e) {
