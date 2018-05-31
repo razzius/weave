@@ -57,7 +57,7 @@ class Profile(db.Model):
     willing_residency_application = db.Column(db.Boolean, default=False)
 
     cadence = db.Column(db.String(255))
-    other_cadence = db.Column(db.String(255))
+    other_cadence = db.Column(db.String(255), nullable=True)
 
     def __repr__(self):
         return f'<Profile id={self.id} name={self.name}>'
@@ -94,7 +94,7 @@ class ProfileSchema(Schema):
     willing_residency_application = fields.Boolean()
 
     cadence = fields.String()
-    other_cadence = fields.String()
+    other_cadence = fields.String(allow_none=True)
 
 
 profile_schema = ProfileSchema()

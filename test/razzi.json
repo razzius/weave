@@ -1,0 +1,18 @@
+{
+  "name": "Razzi Abuissa",
+  "email": "razzi53@gmail.com",
+  "affiliations": ["Abuissa hospital", "Mercy hospital"],
+  "clinical_specialties": ["osteology"],
+  "additional_interests": ["yoga"],
+  "profile_image_url": "https://avatars2.githubusercontent.com/u/2244895?s=460&v=4",
+  "additional_information": ":)",
+
+  "willing_shadowing": false,
+  "willing_networking": false,
+  "willing_goal_setting": false,
+  "willing_discuss_personal": false,
+  "willing_residency_application": false,
+
+  "cadence": "monthly",
+  "other_cadence": null
+}
