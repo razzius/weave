@@ -24,8 +24,8 @@ export async function getProfile(id) {
   return http(buildURL(`api/profiles/${id}`))
 }
 
-export async function createProfile(profile) {
-  const payload = {
+export function profileToPayload(profile) {
+  return {
     name: profile.name,
     email: profile.email,
     profile_image_url: profile.imageUrl,
@@ -44,6 +44,10 @@ export async function createProfile(profile) {
     cadence: profile.cadence,
     other_cadence: profile.otherCadence
   }
+}
+
+export async function createProfile(profile) {
+  const payload = profileToPayload(profile)
 
   return http(buildURL("api/profile"), {
     method: "POST",

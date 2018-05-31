@@ -13,9 +13,9 @@ from sqlalchemy.types import TypeDecorator, VARCHAR
 from cloudinary import uploader
 
 
-app = Flask(__name__, static_url_path="/static", static_folder="build/static")
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ["DATABASE_URL"]
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app = Flask(__name__, static_url_path='/static', static_folder='build/static')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 CORS(app)
 
@@ -25,13 +25,13 @@ class StringEncodedList(TypeDecorator):
     impl = VARCHAR
 
     def process_bind_param(self, value, dialect):
-        return ",".join(value)
+        return ','.join(value)
 
     def process_result_value(self, value, dialect):
-        if value == "":
+        if value == '':
             return []
         else:
-            return value.split(",")
+            return value.split(',')
 
 
 class Profile(db.Model):
@@ -60,11 +60,10 @@ class Profile(db.Model):
     other_cadence = db.Column(db.String(255))
 
     def __repr__(self):
-        return f"<Profile id={self.id} name={self.name}>"
+        return f'<Profile id={self.id} name={self.name}>'
 
 
 class RenderedList(fields.List):
-
     def _serialize(self, value, attr, obj):
         if value is None:
             return []
@@ -72,7 +71,7 @@ class RenderedList(fields.List):
 
     def _deserialize(self, value, attr, data):
         if value is None:
-            return ""
+            return ''
         return super()._deserialize(value, attr, data)
 
 
@@ -102,18 +101,25 @@ profile_schema = ProfileSchema()
 profiles_schema = ProfileSchema(many=True)
 
 
-@app.route("/")
-@app.route("/<path:path>")  # Enable any url redirecting to home for SPA
+@app.route('/')
+@app.route('/<path:path>')  # Enable any url redirecting to home for SPA
 def index(path=None):
-    return send_from_directory("build", "index.html")
+    return send_from_directory('build', 'index.html')
 
 
-@app.route("/api/profiles")
+@app.route('/api/profiles')
 def get_profiles():
+    query = 'salamander'
+    searchable_fields = [
+        'additional_information',
+        'clinical_specialties',
+        'additional_interests',
+        'affiliations',
+    ]
     return jsonify(profiles_schema.dump(Profile.query.all()).data)
 
 
-@app.route("/api/profiles/<profile_id>")
+@app.route('/api/profiles/<profile_id>')
 def get_profile(profile_id=None):
     return jsonify(
         profile_schema.dump(
@@ -123,10 +129,10 @@ def get_profile(profile_id=None):
 
 
 def error(reason):
-    return Response(json.dumps(reason), status=400, content_type="application/json")
+    return Response(json.dumps(reason), status=400, content_type='application/json')
 
 
-@app.route("/api/profile", methods=["POST"])
+@app.route('/api/profile', methods=['POST'])
 def create_profile(profile_id=None):
     json_data = request.get_json()
 
@@ -138,8 +144,8 @@ def create_profile(profile_id=None):
     if schema.errors:
         return jsonify(schema.errors), 422
 
-    if db.session.query(exists().where(Profile.email == schema.data["email"])).scalar():
-        return error({"email": ["This email already exists in the database"]})
+    if db.session.query(exists().where(Profile.email == schema.data['email'])).scalar():
+        return error({'email': ['This email already exists in the database']})
 
     profile = Profile(**schema.data)
     db.session.add(profile)
@@ -148,7 +154,7 @@ def create_profile(profile_id=None):
     return jsonify(profile_schema.dump(profile).data)
 
 
-@app.route("/api/profile/<profile_id>", methods=["PUT"])
+@app.route('/api/profile/<profile_id>', methods=['PUT'])
 def update_profile(profile_id=None):
     profile = Profile({})
     db.session.add(profile)
@@ -157,13 +163,15 @@ def update_profile(profile_id=None):
     return jsonify(ProfileSchema().dump(profile).data)
 
 
-@app.route("/api/upload-image", methods=["POST"])
+@app.route('/api/upload-image', methods=['POST'])
 def upload_image():
     data = request.data
 
     if not data:
         return error({'file': 'No image sent'})
 
-    response = uploader.upload(data, eager=[{'width': 200, 'height': 200, 'crop': 'crop'}])
+    response = uploader.upload(
+        data, eager=[{'width': 200, 'height': 200, 'crop': 'crop'}]
+    )
 
     return jsonify({'image_url': response['eager'][0]['secure_url']})

@@ -4,7 +4,9 @@ import Select from 'react-select'
 import Dropzone from 'react-dropzone'
 import 'react-select/dist/react-select.css'
 
-import { createProfile, uploadPicture } from './api'
+import ProfileView from './ProfileView'
+
+import { createProfile, uploadPicture, profileToPayload } from './api'
 import {
   clinicalSpecialtyOptions,
   additionalInterestOptions,
@@ -47,7 +49,8 @@ export default class EditProfile extends Component {
     willingResidencyApplication: false,
 
     cadence: 'monthly',
-    otherCadence: null
+    otherCadence: null,
+    preview: false
   }
 
   handleSelectClinicalSpecialties = specialties => {
@@ -136,6 +139,22 @@ export default class EditProfile extends Component {
   }
 
   render() {
+    if (this.state.preview) {
+      return (
+        <div>
+          <ProfileView data={profileToPayload(this.state)} />
+          <button
+            onClick={() => {
+              this.setState({ preview: false })
+            }}
+          >
+            Edit
+          </button>
+          <button onClick={this.submit}>Publish profile</button>
+        </div>
+      )
+    }
+
     return (
       <AppScreen className="edit-profile">
         <div className="columns">
@@ -353,8 +372,13 @@ export default class EditProfile extends Component {
             </label>
           </div>
 
-          <button className="button" onClick={this.submit}>
-            Save changes
+          <button
+            className="button"
+            onClick={() => {
+              this.setState({ preview: true })
+            }}
+          >
+            Preview profile
           </button>
         </div>
       </AppScreen>
