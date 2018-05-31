@@ -50,6 +50,15 @@ class Profile(db.Model):
 
     additional_information = db.Column(db.String(500), nullable=False)
 
+    willing_shadowing = db.Column(db.Boolean, default=False)
+    willing_networking = db.Column(db.Boolean, default=False)
+    willing_goal_setting = db.Column(db.Boolean, default=False)
+    willing_discuss_personal = db.Column(db.Boolean, default=False)
+    willing_residency_application = db.Column(db.Boolean, default=False)
+
+    cadence = db.Column(db.String(255))
+    other_cadence = db.Column(db.String(255))
+
     def __repr__(self):
         return f"<Profile id={self.id} name={self.name}>"
 
@@ -78,6 +87,15 @@ class ProfileSchema(Schema):
     affiliations = RenderedList(fields.String, required=True)
 
     additional_information = fields.String()
+
+    willing_shadowing = fields.Boolean()
+    willing_networking = fields.Boolean()
+    willing_goal_setting = fields.Boolean()
+    willing_discuss_personal = fields.Boolean()
+    willing_residency_application = fields.Boolean()
+
+    cadence = fields.String()
+    other_cadence = fields.String()
 
 
 profile_schema = ProfileSchema()

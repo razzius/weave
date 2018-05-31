@@ -1,16 +1,16 @@
-import React, { Component } from "react"
-import AvatarEditor from "react-avatar-editor"
-import Select from "react-select"
-import Dropzone from "react-dropzone"
-import "react-select/dist/react-select.css"
+import React, { Component } from 'react'
+import AvatarEditor from 'react-avatar-editor'
+import Select from 'react-select'
+import Dropzone from 'react-dropzone'
+import 'react-select/dist/react-select.css'
 
-import { createProfile, uploadPicture } from "./api"
+import { createProfile, uploadPicture } from './api'
 import {
   clinicalSpecialtyOptions,
   additionalInterestOptions,
   hospitalOptions
-} from "./options"
-import AppScreen from "./AppScreen"
+} from './options'
+import AppScreen from './AppScreen'
 
 function scaleCanvas(canvas) {
   const scaled = document.createElement('canvas')
@@ -29,8 +29,8 @@ export default class EditProfile extends Component {
     rotate: 0,
     width: 200,
     height: 200,
-    name: "",
-    email: "",
+    name: '',
+    email: '',
     image: null,
     imageUrl: null,
     imageSuccess: false,
@@ -38,7 +38,16 @@ export default class EditProfile extends Component {
     affiliations: [],
     clinicalSpecialties: [],
     additionalInterests: [],
-    additionalInformation: ""
+    additionalInformation: '',
+
+    willingShadowing: false,
+    willingNetworking: false,
+    willingGoalSetting: false,
+    willingDiscussPersonal: false,
+    willingResidencyApplication: false,
+
+    cadence: 'monthly',
+    otherCadence: null
   }
 
   handleSelectClinicalSpecialties = specialties => {
@@ -59,10 +68,8 @@ export default class EditProfile extends Component {
     })
   }
 
-  setAdditionalInformation = ({ target }) => {
-    this.setState({
-      additionalInformation: target.value
-    })
+  update = field => ({ target }) => {
+    this.setState({ [field]: target.value })
   }
 
   submit = () => {
@@ -75,20 +82,14 @@ export default class EditProfile extends Component {
     }
 
     return promise.then(() => {
-      createProfile(this.state).then(profile => {
-        window.location = `/profiles/${profile.id}`
-      }).catch(error => {
-        console.error(error)
-      })
+      createProfile(this.state)
+        .then(profile => {
+          window.location = `/profiles/${profile.id}`
+        })
+        .catch(error => {
+          console.error(error)
+        })
     })
-  }
-
-  setName = ({ target }) => {
-    this.setState({ name: target.value })
-  }
-
-  setEmail = ({ target }) => {
-    this.setState({ email: target.value })
   }
 
   handleDrop = acceptedFiles => {
@@ -105,14 +106,14 @@ export default class EditProfile extends Component {
   }
 
   saveImage = () => {
-    this.setState({uploadingImage: true})
+    this.setState({ uploadingImage: true })
 
     const canvas = this.editor.getImage()
 
     const scaled = scaleCanvas(canvas)
 
-    return new Promise((resolve) => {
-      scaled.toBlob(blob => (
+    return new Promise(resolve => {
+      scaled.toBlob(blob =>
         uploadPicture(blob).then(response => {
           this.setState({
             imageUrl: response.image_url,
@@ -121,17 +122,17 @@ export default class EditProfile extends Component {
           })
           resolve(response)
         })
-      ))
+      )
     })
   }
 
-  setEditorRef = (editor) => {
+  setEditorRef = editor => {
     this.editor = editor
   }
 
   rotateRight = () => {
     const rotation = (90 + this.state.rotate) % 360
-    this.setState({rotate: rotation})
+    this.setState({ rotate: rotation })
   }
 
   render() {
@@ -143,7 +144,7 @@ export default class EditProfile extends Component {
               onDrop={this.handleDrop}
               disableClick
               multiple={false}
-              style={{ width: "200px", height: "200px", marginBottom: "55px" }}
+              style={{ width: '200px', height: '200px', marginBottom: '55px' }}
             >
               <AvatarEditor
                 ref={this.setEditorRef}
@@ -156,21 +157,29 @@ export default class EditProfile extends Component {
               />
             </Dropzone>
             <div>
-              <input name="newImage" type="file" onChange={this.handleNewImage} />
+              <input
+                name="newImage"
+                type="file"
+                onChange={this.handleNewImage}
+              />
               <input
                 name="scale"
                 type="range"
                 onChange={this.handleScale}
-                min={this.state.allowZoomOut ? "0.1" : "1"}
+                min={this.state.allowZoomOut ? '0.1' : '1'}
                 max="2"
                 step="0.01"
                 defaultValue="1"
-                />
+              />
               <button onClick={this.rotateRight}>Rotate</button>
-              <input value={this.state.uploadingImage ? "Uploading..." : "Save image"}
-                     disabled={!this.state.image}
-                     type="submit"
-                     onClick={this.saveImage}/>
+              <input
+                value={
+                  this.state.uploadingImage ? 'Uploading...' : 'Save image'
+                }
+                disabled={!this.state.image}
+                type="submit"
+                onClick={this.saveImage}
+              />
               {this.state.imageSuccess ? 'Image uploaded' : null}
             </div>
 
@@ -179,35 +188,50 @@ export default class EditProfile extends Component {
 
               <div className="expectation">
                 <label>
-                  <input type="checkbox"/>
+                  <input
+                    type="checkbox"
+                    onChange={this.update('willingShadowing')}
+                  />
                   Will allow shadowing opportunities for mentee(s).
                 </label>
               </div>
 
               <div className="expectation">
                 <label>
-                  <input type="checkbox"/>
+                  <input
+                    type="checkbox"
+                    onChange={this.update('willingNetworking')}
+                  />
                   Will help mentee(s) with networking as deemed appropriate.
                 </label>
               </div>
 
               <div className="expectation">
                 <label>
-                  <input type="checkbox"/>
+                  <input
+                    type="checkbox"
+                    onChange={this.update('willingGoalSetting')}
+                  />
                   Will help mentee(s) with goal setting.
                 </label>
               </div>
 
               <div className="expectation">
                 <label>
-                  <input type="checkbox"/>
+                  <input
+                    type="checkbox"
+                    onChange={this.update('willingDiscussPersonal')}
+                  />
                   Willing to discuss personal as well as professional life.
                 </label>
               </div>
 
               <div className="expectation">
                 <label>
-                  <input type="checkbox"/>
+                  <input
+                    type="checkbox"
+                    onChange={this.update('willingResidencyApplication')}
+                  />
                   Willing to advise for residency application.
                 </label>
               </div>
@@ -216,17 +240,23 @@ export default class EditProfile extends Component {
 
           <div
             className="about"
-            style={{ width: "450px", paddingLeft: "50px" }}
+            style={{ width: '450px', paddingLeft: '50px' }}
           >
             <p>Name</p>
-            <input type="text" name="name"
-                   className="fullWidth"
-                   onChange={this.setName} />
+            <input
+              type="text"
+              name="name"
+              className="fullWidth"
+              onChange={this.update('name')}
+            />
 
             <p>Preferred contact email</p>
-            <input name="email" type="email"
-                   className="fullWidth"
-                   onChange={this.setEmail} />
+            <input
+              name="email"
+              type="email"
+              className="fullWidth"
+              onChange={this.update('email')}
+            />
 
             <p>Hospital Affiliations</p>
             <Select
@@ -257,37 +287,69 @@ export default class EditProfile extends Component {
 
             <p>Additional Information</p>
             <textarea
-              onChange={this.setAdditionalInformation}
+              onChange={this.update('additionalInformation')}
               maxLength={500}
               style={{
-                width: "100%",
-                height: "3em",
-                fontSize: "18px"
+                width: '100%',
+                height: '3em',
+                fontSize: '18px'
               }}
             />
           </div>
         </div>
         <div>
           <div className="cadence">
-            <h2>Cadence</h2>
+            <h3>Cadence</h3>
             <label>
-              <input name="cadence" type="radio" value="biweekly"/>
+              <input
+                onChange={this.update('cadence')}
+                name="cadence"
+                type="radio"
+                value="biweekly"
+              />
               Every 2 weeks
             </label>
 
             <label>
-              <input defaultChecked name="cadence" type="radio" value="monthly"/>
+              <input
+                defaultChecked
+                onChange={this.update('cadence')}
+                name="cadence"
+                type="radio"
+                value="monthly"
+              />
               Monthly
             </label>
 
             <label>
-              <input name="cadence" type="radio" value="quarterly"/>
+              <input
+                onChange={this.update('cadence')}
+                name="cadence"
+                type="radio"
+                value="quarterly"
+              />
               Quarterly
             </label>
 
             <label>
-              <input name="cadence" type="radio" value="other"/>
-              Other <input type="text"/>
+              <input
+                onChange={this.update('cadence')}
+                name="cadence"
+                type="radio"
+                value="other"
+                ref={el => {
+                  this.otherCadenceInput = el
+                }}
+              />
+              Other
+              <input
+                type="text"
+                onFocus={() => {
+                  this.setState({ cadence: 'other' })
+                  this.otherCadenceInput.checked = true
+                }}
+                onChange={this.update('otherCadence')}
+              />
             </label>
           </div>
 

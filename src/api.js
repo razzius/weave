@@ -27,12 +27,22 @@ export async function getProfile(id) {
 export async function createProfile(profile) {
   const payload = {
     name: profile.name,
-    profile_image_url: profile.imageUrl,
     email: profile.email,
+    profile_image_url: profile.imageUrl,
+
     additional_interests: profile.additionalInterests,
     affiliations: profile.affiliations,
     clinical_specialties: profile.clinicalSpecialties,
-    additional_information: profile.additionalInformation
+    additional_information: profile.additionalInformation,
+
+    willing_shadowing: profile.willingShadowing,
+    willing_networking: profile.willingNetworking,
+    willing_goal_setting: profile.willingGoalSetting,
+    willing_discuss_personal: profile.willingDiscussPersonal,
+    willing_residency_application: profile.willingResidencyApplication,
+
+    cadence: profile.cadence,
+    other_cadence: profile.otherCadence
   }
 
   return http(buildURL("api/profile"), {
