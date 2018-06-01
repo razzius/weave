@@ -1,17 +1,17 @@
-import React, { Component } from "react"
-import hospitals from "./hospitals"
-import ProfileResult from "./ProfileResult"
-import "react-select/dist/react-select.css"
-import SearchInput from "./SearchInput"
-import profiles from "./profiles"
-import { getProfiles } from "./api"
-import AppScreen from "./AppScreen"
+import React, { Component } from 'react'
+import 'react-select/dist/react-select.css'
+import hospitals from './hospitals'
+import ProfileResult from './ProfileResult'
+import SearchInput from './SearchInput'
+import profiles from './profiles'
+import { getProfiles } from './api'
+import AppScreen from './AppScreen'
 
 function pluralizeResults(length) {
   if (length === 1) {
-    return "result"
+    return 'result'
   }
-  return "results"
+  return 'results'
 }
 
 export default class Browse extends Component {
@@ -19,7 +19,7 @@ export default class Browse extends Component {
     super(props)
 
     this.state = {
-      search: "",
+      search: '',
       results: null,
       error: null
     }
@@ -27,14 +27,12 @@ export default class Browse extends Component {
     getProfiles()
       .then(results => this.setState({ results }))
       .catch(() =>
-        this.setState({ error: "Unable to load profiles. Try again later." })
+        this.setState({ error: 'Unable to load profiles. Try again later.' })
       )
   }
 
   handleSearch = () => {
-    getProfiles(this.state.search).then(results =>
-      this.setState({ results })
-    )
+    getProfiles(this.state.search).then(results => this.setState({ results }))
   }
 
   handleChange = event => {
@@ -42,6 +40,7 @@ export default class Browse extends Component {
   }
 
   render() {
+    const { error, results } = this.state
     return (
       <AppScreen>
         <SearchInput
@@ -49,23 +48,20 @@ export default class Browse extends Component {
           onChange={this.handleChange}
           onSubmit={this.handleSearch}
         />
-        {this.state.error !== null ? (
-          this.state.error
-        ) : this.state.results === null ? (
-          "Loading..."
-        ) : (
-          <div>
-            <p>
-              Showing {this.state.results.length}{" "}
-              {pluralizeResults(this.state.results.length)}.
-            </p>
+        {(error !== null && error) ||
+          (results === null && <p>Loading...</p>) || (
             <div>
-              {this.state.results.map(result => (
-                <ProfileResult key={result.id} {...result} />
-              ))}
+              <p>
+                Showing {this.state.results.length}{' '}
+                {pluralizeResults(this.state.results.length)}.
+              </p>
+              <div>
+                {this.state.results.map(result => (
+                  <ProfileResult key={result.id} {...result} />
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          )}
       </AppScreen>
     )
   }
