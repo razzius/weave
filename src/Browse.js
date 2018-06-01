@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import 'react-select/dist/react-select.css'
-import hospitals from './hospitals'
 import ProfileResult from './ProfileResult'
 import SearchInput from './SearchInput'
-import profiles from './profiles'
 import { getProfiles } from './api'
 import AppScreen from './AppScreen'
 
