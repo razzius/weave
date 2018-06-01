@@ -22,7 +22,7 @@ export default class FacultyExpectationsSlider extends React.Component {
   render() {
     const settings = {
       dots: true,
-      speed: 0,
+      speed: 500,
       slidesToScroll: 1,
       beforeChange: (_, nextIndex) => {
         const lastSlide = nextIndex === this.slider.props.children.length - 1

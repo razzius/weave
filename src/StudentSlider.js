@@ -22,7 +22,7 @@ export default class StudentExpectationsSlider extends React.Component {
   render() {
     const settings = {
       dots: true,
-      speed: 0,
+      speed: 500,
       beforeChange: (_, nextIndex) => {
         const lastSlide = nextIndex === this.slider.props.children.length - 1
         this.setState({
@@ -35,7 +35,7 @@ export default class StudentExpectationsSlider extends React.Component {
 
     return (
       <div>
-        <Slider ref={c => (this.slider = c)} {...settings}>
+        <Slider ref={c => {this.slider = c}} {...settings}>
           <div className="expectation">
             <h2 style={{ textAlign: "center" }}>Stay in touch</h2>
             <div>
