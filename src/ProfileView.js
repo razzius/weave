@@ -1,6 +1,10 @@
 import React from 'react'
 import AppScreen from './AppScreen'
 
+function capitalize(text) {
+  return text[0].toUpperCase() + text.slice(1)
+}
+
 const ProfileView = ({ data }) => (
   <AppScreen>
     <div className="profile-contact">
@@ -66,25 +70,25 @@ const ProfileView = ({ data }) => (
           </div>
 
           <h4>Cadence</h4>
-          {data.cadence === 'other' ? data.other_cadence : data.cadence}
+          {data.cadence === 'other' ? data.other_cadence : capitalize(data.cadence)}
         </div>
         <div className="about" style={{ width: '450px' }}>
-          <h1>{data.name}</h1>
-          <p>Hospital Affiliations:</p>
+          <h2>{data.name}</h2>
+          <h4>Hospital Affiliations</h4>
           <p style={{ paddingBottom: '1em' }}>{data.affiliations.join(', ')}</p>
 
-          <p>Clinical specialties:</p>
+          <h4>Clinical specialties</h4>
           <p style={{ paddingBottom: '1em' }}>
             {data.clinical_specialties.join(', ')}
           </p>
 
-          <p>Additional interests:</p>
+          <h4>Additional interests</h4>
           <p style={{ paddingBottom: '1em' }}>
             {data.additional_interests.join(', ')}
           </p>
           {data.additional_information && (
             <div>
-              <p>Additional Information:</p>
+              <h4>Additional Information</h4>
               <p>{data.additional_information}</p>
             </div>
           )}
