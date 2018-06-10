@@ -19,7 +19,7 @@ const ProfileView = ({ data }) => (
           </p>
 
           <div style={{marginTop: '1.2em'}}>
-            <h4>Cadence</h4>
+            <h4>Meeting Cadence</h4>
             {data.cadence === 'other' ? data.other_cadence : capitalize(data.cadence)}
           </div>
 
