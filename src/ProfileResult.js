@@ -38,8 +38,7 @@ export default props => {
         </p>
       </div>
       <div className="profile-result-right">
-        <p>Meeting Cadence: {capitalize(props.cadence)}</p>
-        <p>Additional Opportunities:</p>
+        <p>{capitalize(props.cadence)}</p>
         <input disabled title="Shadowing" type="checkbox" checked={props.willing_shadowing}/>
         <input disabled title="Networking" type="checkbox" checked={props.willing_networking}/>
         <input disabled title="Goal setting" type="checkbox" checked={props.willing_goal_setting}/>
