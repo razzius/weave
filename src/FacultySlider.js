@@ -1,7 +1,8 @@
 import React from "react"
 import Slider from "react-slick"
-import NextButton from "./NextButton"
 import { Link } from "react-router-dom"
+
+import NextButton from "./NextButton"
 
 export default class FacultyExpectationsSlider extends React.Component {
   constructor(props) {
@@ -37,7 +38,7 @@ export default class FacultyExpectationsSlider extends React.Component {
 
     return (
       <div>
-        <Slider ref={c => (this.slider = c)} {...settings}>
+        <Slider ref={c => {this.slider = c}} {...settings}>
           <div className="expectation">
             <h2 style={{ textAlign: "center" }}>Stay in touch</h2>
             <div>

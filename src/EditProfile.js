@@ -144,14 +144,16 @@ export default class EditProfile extends Component {
       return (
         <div>
           <ProfileView data={profileToPayload(this.state)} />
-          <button
-            onClick={() => {
-              this.setState({ preview: false })
-            }}
-          >
-            Edit
-          </button>
-          <button onClick={this.submit}>Publish profile</button>
+          <div style={{width: '700px', margin: 'auto'}}>
+            <button style={{marginRight: '1em'}} className="button"
+              onClick={() => {
+                this.setState({ preview: false })
+              }}
+            >
+              Edit
+            </button>
+            <button className="button" onClick={this.submit}>Publish profile</button>
+          </div>
         </div>
       )
     }
@@ -203,59 +205,6 @@ export default class EditProfile extends Component {
               {this.state.imageSuccess ? 'Image uploaded' : null}
             </div>
 
-            <div className="expectations">
-              <h4>Optional expectations</h4>
-
-              <div className="expectation">
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={this.update('willingShadowing')}
-                  />
-                  Will allow shadowing opportunities for mentee(s).
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={this.update('willingNetworking')}
-                  />
-                  Will help mentee(s) with networking as deemed appropriate.
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={this.update('willingGoalSetting')}
-                  />
-                  Will help mentee(s) with goal setting.
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={this.update('willingDiscussPersonal')}
-                  />
-                  Willing to discuss personal as well as professional life.
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label>
-                  <input
-                    type="checkbox"
-                    onChange={this.update('willingResidencyApplication')}
-                  />
-                  Willing to advise for residency application.
-                </label>
-              </div>
-            </div>
           </div>
 
           <div
@@ -318,6 +267,64 @@ export default class EditProfile extends Component {
           </div>
         </div>
         <div>
+          <div className="expectations">
+            <h3>Optional expectations</h3>
+
+            <div className="expectation">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={this.state.willingShadowing}
+                  onChange={this.update('willingShadowing')}
+                />
+                Will allow shadowing opportunities for mentee(s).
+              </label>
+            </div>
+
+            <div className="expectation">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={this.state.willingNetworking}
+                  onChange={this.update('willingNetworking')}
+                />
+                Will help mentee(s) with networking as deemed appropriate.
+              </label>
+            </div>
+
+            <div className="expectation">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={this.state.willingGoalSetting}
+                  onChange={this.update('willingGoalSetting')}
+                />
+                Will help mentee(s) with goal setting.
+              </label>
+            </div>
+
+            <div className="expectation">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={this.state.willingDiscussPersonal}
+                  onChange={this.update('willingDiscussPersonal')}
+                />
+                Willing to discuss personal as well as professional life.
+              </label>
+            </div>
+
+            <div className="expectation">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={this.state.willingResidencyApplication}
+                  onChange={this.update('willingResidencyApplication')}
+                />
+                Willing to advise for residency application.
+              </label>
+            </div>
+          </div>
           <div className="cadence">
             <h3>Cadence</h3>
             <label>
@@ -376,9 +383,13 @@ export default class EditProfile extends Component {
           <button
             className="button"
             onClick={() => {
-              this.saveImage().then(() => {
+              if (this.state.image !== null && this.state.imageUrl === null) {
+                this.saveImage().then(() => {
+                  this.setState({ preview: true })
+                })
+              } else {
                 this.setState({ preview: true })
-              })
+              }
             }}
           >
             Preview profile
