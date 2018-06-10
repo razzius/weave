@@ -10,6 +10,7 @@ import "react-toggle-switch/dist/css/switch.min.css"
 import "./App.css"
 import Home from "./Home"
 import Browse from "./Browse"
+import Expectations from "./Expectations"
 import FacultyExpectations from "./FacultyExpectations"
 import StudentExpectations from "./StudentExpectations"
 import EditProfile from "./EditProfile"
@@ -64,6 +65,7 @@ class App extends Component {
             )
           }/>
           <Route path="/browse" component={Browse} />
+          <Route path="/expectations" component={Expectations} />
           <Route
             path="/profiles/:id"
             render={props => <Profile {...props} />}

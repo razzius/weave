@@ -1,6 +1,7 @@
 import React from "react"
 import Slider from "react-slick"
 import NextButton from "./NextButton"
+import { Link } from "react-router-dom"
 
 export default class FacultyExpectationsSlider extends React.Component {
   constructor(props) {
@@ -89,6 +90,13 @@ export default class FacultyExpectationsSlider extends React.Component {
             onClick={this.next}
             text={this.state.nextText}
           />
+          {this.state.nextText === "I agree" &&
+            <div style={{marginTop: '1em'}}>
+              <Link target="_blank" to="/expectations">
+                Read more about expectations.
+              </Link>
+            </div>
+          }
         </div>
       </div>
     )
