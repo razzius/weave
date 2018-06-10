@@ -15,9 +15,13 @@ const ProfileView = ({ data }) => (
             className="profile-image column"
             src={data.profile_image_url}
           />
-          <p>
-            <a href={`mailto:${data.email}`}>{data.email}</a>
-          </p>
+
+          <div>
+            <h4>Cadence</h4>
+            {data.cadence === 'other' ? data.other_cadence : capitalize(data.cadence)}
+          </div>
+          <br/>
+
           <div className="expectation">
             <label>
               <input
@@ -68,13 +72,16 @@ const ProfileView = ({ data }) => (
               Willing to advise for residency application.
             </label>
           </div>
-
-          <h4>Cadence</h4>
-          {data.cadence === 'other' ? data.other_cadence : capitalize(data.cadence)}
         </div>
         <div className="about" style={{ width: '450px' }}>
           <h2>{data.name}</h2>
+
+          <p>
+            <a href={`mailto:${data.email}`}>{data.email}</a>
+          </p>
+
           <h4>Hospital Affiliations</h4>
+
           <p style={{ paddingBottom: '1em' }}>{data.affiliations.join(', ')}</p>
 
           <h4>Clinical specialties</h4>

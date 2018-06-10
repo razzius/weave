@@ -87,7 +87,8 @@ export default class EditProfile extends Component {
     return promise.then(() => {
       createProfile(this.state)
         .then(profile => {
-          window.location = `/profiles/${profile.id}`
+          this.props.authenticate(1)  // TODO proper server-given token
+          this.props.history.push(`/profiles/${profile.id}`)
         })
         .catch(error => {
           console.error(error)
@@ -375,7 +376,9 @@ export default class EditProfile extends Component {
           <button
             className="button"
             onClick={() => {
-              this.setState({ preview: true })
+              this.saveImage().then(() => {
+                this.setState({ preview: true })
+              })
             }}
           >
             Preview profile

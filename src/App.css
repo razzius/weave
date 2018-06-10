@@ -50,7 +50,6 @@ body,
 }
 
 .header-inner {
-  /* max-width: 700px; */
   margin: 0 auto;
 }
 
@@ -218,4 +217,24 @@ input[type='email'] {
 
 .cadence label {
     margin: 10px;
+}
+
+input[disabled]:checked {
+    box-shadow: 0px 0px 0px 2px var(--burnt-orange);
+}
+
+.available-for-mentoring {
+    margin-top: 25px;
+    margin-right: 25px;
+    float: right;
+    /* display: inline; */
+}
+
+.switch.on {
+    background: #007aff;
+}
+
+.switch {
+    vertical-align: middle;
+    margin: 0px 20px;
 }
