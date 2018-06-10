@@ -221,6 +221,7 @@ input[type='email'] {
 
 input[disabled]:checked {
     box-shadow: 0px 0px 0px 2px var(--burnt-orange);
+    border-radius: 3px;
 }
 
 .available-for-mentoring {
@@ -237,4 +238,8 @@ input[disabled]:checked {
 .switch {
     vertical-align: middle;
     margin: 0px 20px;
+}
+
+.grayed-out {
+    color: lightgray;
 }

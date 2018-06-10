@@ -23,7 +23,7 @@ const ProfileView = ({ data }) => (
           <br/>
 
           <div className="expectation">
-            <label>
+            <label className={!data.willing_shadowing && 'grayed-out'}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -34,7 +34,7 @@ const ProfileView = ({ data }) => (
           </div>
 
           <div className="expectation">
-            <label>
+            <label className={!data.willing_networking && 'grayed-out'}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -45,7 +45,7 @@ const ProfileView = ({ data }) => (
           </div>
 
           <div className="expectation">
-            <label>
+            <label className={!data.willing_goal_setting && 'grayed-out'}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -56,18 +56,22 @@ const ProfileView = ({ data }) => (
           </div>
 
           <div className="expectation">
-            <label>
-              <input type="checkbox" />
+            <label className={!data.willing_discuss_personal && 'grayed-out'}>
+              <input
+                type="checkbox"
+                disabled="true"
+                checked={data.willing_discuss_personal}
+              />
               Willing to discuss personal as well as professional life.
             </label>
           </div>
 
           <div className="expectation">
-            <label>
+            <label className={!data.willing_residency_application && 'grayed-out'}>
               <input
                 type="checkbox"
                 disabled="true"
-                checked={data.willing_goal_setting}
+                checked={data.willing_residency_application}
               />
               Willing to advise for residency application.
             </label>
