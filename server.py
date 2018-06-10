@@ -8,7 +8,7 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, ValidationError, fields
 from sqlalchemy.sql import exists
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from sqlalchemy.types import TypeDecorator, VARCHAR
 
 from cloudinary import uploader
@@ -124,7 +124,7 @@ def matching_profiles(query):
         Profile.affiliations,
     ]
 
-    filters = [field.contains(query) for field in searchable_fields]
+    filters = [func.lower(field).contains(query) for field in searchable_fields]
 
     return Profile.query.filter(or_(*filters))
 
