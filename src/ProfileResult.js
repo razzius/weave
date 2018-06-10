@@ -37,8 +37,7 @@ export default props => {
         </p>
       </div>
       <div className="profile-result-right">
-        <p>Level of involvement: </p>
-        <p>Meeting frequency: </p>
+        <p>Meeting frequency: {props.cadence}</p>
       </div>
     </Link>
   )
