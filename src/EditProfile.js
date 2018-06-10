@@ -219,7 +219,7 @@ export default class EditProfile extends Component {
             <input
               type="text"
               name="name"
-              autocomplete="off"
+              autoComplete="off"
               className="fullWidth"
               onChange={this.update('name')}
             />
