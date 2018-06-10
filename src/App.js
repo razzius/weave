@@ -19,7 +19,7 @@ import Profile from "./Profile"
 
 class App extends Component {
   state = {
-    availableForMentoring: false,
+    availableForMentoring: true,
     auth: null
   }
 

@@ -84,7 +84,7 @@ class ProfileSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.String()
     email = fields.String()
-    profile_image_url = fields.String()
+    profile_image_url = fields.String(allow_none=True)
 
     clinical_specialties = RenderedList(fields.String, required=True)
     additional_interests = RenderedList(fields.String, required=True)
