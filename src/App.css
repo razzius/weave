@@ -236,6 +236,7 @@ input[disabled]:checked {
 
 .switch.on {
     background: #007aff;
+    transition: all .5s;
 }
 
 .switch {

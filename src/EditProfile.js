@@ -331,7 +331,7 @@ export default class EditProfile extends Component {
             </div>
           </div>
           <div className="cadence">
-            <h3>Cadence</h3>
+            <h3>Meeting Cadence</h3>
             <label>
               <input
                 onChange={this.update('cadence')}
