@@ -16,11 +16,17 @@ const ProfileView = ({ data }) => (
             src={data.profile_image_url}
           />
 
-          <div>
+          <h4>Contact Information</h4>
+          <p>
+            <a href={`mailto:${data.email}`}>{data.email}</a>
+          </p>
+
+          <div style={{marginTop: '1.2em'}}>
             <h4>Cadence</h4>
             {data.cadence === 'other' ? data.other_cadence : capitalize(data.cadence)}
           </div>
-          <br/>
+
+          <h4>Additional Opportunities</h4>
 
           <div className="expectation">
             <label className={!data.willing_shadowing && 'grayed-out'}>
@@ -78,22 +84,18 @@ const ProfileView = ({ data }) => (
           </div>
         </div>
         <div className="about" style={{ width: '450px' }}>
-          <h2>{data.name}</h2>
+          <h1>{data.name}</h1>
 
-          <p>
-            <a href={`mailto:${data.email}`}>{data.email}</a>
-          </p>
-
-          <h4>Hospital Affiliations</h4>
+          <h4 style={{marginTop: '2em'}}>Hospital Affiliations</h4>
 
           <p style={{ paddingBottom: '1em' }}>{data.affiliations.join(', ')}</p>
 
-          <h4>Clinical specialties</h4>
+          <h4>Clinical Specialties</h4>
           <p style={{ paddingBottom: '1em' }}>
             {data.clinical_specialties.join(', ')}
           </p>
 
-          <h4>Additional interests</h4>
+          <h4>Additional Interests</h4>
           <p style={{ paddingBottom: '1em' }}>
             {data.additional_interests.join(', ')}
           </p>

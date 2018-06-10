@@ -92,7 +92,6 @@ body,
 
 .profile-image {
   border-radius: 100%;
-  padding: 20px;
   box-sizing: border-box;
   width: 200px;
   height: 200px;
@@ -242,4 +241,12 @@ input[disabled]:checked {
 
 .grayed-out {
     color: lightgray;
+}
+
+.profile-contact h4 {
+    margin-bottom: .5em;
+}
+
+.profile-contact p {
+    margin-top: .2em;
 }
