@@ -1,9 +1,6 @@
 import React from 'react'
 import AppScreen from './AppScreen'
-
-function capitalize(text) {
-  return text[0].toUpperCase() + text.slice(1)
-}
+import { capitalize } from './utils'
 
 const ProfileView = ({ data }) => (
   <AppScreen>
