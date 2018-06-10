@@ -37,7 +37,7 @@ export default props => {
         </p>
       </div>
       <div className="profile-result-right">
-        <p>Meeting frequency: {props.cadence}</p>
+        <p>Meeting cadence: {props.cadence}</p>
       </div>
     </Link>
   )
