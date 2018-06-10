@@ -97,6 +97,10 @@ body,
   height: 200px;
 }
 
+.profile-result .profile-image {
+  padding: 20px;
+}
+
 input[type='text'],
 input[type='email'] {
   box-sizing: border-box;
