@@ -75,6 +75,10 @@ export default class EditProfile extends Component {
     this.setState({ [field]: target.value })
   }
 
+  updateBoolean = field => ({ target }) => {
+    this.setState({ [field]: target.value === "on" })
+  }
+
   submit = () => {
     let promise
 
@@ -275,7 +279,7 @@ export default class EditProfile extends Component {
                 <input
                   type="checkbox"
                   checked={this.state.willingShadowing}
-                  onChange={this.update('willingShadowing')}
+                  onChange={this.updateBoolean('willingShadowing')}
                 />
                 Will allow shadowing opportunities for mentee(s).
               </label>
@@ -286,7 +290,7 @@ export default class EditProfile extends Component {
                 <input
                   type="checkbox"
                   checked={this.state.willingNetworking}
-                  onChange={this.update('willingNetworking')}
+                  onChange={this.updateBoolean('willingNetworking')}
                 />
                 Will help mentee(s) with networking as deemed appropriate.
               </label>
@@ -297,7 +301,7 @@ export default class EditProfile extends Component {
                 <input
                   type="checkbox"
                   checked={this.state.willingGoalSetting}
-                  onChange={this.update('willingGoalSetting')}
+                  onChange={this.updateBoolean('willingGoalSetting')}
                 />
                 Will help mentee(s) with goal setting.
               </label>
@@ -308,7 +312,7 @@ export default class EditProfile extends Component {
                 <input
                   type="checkbox"
                   checked={this.state.willingDiscussPersonal}
-                  onChange={this.update('willingDiscussPersonal')}
+                  onChange={this.updateBoolean('willingDiscussPersonal')}
                 />
                 Willing to discuss personal as well as professional life.
               </label>
@@ -319,7 +323,7 @@ export default class EditProfile extends Component {
                 <input
                   type="checkbox"
                   checked={this.state.willingResidencyApplication}
-                  onChange={this.update('willingResidencyApplication')}
+                  onChange={this.updateBoolean('willingResidencyApplication')}
                 />
                 Willing to advise for residency application.
               </label>
