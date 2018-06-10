@@ -24,7 +24,7 @@ export default props => {
           {props.clinical_specialties.map(interest => (
             <span key={interest} className="clinical interest">
               {" "}
-              {interest}{" "}
+              {interest.replace(/ /g, "\u00a0")}{" "}
             </span>
           ))}
         </p>

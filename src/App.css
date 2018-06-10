@@ -140,10 +140,11 @@ input[type='email'] {
 }
 
 .interest {
+  display: inline-block;
   border: 1px solid #b9d7fd;
   line-height: 1.4em;
+  padding: 2px 6px;
   vertical-align: middle;
-  padding: 2px 5px;
   margin: 2px;
   background: #edf4fe;
   color: #007eff;
