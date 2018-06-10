@@ -76,7 +76,7 @@ export default class EditProfile extends Component {
   }
 
   updateBoolean = field => ({ target }) => {
-    this.setState({ [field]: target.value === "on" })
+    this.setState({ [field]: target.checked })
   }
 
   submit = () => {
