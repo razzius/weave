@@ -19,18 +19,27 @@ export default class Browse extends Component {
     this.state = {
       search: '',
       results: null,
+      queried: false,
       error: null
     }
 
     getProfiles()
-      .then(results => this.setState({ results }))
+      .then(results => {
+        this.setState({ results })
+      })
       .catch(() =>
         this.setState({ error: 'Unable to load profiles. Try again later.' })
       )
   }
 
-  handleSearch = () => {
-    getProfiles(this.state.search).then(results => this.setState({ results }))
+  handleSearch = (search) => {
+    const query = search === null ? '' : this.state.search
+    getProfiles(query).then(results => {
+      this.setState({ results })
+      if (search !== null) {
+        this.setState({ queried: true })
+      }
+    })
   }
 
   handleChange = event => {
@@ -52,6 +61,11 @@ export default class Browse extends Component {
               <p>
                 Showing {this.state.results.length}{' '}
                 {pluralizeResults(this.state.results.length)}.
+                {" "}
+                {this.state.queried && <a href="#" onClick={() => {
+                  this.handleSearch(null)
+                  this.setState({search: '', queried: false})
+                }}>Clear search</a>}
               </p>
               <div>
                 {this.state.results.map(result => (
