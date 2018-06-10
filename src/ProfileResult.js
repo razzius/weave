@@ -10,7 +10,7 @@ export default props => {
       params={{ test: "tricky" }}
     >
       <img alt="Profile" className="profile-image" src={props.profile_image_url} />
-      <div>
+      <div style={{width: '400px'}}>
         <h2>{props.name}</h2>
         <p>
           {props.affiliations.map(affiliation => (
@@ -20,7 +20,7 @@ export default props => {
             </span>
           ))}
         </p>
-        <p>
+        <p className="clinical-interests">
           {props.clinical_specialties.map(interest => (
             <span key={interest} className="clinical interest">
               {" "}
