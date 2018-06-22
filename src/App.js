@@ -6,6 +6,7 @@ import Toggle from "react-toggle-switch"
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
 import "react-toggle-switch/dist/css/switch.min.css"
+import "bulma/css/bulma.css"
 
 import "./App.css"
 import Home from "./Home"

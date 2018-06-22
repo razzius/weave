@@ -34,20 +34,20 @@ body,
   height: 100%;
 }
 
-.button {
-  border: 1px solid black;
-  text-decoration: none;
-  color: black;
-  line-height: 1.5em;
-  display: inline-block;
-  font-size: 16px;
-  padding: 15px 32px;
-  background: white;
-  cursor: pointer;
-}
-.button:hover {
-  background: var(--pastel-yellow);
-}
+/* .button { */
+/*   border: 1px solid black; */
+/*   text-decoration: none; */
+/*   color: black; */
+/*   line-height: 1.5em; */
+/*   display: inline-block; */
+/*   font-size: 16px; */
+/*   padding: 15px 32px; */
+/*   background: white; */
+/*   cursor: pointer; */
+/* } */
+/* .button:hover { */
+/*   background: var(--pastel-yellow); */
+/* } */
 
 .header-inner {
   margin: 0 auto;
@@ -74,9 +74,12 @@ body,
 }
 
 .App-title {
-    color: white;
-    display: inline;
+  color: white;
+  display: inline;
   text-decoration: none;
+}
+.App-title:hover {
+    color: white;
 }
 
 .App-title h1 {
@@ -101,11 +104,11 @@ body,
   padding: 20px;
 }
 
-input[type='text'],
-input[type='email'] {
-  box-sizing: border-box;
-  font-size: 22px;
-}
+/* input[type='text'], */
+/* input[type='email'] { */
+/*   box-sizing: border-box; */
+/*   font-size: 22px; */
+/* } */
 
 .fullWidth {
   width: 100%;
@@ -186,13 +189,13 @@ input[type='email'] {
 }
 
 
-.next-button {
-  text-align: center;
-}
+/* .next-button { */
+/*   text-align: center; */
+/* } */
 
-.slick-dots li button:before {
-  font-size: 10px !important;
-}
+/* .slick-dots li button:before { */
+/*   font-size: 10px !important; */
+/* } */
 
 .slick-slider {
   margin: 40px;

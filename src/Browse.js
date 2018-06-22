@@ -62,10 +62,10 @@ export default class Browse extends Component {
                 Showing {this.state.results.length}{' '}
                 {pluralizeResults(this.state.results.length)}.
                 {" "}
-                {this.state.queried && <a href="#" onClick={() => {
+                {this.state.queried && <button onClick={() => {
                   this.handleSearch(null)
                   this.setState({search: '', queried: false})
-                }}>Clear search</a>}
+                }}>Clear search</button>}
               </p>
               <div>
                 {this.state.results.map(result => (
@@ -74,6 +74,16 @@ export default class Browse extends Component {
               </div>
             </div>
           )}
+        <div className="field is-grouped">
+          <p className="control is-expanded">
+            <input className="input" type="text" placeholder="Find a repository"/>
+          </p>
+          <p className="control">
+            <a className="button is-info">
+              Search
+            </a>
+          </p>
+        </div>
       </AppScreen>
     )
   }
