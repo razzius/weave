@@ -34,20 +34,20 @@ body,
   height: 100%;
 }
 
-/* .button { */
-/*   border: 1px solid black; */
-/*   text-decoration: none; */
-/*   color: black; */
-/*   line-height: 1.5em; */
-/*   display: inline-block; */
-/*   font-size: 16px; */
-/*   padding: 15px 32px; */
-/*   background: white; */
-/*   cursor: pointer; */
-/* } */
-/* .button:hover { */
-/*   background: var(--pastel-yellow); */
-/* } */
+.button {
+  border: 1px solid black;
+  text-decoration: none;
+  color: black;
+  line-height: 1.5em;
+  display: inline-block;
+  font-size: 16px;
+  padding: 15px 32px;
+  background: white;
+  cursor: pointer;
+}
+.button:hover {
+  background: var(--pastel-yellow);
+}
 
 .header-inner {
   margin: 0 auto;

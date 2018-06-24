@@ -14,14 +14,14 @@ export default class SearchInput extends Component {
 
   render() {
     return (
-      <form className="search" onSubmit={this.handleSubmit}>
+      <form style={{display: 'flex'}} className="search" onSubmit={this.handleSubmit}>
         <input
           name="search"
           value={this.props.value}
           className="search-input"
           placeholder="Search"
           onChange={this.props.onChange}
-        />
+          />
         <button className="search-submit" type="submit">
           Submit
         </button>
