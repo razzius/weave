@@ -12,9 +12,12 @@ flask-cors = "*"
 gunicorn = "*"
 "psycopg2" = "*"
 cloudinary = "*"
+requests = "*"
+requests-toolbelt = "*"
 
 [dev-packages]
 ipython = "*"
+ipdb = "*"
 
 [requires]
 python_version = "3.6"

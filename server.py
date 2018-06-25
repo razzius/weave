@@ -1,17 +1,19 @@
-import os
 import json
+import os
+import uuid
 from datetime import datetime
 
 from flask import Flask, Response, jsonify, request, send_from_directory
 
+from cloudinary import uploader
+from emails import send_confirmation_token
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, ValidationError, fields
+from requests_toolbelt.utils import dump
+from sqlalchemy import func, or_
 from sqlalchemy.sql import exists
-from sqlalchemy import or_, func
-from sqlalchemy.types import TypeDecorator, VARCHAR
-
-from cloudinary import uploader
+from sqlalchemy.types import VARCHAR, TypeDecorator
 
 
 app = Flask(__name__, static_url_path='/static', static_folder='build/static')
@@ -39,10 +41,14 @@ class StringEncodedList(TypeDecorator):
             return value.split(',')
 
 
+class Email(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+
+
 class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(120), unique=True, nullable=False)
 
     profile_image_url = db.Column(db.String(255))
 
@@ -66,6 +72,15 @@ class Profile(db.Model):
 
     def __repr__(self):
         return f'<Profile id={self.id} name={self.name}>'
+
+
+class VerificationToken(db.Model):
+    token = db.Column(db.String(36), primary_key=True)
+    email_id = db.Column(db.Integer, db.ForeignKey(Profile.id), nullable=False)
+    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    verified = db.Column(db.Boolean, default=False)
+
+    email_log = db.Column(db.Text)
 
 
 class RenderedList(fields.List):
@@ -192,3 +207,33 @@ def upload_image():
     )
 
     return jsonify({'image_url': response['eager'][0]['secure_url']})
+
+
+@app.route('/api/send-verification-email', methods=['POST'])
+def send_verification_email():
+    data = request.json
+
+    email = data['email']
+
+    token = str(uuid.uuid4())
+
+    email_row = Email(email=email)
+    db.session.add(email_row)
+    db.session.commit()  # Could we avoid this commit?
+
+    email_response = send_confirmation_token(email, token)
+    email_log = dump.dump_all(email_response).decode('utf-8')
+
+    verification_token = VerificationToken(
+        email_id=email_row.id,
+        token=token,
+        email_log=email_log
+    )
+
+    db.session.add(verification_token)
+    db.session.commit()
+
+    return jsonify({
+        'id': email_row.id,
+        'email': email
+    })
