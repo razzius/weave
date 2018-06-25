@@ -17,7 +17,14 @@ const Home = () => (
     </main>
     <section id="about">
       <h1>About</h1>
-      <p>This mentorship program and platform was developed to provide a customized way for students to find invested mentors for professional and/or personal interests. While resources for faculty contact information exist, there are often unclear guidelines about what a relationship will constitute after a student reaches out and varying degrees of involvement with which faculty may feel comfortable engaging in a mentorship role. This program provides an opt-in mentoring structure with clarified expectations for both mentors and mentees that may encourage more longitudinal and hopefully meaningful mentoring experiences. Through personalizing their profiles, mentors may share a preferred cadence for meeting with students, and may indicate in what areas and in what capacities they would like to mentor students. Furthermore, the “clinical interests” and “additional interests” tags and search feature provide opportunities for students to find mentors with whom they may discuss career interests, the process of discovering and developing these interests, and integrating additional aspects such as balancing family life, passion for social justice advocacy, and more.</p>
+
+      <p>This mentorship platform was developed to provide an interest-driven way for students to find invested mentors for professional or personal guidance. Although resources for faculty contact information exist, student have found there to be unclear expectations about what a relationship or experience will constitute from the faculty’s point of view. In recognizing that students can only set expectations for their side of the mentoring relationship, we wanted to provide a platform that allows faculty to more clearly communicate their own level of comfort in engaging in a mentoring relationship. In recognizing the many clinical, academic, and personal demands that exist for faculty, we want to empower the faculty to decide for themselves what level of involvement they will hold themselves to.</p>
+
+      <p>This mentorship platform provides an opt-in mentoring structure with clear, adjustable expectations for both mentors and mentees in the hopes of encouraging more longitudinal and meaningful mentoring experiences.</p>
+
+      <p>For the faculty, profiles can be personalized; faculty can share a preferred cadence for meeting with students, may indicate topics that they are willing to discuss, and can show or hide their profiles based on their availability.</p>
+
+      <p>For students, they are able to search for mentors using both clinical and non-clinical “tags” as well as view available faculty profiles. In each profile, students they will see additional opportunities that each faculty offer and other preferences that faculty members have chosen for themselves.</p>
     </section>
     <section id="additional-resources">
       <h3>Additional Resources</h3>
