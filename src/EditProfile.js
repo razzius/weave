@@ -91,7 +91,7 @@ export default class EditProfile extends Component {
     return promise.then(() => {
       createProfile(this.state)
         .then(profile => {
-          this.props.authenticate(1)  // TODO proper server-given token
+          this.props.authenticate(1) // TODO proper server-given token
           this.props.history.push(`/profiles/${profile.id}`)
         })
         .catch(error => {
@@ -148,15 +148,19 @@ export default class EditProfile extends Component {
       return (
         <div>
           <ProfileView data={profileToPayload(this.state)} />
-          <div style={{width: '700px', margin: 'auto'}}>
-            <button style={{marginRight: '1em'}} className="button"
+          <div style={{ width: '700px', margin: 'auto' }}>
+            <button
+              style={{ marginRight: '1em' }}
+              className="button"
               onClick={() => {
                 this.setState({ preview: false })
               }}
             >
               Edit
             </button>
-            <button className="button" onClick={this.submit}>Publish profile</button>
+            <button className="button" onClick={this.submit}>
+              Publish profile
+            </button>
           </div>
         </div>
       )
@@ -208,7 +212,6 @@ export default class EditProfile extends Component {
               />
               {this.state.imageSuccess ? 'Image uploaded' : null}
             </div>
-
           </div>
 
           <div
@@ -368,6 +371,16 @@ export default class EditProfile extends Component {
                 onChange={this.update('cadence')}
                 name="cadence"
                 type="radio"
+                value="irregularly"
+              />
+              2-3 conversations/year
+            </label>
+
+            <label>
+              <input
+                onChange={this.update('cadence')}
+                name="cadence"
+                type="radio"
                 value="other"
                 ref={el => {
                   this.otherCadenceInput = el
@@ -376,6 +389,7 @@ export default class EditProfile extends Component {
               Other
               <input
                 type="text"
+                style={{ marginLeft: '4px' }}
                 onFocus={() => {
                   this.setState({ cadence: 'other' })
                   this.otherCadenceInput.checked = true
