@@ -15,7 +15,7 @@ body,
   height: 100%;
 }
 .App-body {
-  max-width: 750px;
+  max-width: 850px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -104,11 +104,11 @@ body,
   padding: 20px;
 }
 
-/* input[type='text'], */
-/* input[type='email'] { */
-/*   box-sizing: border-box; */
-/*   font-size: 22px; */
-/* } */
+input[type='text'],
+input[type='email'] {
+  box-sizing: border-box;
+  font-size: 22px;
+}
 
 .fullWidth {
   width: 100%;
