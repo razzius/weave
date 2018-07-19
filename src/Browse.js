@@ -18,6 +18,7 @@ export default class Browse extends Component {
 
     this.state = {
       searchTerms: [],
+      search: '',
       results: null,
       queried: false,
       error: null
@@ -33,8 +34,8 @@ export default class Browse extends Component {
   }
 
   handleSearch = () => {
-    const { searchTerms } = this.state
-    const query = searchTerms.length === 0 ? '' : searchTerms.join(' ')
+    const { searchTerms, search } = this.state
+    const query = searchTerms.concat([search]).join(' ')
     getProfiles(query).then(results => {
       this.setState({ results })
       if (searchTerms !== null) {
@@ -47,13 +48,20 @@ export default class Browse extends Component {
     this.setState({ searchTerms: tags.map(tag => tag.value) })
   }
 
+  handleInputChange = value => {
+    this.setState({ search: value })
+    return value
+  }
+
   render() {
     const { error, results } = this.state
     return (
       <AppScreen>
         <SearchInput
           value={this.state.searchTerms}
+          inputValue={this.state.search}
           onChange={this.handleChange}
+          onInputChange={this.handleInputChange}
           onSubmit={this.handleSearch}
         />
         {(error !== null && error) ||
@@ -65,7 +73,11 @@ export default class Browse extends Component {
                 {" "}
                 {this.state.queried && <button onClick={() => {
                   this.handleSearch(null)
-                  this.setState({searchTerms: [], queried: false})
+                  this.setState({
+                    searchTerms: [],
+                    search: '',
+                    queried: false
+                    })
                 }}>Clear search</button>}
               </p>
               <div>

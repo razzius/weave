@@ -15,6 +15,14 @@ export default class SearchInput extends Component {
     this.props.onSubmit()
   }
 
+  handleInputKeyDown = (e) => {
+    switch (e.key) {
+      case "Enter":
+        e.preventDefault()
+        this.props.onSubmit()
+    }
+  }
+
   render() {
     return (
       <form style={{display: 'flex'}} className="search" onSubmit={this.handleSubmit}>
@@ -24,8 +32,11 @@ export default class SearchInput extends Component {
           }}
           options={options}
           placeholder={"Search"}
+          onBlurResetsInput={false}
           noResultsText={null}
           onChange={this.props.onChange}
+          onInputChange={this.props.onInputChange}
+          onInputKeyDown={this.handleInputKeyDown}
           value={this.props.value}
           multi
           />
