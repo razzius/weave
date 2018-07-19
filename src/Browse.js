@@ -72,12 +72,12 @@ export default class Browse extends Component {
                 {pluralizeResults(this.state.results.length)}.
                 {" "}
                 {this.state.queried && <button onClick={() => {
-                  this.handleSearch(null)
                   this.setState({
                     searchTerms: [],
                     search: '',
                     queried: false
-                    })
+                  })
+                  this.handleSearch()
                 }}>Clear search</button>}
               </p>
               <div>
