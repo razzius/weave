@@ -224,6 +224,7 @@ export default class EditProfile extends Component {
               name="name"
               autoComplete="off"
               className="fullWidth"
+              value={this.state.name}
               onChange={this.update('name')}
             />
 
@@ -232,6 +233,7 @@ export default class EditProfile extends Component {
               name="email"
               type="email"
               className="fullWidth"
+              value={this.state.email}
               onChange={this.update('email')}
             />
 
@@ -265,6 +267,7 @@ export default class EditProfile extends Component {
             <p>Additional Information</p>
             <textarea
               onChange={this.update('additionalInformation')}
+              value={this.state.additionalInformation}
               maxLength={500}
               style={{
                 width: '100%',

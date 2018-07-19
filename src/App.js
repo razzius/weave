@@ -47,7 +47,7 @@ class App extends Component {
               Login
             </a>
             {
-              this.state.auth &&
+              (this.state.auth || window.location.pathname === '/edit-profile')&&
                 <span className="App-title available-for-mentoring">
                 Available for mentoring:
                 <Toggle on={this.state.availableForMentoring} onClick={
