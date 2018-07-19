@@ -1,13 +1,16 @@
 import React, { Component } from "react"
+import Select from 'react-select'
+import {
+  clinicalSpecialtyOptions,
+  additionalInterestOptions,
+  hospitalOptions
+} from './options'
+
+const options = clinicalSpecialtyOptions.concat(additionalInterestOptions, hospitalOptions)
 
 export default class SearchInput extends Component {
-  constructor(props) {
-    super(props)
-    this.handleSubmit = this.handleSubmit.bind(this)
-    this.autocompleteWords = []  // props.autocompleteWords
-  }
 
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault()
     this.props.onSubmit()
   }
@@ -15,12 +18,16 @@ export default class SearchInput extends Component {
   render() {
     return (
       <form style={{display: 'flex'}} className="search" onSubmit={this.handleSubmit}>
-        <input
-          name="search"
-          value={this.props.value}
-          className="search-input"
-          placeholder="Search"
+        <Select
+          style={{
+            width: '500px',
+          }}
+          options={options}
+          placeholder={"Search"}
+          noResultsText={null}
           onChange={this.props.onChange}
+          value={this.props.value}
+          multi
           />
         <button className="search-submit" type="submit">
           Submit
