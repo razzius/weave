@@ -10,6 +10,7 @@ import "react-toggle-switch/dist/css/switch.min.css"
 import "./App.css"
 import Home from "./Home"
 import Browse from "./Browse"
+import Login from "./Login"
 import Expectations from "./Expectations"
 import FacultyExpectations from "./FacultyExpectations"
 import StudentExpectations from "./StudentExpectations"
@@ -38,6 +39,13 @@ class App extends Component {
             <a href="/#about" className="App-title">
               About
             </a>
+            <a href="/login" className="App-title" style={{
+              paddingTop: '1.95em',
+              float: 'right',
+              paddingRight: '2em'
+            }}>
+              Login
+            </a>
             {
               this.state.auth &&
                 <span className="App-title available-for-mentoring">
@@ -65,6 +73,7 @@ class App extends Component {
             )
           }/>
           <Route path="/browse" component={Browse} />
+          <Route path="/login" component={Login} />
           <Route path="/expectations" component={Expectations} />
           <Route
             path="/profiles/:id"

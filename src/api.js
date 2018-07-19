@@ -1,7 +1,7 @@
 const serverUrl = process.env.REACT_APP_SERVER_URL
 
 function buildURL(path) {
-  return new URL(`${window.location.protocol}//${serverUrl}/${path}`)
+  return new URL(`${serverUrl}/${path}`)
 }
 
 async function http(url, options) {

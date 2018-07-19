@@ -1,86 +1,27 @@
-import json
 import os
 import uuid
-from datetime import datetime
 
-from flask import Flask, Response, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory
 
 from cloudinary import uploader
-from emails import send_confirmation_token
 from flask_cors import CORS
-from flask_sqlalchemy import SQLAlchemy
 from marshmallow import Schema, ValidationError, fields
 from requests_toolbelt.utils import dump
 from sqlalchemy import func, or_
 from sqlalchemy.sql import exists
-from sqlalchemy.types import VARCHAR, TypeDecorator
+
+from .models import Profile, Email, VerificationToken, db
+from .emails import send_confirmation_token, send_login_email
 
 
-app = Flask(__name__, static_url_path='/static', static_folder='build/static')
+app = Flask(__name__, static_url_path='/static', static_folder='../build/static')
+
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = app.debug
-db = SQLAlchemy(app)
+
+db.init_app(app)
 CORS(app)
-
-
-class StringEncodedList(TypeDecorator):
-
-    impl = VARCHAR
-
-    def process_bind_param(self, value, dialect):
-        if isinstance(value, str):
-            return value
-
-        return ','.join(value)
-
-    def process_result_value(self, value, dialect):
-        if value == '':
-            return []
-        else:
-            return value.split(',')
-
-
-class Email(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(120), unique=True, nullable=False)
-
-
-class Profile(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
-
-    profile_image_url = db.Column(db.String(255))
-
-    clinical_specialties = db.Column(StringEncodedList(1024))
-    affiliations = db.Column(StringEncodedList(1024))
-    additional_interests = db.Column(StringEncodedList(1024))
-
-    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-
-    additional_information = db.Column(db.String(500), nullable=False)
-
-    willing_shadowing = db.Column(db.Boolean, default=False)
-    willing_networking = db.Column(db.Boolean, default=False)
-    willing_goal_setting = db.Column(db.Boolean, default=False)
-    willing_discuss_personal = db.Column(db.Boolean, default=False)
-    willing_residency_application = db.Column(db.Boolean, default=False)
-
-    cadence = db.Column(db.String(255))
-    other_cadence = db.Column(db.String(255), nullable=True)
-
-    def __repr__(self):
-        return f'<Profile id={self.id} name={self.name}>'
-
-
-class VerificationToken(db.Model):
-    token = db.Column(db.String(36), primary_key=True)
-    email_id = db.Column(db.Integer, db.ForeignKey(Profile.id), nullable=False)
-    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    verified = db.Column(db.Boolean, default=False)
-
-    email_log = db.Column(db.Text)
 
 
 class RenderedList(fields.List):
@@ -124,7 +65,7 @@ profiles_schema = ProfileSchema(many=True)
 @app.route('/')
 @app.route('/<path:path>')  # Enable any url redirecting to home for SPA
 def index(path=None):
-    return send_from_directory('build', 'index.html')
+    return send_from_directory('../build', 'index.html')
 
 
 def matching_profiles(query):
@@ -161,7 +102,7 @@ def get_profile(profile_id=None):
 
 
 def error(reason):
-    return Response(json.dumps(reason), status=400, content_type='application/json')
+    return jsonify(reason), 400
 
 
 @app.route('/api/profile', methods=['POST'])
@@ -176,10 +117,16 @@ def create_profile(profile_id=None):
     if schema.errors:
         return jsonify(schema.errors), 422
 
-    if db.session.query(exists().where(Profile.email == schema.data['email'])).scalar():
+    if db.session.query(exists().where(Email.email == schema.data['email'])).scalar():
         return error({'email': ['This email already exists in the database']})
 
-    profile = Profile(**schema.data)
+    profile_data = {
+        key: value
+        for key, value in schema.data.items()
+        if key != 'email'
+    }
+    profile = Profile(**profile_data)
+
     db.session.add(profile)
     db.session.commit()
 
@@ -211,9 +158,7 @@ def upload_image():
 
 @app.route('/api/send-verification-email', methods=['POST'])
 def send_verification_email():
-    data = request.json
-
-    email = data['email']
+    email = request.json['email']
 
     token = str(uuid.uuid4())
 
@@ -235,5 +180,25 @@ def send_verification_email():
 
     return jsonify({
         'id': email_row.id,
+        'email': email
+    })
+
+
+def api_post(route):
+    return app.route(f'/api/{route}', methods=['POST'])
+
+
+@api_post('login')
+def login():
+    email = request.json['email']
+
+    matches = Email.query.filter(Email.email == email).one_or_none()
+
+    if matches is None:
+        return error({'email': 'unregistered'})
+
+    send_login_email(email)
+
+    return jsonify({
         'email': email
     })

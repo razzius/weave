@@ -202,7 +202,9 @@ input[type='email'] {
 }
 
 .expectation div {
-  margin: 50px;
+  margin: 40px 100px 0px;
+  font-size: 17px;
+  line-height: 1.5;
 }
 #about {
   max-width: 700px;
