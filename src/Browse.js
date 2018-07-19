@@ -35,7 +35,8 @@ export default class Browse extends Component {
 
   handleSearch = () => {
     const { searchTerms, search } = this.state
-    const query = searchTerms.concat([search]).join(' ')
+    const searchArray = search === '' ? [] : [search]
+    const query = searchTerms.concat(searchArray).join(' ').toLowerCase()
     getProfiles(query).then(results => {
       this.setState({ results })
       if (searchTerms !== null) {
