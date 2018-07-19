@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { BrowserRouter as Router, Link, Route, Switch } from "react-router-dom"
 
 import Toggle from "react-toggle-switch"
+import ReactTooltip from "react-tooltip"
 
 import "slick-carousel/slick/slick.css"
 import "slick-carousel/slick/slick-theme.css"
@@ -47,12 +48,15 @@ class App extends Component {
               Login
             </a>
             {
-              (this.state.auth || window.location.pathname === '/edit-profile')&&
-                <span className="App-title available-for-mentoring">
+              (this.state.auth || window.location.pathname === '/edit-profile') &&
+                <span
+                  data-tip="Controls whether your profile will be visible to mentees."
+                  className="App-title available-for-mentoring">
                 Available for mentoring:
                 <Toggle on={this.state.availableForMentoring} onClick={
                   () => this.setState({availableForMentoring: !this.state.availableForMentoring})
                 }/>
+                <ReactTooltip place="bottom"/>
               </span>
             }
           </div>

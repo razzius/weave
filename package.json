@@ -12,6 +12,7 @@
     "react-select": "^1.2.1",
     "react-slick": "^0.23.1",
     "react-toggle-switch": "^3.0.4",
+    "react-tooltip": "^3.6.1",
     "slick-carousel": "^1.8.1",
     "yarn": "^1.7.0"
   },
