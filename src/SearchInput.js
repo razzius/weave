@@ -16,10 +16,8 @@ export default class SearchInput extends Component {
   }
 
   handleInputKeyDown = (e) => {
-    switch (e.key) {
-      case "Enter":
-        e.preventDefault()
-        this.props.onSubmit()
+    if (e.key === 'Enter'){
+      this.props.onSubmit()
     }
   }
 

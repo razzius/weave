@@ -84,12 +84,13 @@ def matching_profiles(query):
 
     filters = and_(*[
         or_(*[
-            func.lower(field).contains(query) for field in searchable_fields
+            func.lower(field).contains(word)
+            for field in searchable_fields
         ])
         for word in words
     ])
 
-    return Profile.query.filter(or_(*filters))
+    return Profile.query.filter(*filters)
 
 
 @app.route('/api/profiles')

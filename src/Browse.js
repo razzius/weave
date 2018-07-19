@@ -33,20 +33,23 @@ export default class Browse extends Component {
       )
   }
 
-  handleSearch = () => {
+  handleSearch = (reset = false) => {
     const { searchTerms, search } = this.state
     const searchArray = search === '' ? [] : [search]
-    const query = searchTerms.concat(searchArray).join(' ').toLowerCase()
+    const searchString = searchTerms.concat(searchArray).join(' ').toLowerCase()
+
+    const query = reset ? '' : searchString
+
     getProfiles(query).then(results => {
       this.setState({ results })
-      if (searchTerms !== null) {
+      if (!reset) {
         this.setState({ queried: true })
       }
     })
   }
 
   handleChange = tags => {
-    this.setState({ searchTerms: tags.map(tag => tag.value) })
+    this.setState({ searchTerms: tags.map(tag => tag.value) }, this.handleSearch)
   }
 
   handleInputChange = value => {
@@ -76,9 +79,11 @@ export default class Browse extends Component {
                   this.setState({
                     searchTerms: [],
                     search: '',
+                  })
+                  this.handleSearch(true)
+                  this.setState({
                     queried: false
                   })
-                  this.handleSearch()
                 }}>Clear search</button>}
               </p>
               <div>
