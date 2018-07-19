@@ -7,7 +7,7 @@ from cloudinary import uploader
 from flask_cors import CORS
 from marshmallow import Schema, ValidationError, fields
 from requests_toolbelt.utils import dump
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, and_
 from sqlalchemy.sql import exists
 
 from .models import Profile, Email, VerificationToken, db
@@ -72,6 +72,8 @@ def matching_profiles(query):
     if query is None:
         return Profile.query.all()
 
+    words = query.lower().split()
+
     searchable_fields = [
         Profile.name,
         Profile.additional_information,
@@ -80,7 +82,12 @@ def matching_profiles(query):
         Profile.affiliations,
     ]
 
-    filters = [func.lower(field).contains(query) for field in searchable_fields]
+    filters = and_(*[
+        or_(*[
+            func.lower(field).contains(query) for field in searchable_fields
+        ])
+        for word in words
+    ])
 
     return Profile.query.filter(or_(*filters))
 
