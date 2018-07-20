@@ -1,6 +1,7 @@
 from datetime import datetime
-from sqlalchemy.types import VARCHAR, TypeDecorator
+
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.types import VARCHAR, TypeDecorator
 
 
 db = SQLAlchemy()

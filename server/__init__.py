@@ -2,13 +2,13 @@ import os
 import uuid
 
 from flask import Flask, jsonify, request, send_from_directory
+from sqlalchemy import func, or_, and_
+from sqlalchemy.sql import exists
 
 from cloudinary import uploader
 from flask_cors import CORS
 from marshmallow import Schema, ValidationError, fields
 from requests_toolbelt.utils import dump
-from sqlalchemy import func, or_, and_
-from sqlalchemy.sql import exists
 
 from .models import Profile, Email, VerificationToken, db
 from .emails import send_confirmation_token, send_login_email

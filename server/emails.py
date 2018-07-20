@@ -1,5 +1,7 @@
 import os
+
 import requests
+
 
 MAILGUN_DOMAIN = os.environ['MAILGUN_DOMAIN']
 MAILGUN_API_KEY = os.environ['MAILGUN_API_KEY']
