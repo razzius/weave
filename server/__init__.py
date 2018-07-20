@@ -19,6 +19,12 @@ app = Flask(__name__, static_url_path='/static', static_folder='../build/static'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = app.debug
+<<<<<<< HEAD:server/__init__.py
+=======
+db = SQLAlchemy(app)
+CORS(app)
+
+
 
 db.init_app(app)
 CORS(app)
@@ -170,7 +176,7 @@ def send_verification_email():
 
     token = str(uuid.uuid4())
 
-    email_row = Email(email=email)
+    email_row = VerificationEmail(email=email)
     db.session.add(email_row)
     db.session.commit()  # Could we avoid this commit?
 
