@@ -14,6 +14,7 @@ gunicorn = "*"
 cloudinary = "*"
 requests = "*"
 requests-toolbelt = "*"
+flask-admin = "*"
 
 [dev-packages]
 ipython = "*"

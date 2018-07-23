@@ -2,6 +2,8 @@ import os
 import uuid
 
 from flask import Flask, jsonify, request, send_from_directory
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from sqlalchemy import func, or_, and_
 from sqlalchemy.sql import exists
 
@@ -23,6 +25,11 @@ app.config['SQLALCHEMY_ECHO'] = app.debug
 
 db.init_app(app)
 CORS(app)
+
+admin = Admin(app, name='advising app', template_mode='bootstrap3')
+admin.add_view(ModelView(VerificationToken, db.session))
+admin.add_view(ModelView(VerificationEmail, db.session))
+admin.add_view(ModelView(Profile, db.session))
 
 
 class RenderedList(fields.List):
