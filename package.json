@@ -3,8 +3,6 @@
   "version": "0.4.0",
   "private": true,
   "dependencies": {
-    "eslint-config-airbnb-base": "^13.0.0",
-    "eslint-config-prettier": "^2.9.0",
     "react": "^16.3.2",
     "react-avatar-editor": "^11.0.2",
     "react-dom": "^16.3.2",
@@ -27,6 +25,11 @@
     "heroku-postbuild": "react-scripts build"
   },
   "devDependencies": {
+    "eslint": "^5.2.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-config-prettier": "^2.9.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-react": "^7.10.0",
     "gh-pages": "^1.1.0"
   }
 }

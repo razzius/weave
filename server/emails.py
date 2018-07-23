@@ -8,14 +8,16 @@ MAILGUN_API_KEY = os.environ['MAILGUN_API_KEY']
 SERVER_URL = os.environ['REACT_APP_SERVER_URL']
 
 
-def _send_email(to, subject, body):
+def _send_email(to, subject, html):
     return requests.post(
         f'https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages',
         auth=('api', MAILGUN_API_KEY),
         data={
             'subject': subject,
-            'to': [to]
-        }
+            'to': [to],
+            'from': 'HMS Advise Admin <razzi@abuissa.net>',
+            'html': html
+        },
     )
 
 
@@ -37,22 +39,17 @@ def get_verification_url(token):
 def send_confirmation_token(email, token):
     verify_url = get_verification_url(token)
 
-    data = {
-        'from': 'HMS Advise Admin <razzi@abuissa.net>',
-        'to': [email],
-        'subject': 'HMS Advise verification token',
-        'html': f"""
-        <p>Hi,</p>
+    html = f"""
+    <p>Hi,</p>
 
-        <p>
-            Follow this link to verify your email: <a href="{verify_url}">{verify_url}</a>.
-        </p>
+    <p>
+        Follow this link to verify your email: <a href="{verify_url}">{verify_url}</a>.
+    </p>
 
-        {EMAIL_CLOSING}
-        """
-    }
+    {EMAIL_CLOSING}
+    """
 
-    return _send_email(data)
+    return _send_email(email, 'HMS Advise verification token', html)
 
 
 def send_login_email(email, name, token):

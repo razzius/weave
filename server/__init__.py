@@ -10,7 +10,7 @@ from flask_cors import CORS
 from marshmallow import Schema, ValidationError, fields
 from requests_toolbelt.utils import dump
 
-from .models import Profile, Email, VerificationToken, db
+from .models import Profile, VerificationEmail, VerificationToken, db
 from .emails import send_confirmation_token, send_login_email
 
 
@@ -19,11 +19,6 @@ app = Flask(__name__, static_url_path='/static', static_folder='../build/static'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = app.debug
-<<<<<<< HEAD:server/__init__.py
-=======
-db = SQLAlchemy(app)
-CORS(app)
-
 
 
 db.init_app(app)
@@ -119,7 +114,11 @@ def error(reason):
     return jsonify(reason), 400
 
 
-@app.route('/api/profile', methods=['POST'])
+def api_post(route):
+    return app.route(f'/api/{route}', methods=['POST'])
+
+
+@api_post('profile')
 def create_profile(profile_id=None):
     json_data = request.get_json()
 
@@ -131,7 +130,7 @@ def create_profile(profile_id=None):
     if schema.errors:
         return jsonify(schema.errors), 422
 
-    if db.session.query(exists().where(Email.email == schema.data['email'])).scalar():
+    if db.session.query(exists().where(Profile.contact_email == schema.data['email'])).scalar():
         return error({'email': ['This email already exists in the database']})
 
     profile_data = {
@@ -156,7 +155,7 @@ def update_profile(profile_id=None):
     return jsonify(ProfileSchema().dump(profile).data)
 
 
-@app.route('/api/upload-image', methods=['POST'])
+@api_post('upload-image')
 def upload_image():
     data = request.data
 
@@ -170,15 +169,20 @@ def upload_image():
     return jsonify({'image_url': response['eager'][0]['secure_url']})
 
 
-@app.route('/api/send-verification-email', methods=['POST'])
+@api_post('send-verification-email')
 def send_verification_email():
     email = request.json['email']
 
     token = str(uuid.uuid4())
 
-    email_row = VerificationEmail(email=email)
-    db.session.add(email_row)
-    db.session.commit()  # Could we avoid this commit?
+    existing_email = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
+
+    if not existing_email:
+        email_row = VerificationEmail(email=email)
+        db.session.add(email_row)
+        db.session.commit()  # Could we avoid this commit?
+    else:
+        email_row = existing_email
 
     email_response = send_confirmation_token(email, token)
     email_log = dump.dump_all(email_response).decode('utf-8')
@@ -198,15 +202,11 @@ def send_verification_email():
     })
 
 
-def api_post(route):
-    return app.route(f'/api/{route}', methods=['POST'])
-
-
 @api_post('login')
 def login():
     email = request.json['email']
 
-    matches = Email.query.filter(Email.email == email).one_or_none()
+    matches = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
 
     if matches is None:
         return error({'email': 'unregistered'})
@@ -215,4 +215,26 @@ def login():
 
     return jsonify({
         'email': email
+    })
+
+
+@api_post('verify-token')
+def verify_token():
+    token = request.json['token']
+
+    query = VerificationToken.query.filter(VerificationToken.token == token)
+    match = query.one_or_none()
+
+    if match is None:
+        return error({'token': 'Verification token not recognized.'})  # TODO please contact us
+
+    VerificationToken.query.filter(VerificationToken.token == match.token).update({
+        VerificationToken.verified: True
+    })
+
+    # There has to be a better way
+    email = VerificationEmail.query.get(match.email_id)
+
+    return jsonify({
+        'email': email.email
     })

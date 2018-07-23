@@ -15,7 +15,7 @@ async function http(url, options) {
 }
 
 export async function getProfiles(search = null) {
-  const url = buildURL("api/profiles")
+  const url = buildURL('api/profiles')
   if (search !== null) {
     url.searchParams.append('query', search)
   }
@@ -48,24 +48,37 @@ export function profileToPayload(profile) {
   }
 }
 
-export async function createProfile(profile) {
-  const payload = profileToPayload(profile)
-
-  return http(buildURL("api/profile"), {
-    method: "POST",
+async function post(path, payload) {
+  return http(buildURL(`api/${path}`), {
+    method: 'POST',
     headers: {
-      "content-type": "application/json"
+      'content-type': 'application/json'
     },
     body: JSON.stringify(payload)
   })
 }
+
+export async function createProfile(profile) {
+  const payload = profileToPayload(profile)
+
+  return post('profile', payload)
+}
+
+export async function sendVerificationEmail(email) {
+  return post('send-verification-email', { email })
+}
+
+export async function verifyToken(token) {
+  return post('verify-token', { token })
+}
+
 // todo use auth
 // export async function updateProfile(id, profile) {
-  // await put(`/api/profiles/${id}`, profile)
+// await put(`/api/profiles/${id}`, profile)
 // }
 
 export async function uploadPicture(file) {
-  const url = buildURL("api/upload-image")
+  const url = buildURL('api/upload-image')
 
   return http(url, {
     method: 'POST',

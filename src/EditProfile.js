@@ -364,16 +364,6 @@ export default class EditProfile extends Component {
                 onChange={this.update('cadence')}
                 name="cadence"
                 type="radio"
-                value="infrequently"
-                />
-              2-3 times a year
-            </label>
-
-            <label>
-              <input
-                onChange={this.update('cadence')}
-                name="cadence"
-                type="radio"
                 value="irregularly"
               />
               2-3 conversations/year
