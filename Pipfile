@@ -15,6 +15,7 @@ cloudinary = "*"
 requests = "*"
 requests-toolbelt = "*"
 flask-admin = "*"
+raven = {version = "*", extras = ["flask"]}
 
 [dev-packages]
 ipython = "*"

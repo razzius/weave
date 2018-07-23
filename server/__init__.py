@@ -6,6 +6,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from sqlalchemy import func, or_, and_
 from sqlalchemy.sql import exists
+from raven.contrib.flask import Sentry
 
 from cloudinary import uploader
 from flask_cors import CORS
@@ -26,6 +27,7 @@ app.config['SQLALCHEMY_ECHO'] = app.debug
 
 db.init_app(app)
 CORS(app)
+Sentry(app)
 
 admin = Admin(app, name='advising app', template_mode='bootstrap3')
 admin.add_view(ModelView(VerificationToken, db.session))
