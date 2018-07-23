@@ -17,6 +17,7 @@ from .emails import send_confirmation_token, send_login_email
 
 
 app = Flask(__name__, static_url_path='/static', static_folder='../build/static')
+app.secret_key = os.environ['SECRET_KEY']
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
