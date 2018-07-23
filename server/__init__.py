@@ -40,7 +40,7 @@ class RenderedList(fields.List):
 class ProfileSchema(Schema):
     id = fields.Int(dump_only=True)
     name = fields.String()
-    email = fields.String()
+    contact_email = fields.String()
     profile_image_url = fields.String(allow_none=True)
 
     clinical_specialties = RenderedList(fields.String, required=True)
@@ -130,15 +130,12 @@ def create_profile(profile_id=None):
     if schema.errors:
         return jsonify(schema.errors), 422
 
-    if db.session.query(exists().where(Profile.contact_email == schema.data['email'])).scalar():
+    if db.session.query(exists().where(
+        Profile.contact_email == schema.data['contact_email'])
+    ).scalar():
         return error({'email': ['This email already exists in the database']})
 
-    profile_data = {
-        key: value
-        for key, value in schema.data.items()
-        if key != 'email'
-    }
-    profile = Profile(**profile_data)
+    profile = Profile(**schema.data)
 
     db.session.add(profile)
     db.session.commit()
@@ -184,7 +181,7 @@ def send_verification_email():
     else:
         email_row = existing_email
 
-    email_response = send_confirmation_token(email, token)
+    email_response = send_confirmation_token(email, token, login=existing_email)
     email_log = dump.dump_all(email_response).decode('utf-8')
 
     verification_token = VerificationToken(

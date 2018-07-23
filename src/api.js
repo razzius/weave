@@ -29,7 +29,7 @@ export async function getProfile(id) {
 export function profileToPayload(profile) {
   return {
     name: profile.name,
-    email: profile.email,
+    contact_email: profile.email,
     profile_image_url: profile.imageUrl,
 
     additional_interests: profile.additionalInterests,

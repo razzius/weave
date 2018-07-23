@@ -36,14 +36,20 @@ def get_verification_url(token):
     return f'{SERVER_URL}/verify?token={token}'
 
 
-def send_confirmation_token(email, token):
+def send_confirmation_token(email, token, login=False):
     verify_url = get_verification_url(token)
+
+    verb = (
+        'verify your email'
+        if not login
+        else 'login'
+    )
 
     html = f"""
     <p>Hi,</p>
 
     <p>
-        Follow this link to verify your email: <a href="{verify_url}">{verify_url}</a>.
+        Follow this link to {verb}: <a href="{verify_url}">{verify_url}</a>.
     </p>
 
     {EMAIL_CLOSING}

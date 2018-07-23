@@ -21,6 +21,7 @@ import Profile from "./Profile"
 
 import RegisterEmail from './RegisterEmail'
 import CheckEmail from './CheckEmail'
+import LoginCheckEmail from './LoginCheckEmail'
 import VerifyEmail from './VerifyEmail'
 
 class App extends Component {
@@ -98,16 +99,23 @@ class App extends Component {
               <EditProfile authenticate={this.authenticate} history={history}/>
             )
           }/>
-          <Route path="/register-email" component={RegisterEmail} />
+          <Route path="/register-email" render={
+            ({ history }) => <RegisterEmail history={history}/>
+          }/>
           <Route path="/check-email" component={CheckEmail} />
+          <Route path="/login-check-email" component={LoginCheckEmail} />
           <Route path="/verify" render={
             ({ history }) => (
               <VerifyEmail authenticate={this.authenticate} history={history}/>
             )
           }/>
           <Route path="/browse" component={Browse} />
-          <Route path="/login" component={Login} />
-          <Route path="/logout" component={Logout} />
+          <Route path="/login" render={
+            ({ history }) => <Login history={history}/>
+          }/>
+          <Route path="/logout" render={
+            () => <Logout authenticate={this.authenticate}/>
+          }/>
 
           <Route path="/expectations" component={Expectations} />
           <Route
