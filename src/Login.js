@@ -9,7 +9,7 @@ const Login = (props) => (
     <h1>Login to edit mentor profile</h1>
     <p>Enter your email and we will confirm your account by sending a verification email.</p>
     <p>
-      <Link to="/faculty-expectations">If you haven&quot;t signed up yet, start here.</Link>
+      <Link to="/faculty-expectations">If you have not signed up yet, please start here.</Link>
     </p>
     <SubmitEmailForm history={props.history} redirectTo={'/login-check-email'}/>
   </AppScreen>

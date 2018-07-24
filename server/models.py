@@ -15,6 +15,9 @@ class StringEncodedList(TypeDecorator):
         if isinstance(value, str):
             return value
 
+        if value is None:
+            return ''
+
         return ','.join(value)
 
     def process_result_value(self, value, dialect):
@@ -32,6 +35,7 @@ class VerificationEmail(db.Model):
 class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
+    verification_email = db.Column(db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False)
     contact_email = db.Column(db.String(120), unique=True, nullable=False)
 
     profile_image_url = db.Column(db.String(255))
@@ -43,7 +47,7 @@ class Profile(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
-    additional_information = db.Column(db.String(500), nullable=False)
+    additional_information = db.Column(db.String(500), default='')
 
     willing_shadowing = db.Column(db.Boolean, default=False)
     willing_networking = db.Column(db.Boolean, default=False)
@@ -53,6 +57,8 @@ class Profile(db.Model):
 
     cadence = db.Column(db.String(255))
     other_cadence = db.Column(db.String(255), nullable=True)
+
+    available_for_mentoring = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
         return f'<Profile id={self.id} name={self.name}>'

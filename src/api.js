@@ -72,6 +72,11 @@ export async function verifyToken(token) {
   return post('verify-token', { token })
 }
 
+export async function setAvailabilityForMentoring(available) {
+  return post('availability', { available })
+}
+
+
 // todo use auth
 // export async function updateProfile(id, profile) {
 // await put(`/api/profiles/${id}`, profile)

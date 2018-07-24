@@ -22,7 +22,7 @@ app.secret_key = os.environ['SECRET_KEY']
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = app.debug
+# app.config['SQLALCHEMY_ECHO'] = app.debug
 
 
 db.init_app(app)
@@ -91,6 +91,7 @@ def matching_profiles(query):
         Profile.clinical_specialties,
         Profile.additional_interests,
         Profile.affiliations,
+        # cadence
     ]
 
     filters = and_(*[
@@ -244,4 +245,30 @@ def verify_token():
 
     return jsonify({
         'email': email.email
+    })
+
+
+def get_profile_by_token(token):
+    verification_token = VerificationToken.query.get(token)
+
+    verification_email = VerificationEmail.query.get(verification_token.email_id)
+
+    return Profile.query.filter(Profile.verification_email == verification_email.id).one()
+
+
+@api_post('availability')
+def availability():
+    token = request.json['token']
+
+    available = request.json['available']
+
+    profile = get_profile_by_token(token)
+
+    profile.available_for_mentoring = available
+
+    db.session.add(profile)
+    db.session.commit()
+
+    return jsonify({
+        'available': available
     })

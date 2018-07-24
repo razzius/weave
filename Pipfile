@@ -20,9 +20,12 @@ raven = {version = "*", extras = ["flask"]}
 [dev-packages]
 ipython = "*"
 ipdb = "*"
+pytest = "*"
+pdbpp = "*"
 
 [requires]
 python_version = "3.6"
 
 [scripts]
 start = "flask run"
+shell = "ipython -i scripts/shell.py"

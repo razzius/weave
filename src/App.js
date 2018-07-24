@@ -23,6 +23,8 @@ import RegisterEmail from './RegisterEmail'
 import CheckEmail from './CheckEmail'
 import LoginCheckEmail from './LoginCheckEmail'
 import VerifyEmail from './VerifyEmail'
+import { setAvailabilityForMentoring } from './api'
+
 
 class App extends Component {
   state = {
@@ -68,7 +70,11 @@ class App extends Component {
                   className="App-title available-for-mentoring">
                   Available for mentoring:
                   <Toggle on={this.state.availableForMentoring} onClick={
-                    () => this.setState({availableForMentoring: !this.state.availableForMentoring})
+                    () => {
+                      const available = !this.state.availableForMentoring
+                      this.setState({availableForMentoring: available})
+                      setAvailabilityForMentoring(available)
+                    }
                   }/>
                   <ReactTooltip place="bottom"/>
                 </span>

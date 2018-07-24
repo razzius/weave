@@ -8,7 +8,7 @@ export default class RegisterEmail extends Component {
       <AppScreen>
         <h1>Register email</h1>
         <p>
-          Please enter your email and we will send you a verification email.
+          Please enter your Harvard or Hopsital-affiliated email and we will send you a verification email.
         </p>
         <SubmitEmailForm history={this.props.history} redirectTo='/check-email'/>
       </AppScreen>
