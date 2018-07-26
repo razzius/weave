@@ -15,4 +15,4 @@ def client():
         db.drop_all()
         db.create_all()
 
-    yield test_client
+        yield test_client

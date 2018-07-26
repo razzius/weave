@@ -78,13 +78,12 @@ def matching_profiles(query):
         # cadence
     ]
 
-    filters = and_(*[
-        or_(*[
-            func.lower(field).contains(word)
-            for field in searchable_fields
-        ])
-        for word in words
-    ])
+    filters = and_(
+        *[
+            or_(*[func.lower(field).contains(word) for field in searchable_fields])
+            for word in words
+        ]
+    )
 
     return Profile.query.filter(*filters)
 
@@ -124,8 +123,8 @@ def create_profile(profile_id=None):
     if schema.errors:
         return jsonify(schema.errors), 422
 
-    if db.session.query(exists().where(
-        Profile.contact_email == schema.data['contact_email'])
+    if db.session.query(
+        exists().where(Profile.contact_email == schema.data['contact_email'])
     ).scalar():
         return error({'email': ['This email already exists in the database']})
 
@@ -167,7 +166,9 @@ def upload_image():
 def get_verification_email(email: str) -> VerificationEmail:
     email = request.json['email']
 
-    existing_email = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
+    existing_email = VerificationEmail.query.filter(
+        VerificationEmail.email == email
+    ).one_or_none()
 
     if existing_email:
         return existing_email
@@ -183,9 +184,7 @@ def save_verification_token(email_id, token, email_response):
     email_log = dump.dump_all(email_response).decode('utf-8')
 
     verification_token = VerificationToken(
-        email_id=email_id,
-        token=token,
-        email_log=email_log
+        email_id=email_id, token=token, email_log=email_log
     )
 
     db.session.add(verification_token)
@@ -204,10 +203,7 @@ def send_faculty_verification_email():
 
     save_verification_token(verification_email.id, token, email_response)
 
-    return jsonify({
-        'id': verification_email.id,
-        'email': email
-    })
+    return jsonify({'id': verification_email.id, 'email': email})
 
 
 @api_post('send-student-verification-email')
@@ -222,10 +218,7 @@ def send_student_verification_email():
 
     save_verification_token(verification_email.id, token, email_response)
 
-    return jsonify({
-        'id': verification_email.id,
-        'email': email
-    })
+    return jsonify({'id': verification_email.id, 'email': email})
 
 
 # @api_post('login')
@@ -252,7 +245,9 @@ def verify_token():
     match = query.one_or_none()
 
     if match is None:
-        return error({'token': 'Verification token not recognized.'})  # TODO please contact us
+        return error(
+            {'token': 'Verification token not recognized.'}
+        )  # TODO please contact us
 
     match.verified = True
     db.session.add(match)
@@ -260,9 +255,7 @@ def verify_token():
 
     verification_email = VerificationEmail.query.get(match.email_id)
 
-    return jsonify({
-        'email': verification_email.email
-    })
+    return jsonify({'email': verification_email.email})
 
 
 def get_profile_by_token(token):
@@ -270,7 +263,9 @@ def get_profile_by_token(token):
 
     verification_email = VerificationEmail.query.get(verification_token.email_id)
 
-    return Profile.query.filter(Profile.verification_email == verification_email.id).one()
+    return Profile.query.filter(
+        Profile.verification_email == verification_email.id
+    ).one()
 
 
 @api_post('availability')
@@ -286,6 +281,4 @@ def availability():
     db.session.add(profile)
     db.session.commit()
 
-    return jsonify({
-        'available': available
-    })
+    return jsonify({'available': available})
