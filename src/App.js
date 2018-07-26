@@ -55,7 +55,7 @@ class App extends Component {
         <header className="App-header">
           <div className="header-inner">
             <Link to="/" className="App-title left">
-              <h1>HMS Advises</h1>
+              <h1>HMS Weave</h1>
             </Link>
             <a href="/#about" className="App-title">
               About
