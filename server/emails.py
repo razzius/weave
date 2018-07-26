@@ -15,7 +15,7 @@ def _send_email(to, subject, html):
         data={
             'subject': subject,
             'to': [to],
-            'from': 'HMS Weave <admin@hmsweave.com',
+            'from': 'HMS Weave <admin@hmsweave.com>',
             'html': html
         },
     )
