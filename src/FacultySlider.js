@@ -40,6 +40,17 @@ export default class FacultyExpectationsSlider extends React.Component {
       <div>
         <Slider ref={c => {this.slider = c}} {...settings}>
           <div className="expectation">
+            <h2 style={{ textAlign: "center" }}>Get in touch</h2>
+            <div>
+              When students contact you, work with your mentees to define the relationship
+              early in your correspondences. These terms do not have to be final but each
+              member should have some sense of expectations about what the relationship will
+              constitute in the dimensions of frequency meeting, method of correspondence,
+              and content of what each party is hoping to invest and receive from the
+              relationship. Let HMS Weave serve as a catalyst for this discussion.
+            </div>
+          </div>
+          <div className="expectation">
             <h2 style={{ textAlign: "center" }}>Stay in touch</h2>
             <div>
               Maintain regular contact with your mentee(s). Set realistic goals
@@ -81,6 +92,15 @@ export default class FacultyExpectationsSlider extends React.Component {
               mentee are unable to keep the terms of the contract. Remember, the
               “no fault” separation policy. Review your mentoring relationship
               goals and expectations on an annual basis.
+            </div>
+          </div>
+          <div className="expectation">
+            <h2 style={{ textAlign: "center" }}>Resources</h2>
+            <div>
+              If ever something occurs in the context of the mentor/mentee relationship
+              that makes you uncomfortable or if you are unsure how to respond, please do not
+              suffer alone. <a href="/resources" target="_blank">Here</a> are resources that may be helpful starting points in
+              addressing problems that you may encounter.
             </div>
           </div>
         </Slider>

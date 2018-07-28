@@ -262,3 +262,7 @@ input[disabled]:checked {
 .profile-contact p {
     margin-top: .2em;
 }
+
+.App-body h3 {
+    margin-top: 2em;
+}

@@ -14,6 +14,7 @@ import Browse from './Browse'
 import Login from './Login'
 import Logout from './Logout'
 import Expectations from './Expectations'
+import Resources from './Resources'
 import FacultyExpectations from './FacultyExpectations'
 import StudentExpectations from './StudentExpectations'
 import EditProfile from './EditProfile'
@@ -195,6 +196,8 @@ class App extends Component {
             />
 
             <Route path="/expectations" component={Expectations} />
+            <Route path="/resources" component={Resources} />
+
             <Route
               path="/profiles/:id"
               render={props => <Profile token={this.state.token} {...props} />}
