@@ -329,10 +329,14 @@ def verify_token():
 
     verification_email = VerificationEmail.query.get(match.email_id)
 
+    profile = get_profile_by_token(token)
+
+    profile_id = profile.id if profile is not None else None
+
     return jsonify({
         'email': verification_email.email,
         'is_mentor': verification_email.is_mentor,
-        'profile_id': get_profile_by_token(token),
+        'profile_id': profile_id,
     })
 
 
