@@ -230,7 +230,7 @@ export default class EditProfile extends Component {
               onChange={this.update('name')}
             />
 
-            <p>Preferred contact email</p>
+            <p>Preferred Contact Email</p>
             <input
               name="email"
               type="email"
