@@ -34,9 +34,9 @@ class ProfileSchema(Schema):
     contact_email = fields.String()
     profile_image_url = fields.String(allow_none=True)
 
-    clinical_specialties = RenderedList(fields.String, required=True)
-    additional_interests = RenderedList(fields.String, required=True)
-    affiliations = RenderedList(fields.String, required=True)
+    clinical_specialties = RenderedList(fields.String)
+    additional_interests = RenderedList(fields.String)
+    affiliations = RenderedList(fields.String)
 
     additional_information = fields.String()
 
@@ -89,24 +89,33 @@ def matching_profiles(query):
     return Profile.query.filter(*filters)
 
 
-@api.route('/api/profiles')
-def get_profiles():
+def get_token(headers):
     token = request.headers.get('Authorization')
 
     if token is None:
-        return error({'token': ['unauthorized']}, status_code=HTTPStatus.UNAUTHORIZED.value)
+        return error({'token': ['unauthorized']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
 
     token_parts = token.split()
 
     if token_parts[0].lower() != 'token' or len(token_parts) != 2:
-        return error({'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value)
+        return error({'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
 
     token_value = token_parts[1]
 
     verification_token = VerificationToken.query.get(token_value)
 
     if verification_token is None:
-        return error({'token': ['unknown token']}, status_code=HTTPStatus.UNAUTHORIZED.value)
+        return error({'token': ['unknown token']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
+
+    return None, verification_token
+
+
+@api.route('/api/profiles')
+def get_profiles():
+    error, _ = get_token(request.headers)
+
+    if error:
+        return error
 
     query = request.args.get('query')
 
@@ -133,6 +142,7 @@ def api_post(route):
 @api_post('profile')
 def create_profile(profile_id=None):
     schema = profile_schema.load(request.json)
+
     try:
         schema = profile_schema.load(request.json)
     except ValidationError as err:
@@ -154,13 +164,34 @@ def create_profile(profile_id=None):
     return jsonify(profile_schema.dump(profile).data)
 
 
-# @app.route('/api/profile/<profile_id>', methods=['PUT'])
-# def update_profile(profile_id=None):
-#     profile = Profile({})
-#     db.session.add(profile)
-#     db.session.commit()
+@api.route('/api/profiles/<profile_id>', methods=['PUT'])
+def update_profile(profile_id=None):
+    schema = profile_schema.load(request.json)
 
-#     return jsonify(ProfileSchema().dump(profile).data)
+    try:
+        schema = profile_schema.load(request.json)
+    except ValidationError as err:
+        return jsonify(err.messages), 422
+
+    if schema.errors:
+        return jsonify(schema.errors), 422
+
+    profile = Profile.query.get(profile_id)
+
+    error, verification_token = get_token(request.headers)
+
+    if error:
+        return error  # TODO exceptions
+
+    assert profile.verification_email == verification_token.email_id
+
+    for key, value in schema.data.items():
+        setattr(profile, key, value)
+
+    db.session.add(profile)
+    db.session.commit()
+
+    return jsonify(ProfileSchema().dump(profile).data)
 
 
 def generate_token():
@@ -271,17 +302,23 @@ def verify_token():
 
     verification_email = VerificationEmail.query.get(match.email_id)
 
-    return jsonify({'email': verification_email.email})
+    return jsonify({
+        'email': verification_email.email,
+        'profile_id': get_profile_by_token(token)
+    })
 
 
 def get_profile_by_token(token):
     verification_token = VerificationToken.query.get(token)
 
+    if verification_token is None:
+        return None
+
     verification_email = VerificationEmail.query.get(verification_token.email_id)
 
     return Profile.query.filter(
         Profile.verification_email == verification_email.id
-    ).one()
+    ).one_or_none()
 
 
 @api_post('availability')

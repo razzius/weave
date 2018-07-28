@@ -14,7 +14,7 @@ app.secret_key = os.environ['SECRET_KEY']
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAILGUN_DOMAIN'] = os.environ['MAILGUN_DOMAIN']
-app.config['SQLALCHEMY_ECHO'] = app.debug
+# app.config['SQLALCHEMY_ECHO'] = app.debug
 
 
 db.init_app(app)

@@ -24,8 +24,12 @@ def test_verify_valid_token(client):
         db.session.commit()
 
     response = client.post('/api/verify-token', json={'token': token})
+
     assert response.status_code == HTTPStatus.OK.value
-    assert response.json == {'email': 'test@test.com'}
+    assert response.json == {
+        'email': 'test@test.com',
+        'profile_id': None
+    }
 
 
 def test_set_unavailable_to_mentor(client):
