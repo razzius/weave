@@ -33,10 +33,6 @@ EMAIL_CLOSING = """
 """
 
 
-def get_login_url(token):
-    return f'{SERVER_URL}/login?token={token}'
-
-
 def get_verification_url(token):
     return f'{SERVER_URL}/verify?token={token}'
 
@@ -94,13 +90,13 @@ def send_student_registration_email(email, token):
 
 
 def send_login_email(email, token):
-    login_link = self_link(get_login_url(token))
+    verify_link = self_link(get_verification_url(token))
 
     html = f"""
     <p>Hello,</p>
 
     <p>
-        Use this link to log in to your HMS Weave profile: {login_link}
+        Use this link to log in to your HMS Weave profile: {verify_link}
     </p>
 
     {EMAIL_CLOSING}

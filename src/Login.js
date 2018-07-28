@@ -7,7 +7,7 @@ import { sendLoginEmail } from './api'
 
 const Login = (props) => (
   <AppScreen>
-    <h1>Login to edit mentor profile</h1>
+    <h1>Login</h1>
     <p>Enter your Harvard or hospital-affiliated email and we will confirm your account by sending a verification email.</p>
     <p>
       <Link to="/faculty-expectations">If you have not signed up yet, please start here.</Link>

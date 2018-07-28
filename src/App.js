@@ -19,50 +19,85 @@ import StudentExpectations from './StudentExpectations'
 import EditProfile from './EditProfile'
 import Profile from './Profile'
 
-import RegisterEmail from './RegisterEmail'
+import RegisterFacultyEmail from './RegisterFacultyEmail'
+import RegisterStudentEmail from './RegisterStudentEmail'
 import CheckEmail from './CheckEmail'
 import LoginCheckEmail from './LoginCheckEmail'
 import VerifyEmail from './VerifyEmail'
-import { setAvailabilityForMentoring } from './api'
+import { setAvailabilityForMentoring, verifyToken } from './api'
 
 class App extends Component {
   state = {
     availableForMentoring: true,
-    auth: window.localStorage.getItem('token'),
+    token: window.localStorage.getItem('token'),
+    isMentor: null,
     profileId: null
   }
 
-  authenticate = auth => {
-    this.setState({ auth })
+  componentDidMount() {
+    if (this.state.token !== null) {
+      verifyToken(this.state.token).then(response => {
+        this.setState({
+          profileId: response.profileId,
+          isMentor: response.is_mentor
+        })
+      })
+    }
   }
+
+  authenticate = token => (
+    new Promise(resolve => {
+      this.setState({ token }, () => resolve())
+    })
+  )
 
   setProfileId = profileId => {
     this.setState({ profileId })
   }
 
+  setIsMentor = isMentor => {
+    this.setState({ isMentor })
+  }
+
+  logout = (e) => {
+    e.preventDefault()
+    window.localStorage.removeItem('token')
+    this.setState({ token: null }, () => {
+      window.location.pathname = '/' // wtfff
+    })
+  }
+
   render() {
-    const loggedOut = this.state.auth === null
-    const loginUrl = loggedOut ? '/login' : '/'
-    const loginOrLogout = loggedOut ? 'Login' : 'Logout'
+    const loggedOut = this.state.token === null
 
     const loginButton = (
       <a
-        href={loginUrl}
+        href="/login"
         className="App-title"
-        onClick={() => {
-          if (!loggedOut) {
-            window.localStorage.set('token', null)
-          }
-        }}
         style={{
           paddingTop: '1.95em',
           float: 'right',
           paddingRight: '2em'
         }}
       >
-        {loginOrLogout}
+        Login
       </a>
     )
+
+    const logoutButton = (
+      <a
+        onClick={this.logout}
+        className="App-title"
+        style={{
+          paddingTop: '1.95em',
+          float: 'right',
+          paddingRight: '2em',
+          cursor: 'pointer'
+        }}
+        >Logout</a>
+    )
+
+    const loginAction = loggedOut ? loginButton : logoutButton
 
     return (
       <Router>
@@ -76,9 +111,9 @@ class App extends Component {
                 About
               </a>
 
-              {loginButton}
+              {loginAction}
 
-              {this.state.auth && (
+              {this.state.isMentor && (
                 <span
                   data-tip="Controls whether your profile will be visible to mentees."
                   className="App-title available-for-mentoring"
@@ -90,7 +125,7 @@ class App extends Component {
                       const available = !this.state.availableForMentoring
                       this.setState({ availableForMentoring: available })
                       if (this.state.profileId !== null) {
-                        setAvailabilityForMentoring(this.state.auth, available)
+                        setAvailabilityForMentoring(this.state.token, available)
                       }
                     }}
                   />
@@ -115,14 +150,18 @@ class App extends Component {
                 <EditProfile
                   availableForMentoring={this.state.availableForMentoring}
                   setProfileId={this.setProfileId}
-                  token={this.state.auth}
+                  token={this.state.token}
                   history={history}
                 />
               )}
             />
             <Route
-              path="/register-email"
-              render={({ history }) => <RegisterEmail history={history} />}
+              path="/register-faculty-email"
+              render={({ history }) => <RegisterFacultyEmail history={history} />}
+            />
+            <Route
+              path="/register-student-email"
+              render={({ history }) => <RegisterStudentEmail history={history} />}
             />
             <Route path="/check-email" component={CheckEmail} />
             <Route path="/login-check-email" component={LoginCheckEmail} />
@@ -137,7 +176,7 @@ class App extends Component {
             />
             <Route
               path="/browse"
-              render={() => <Browse token={this.state.auth} />}
+              render={() => <Browse token={this.state.token} />}
             />
             <Route
               path="/login"

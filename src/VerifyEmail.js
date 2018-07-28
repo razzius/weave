@@ -23,61 +23,79 @@ function getButtonInfo(isMentor, returningUser) {
   }
 }
 
+const VerifiedView = (props) => {
+  const {
+    isMentor,
+    returningUser,
+    verified,
+    history,
+    authenticate,
+    token,
+  } = props
+
+  const { buttonText, linkUrl } = getButtonInfo(isMentor, returningUser)
+
+  const welcomeMessage = returningUser
+      ? `Successfully logged in as ${verified.email}.`
+      : `Successfully verified ${verified.email}.`
+
+  return (
+    <div>
+      <p>{welcomeMessage}</p>
+      <NextButton
+        onClick={() => {
+          authenticate(token).then(() => {
+            history.push(linkUrl)
+          })
+        }}
+        text={buttonText}
+        />
+    </div>
+  )
+}
 export default class VerifyEmail extends Component {
   constructor(props) {
     super(props)
     this.state = {
       error: null,
       verified: null,
-      token: null,
+      token: getParam('token'),
       profileId: null
     }
   }
 
   componentDidMount() {
-    const token = getParam('token')
-
-    verifyToken(token).then(response => {
+    verifyToken(this.state.token).then(response => {
       this.setState({
-        token,
         verified: response,
         profileId: response.profileId,
         isMentor: response.is_mentor
       })
-      window.localStorage.set('token', token)
+      window.localStorage.setItem('token', this.state.token)
     })
   }
 
   render() {
-    const { error, isMentor, profileId, verified } = this.state
+    const { error, isMentor, profileId, verified, token } = this.state
+
+    const { authenticate, history } = this.props
 
     const errorView = error && <p>{error}</p>
 
     const returningUser = profileId !== null
 
-    const welcomeMessage = returningUser
-      ? `Successfully logged in as ${verified.email}.`
-      : `Successfully verified ${verified.email}.`
-
-    const { buttonText, linkUrl } = getButtonInfo(isMentor, returningUser)
-    const verifiedView = this.state.verified && (
-      <div>
-        <p>{welcomeMessage}</p>
-        <NextButton
-          onClick={() => {
-            this.props.authenticate(this.state.token)
-            this.props.history.push(linkUrl)
-          }}
-          text={buttonText}
-        />
-      </div>
-    )
-
     return (
       <AppScreen>
-        <h1>Complete email registration</h1>
+        <h1>Confirm email verification</h1>
         {errorView}
-        {verifiedView}
+        {this.state.verified && <VerifiedView
+                                  isMentor={isMentor}
+                                  returningUser={returningUser}
+                                  verified={verified}
+                                  authenticate={authenticate}
+                                  history={history}
+                                  token={token}
+                                  />}
       </AppScreen>
     )
   }
