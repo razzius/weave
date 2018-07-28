@@ -14,7 +14,7 @@ def test_verify_valid_token(client):
     token = '123'
     email = 'test@test.com'
 
-    verification_email = VerificationEmail(email=email)
+    verification_email = VerificationEmail(email=email, is_mentor=True)
 
     with app.app_context():
         db.session.add(verification_email)
@@ -28,7 +28,8 @@ def test_verify_valid_token(client):
     assert response.status_code == HTTPStatus.OK.value
     assert response.json == {
         'email': 'test@test.com',
-        'profile_id': None
+        'profile_id': None,
+        'is_mentor': True
     }
 
 
@@ -50,9 +51,9 @@ def test_set_unavailable_to_mentor(client):
         db.session.add(profile)
         db.session.commit()
 
-    data = {'token': token, 'available': False}
+    data = {'available': False}
 
-    response = client.post('/api/availability', json=data)
+    response = client.post('/api/availability', json=data, headers={'Authorization': f'Token {token}'})
 
     assert response.status_code == HTTPStatus.OK.value
     assert response.json['available'] is False
