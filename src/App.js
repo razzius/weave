@@ -78,7 +78,7 @@ class App extends Component {
         href="/login"
         className="App-title"
         style={{
-          paddingTop: '1.95em',
+          paddingTop: '1.4em',
           float: 'right',
           paddingRight: '2em'
         }}
@@ -92,7 +92,7 @@ class App extends Component {
         onClick={this.logout}
         className="App-title"
         style={{
-          paddingTop: '1.95em',
+          paddingTop: '1.4em',
           float: 'right',
           paddingRight: '2em',
           cursor: 'pointer'
@@ -113,6 +113,10 @@ class App extends Component {
               <a href="/#about" className="App-title">
                 About
               </a>
+
+              {this.state.token && !this.state.isMentor && <a href="/browse" className="App-title">
+                Browse Mentor Profiles
+              </a>}
 
               {loginAction}
 
