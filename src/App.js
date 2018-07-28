@@ -41,6 +41,9 @@ class App extends Component {
           profileId: response.profileId,
           isMentor: response.is_mentor
         })
+      }).catch(() => {
+        window.localStorage.removeItem('token')
+        this.setState({ token: null })
       })
     }
   }
@@ -190,7 +193,7 @@ class App extends Component {
             <Route path="/expectations" component={Expectations} />
             <Route
               path="/profiles/:id"
-              render={props => <Profile {...props} />}
+              render={props => <Profile token={this.state.token} {...props} />}
             />
             <Route component={() => <p>404 Not found</p>} />
           </Switch>

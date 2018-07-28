@@ -144,6 +144,11 @@ def api_post(route):
 
 @api_post('profile')
 def create_profile(profile_id=None):
+    error, verification_token = get_token(request.headers)
+
+    if error:
+        return error
+
     schema = profile_schema.load(request.json)
 
     try:
@@ -159,7 +164,12 @@ def create_profile(profile_id=None):
     ).scalar():
         return error({'email': ['This email already exists in the database']})
 
-    profile = Profile(**schema.data)
+    profile_data = {
+        'verification_email': verification_token.email_id,
+        **schema.data
+    }
+
+    profile = Profile(**profile_data)
 
     db.session.add(profile)
     db.session.commit()

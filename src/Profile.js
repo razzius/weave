@@ -10,7 +10,7 @@ export default class Profile extends Component {
       error: null
     }
 
-    getProfile(props.match.params.id)
+    getProfile(props.token, props.match.params.id)
       .then(data => this.setState({ data }))
       .catch(error => this.setState({ error }))
   }

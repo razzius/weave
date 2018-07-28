@@ -114,6 +114,8 @@ export default class EditProfile extends Component {
   }
 
   saveImage = () => {
+    const { token } = this.props
+
     this.setState({ uploadingImage: true })
 
     const canvas = this.editor.getImage()
@@ -122,7 +124,7 @@ export default class EditProfile extends Component {
 
     return new Promise(resolve => {
       scaled.toBlob(blob =>
-        uploadPicture(blob).then(response => {
+        uploadPicture(token, blob).then(response => {
           this.setState({
             imageUrl: response.image_url,
             imageSuccess: true,

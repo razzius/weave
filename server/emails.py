@@ -96,7 +96,7 @@ def send_login_email(email, token):
     <p>Hello,</p>
 
     <p>
-        Use this link to log in to your HMS Weave profile: {verify_link}
+        Use this link to log in to HMS Weave: {verify_link}
     </p>
 
     {EMAIL_CLOSING}

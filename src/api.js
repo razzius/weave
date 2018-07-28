@@ -1,11 +1,18 @@
-import queryString from 'query-string'
-
 const serverUrl = process.env.REACT_APP_SERVER_URL
 
-function buildURL(path, params) {
-  const qs = params === null ? '' : `?${queryString.stringify(params)}`
+// -_-
+function addQueryString(url, params) {
+  return Object.keys(params).forEach(key => {
+    url.searchParams.append(key, params[key])
+  })
+}
 
-  return new URL(`${serverUrl}/${path}${qs}`)
+function buildURL(path, params) {
+  const url = new URL(`${serverUrl}/${path}`)
+  if (params) {
+    addQueryString(url, params)
+  }
+  return url
 }
 
 async function http(url, options) {

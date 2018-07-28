@@ -30,7 +30,7 @@ export default class FacultyExpectationsSlider extends React.Component {
         const lastSlide = nextIndex === this.slider.props.children.length - 1
         this.setState({
           nextText: lastSlide ? "I agree" : "Next",
-          nextHref: lastSlide ? "/register-mentor-email" : null,
+          nextHref: lastSlide ? "/register-faculty-email" : null,
           lastSlide
         })
       }
