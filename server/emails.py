@@ -33,12 +33,20 @@ EMAIL_CLOSING = """
 """
 
 
+def get_login_url(token):
+    return f'{SERVER_URL}/login?token={token}'
+
+
 def get_verification_url(token):
     return f'{SERVER_URL}/verify?token={token}'
 
 
+def self_link(href):
+    return f'<a href="{href}">href</a>'
+
+
 def send_faculty_registration_email(email, token):
-    verify_url = get_verification_url(token)
+    verify_link = self_link(get_verification_url(token))
 
     html = f"""
     <p>Hello,</p>
@@ -46,7 +54,7 @@ def send_faculty_registration_email(email, token):
     <p>
         Welcome to HMS Weave, a mentorship platform to connect students and
         faculty. You have successfully registered for a faculty mentor profile.
-        The following link will direct you to create your profile page: {verify_url}.
+        The following link will direct you to create your profile page: {verify_link}.
         You may return to edit your profile or change your availability
         settings anytime through this link.
     </p>
@@ -62,7 +70,7 @@ def send_faculty_registration_email(email, token):
 
 
 def send_student_registration_email(email, token):
-    verify_url = get_verification_url(token)
+    verify_link = self_link(get_verification_url(token))
 
     html = f"""
     <p>Hello,</p>
@@ -71,12 +79,28 @@ def send_student_registration_email(email, token):
         Welcome to HMS Weave, a mentorship platform to connect students and
         faculty. You have successfully registered for a student mentee profile.
         The following link will direct you to view the database of faculty
-        mentors: {verify_url}. You may access this database of mentors anytime
+        mentors: {verify_link}. You may access this database of mentors anytime
         through this link.
     </p>
 
     <p>
         We hope that this platform helps foster meaningful conversations and mentorship relationships for you!
+    </p>
+
+    {EMAIL_CLOSING}
+    """
+
+    return _send_email(email, 'HMS Weave Mentee Registration', html)
+
+
+def send_login_email(email, token):
+    login_link = self_link(get_login_url(token))
+
+    html = f"""
+    <p>Hello,</p>
+
+    <p>
+        Use this link to log in to your HMS Weave profile: {login_link}
     </p>
 
     {EMAIL_CLOSING}

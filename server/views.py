@@ -1,3 +1,4 @@
+from http import HTTPStatus
 import uuid
 
 from flask import Blueprint, jsonify, request
@@ -9,7 +10,7 @@ from marshmallow import Schema, ValidationError, fields
 from requests_toolbelt.utils import dump
 
 from .models import Profile, VerificationEmail, VerificationToken, db
-from .emails import send_student_registration_email, send_faculty_registration_email
+from .emails import send_student_registration_email, send_faculty_registration_email, send_login_email
 
 
 api = Blueprint('api', __name__)
@@ -90,6 +91,23 @@ def matching_profiles(query):
 
 @api.route('/api/profiles')
 def get_profiles():
+    token = request.headers.get('Authorization')
+
+    if token is None:
+        return error({'token': ['unauthorized']}, status_code=HTTPStatus.UNAUTHORIZED.value)
+
+    token_parts = token.split()
+
+    if token_parts[0].lower() != 'token' or len(token_parts) != 2:
+        return error({'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value)
+
+    token_value = token_parts[1]
+
+    verification_token = VerificationToken.query.get(token_value)
+
+    if verification_token is None:
+        return error({'token': ['unknown token']}, status_code=HTTPStatus.UNAUTHORIZED.value)
+
     query = request.args.get('query')
 
     return jsonify(profiles_schema.dump(matching_profiles(query)).data)
@@ -104,8 +122,8 @@ def get_profile(profile_id=None):
     )
 
 
-def error(reason):
-    return jsonify(reason), 400
+def error(reason, status_code=HTTPStatus.BAD_REQUEST.value):
+    return jsonify(reason), status_code
 
 
 def api_post(route):
@@ -154,7 +172,7 @@ def upload_image():
     data = request.data
 
     if not data:
-        return error({'file': 'No image sent'})
+        return error({'file': ['No image sent']})
 
     response = uploader.upload(
         data, eager=[{'width': 200, 'height': 200, 'crop': 'crop'}]
@@ -221,20 +239,20 @@ def send_student_verification_email():
     return jsonify({'id': verification_email.id, 'email': email})
 
 
-# @api_post('login')
-# def login():
-#     email = request.json['email']
+@api_post('login')
+def login():
+    email = request.json['email']
 
-#     matches = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
+    matches = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
 
-#     if matches is None:
-#         return error({'email': 'unregistered'})
+    if matches is None:
+        return error({'email': ['unregistered']})
 
-#     send_login_email(email)
+    send_login_email(email)
 
-#     return jsonify({
-#         'email': email
-#     })
+    return jsonify({
+        'email': email
+    })
 
 
 @api_post('verify-token')
@@ -245,9 +263,7 @@ def verify_token():
     match = query.one_or_none()
 
     if match is None:
-        return error(
-            {'token': 'Verification token not recognized.'}
-        )  # TODO please contact us
+        return error({'token': ['not recognized']})
 
     match.verified = True
     db.session.add(match)

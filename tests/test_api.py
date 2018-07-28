@@ -1,11 +1,13 @@
+from http import HTTPStatus
+
 from server import app
 from server.models import db, VerificationEmail, VerificationToken, Profile
 
 
 def test_verify_invalid_token(client):
     response = client.post('/api/verify-token', json={'token': '123'})
-    assert response.status_code == 400
-    assert response.json == {'token': 'Verification token not recognized.'}
+    assert response.status_code == HTTPStatus.BAD_REQUEST.value
+    assert response.json == {'token': ['not recognized']}
 
 
 def test_verify_valid_token(client):
@@ -22,7 +24,7 @@ def test_verify_valid_token(client):
         db.session.commit()
 
     response = client.post('/api/verify-token', json={'token': token})
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK.value
     assert response.json == {'email': 'test@test.com'}
 
 
@@ -48,7 +50,7 @@ def test_set_unavailable_to_mentor(client):
 
     response = client.post('/api/availability', json=data)
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK.value
     assert response.json['available'] is False
 
     with app.app_context():
