@@ -1,17 +1,17 @@
 import React, { Component } from 'react'
-import { sendFacultyVerificationEmail } from './api'
 
 export default class SubmitEmailForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      email: ''
+      email: '',
+      error: null
     }
   }
 
   submitEmail = e => {
     e.preventDefault()
-    sendFacultyVerificationEmail(this.state.email)
+    this.props.sendEmail(this.state.email)
       .then(() => {
         this.props.history.push(this.props.redirectTo)
       })

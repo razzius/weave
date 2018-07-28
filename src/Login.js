@@ -3,6 +3,7 @@ import { Link } from "react-router-dom"
 
 import AppScreen from './AppScreen'
 import SubmitEmailForm from './SubmitEmailForm'
+import { sendLoginEmail } from './api'
 
 const Login = (props) => (
   <AppScreen>
@@ -11,7 +12,11 @@ const Login = (props) => (
     <p>
       <Link to="/faculty-expectations">If you have not signed up yet, please start here.</Link>
     </p>
-    <SubmitEmailForm history={props.history} redirectTo={'/login-check-email'}/>
+    <SubmitEmailForm
+      history={props.history}
+      redirectTo={'/login-check-email'}
+      sendEmail={sendLoginEmail}
+    />
   </AppScreen>
 )
 

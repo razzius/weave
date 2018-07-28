@@ -89,9 +89,9 @@ export default class EditProfile extends Component {
     }
 
     return promise.then(() => {
-      createProfile(this.state)
+      createProfile(this.props.token, this.state)
         .then(profile => {
-          this.props.authenticate(1) // TODO proper server-given token
+          this.props.setProfileId(profile.id)
           this.props.history.push(`/profiles/${profile.id}`)
         })
         .catch(error => {
@@ -234,7 +234,7 @@ export default class EditProfile extends Component {
               type="email"
               className="fullWidth"
               value={this.state.contactEmail}
-              onChange={this.update('email')}
+              onChange={this.update('contactEmail')}
             />
 
             <p>Hospital Affiliations</p>

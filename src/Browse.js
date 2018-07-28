@@ -24,7 +24,7 @@ export default class Browse extends Component {
       error: null
     }
 
-    getProfiles()
+    getProfiles(props.token)
       .then(results => {
         this.setState({ results })
       })
@@ -34,13 +34,14 @@ export default class Browse extends Component {
   }
 
   handleSearch = (reset = false) => {
+    const { token } = this.props
     const { searchTerms, search } = this.state
     const searchArray = search === '' ? [] : [search]
     const searchString = searchTerms.concat(searchArray).join(' ').toLowerCase()
 
     const query = reset ? '' : searchString
 
-    getProfiles(query).then(results => {
+    getProfiles(token, query).then(results => {
       this.setState({ results })
       if (!reset) {
         this.setState({ queried: true })

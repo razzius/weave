@@ -4,7 +4,7 @@ function buildURL(path) {
   return new URL(`${serverUrl}/${path}`)
 }
 
-async function http(url, options) {
+async function http(token, url, options) {
   const response = await fetch(url, options)
 
   if (!response.ok) {
@@ -14,16 +14,16 @@ async function http(url, options) {
   return response.json()
 }
 
-export async function getProfiles(search = null) {
+export async function getProfiles(token, search = null) {
   const url = buildURL('api/profiles')
   if (search !== null) {
     url.searchParams.append('query', search)
   }
-  return http(url)
+  return http(token, url)
 }
 
-export async function getProfile(id) {
-  return http(buildURL(`api/profiles/${id}`))
+export async function getProfile(token, id) {
+  return http(token, buildURL(`api/profiles/${id}`))
 }
 
 export function profileToPayload(profile) {
@@ -48,49 +48,54 @@ export function profileToPayload(profile) {
   }
 }
 
-async function post(path, payload) {
-  return http(buildURL(`api/${path}`), {
+async function post(token, path, payload) {
+  return http(token, buildURL(`api/${path}`), {
     method: 'POST',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
+      'Authorization': `Token ${token}`,
     },
     body: JSON.stringify(payload)
   })
 }
 
-export async function createProfile(profile) {
+export async function createProfile(token, profile) {
   const payload = profileToPayload(profile)
 
-  return post('profile', payload)
+  return post(token, 'profile', payload)
 }
 
-export async function sendFacultyVerificationEmail(email) {
-  return post('send-faculty-verification-email', { email })
-}
+// export async function updateProfile(token, profile) {
+//   const payload = profileToPayload(profile)
 
-export async function sendStudentVerificationEmail(email) {
-  return post('send-student-verification-email', { email })
-}
-
-
-export async function verifyToken(token) {
-  return post('verify-token', { token })
-}
-
-export async function setAvailabilityForMentoring(available) {
-  return post('availability', { available })
-}
-
-
-// todo use auth
-// export async function updateProfile(id, profile) {
-// await put(`/api/profiles/${id}`, profile)
+//   return put(token, 'profile', payload)
 // }
 
-export async function uploadPicture(file) {
+export async function sendFacultyVerificationEmail(token, email) {
+  return post(token, 'send-faculty-verification-email', { email })
+}
+
+export async function sendStudentVerificationEmail(token, email) {
+  return post(token, 'send-student-verification-email', { email })
+}
+
+export async function sendLoginEmail(email) {
+  return post(null, 'login', { email })
+}
+
+export async function verifyToken(token) {
+  return post(null, 'verify-token', { token })
+}
+
+export async function setAvailabilityForMentoring(token, available) {
+  return post(token, 'availability', { available })
+}
+
+
+export async function uploadPicture(token, file) {
   const url = buildURL('api/upload-image')
 
-  return http(url, {
+  return http(token, url, {
     method: 'POST',
     body: file
   })

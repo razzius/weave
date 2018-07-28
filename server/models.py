@@ -30,6 +30,7 @@ class StringEncodedList(TypeDecorator):
 class VerificationEmail(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
+    is_mentor = db.Column(db.Boolean(default=False))
 
 
 class Profile(db.Model):

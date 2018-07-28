@@ -51,7 +51,7 @@ class ProfileSchema(Schema):
 
 
 class SendVerificationEmailSchema(Schema):
-    email = fields.String()
+    email = fields.String(required=True)
 
 
 profile_schema = ProfileSchema()
@@ -215,7 +215,7 @@ def upload_image():
     return jsonify({'image_url': response['eager'][0]['secure_url']})
 
 
-def get_verification_email(email: str) -> VerificationEmail:
+def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
     email = request.json['email']
 
     existing_email = VerificationEmail.query.filter(
@@ -225,7 +225,8 @@ def get_verification_email(email: str) -> VerificationEmail:
     if existing_email:
         return existing_email
 
-    email_row = VerificationEmail(email=email)
+    email_row = VerificationEmail(email=email, is_mentor=is_mentor)
+
     db.session.add(email_row)
     db.session.commit()
 
@@ -245,9 +246,14 @@ def save_verification_token(email_id, token, email_response):
 
 @api_post('send-faculty-verification-email')
 def send_faculty_verification_email():
-    email = send_verification_email_schema.load(request.json).data['email']
+    schema = send_verification_email_schema.load(request.json)
 
-    verification_email = get_verification_email(email)
+    if schema.errors:
+        return error(schema.errors)
+
+    email = schema.data['email']
+
+    verification_email = get_verification_email(email, is_mentor=True)
 
     token = generate_token()
 
@@ -260,9 +266,14 @@ def send_faculty_verification_email():
 
 @api_post('send-student-verification-email')
 def send_student_verification_email():
-    email = send_verification_email_schema.load(request.json)['email']
+    schema = send_verification_email_schema.load(request.json)
 
-    verification_email = get_verification_email(email)
+    if schema.errors:
+        return error(schema.errors)
+
+    email = schema.data['email']
+
+    verification_email = get_verification_email(email, is_mentor=False)
 
     token = generate_token()
 
@@ -282,7 +293,10 @@ def login():
     if matches is None:
         return error({'email': ['unregistered']})
 
-    send_login_email(email)
+    # TODO fresh token
+    verification_token = VerificationToken.query.filter(VerificationEmail.id == matches.id).first()
+
+    send_login_email(email, verification_token.token)
 
     return jsonify({
         'email': email
@@ -307,7 +321,8 @@ def verify_token():
 
     return jsonify({
         'email': verification_email.email,
-        'profile_id': get_profile_by_token(token)
+        'is_mentor': verification_email.is_mentor,
+        'profile_id': get_profile_by_token(token),
     })
 
 
