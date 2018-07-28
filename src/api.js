@@ -29,7 +29,7 @@ export async function getProfile(id) {
 export function profileToPayload(profile) {
   return {
     name: profile.name,
-    contact_email: profile.email,
+    contact_email: profile.contactEmail,
     profile_image_url: profile.imageUrl,
 
     additional_interests: profile.additionalInterests,
@@ -64,9 +64,14 @@ export async function createProfile(profile) {
   return post('profile', payload)
 }
 
-export async function sendVerificationEmail(email) {
-  return post('send-verification-email', { email })
+export async function sendFacultyVerificationEmail(email) {
+  return post('send-faculty-verification-email', { email })
 }
+
+export async function sendStudentVerificationEmail(email) {
+  return post('send-student-verification-email', { email })
+}
+
 
 export async function verifyToken(token) {
   return post('verify-token', { token })

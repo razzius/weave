@@ -32,7 +32,7 @@ export default class EditProfile extends Component {
     width: 200,
     height: 200,
     name: '',
-    email: '',
+    contactEmail: '',
     image: null,
     imageUrl: null,
     imageSuccess: false,
@@ -233,7 +233,7 @@ export default class EditProfile extends Component {
               name="email"
               type="email"
               className="fullWidth"
-              value={this.state.email}
+              value={this.state.contactEmail}
               onChange={this.update('email')}
             />
 

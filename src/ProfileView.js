@@ -15,7 +15,7 @@ const ProfileView = ({ data }) => (
 
           <h4>Contact Information</h4>
           <p>
-            <a href={`mailto:${data.email}`}>{data.email}</a>
+            <a href={`mailto:${data.contact_email}`}>{data.contact_email}</a>
           </p>
 
           <div style={{marginTop: '1.2em'}}>

@@ -42,7 +42,7 @@ def get_verification_url(token):
 
 
 def self_link(href):
-    return f'<a href="{href}">href</a>'
+    return f'<a href="{href}">{href}</a>'
 
 
 def send_faculty_registration_email(email, token):
