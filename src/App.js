@@ -115,9 +115,13 @@ class App extends Component {
                 About
               </a>
 
-              {this.state.token && !this.state.isMentor && <a href="/browse" className="App-title">
-                Browse Mentor Profiles
-              </a>}
+              <a href="/expectations" className="App-title">
+                Expectations
+              </a>
+
+              <a href="/resources" className="App-title">
+                Resources
+              </a>
 
               {loginAction}
 
