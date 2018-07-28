@@ -1,16 +1,20 @@
-from http import HTTPStatus
 import uuid
+from http import HTTPStatus
 
+from cloudinary import uploader
 from flask import Blueprint, jsonify, request
+from marshmallow import Schema, ValidationError, fields
+from requests_toolbelt.utils import dump
 from sqlalchemy import func, or_
 from sqlalchemy.sql import exists
 
-from cloudinary import uploader
-from marshmallow import Schema, ValidationError, fields
-from requests_toolbelt.utils import dump
-
+from .emails import (
+    send_faculty_login_email,
+    send_faculty_registration_email,
+    send_student_login_email,
+    send_student_registration_email
+)
 from .models import Profile, VerificationEmail, VerificationToken, db
-from .emails import send_student_registration_email, send_faculty_registration_email, send_login_email
 
 
 api = Blueprint('api', __name__)
@@ -298,15 +302,19 @@ def send_student_verification_email():
 def login():
     email = request.json['email']
 
-    matches = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
+    verification_email = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
 
-    if matches is None:
+    if verification_email is None:
         return error({'email': ['unregistered']})
 
-    # TODO fresh token
-    verification_token = VerificationToken.query.filter(VerificationEmail.id == matches.id).first()
+    verification_token = VerificationToken.query.filter(
+        VerificationToken.email_id == verification_email.id
+    ).one_or_none()
 
-    send_login_email(email, verification_token.token)
+    if verification_email.is_mentor:
+        send_faculty_login_email(email, verification_token.token)
+    else:
+        send_student_login_email(email, verification_token.token)
 
     return jsonify({
         'email': email

@@ -52,7 +52,8 @@ def send_faculty_registration_email(email, token):
         faculty. You have successfully registered for a faculty mentor profile.
         The following link will direct you to create your profile page: {verify_link}.
         You may return to edit your profile or change your availability
-        settings anytime through this link.
+        settings anytime by returning to HMSWeave.com and clicking “Login” in
+        the top right-hand corner.
     </p>
 
     <p>
@@ -73,10 +74,10 @@ def send_student_registration_email(email, token):
 
     <p>
         Welcome to HMS Weave, a mentorship platform to connect students and
-        faculty. You have successfully registered for a student mentee profile.
-        The following link will direct you to view the database of faculty
-        mentors: {verify_link}. You may access this database of mentors anytime
-        through this link.
+        faculty. You have successfully registered for a student mentee profile. The
+        following link will direct you to view the database of faculty mentors: {verify_link}.
+        You may access this database of mentors anytime by returning to HMSWeave.com
+        and clicking “Login” in the top right-hand corner.
     </p>
 
     <p>
@@ -89,17 +90,37 @@ def send_student_registration_email(email, token):
     return _send_email(email, 'HMS Weave Mentee Registration', html)
 
 
-def send_login_email(email, token):
+def send_faculty_login_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
     html = f"""
     <p>Hello,</p>
 
     <p>
-        Use this link to log in to HMS Weave: {verify_link}
+        Welcome back to HMS Weave, a mentorship platform to connect students
+        and faculty. You have previously created a profile; you may return to
+        your profile for editing or viewing through this link: {verify_link}.
     </p>
 
     {EMAIL_CLOSING}
     """
 
-    return _send_email(email, 'HMS Weave Mentee Registration', html)
+    return _send_email(email, 'HMS Weave Mentor Login', html)
+
+
+def send_student_login_email(email, token):
+    verify_link = self_link(get_verification_url(token))
+
+    html = f"""
+    <p>Hello,</p>
+
+    <p>
+        Welcome back to HMS Weave, a mentorship platform to connect students
+        and faculty. You may access the faculty mentorship database though this
+        link: {verify_link}.
+    </p>
+
+    {EMAIL_CLOSING}
+    """
+
+    return _send_email(email, 'HMS Weave Login', html)
