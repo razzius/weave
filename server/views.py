@@ -2,7 +2,7 @@ from http import HTTPStatus
 import uuid
 
 from flask import Blueprint, jsonify, request
-from sqlalchemy import func, or_, and_
+from sqlalchemy import func, or_
 from sqlalchemy.sql import exists
 
 from cloudinary import uploader
@@ -79,12 +79,15 @@ def matching_profiles(query):
         # cadence
     ]
 
-    filters = and_(
-        *[
-            or_(*[func.lower(field).contains(word) for field in searchable_fields])
-            for word in words
-        ]
-    )
+    search_filters = [
+        or_(*[func.lower(field).contains(word) for field in searchable_fields])
+        for word in words
+    ]
+
+    filters = [
+        Profile.available_for_mentoring,
+        *search_filters
+    ]
 
     return Profile.query.filter(*filters)
 
@@ -323,11 +326,14 @@ def get_profile_by_token(token):
 
 @api_post('availability')
 def availability():
-    token = request.json['token']
+    error, verification_token = get_token(request.headers)
+
+    if error is not None:
+        return error
 
     available = request.json['available']
 
-    profile = get_profile_by_token(token)
+    profile = get_profile_by_token(verification_token.token)
 
     profile.available_for_mentoring = available
 
