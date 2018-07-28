@@ -281,7 +281,7 @@ export default class EditProfile extends Component {
         </div>
         <div>
           <div className="expectations">
-            <h3>Optional expectations</h3>
+            <h3>Optional Expectations</h3>
 
             <div className="expectation">
               <label>
