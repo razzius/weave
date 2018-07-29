@@ -1,18 +1,20 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
-const Home = () => (
+const Home = (props) => (
   <div className="Home">
     <main id="background">
       <div className="App-intro">
         <h1>Students</h1>
-        <Link className="button" to="student-expectations">
+        <Link className="button" to={props.token ? "/browse" : "student-expectations"}>
           Find a mentor
         </Link>
-        <h1>Faculty</h1>
-        <Link className="button" to="faculty-expectations">
-          Register as a mentor
-        </Link>
+        {!(props.token && !props.isMentor) && <div>
+          <h1>Faculty</h1>
+          <Link className="button" to={props.isMentor ? "/edit-profile" : "faculty-expectations"}>
+            {props.isMentor ? 'Edit profile' : 'Register as a mentor'}
+          </Link>
+        </div>}
       </div>
     </main>
     <section id="about">

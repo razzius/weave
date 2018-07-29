@@ -145,7 +145,7 @@ class App extends Component {
             </div>
           </header>
           <Switch>
-            <Route exact path="/" component={Home} />
+            <Route exact path="/" render={() => <Home token={this.state.token} isMentor={this.state.isMentor}/>} />
             <Route
               path="/faculty-expectations"
               component={FacultyExpectations}

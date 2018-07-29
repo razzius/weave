@@ -72,7 +72,7 @@ class Profile(db.Model):
 class VerificationToken(db.Model):
     token = db.Column(db.String(36), primary_key=True)
     email_id = db.Column(
-        db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
+        db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False, unique=True
     )
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     verified = db.Column(db.Boolean, default=False)
