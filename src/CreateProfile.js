@@ -6,7 +6,7 @@ import 'react-select/dist/react-select.css'
 
 import ProfileView from './ProfileView'
 
-import { getProfile, updateProfile, uploadPicture, payloadToProfile, profileToPayload } from './api'
+import { createProfile, uploadPicture, profileToPayload } from './api'
 import {
   clinicalSpecialtyOptions,
   additionalInterestOptions,
@@ -24,7 +24,7 @@ function scaleCanvas(canvas) {
   return scaled
 }
 
-export default class EditProfile extends Component {
+export default class CreateProfile extends Component {
   state = {
     position: { x: 0.5, y: 0.5 },
     scale: 1,
@@ -51,13 +51,6 @@ export default class EditProfile extends Component {
     cadence: 'monthly',
     otherCadence: null,
     preview: false
-  }
-
-  componentDidMount() {
-    const { token, profileId } = this.props
-    getProfile(token, profileId).then(response => {
-      this.setState(payloadToProfile(response))
-    })
   }
 
   handleSelectClinicalSpecialties = specialties => {
@@ -89,7 +82,6 @@ export default class EditProfile extends Component {
   submit = () => {
     let promise
 
-    // todo see if image changed
     if (!this.state.imageSuccess && this.state.image !== null) {
       promise = this.saveImage()
     } else {
@@ -97,7 +89,7 @@ export default class EditProfile extends Component {
     }
 
     return promise.then(() => {
-      updateProfile(this.props.token, this.state, this.props.profileId)
+      createProfile(this.props.token, this.state)
         .then(profile => {
           this.props.setProfileId(profile.id)
           this.props.history.push(`/profiles/${profile.id}`)
@@ -189,7 +181,7 @@ export default class EditProfile extends Component {
               <AvatarEditor
                 ref={this.setEditorRef}
                 borderRadius={100}
-                image={this.state.image || this.state.imageUrl}
+                image={this.state.image}
                 scale={parseFloat(this.state.scale)}
                 width={180}
                 height={180}

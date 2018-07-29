@@ -1,8 +1,9 @@
 import React from 'react'
 import AppScreen from './AppScreen'
 import { capitalize } from './utils'
+import NextButton from "./NextButton"
 
-const ProfileView = ({ data }) => (
+const ProfileView = ({ data, ownProfile }) => (
   <AppScreen>
     <div className="profile-contact">
       <div className="columns">
@@ -37,7 +38,7 @@ const ProfileView = ({ data }) => (
           </div>
 
           <div className="expectation">
-            <label className={!data.willing_networking && 'grayed-out'}>
+            <label className={!data.willing_networking ? 'grayed-out' : undefined}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -59,7 +60,7 @@ const ProfileView = ({ data }) => (
           </div>
 
           <div className="expectation">
-            <label className={!data.willing_discuss_personal && 'grayed-out'}>
+            <label className={!data.willing_discuss_personal ? 'grayed-out' : undefined}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -81,6 +82,7 @@ const ProfileView = ({ data }) => (
           </div>
         </div>
         <div className="about" style={{ width: '450px' }}>
+          {ownProfile && <NextButton href="/edit-profile" text="Edit profile"/>}
           <h1>{data.name}</h1>
 
           <h4 style={{marginTop: '2em'}}>Hospital Affiliations</h4>

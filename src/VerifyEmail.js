@@ -19,7 +19,7 @@ function getButtonInfo(isMentor, returningUser) {
   }
   return {
     buttonText: 'Create profile',
-    linkUrl: '/edit-profile'
+    linkUrl: '/create-profile'
   }
 }
 
@@ -68,7 +68,7 @@ export default class VerifyEmail extends Component {
     verifyToken(this.state.token).then(response => {
       this.setState({
         verified: response,
-        profileId: response.profileId,
+        profileId: response.profile_id,
         isMentor: response.is_mentor
       })
       window.localStorage.setItem('token', this.state.token)

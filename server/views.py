@@ -70,7 +70,7 @@ def handle_invalid_schema(error):
 
 def matching_profiles(query):
     if query is None:
-        return Profile.query.all()
+        return Profile.query.filter(Profile.available_for_mentoring)
 
     words = query.lower().split()
 
@@ -169,7 +169,7 @@ def create_profile(profile_id=None):
         return error({'email': ['This email already exists in the database']})
 
     profile_data = {
-        'verification_email': verification_token.email_id,
+        'verification_email_id': verification_token.email_id,
         **schema.data
     }
 
@@ -200,7 +200,7 @@ def update_profile(profile_id=None):
     if error:
         return error  # TODO exceptions
 
-    assert profile.verification_email == verification_token.email_id
+    assert profile.verification_email_id == verification_token.email_id
 
     for key, value in schema.data.items():
         setattr(profile, key, value)
@@ -345,6 +345,7 @@ def verify_token():
         'email': verification_email.email,
         'is_mentor': verification_email.is_mentor,
         'profile_id': profile_id,
+        'available_for_mentoring': profile.available_for_mentoring
     })
 
 
@@ -357,7 +358,7 @@ def get_profile_by_token(token):
     verification_email = VerificationEmail.query.get(verification_token.email_id)
 
     return Profile.query.filter(
-        Profile.verification_email == verification_email.id
+        Profile.verification_email_id == verification_email.id
     ).one_or_none()
 
 

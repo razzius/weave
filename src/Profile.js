@@ -17,9 +17,11 @@ export default class Profile extends Component {
 
   render() {
     const { data, error } = this.state
+    const ownProfile = data !== null && this.props.profileId === data.id
     return (
       (error !== null && <h4>error: {String(error)}</h4>) ||
-      (data !== null && <ProfileView data={data} />)
+      // could use spread props below
+      (data !== null && <ProfileView ownProfile={ownProfile} data={data} />)
     )
   }
 }

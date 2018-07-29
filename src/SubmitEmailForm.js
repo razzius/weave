@@ -1,5 +1,21 @@
 import React, { Component } from 'react'
 
+function displayError(error) {
+  if (error === null) {
+    return null
+  }
+
+  if (error.email[0] === 'unregistered') {
+    return <p>
+      That email has not been registered. Please sign up using the links above.
+    </p>
+  }
+
+  return <p>
+    There was a problem with the request. Please wait a moment and try again.
+  </p>
+}
+
 export default class SubmitEmailForm extends Component {
   constructor(props) {
     super(props)
@@ -29,9 +45,7 @@ export default class SubmitEmailForm extends Component {
       <p>
         <input name="email" type="email" onChange={this.updateEmail} />
       </p>
-    {this.state.error && <p>
-     There was a problem with the request. Please wait a moment and try again.
-     </p>}
+      {displayError(this.state.error)}
     <button className="button">Send verification email</button>
     </form>
   }

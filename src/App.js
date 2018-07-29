@@ -18,6 +18,7 @@ import Resources from './Resources'
 import FacultyExpectations from './FacultyExpectations'
 import StudentExpectations from './StudentExpectations'
 import EditProfile from './EditProfile'
+import CreateProfile from './CreateProfile'
 import Profile from './Profile'
 
 import RegisterFacultyEmail from './RegisterFacultyEmail'
@@ -29,7 +30,7 @@ import { setAvailabilityForMentoring, verifyToken } from './api'
 
 class App extends Component {
   state = {
-    availableForMentoring: true,
+    availableForMentoring: null,
     token: window.localStorage.getItem('token'),
     isMentor: null,
     profileId: null
@@ -39,8 +40,9 @@ class App extends Component {
     if (this.state.token !== null) {
       verifyToken(this.state.token).then(response => {
         this.setState({
-          profileId: response.profileId,
-          isMentor: response.is_mentor
+          profileId: response.profile_id,
+          isMentor: response.is_mentor,
+          availableForMentoring: response.available_for_mentoring,
         })
       }).catch(() => {
         window.localStorage.removeItem('token')
@@ -57,10 +59,6 @@ class App extends Component {
 
   setProfileId = profileId => {
     this.setState({ profileId })
-  }
-
-  setIsMentor = isMentor => {
-    this.setState({ isMentor })
   }
 
   logout = (e) => {
@@ -119,7 +117,7 @@ class App extends Component {
                 Expectations
               </a>
 
-              <a href="/resources" className="App-title">
+              <a href="/resourcesexpectations" className="App-title">
                 Resources
               </a>
 
@@ -157,15 +155,31 @@ class App extends Component {
               component={StudentExpectations}
             />
             <Route
-              path="/edit-profile"
+              path="/create-profile"
               render={({ history }) => (
-                <EditProfile
+                <CreateProfile
                   availableForMentoring={this.state.availableForMentoring}
                   setProfileId={this.setProfileId}
                   token={this.state.token}
                   history={history}
-                />
+                  />
               )}
+            />
+            <Route
+              path="/edit-profile"
+              render={({ history }) => {
+                if (this.state.profileId !== null) {
+                  return <EditProfile
+                    availableForMentoring={this.state.availableForMentoring}
+                    setProfileId={this.setProfileId}
+                    token={this.state.token}
+                    history={history}
+                    profileId={this.state.profileId}
+                  />
+                }
+
+                return null
+              }}
             />
             <Route
               path="/register-faculty-email"
@@ -204,7 +218,7 @@ class App extends Component {
 
             <Route
               path="/profiles/:id"
-              render={props => <Profile token={this.state.token} {...props} />}
+              render={props => <Profile profileId={this.state.profileId} token={this.state.token} {...props} />}
             />
             <Route component={() => <p>404 Not found</p>} />
           </Switch>

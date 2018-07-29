@@ -14,7 +14,7 @@ def test_update_profile(client):
 
     profile = save(Profile(
         name='Test User',
-        verification_email=verification_email.id,
+        verification_email_id=verification_email.id,
         contact_email='test@test.com',
     ))
 

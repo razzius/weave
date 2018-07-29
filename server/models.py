@@ -2,6 +2,7 @@ from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.types import VARCHAR, TypeDecorator
+from sqlalchemy.orm import relationship
 
 
 db = SQLAlchemy()
@@ -36,9 +37,10 @@ class VerificationEmail(db.Model):
 class Profile(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False)
-    verification_email = db.Column(
+    verification_email_id = db.Column(
         db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
     )
+    verification_email = relationship(VerificationEmail, uselist=False)
     contact_email = db.Column(db.String(120), unique=True, nullable=False)
 
     profile_image_url = db.Column(db.String(255))

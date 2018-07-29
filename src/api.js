@@ -15,8 +15,18 @@ function buildURL(path, params) {
   return url
 }
 
-async function http(url, options) {
-  const response = await fetch(url, options)
+async function http(token, url, options = {}) {
+  const existingHeaders = options.headers || {}
+  const authHeaders = {
+    'Authorization': `Token ${token}`,
+    ...existingHeaders
+  }
+  const optionsWithAuth = {
+    ...options,
+    headers: authHeaders
+  }
+
+  const response = await fetch(url, optionsWithAuth)
 
   if (!response.ok) {
     throw await response.json()
@@ -28,19 +38,24 @@ async function http(url, options) {
 async function get(token, path, params = null) {
   const url = buildURL(`api/${path}`, params)
 
-  return http(url, {
-    headers: {
-      'Authorization': `Token ${token}`,
-    },
-  })
+  return http(token, url)
 }
 
 async function post(token, path, payload) {
-  return http(buildURL(`api/${path}`, null), {
+  return http(token, buildURL(`api/${path}`, null), {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
-      'Authorization': `Token ${token}`,
+    },
+    body: JSON.stringify(payload)
+  })
+}
+
+async function put(token, path, payload) {
+  return http(token, buildURL(`api/${path}`, null), {
+    method: 'PUT',
+    headers: {
+      'content-type': 'application/json',
     },
     body: JSON.stringify(payload)
   })
@@ -60,26 +75,47 @@ export async function getProfile(token, id) {
   return get(token, `profiles/${id}`)
 }
 
+const profilePayloadMapping = {
+  name: 'name',
+  contact_email: 'contactEmail',
+  profile_image_url: 'imageUrl',
+
+  additional_interests: 'additionalInterests',
+  affiliations: 'affiliations',
+  clinical_specialties: 'clinicalSpecialties',
+  additional_information: 'additionalInformation',
+
+  willing_shadowing: 'willingShadowing',
+  willing_networking: 'willingNetworking',
+  willing_goal_setting: 'willingGoalSetting',
+  willing_discuss_personal: 'willingDiscussPersonal',
+  willing_residency_application: 'willingResidencyApplication',
+
+  cadence: 'cadence',
+  other_cadence: 'otherCadence'
+}
+
 export function profileToPayload(profile) {
-  return {
-    name: profile.name,
-    contact_email: profile.contactEmail,
-    profile_image_url: profile.imageUrl,
+  return Object.keys(profilePayloadMapping).reduce((payload, key) => (
+    {
+      ...payload,
+      [key]: profile[profilePayloadMapping[key]]
+    }
+  ), {})
+}
 
-    additional_interests: profile.additionalInterests,
-    affiliations: profile.affiliations,
-    clinical_specialties: profile.clinicalSpecialties,
-    additional_information: profile.additionalInformation,
+function reverseObject(obj) {
+  return Object.keys(obj).reduce((result, key) => ({[obj[key]]: key, ...result}), {})
+}
 
-    willing_shadowing: profile.willingShadowing,
-    willing_networking: profile.willingNetworking,
-    willing_goal_setting: profile.willingGoalSetting,
-    willing_discuss_personal: profile.willingDiscussPersonal,
-    willing_residency_application: profile.willingResidencyApplication,
-
-    cadence: profile.cadence,
-    other_cadence: profile.otherCadence
-  }
+export function payloadToProfile(payload) {
+  const mapping = reverseObject(profilePayloadMapping)
+  return Object.keys(mapping).reduce((profile, key) => (
+    {
+      ...profile,
+      [key]: payload[mapping[key]]
+    }
+  ), {})
 }
 
 export async function createProfile(token, profile) {
@@ -88,11 +124,11 @@ export async function createProfile(token, profile) {
   return post(token, 'profile', payload)
 }
 
-// export async function updateProfile(token, profile) {
-//   const payload = profileToPayload(profile)
+export async function updateProfile(token, profile, profileId) {
+  const payload = profileToPayload(profile)
 
-//   return put(token, 'profile', payload)
-// }
+  return put(token, `profiles/${profileId}`, payload)
+}
 
 export async function sendFacultyVerificationEmail(email) {
   return post(null, 'send-faculty-verification-email', { email })
@@ -117,11 +153,8 @@ export async function setAvailabilityForMentoring(token, available) {
 export async function uploadPicture(token, file) {
   const url = buildURL('api/upload-image')
 
-  return http(url, {
+  return http(token, url, {
     method: 'POST',
     body: file,
-    headers: {
-      'Authorization': `Token ${token}`,
-    }
   })
 }
