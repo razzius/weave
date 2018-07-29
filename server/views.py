@@ -341,11 +341,13 @@ def verify_token():
 
     profile_id = profile.id if profile is not None else None
 
+    available_for_mentoring = profile.available_for_mentoring if profile is not None else None
+
     return jsonify({
         'email': verification_email.email,
         'is_mentor': verification_email.is_mentor,
         'profile_id': profile_id,
-        'available_for_mentoring': profile.available_for_mentoring
+        'available_for_mentoring': available_for_mentoring
     })
 
 
