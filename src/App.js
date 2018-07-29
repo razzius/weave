@@ -117,7 +117,7 @@ class App extends Component {
                 Expectations
               </a>
 
-              <a href="/resourcesexpectations" className="App-title">
+              <a href="/resources" className="App-title">
                 Resources
               </a>
 
