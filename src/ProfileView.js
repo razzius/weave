@@ -83,7 +83,7 @@ const ProfileView = ({ data, ownProfile }) => (
         </div>
         <div className="about" style={{ width: '450px' }}>
           {ownProfile && <NextButton href="/edit-profile" text="Edit profile"/>}
-          {!ownProfile && <NextButton href="/browse" text="Back to list"/>}
+          {ownProfile === false && <NextButton href="/browse" text="Back to list"/>}
           <h1>{data.name}</h1>
 
           <h4 style={{marginTop: '2em'}}>Hospital Affiliations</h4>

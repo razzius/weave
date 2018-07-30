@@ -158,7 +158,7 @@ export default class EditProfile extends Component {
       return (
         <div>
           <ProfileView data={profileToPayload(this.state)} />
-          <div style={{ width: '700px', margin: 'auto' }}>
+          <div style={{ width: '850px', margin: 'auto' }}>
             <button
               style={{ marginRight: '1em' }}
               className="button"

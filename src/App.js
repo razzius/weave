@@ -12,7 +12,6 @@ import './App.css'
 import Home from './Home'
 import Browse from './Browse'
 import Login from './Login'
-import Logout from './Logout'
 import Expectations from './Expectations'
 import Resources from './Resources'
 import FacultyExpectations from './FacultyExpectations'
@@ -51,9 +50,9 @@ class App extends Component {
     }
   }
 
-  authenticate = token => (
+  authenticate = ({ token, profileId, isMentor }) => (
     new Promise(resolve => {
-      this.setState({ token }, () => resolve())
+      this.setState({ token, profileId, isMentor }, () => resolve())
     })
   )
 
@@ -207,10 +206,6 @@ class App extends Component {
             <Route
               path="/login"
               render={({ history }) => <Login history={history} />}
-            />
-            <Route
-              path="/logout"
-              render={() => <Logout authenticate={this.authenticate} />}
             />
 
             <Route path="/expectations" component={Expectations} />

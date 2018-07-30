@@ -13,8 +13,8 @@ function getButtonInfo(isMentor, returningUser) {
   }
   if (returningUser) {
     return {
-      buttonText: 'Edit profile',
-      linkUrl: '/edit-profile'
+      buttonText: 'Continue to home',
+      linkUrl: '/'
     }
   }
   return {
@@ -31,6 +31,7 @@ const VerifiedView = (props) => {
     history,
     authenticate,
     token,
+    profileId
   } = props
 
   const { buttonText, linkUrl } = getButtonInfo(isMentor, returningUser)
@@ -44,7 +45,7 @@ const VerifiedView = (props) => {
       <p>{welcomeMessage}</p>
       <NextButton
         onClick={() => {
-          authenticate(token).then(() => {
+          authenticate({ token, profileId, isMentor }).then(() => {
             history.push(linkUrl)
           })
         }}
@@ -95,6 +96,7 @@ export default class VerifyEmail extends Component {
                                   authenticate={authenticate}
                                   history={history}
                                   token={token}
+                                  profileId={profileId}
                                   />}
       </AppScreen>
     )

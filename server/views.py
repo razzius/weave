@@ -237,14 +237,14 @@ def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
     ).one_or_none()
 
     if existing_email:
-        return existing_email
+        return existing_email, False
 
     email_row = VerificationEmail(email=email, is_mentor=is_mentor)
 
     db.session.add(email_row)
     db.session.commit()
 
-    return email_row
+    return email_row, True
 
 
 def save_verification_token(email_id, token, email_response):
@@ -258,6 +258,23 @@ def save_verification_token(email_id, token, email_response):
     db.session.commit()
 
 
+def send_token(verification_email, new_user, email_function):
+    if new_user:
+        token = generate_token()
+
+        email_response = email_function(verification_email.email, token)
+
+        save_verification_token(verification_email.id, token, email_response)
+    else:
+        token = VerificationToken.query.filter(
+            VerificationToken.email_id == verification_email.id
+        ).one().token
+
+        email_function(verification_email.email, token)
+        # TODO no email log
+        # TODO re-uses token
+
+
 @api_post('send-faculty-verification-email')
 def send_faculty_verification_email():
     schema = send_verification_email_schema.load(request.json)
@@ -267,13 +284,9 @@ def send_faculty_verification_email():
 
     email = schema.data['email']
 
-    verification_email = get_verification_email(email, is_mentor=True)
+    verification_email, created = get_verification_email(email, is_mentor=True)
 
-    token = generate_token()
-
-    email_response = send_faculty_registration_email(email, token)
-
-    save_verification_token(verification_email.id, token, email_response)
+    send_token(verification_email, created, email_function=send_faculty_registration_email)
 
     return jsonify({'id': verification_email.id, 'email': email})
 
@@ -287,13 +300,9 @@ def send_student_verification_email():
 
     email = schema.data['email']
 
-    verification_email = get_verification_email(email, is_mentor=False)
+    verification_email, created = get_verification_email(email, is_mentor=False)
 
-    token = generate_token()
-
-    email_response = send_student_registration_email(email, token)
-
-    save_verification_token(verification_email.id, token, email_response)
+    send_token(verification_email, created, email_function=send_student_registration_email)
 
     return jsonify({'id': verification_email.id, 'email': email})
 
