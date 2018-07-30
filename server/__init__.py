@@ -3,7 +3,8 @@ import os
 
 from raven.contrib.flask import Sentry
 from flask_cors import CORS
-from flask_admin import Admin
+from flask_basicauth import BasicAuth
+from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from .models import Profile, VerificationEmail, VerificationToken, db
 import server.views
@@ -21,11 +22,52 @@ db.init_app(app)
 CORS(app)
 Sentry(app)
 
+app.config['BASIC_AUTH_USERNAME'] = os.environ['BASIC_AUTH_USERNAME']
+app.config['BASIC_AUTH_PASSWORD'] = os.environ['BASIC_AUTH_PASSWORD']
 
-admin = Admin(app, name='advising app', template_mode='bootstrap3')
-admin.add_view(ModelView(VerificationToken, db.session))
-admin.add_view(ModelView(VerificationEmail, db.session))
-admin.add_view(ModelView(Profile, db.session))
+basic_auth = BasicAuth(app)
+
+
+class BasicAuthAdminView(AdminIndexView):
+
+    @expose('/')
+    @basic_auth.required
+    def index(self):
+        return super().index()
+
+
+class BasicAuthModelView(ModelView):
+
+    @expose('/', methods=('GET',))
+    @basic_auth.required
+    def index_view(self):
+        return super().index_view()
+
+    @expose('/new', methods=('GET', 'POST'))
+    @basic_auth.required
+    def create_view(self):
+        return super().create_view()
+
+    @expose('/details', methods=('GET',))
+    @basic_auth.required
+    def details_view(self):
+        return super().details_view()
+
+    @expose('/edit', methods=('GET', 'POST'))
+    @basic_auth.required
+    def edit_view(self):
+        return super().edit_view()
+
+    @expose('/delete', methods=('DELETE',))
+    @basic_auth.required
+    def delete_view(self):
+        return super().delete_view()
+
+
+admin = Admin(app, index_view=BasicAuthAdminView())
+admin.add_view(BasicAuthModelView(VerificationToken, db.session))
+admin.add_view(BasicAuthModelView(VerificationEmail, db.session))
+admin.add_view(BasicAuthModelView(Profile, db.session))
 
 
 @app.route('/')

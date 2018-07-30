@@ -16,6 +16,7 @@ requests = "*"
 requests-toolbelt = "*"
 flask-admin = "*"
 raven = {version = "*", extras = ["flask"]}
+flask-basicauth = "*"
 
 [dev-packages]
 ipython = "*"
