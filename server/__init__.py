@@ -58,7 +58,7 @@ class BasicAuthModelView(ModelView):
     def edit_view(self):
         return super().edit_view()
 
-    @expose('/delete', methods=('DELETE',))
+    @expose('/delete', methods=('POST',))
     @basic_auth.required
     def delete_view(self):
         return super().delete_view()
