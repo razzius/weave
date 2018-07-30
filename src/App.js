@@ -50,9 +50,9 @@ class App extends Component {
     }
   }
 
-  authenticate = ({ token, profileId, isMentor }) => (
+  authenticate = ({ token, profileId, isMentor, availableForMentoring }) => (
     new Promise(resolve => {
-      this.setState({ token, profileId, isMentor }, () => resolve())
+      this.setState({ token, profileId, isMentor, availableForMentoring }, () => resolve())
     })
   )
 

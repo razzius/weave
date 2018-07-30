@@ -31,7 +31,8 @@ const VerifiedView = (props) => {
     history,
     authenticate,
     token,
-    profileId
+    profileId,
+    availableForMentoring
   } = props
 
   const { buttonText, linkUrl } = getButtonInfo(isMentor, returningUser)
@@ -45,7 +46,7 @@ const VerifiedView = (props) => {
       <p>{welcomeMessage}</p>
       <NextButton
         onClick={() => {
-          authenticate({ token, profileId, isMentor }).then(() => {
+          authenticate({ token, profileId, isMentor, availableForMentoring }).then(() => {
             history.push(linkUrl)
           })
         }}
@@ -70,14 +71,15 @@ export default class VerifyEmail extends Component {
       this.setState({
         verified: response,
         profileId: response.profile_id,
-        isMentor: response.is_mentor
+        isMentor: response.is_mentor,
+        availableForMentoring: response.available_for_mentoring
       })
       window.localStorage.setItem('token', this.state.token)
     })
   }
 
   render() {
-    const { error, isMentor, profileId, verified, token } = this.state
+    const { error, isMentor, profileId, verified, token, availableForMentoring } = this.state
 
     const { authenticate, history } = this.props
 
@@ -97,6 +99,7 @@ export default class VerifyEmail extends Component {
                                   history={history}
                                   token={token}
                                   profileId={profileId}
+                                  availableForMentoring={availableForMentoring}
                                   />}
       </AppScreen>
     )
