@@ -52,7 +52,7 @@ export default class StudentExpectationsSlider extends React.Component {
           <div className="expectation">
             <h2 style={{ textAlign: "center" }}>Stay in touch</h2>
             <div>
-              Maintain regular contact with your mentor. Set realistic goals for
+              Maintain regular contact and timely communication with your mentor. Set realistic goals for
               the relationship and how often to meet. Do your best to stick to
               them and communicate when things come up. We recommend at least
               one face-to-face exchange.

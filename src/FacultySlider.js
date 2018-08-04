@@ -53,7 +53,7 @@ export default class FacultyExpectationsSlider extends React.Component {
           <div className="expectation">
             <h2 style={{ textAlign: "center" }}>Stay in touch</h2>
             <div>
-              Maintain regular contact with your mentee(s). Set realistic goals
+              Maintain regular contact and timely communication with your mentee(s). Set realistic goals
               for the relationship and how often to meet. Do your best to stick
               to them and communicate when things come up.
             </div>
