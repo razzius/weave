@@ -55,7 +55,8 @@ export default class SubmitEmailForm extends Component {
 
   render() {
     if (!this.state.success) {
-      const emailValid = this.state.email.endsWith('harvard.edu')
+      const { email } = this.state
+      const emailValid = email.endsWith('harvard.edu') || email.endsWith('partners.org')
 
       return (
         <div>
@@ -67,7 +68,7 @@ export default class SubmitEmailForm extends Component {
             </p>
             {displayError(this.state.error)}
             <div
-              data-tip="Email must end in harvard.edu"
+              data-tip="Email must end in harvard.edu or partners.org"
               data-tip-disable={emailValid}>
               <button
                 disabled={!emailValid}
