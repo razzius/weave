@@ -123,4 +123,4 @@ def send_student_login_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return _send_email(email, 'HMS Weave Login', html)
+    return _send_email(email, 'HMS Weave Mentee Login', html)

@@ -22,8 +22,6 @@ import Profile from './Profile'
 
 import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
-import CheckEmail from './CheckEmail'
-import LoginCheckEmail from './LoginCheckEmail'
 import VerifyEmail from './VerifyEmail'
 import { setAvailabilityForMentoring, verifyToken } from './api'
 
@@ -103,6 +101,7 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
+          <ReactTooltip place="bottom" />
           <header className="App-header">
             <div className="header-inner">
               <Link to="/" className="App-title left">
@@ -138,7 +137,6 @@ class App extends Component {
                       }
                     }}
                   />
-                  <ReactTooltip place="bottom" />
                 </span>
               )}
             </div>
@@ -188,8 +186,6 @@ class App extends Component {
               path="/register-student-email"
               render={({ history }) => <RegisterStudentEmail history={history} />}
             />
-            <Route path="/check-email" component={CheckEmail} />
-            <Route path="/login-check-email" component={LoginCheckEmail} />
             <Route
               path="/verify"
               render={({ history }) => (

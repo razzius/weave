@@ -35,7 +35,7 @@ body,
 }
 
 .button {
-  border: 1px solid black;
+  border: 1px solid lightgrey;
   text-decoration: none;
   color: black;
   line-height: 1.5em;
@@ -46,8 +46,16 @@ body,
   background: white;
   cursor: pointer;
 }
-.button:hover {
+
+.button:enabled {
+  border: 1px solid black;
+}
+.button:hover:enabled {
   background: var(--pastel-yellow);
+}
+.button:disabled {
+  color: lightgrey;
+  cursor: default;
 }
 
 .header-inner {
@@ -81,7 +89,7 @@ body,
   margin: 10px;
 }
 .App-title:hover {
-    color: white;
+  color: white;
 }
 
 .App-title h1 {
@@ -121,7 +129,7 @@ input[type='email'] {
 }
 
 .expectation {
-    margin-bottom: 1em;
+  margin-bottom: 1em;
 }
 .about {
   padding: 0px 50px;
@@ -187,9 +195,8 @@ input[type='email'] {
   cursor: pointer;
 }
 .search-submit:hover {
-    background: var(--pastel-yellow);
+  background: var(--pastel-yellow);
 }
-
 
 /* .next-button { */
 /*   text-align: center; */
@@ -214,56 +221,56 @@ input[type='email'] {
 }
 
 #additional-resources {
-    max-width: 700px;
-    margin: 3em auto;
+  max-width: 700px;
+  margin: 3em auto;
 }
 
 #additional-resources li {
-    padding: .5em;
+  padding: 0.5em;
 }
 
 .cadence {
-    margin-bottom: 20px;
+  margin-bottom: 20px;
 }
 
 .cadence label {
-    margin: 10px;
+  margin: 10px;
 }
 
 input[disabled]:checked {
-    box-shadow: 0px 0px 0px 2px var(--burnt-orange);
-    border-radius: 3px;
+  box-shadow: 0px 0px 0px 2px var(--burnt-orange);
+  border-radius: 3px;
 }
 
 .available-for-mentoring {
-    margin-top: 25px;
-    margin-right: 25px;
-    float: right;
-    /* display: inline; */
+  margin-top: 25px;
+  margin-right: 25px;
+  float: right;
+  /* display: inline; */
 }
 
 .switch.on {
-    background: #007aff;
-    transition: all .5s;
+  background: #007aff;
+  transition: all 0.5s;
 }
 
 .switch {
-    vertical-align: middle;
-    margin: 0px 20px;
+  vertical-align: middle;
+  margin: 0px 20px;
 }
 
 .grayed-out {
-    color: lightgray;
+  color: lightgray;
 }
 
 .profile-contact h4 {
-    margin-bottom: .5em;
+  margin-bottom: 0.5em;
 }
 
 .profile-contact p {
-    margin-top: .2em;
+  margin-top: 0.2em;
 }
 
 .App-body h3 {
-    margin-top: 2em;
+  margin-top: 2em;
 }

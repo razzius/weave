@@ -1,22 +1,18 @@
-import React, { Component } from 'react'
+import React from 'react'
 import AppScreen from './AppScreen'
 import SubmitEmailForm from './SubmitEmailForm'
 import { sendFacultyVerificationEmail } from './api'
 
-export default class RegisterFacultyEmail extends Component {
-  render() {
-    return (
-      <AppScreen>
-        <h1>Register email</h1>
-        <p>
-          Please enter your Harvard or hospital-affiliated email and we will send you a verification email.
-        </p>
-        <SubmitEmailForm
-          history={this.props.history}
-          redirectTo='/check-email'
-          sendEmail={sendFacultyVerificationEmail}
-          />
-      </AppScreen>
-    )
-  }
-}
+const RegisterFacultyEmail = ({ history }) => (
+  <AppScreen>
+    <SubmitEmailForm
+      header="Register Email"
+      instructions="Please enter your Harvard or hospital-affiliated email and we will send you a verification email."
+      history={history}
+      successMessage="Please check your email to continue registration. You may close this page."
+      sendEmail={sendFacultyVerificationEmail}
+    />
+  </AppScreen>
+)
+
+export default RegisterFacultyEmail
