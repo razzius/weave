@@ -3,7 +3,7 @@ from http import HTTPStatus
 
 from cloudinary import uploader
 from flask import Blueprint, jsonify, request
-from marshmallow import Schema, ValidationError, fields
+from marshmallow import Schema, ValidationError, fields, validates_schema
 from requests_toolbelt.utils import dump
 from sqlalchemy import func, or_
 from sqlalchemy.sql import exists
@@ -56,6 +56,13 @@ class ProfileSchema(Schema):
 
 class SendVerificationEmailSchema(Schema):
     email = fields.String(required=True)
+
+    @validates_schema
+    def validate_email(self, in_data):
+        email = in_data.get('email', '')
+
+        if not email.endswith('harvard.edu') and not email.endswith('partners.org'):
+            raise ValidationError('Email must end with harvard.edu or partners.org')
 
 
 profile_schema = ProfileSchema()
