@@ -27,6 +27,7 @@ def test_verify_valid_token(client):
 
     assert response.status_code == HTTPStatus.OK.value
     assert response.json == {
+        'available_for_mentoring': None,
         'email': 'test@test.com',
         'profile_id': None,
         'is_mentor': True
