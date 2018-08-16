@@ -27,7 +27,7 @@ const ProfileView = ({ data, ownProfile }) => (
           <h4>Additional Opportunities</h4>
 
           <div className="expectation">
-            <label className={!data.willing_shadowing && 'grayed-out'}>
+            <label className={!data.willing_shadowing ? 'grayed-out' : ''}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -38,7 +38,7 @@ const ProfileView = ({ data, ownProfile }) => (
           </div>
 
           <div className="expectation">
-            <label className={!data.willing_networking ? 'grayed-out' : undefined}>
+            <label className={!data.willing_networking ? 'grayed-out' : ''}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -49,7 +49,7 @@ const ProfileView = ({ data, ownProfile }) => (
           </div>
 
           <div className="expectation">
-            <label className={!data.willing_goal_setting && 'grayed-out'}>
+            <label className={!data.willing_goal_setting ? 'grayed-out' : ''}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -60,7 +60,7 @@ const ProfileView = ({ data, ownProfile }) => (
           </div>
 
           <div className="expectation">
-            <label className={!data.willing_discuss_personal ? 'grayed-out' : undefined}>
+            <label className={!data.willing_discuss_personal ? 'grayed-out' : ''}>
               <input
                 type="checkbox"
                 disabled="true"
@@ -71,7 +71,7 @@ const ProfileView = ({ data, ownProfile }) => (
           </div>
 
           <div className="expectation">
-            <label className={!data.willing_residency_application && 'grayed-out'}>
+            <label className={!data.willing_residency_application ? 'grayed-out' : ''}>
               <input
                 type="checkbox"
                 disabled="true"
