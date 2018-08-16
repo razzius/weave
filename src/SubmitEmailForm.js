@@ -22,7 +22,7 @@ function displayError(error) {
 
   return (
     <p>
-      There was a problem with the request. Please wait a moment and try again.
+      {error.email[0]}
     </p>
   )
 }
@@ -61,14 +61,14 @@ export default class SubmitEmailForm extends Component {
       return (
         <div>
           <h1>{this.props.header}</h1>
-          <p>{this.props.instructions}</p>
+          <div>{this.props.instructions}</div>
           <form onSubmit={this.submitEmail}>
             <p>
               <input name="email" type="email" onChange={this.updateEmail} />
             </p>
             {displayError(this.state.error)}
             <div
-              data-tip="Email must end in harvard.edu or partners.org"
+              data-tip="Please enter your Harvard or hospital-affiliated email"
               data-tip-disable={emailValid}>
               <button
                 disabled={!emailValid}

@@ -29,7 +29,7 @@ const Login = props => (
       header="Login"
       history={props.history}
       instructions={instructions}
-      successMessage="Check your email and follow the link from there to log in"
+      successMessage="Please check your email and follow the link from there to log in."
       sendEmail={sendLoginEmail}
     />
   </AppScreen>

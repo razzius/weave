@@ -54,7 +54,7 @@ class ProfileSchema(Schema):
     other_cadence = fields.String(allow_none=True)
 
 
-class SendVerificationEmailSchema(Schema):
+class ValidEmailSchema(Schema):
     email = fields.String(required=True)
 
     @validates_schema
@@ -62,12 +62,12 @@ class SendVerificationEmailSchema(Schema):
         email = in_data.get('email', '')
 
         if not email.endswith('harvard.edu') and not email.endswith('partners.org'):
-            raise ValidationError('Email must end with harvard.edu or partners.org')
+            raise ValidationError('Email must end with harvard.edu or partners.org', 'email')
 
 
 profile_schema = ProfileSchema()
 profiles_schema = ProfileSchema(many=True)
-send_verification_email_schema = SendVerificationEmailSchema()
+valid_email_schema = ValidEmailSchema()
 
 
 @api.errorhandler(ValidationError)
@@ -284,7 +284,7 @@ def send_token(verification_email, new_user, email_function):
 
 @api_post('send-faculty-verification-email')
 def send_faculty_verification_email():
-    schema = send_verification_email_schema.load(request.json)
+    schema = valid_email_schema.load(request.json)
 
     if schema.errors:
         return error(schema.errors)
@@ -300,7 +300,7 @@ def send_faculty_verification_email():
 
 @api_post('send-student-verification-email')
 def send_student_verification_email():
-    schema = send_verification_email_schema.load(request.json)
+    schema = valid_email_schema.load(request.json)
 
     if schema.errors:
         return error(schema.errors)
@@ -316,7 +316,12 @@ def send_student_verification_email():
 
 @api_post('login')
 def login():
-    email = request.json['email']
+    schema = valid_email_schema.load(request.json)
+
+    if schema.errors:
+        return error(schema.errors)
+
+    email = schema.data['email']
 
     verification_email = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
 
