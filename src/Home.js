@@ -44,23 +44,6 @@ const Home = (props) => (
         We hope that this mentorship platform provides an opt-in, customized mentoring structure with clear, adjustable expectations for both mentors and mentees that may encourage more longitudinal and meaningful mentoring experiences.
       </p>
     </section>
-    <section id="additional-resources">
-      <h3>Additional Resources</h3>
-      <ul>
-        <li>
-          <a href="https://medstudenthandbook.hms.harvard.edu/1019-thrive-mobile-app">Thrive Mobile App</a>
-        </li>
-        <li>
-          <a href="https://meded.hms.harvard.edu/student-advising">Student Advising</a>
-        </li>
-        <li>
-          <a href="https://collaborate.hms.harvard.edu/display/hmsadvising/Specialty+Advising">Specialty Advising</a>
-        </li>
-        <li>
-          <a href="https://collaborate.hms.harvard.edu/display/hmsadvising/Personal+Advising">Personal Advising</a>
-        </li>
-      </ul>
-    </section>
   </div>
 )
 
