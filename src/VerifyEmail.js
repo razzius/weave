@@ -75,6 +75,9 @@ export default class VerifyEmail extends Component {
         availableForMentoring: response.available_for_mentoring
       })
       window.localStorage.setItem('token', this.state.token)
+    }).catch(err => {
+      if (err.token[0] === 'not recognized')
+        this.setState({error: 'Your token is invalid or has expired. Try signing up or logging in again.'})
     })
   }
 
