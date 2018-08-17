@@ -71,11 +71,11 @@ const ProfileView = ({ data, ownProfile }) => (
           </div>
 
           <div className="expectation">
-            <label className={!data.willing_residency_application ? 'grayed-out' : ''}>
+            <label className={!data.willing_career_guidance ? 'grayed-out' : ''}>
               <input
                 type="checkbox"
                 disabled="true"
-                checked={data.willing_residency_application}
+                checked={data.willing_career_guidance}
               />
               Willing to advise for residency application.
             </label>

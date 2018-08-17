@@ -89,7 +89,8 @@ const profilePayloadMapping = {
   willing_networking: 'willingNetworking',
   willing_goal_setting: 'willingGoalSetting',
   willing_discuss_personal: 'willingDiscussPersonal',
-  willing_residency_application: 'willingResidencyApplication',
+  willing_career_guidance: 'willingCareerGuidance',
+  willing_student_group: 'willingStudentGroup',
 
   cadence: 'cadence',
   other_cadence: 'otherCadence'

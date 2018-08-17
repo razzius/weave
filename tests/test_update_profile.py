@@ -45,6 +45,7 @@ def test_update_profile(client):
         'willing_discuss_personal': False,
         'willing_goal_setting': False,
         'willing_networking': False,
-        'willing_residency_application': False,
+        'willing_career_guidance': False,
+        'willing_student_group': False,
         'willing_shadowing': False
     }

@@ -9,7 +9,7 @@ export function getParam(param) {
 
 export function when(condition, promiseCallable) {
   if (condition) {
-    return promiseCallable
+    return promiseCallable()
   }
   return Promise.resolve(true)
 }

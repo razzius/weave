@@ -47,7 +47,8 @@ export default class ProfileForm extends Component {
     willingNetworking: false,
     willingGoalSetting: false,
     willingDiscussPersonal: false,
-    willingResidencyApplication: false,
+    willingCareerGuidance: false,
+    willingStudentGroup: false,
 
     cadence: 'monthly',
     otherCadence: null,
@@ -199,6 +200,7 @@ export default class ProfileForm extends Component {
               <input
                 name="newImage"
                 type="file"
+                accept="image/*"
                 onChange={this.handleNewImage}
               />
               <input
@@ -288,7 +290,7 @@ export default class ProfileForm extends Component {
         </div>
         <div>
           <div className="expectations">
-            <h3>Optional Expectations</h3>
+            <h3>I am available to mentor in the following ways:</h3>
 
             <div className="expectation">
               <label>
@@ -297,7 +299,7 @@ export default class ProfileForm extends Component {
                   checked={this.state.willingShadowing}
                   onChange={this.updateBoolean('willingShadowing')}
                 />
-                Will allow shadowing opportunities for mentee(s).
+                Clinical shadowing opportunities
               </label>
             </div>
 
@@ -308,7 +310,7 @@ export default class ProfileForm extends Component {
                   checked={this.state.willingNetworking}
                   onChange={this.updateBoolean('willingNetworking')}
                 />
-                Will help mentee(s) with networking as deemed appropriate.
+                Networking
               </label>
             </div>
 
@@ -319,7 +321,7 @@ export default class ProfileForm extends Component {
                   checked={this.state.willingGoalSetting}
                   onChange={this.updateBoolean('willingGoalSetting')}
                 />
-                Will help mentee(s) with goal setting.
+                Goal setting
               </label>
             </div>
 
@@ -330,7 +332,7 @@ export default class ProfileForm extends Component {
                   checked={this.state.willingDiscussPersonal}
                   onChange={this.updateBoolean('willingDiscussPersonal')}
                 />
-                Willing to discuss personal as well as professional life.
+                Discussing personal as well as professional life
               </label>
             </div>
 
@@ -338,13 +340,25 @@ export default class ProfileForm extends Component {
               <label>
                 <input
                   type="checkbox"
-                  checked={this.state.willingResidencyApplication}
-                  onChange={this.updateBoolean('willingResidencyApplication')}
+                  checked={this.state.willingCareerGuidance}
+                  onChange={this.updateBoolean('willingCareerGuidance')}
                 />
-                Willing to advise for residency application.
+                Career guidance
+              </label>
+            </div>
+
+            <div className="expectation">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={this.state.willingStudentGroup}
+                  onChange={this.updateBoolean('willingStudentGroup')}
+                  />
+                Student interest group support or speaking at student events
               </label>
             </div>
           </div>
+
           <div className="cadence">
             <h3>Meeting Cadence</h3>
             <label>

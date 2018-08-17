@@ -26,7 +26,7 @@ const Home = (props) => (
         }
       </div>
     </main>
-    <section id="about">
+    <section id="about" style={{paddingBottom: '5em'}}>
       <h1>About</h1>
       <p>
         Soon after entering medical school, students are faced with a new learning and social environment and pressure to quickly determine academic or clinical interests. Although resources for faculty contact information exist, both students and faculty have found there to be unclear expectations about what a mentorship relationship or experience will constitute. Furthermore, for students with myriad interests who are still in the process of discovering their desired field of medicine, it is often challenging to know who to reach out to when lists of faculty members are provided solely based on clinical specialty.

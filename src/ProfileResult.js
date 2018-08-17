@@ -43,7 +43,8 @@ export default props => {
         <input disabled title="Networking" type="checkbox" checked={props.willing_networking}/>
         <input disabled title="Goal setting" type="checkbox" checked={props.willing_goal_setting}/>
         <input disabled title="Personal life" type="checkbox" checked={props.willing_discuss_personal}/>
-        <input disabled title="Residency application" type="checkbox" checked={props.willing_residency_application}/>
+        <input disabled title="Career guidance" type="checkbox" checked={props.willing_career_guidance}/>
+        <input disabled title="Student group support" type="checkbox" checked={props.willing_student_group}/>
       </div>
     </Link>
   )

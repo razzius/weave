@@ -48,7 +48,8 @@ class ProfileSchema(Schema):
     willing_networking = fields.Boolean()
     willing_goal_setting = fields.Boolean()
     willing_discuss_personal = fields.Boolean()
-    willing_residency_application = fields.Boolean()
+    willing_career_guidance = fields.Boolean()
+    willing_student_group = fields.Boolean()
 
     cadence = fields.String()
     other_cadence = fields.String(allow_none=True)

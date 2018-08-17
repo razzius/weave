@@ -58,7 +58,8 @@ class Profile(db.Model):
     willing_networking = db.Column(db.Boolean, default=False)
     willing_goal_setting = db.Column(db.Boolean, default=False)
     willing_discuss_personal = db.Column(db.Boolean, default=False)
-    willing_residency_application = db.Column(db.Boolean, default=False)
+    willing_career_guidance = db.Column(db.Boolean, default=False)
+    willing_student_group = db.Column(db.Boolean, default=False)
 
     cadence = db.Column(db.String(255))
     other_cadence = db.Column(db.String(255), nullable=True)
