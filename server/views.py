@@ -1,8 +1,9 @@
 import uuid
 from http import HTTPStatus
 
-from cloudinary import uploader
 from flask import Blueprint, jsonify, request
+
+from cloudinary import uploader
 from marshmallow import Schema, ValidationError, fields, validates_schema
 from requests_toolbelt.utils import dump
 from sqlalchemy import func, or_
@@ -14,7 +15,14 @@ from .emails import (
     send_student_login_email,
     send_student_registration_email
 )
-from .models import Profile, VerificationEmail, VerificationToken, db, save
+from .models import (
+    Profile,
+    VerificationEmail,
+    VerificationToken,
+    db,
+    get_verification_email_by_email,
+    save
+)
 
 
 api = Blueprint('api', __name__)
@@ -242,9 +250,7 @@ def upload_image():
 def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
     email = request.json['email']
 
-    existing_email = VerificationEmail.query.filter(
-        VerificationEmail.email == email
-    ).one_or_none()
+    existing_email = get_verification_email_by_email(email)
 
     if existing_email:
         return existing_email, False
@@ -286,8 +292,13 @@ def send_token(verification_email, email_function):
     return save(verification_token)
 
 
-@api_post('send-faculty-verification-email')
-def send_faculty_verification_email():
+def process_send_verification_email(is_mentor):
+    email_function = (
+        send_faculty_registration_email
+        if is_mentor
+        else send_student_registration_email
+    )
+
     schema = valid_email_schema.load(request.json)
 
     if schema.errors:
@@ -295,27 +306,26 @@ def send_faculty_verification_email():
 
     email = schema.data['email']
 
-    verification_email, _ = get_verification_email(email, is_mentor=True)
+    existing_email = get_verification_email_by_email(email)
 
-    send_token(verification_email, email_function=send_faculty_registration_email)
+    if existing_email:
+        return error({'email': ['claimed']})
+
+    verification_email, _ = get_verification_email(email, is_mentor=is_mentor)
+
+    send_token(verification_email, email_function=email_function)
 
     return jsonify({'id': verification_email.id, 'email': email})
+
+
+@api_post('send-faculty-verification-email')
+def send_faculty_verification_email():
+    return process_send_verification_email(is_mentor=True)
 
 
 @api_post('send-student-verification-email')
 def send_student_verification_email():
-    schema = valid_email_schema.load(request.json)
-
-    if schema.errors:
-        return error(schema.errors)
-
-    email = schema.data['email']
-
-    verification_email, _ = get_verification_email(email, is_mentor=False)
-
-    send_token(verification_email, email_function=send_student_registration_email)
-
-    return jsonify({'id': verification_email.id, 'email': email})
+    return process_send_verification_email(is_mentor=False)
 
 
 @api_post('login')

@@ -13,6 +13,12 @@ def save(instance):
     db.session.commit()
 
 
+def get_verification_email_by_email(email):
+    return VerificationEmail.query.filter(
+        VerificationEmail.email == email
+    ).one_or_none()
+
+
 class StringEncodedList(TypeDecorator):
 
     impl = VARCHAR

@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from "react-router-dom"
 
 function displayError(error) {
   if (error === null) {
@@ -20,6 +21,13 @@ function displayError(error) {
     )
   }
 
+  if (error.email[0] === 'claimed') {
+    return (
+      <p>
+        That email has already been registered. Please <Link to="/login">log in</Link>.
+      </p>
+    )
+  }
   return (
     <p>
       {error.email[0]}
