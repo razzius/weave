@@ -32,6 +32,7 @@ def test_update_profile(client):
     assert response.status_code == http.HTTPStatus.OK.value
 
     assert response.json == {
+        'activities': [],
         'additional_information': '',
         'additional_interests': [],
         'affiliations': [],
@@ -41,6 +42,7 @@ def test_update_profile(client):
         'id': 1,
         'name': 'New User',
         'other_cadence': None,
+        'parts_of_me': [],
         'profile_image_url': None,
         'willing_discuss_personal': False,
         'willing_goal_setting': False,
