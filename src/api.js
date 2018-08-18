@@ -80,9 +80,12 @@ const profilePayloadMapping = {
   contact_email: 'contactEmail',
   profile_image_url: 'imageUrl',
 
-  additional_interests: 'additionalInterests',
   affiliations: 'affiliations',
   clinical_specialties: 'clinicalSpecialties',
+  additional_interests: 'additionalInterests',
+  parts_of_me: 'partsOfMe',
+  activities: 'activities',
+
   additional_information: 'additionalInformation',
 
   willing_shadowing: 'willingShadowing',

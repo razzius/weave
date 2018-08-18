@@ -66,6 +66,10 @@ class App extends Component {
     })
   }
 
+  setAvailableForMentoring = () => {
+    this.setState({availableForMentoring: true})
+  }
+
   render() {
     const loggedOut = this.state.token === null
 
@@ -156,6 +160,7 @@ class App extends Component {
               render={({ history }) => (
                 <CreateProfile
                   availableForMentoring={this.state.availableForMentoring}
+                  setAvailableForMentoring={this.setAvailableForMentoring}
                   setProfileId={this.setProfileId}
                   token={this.state.token}
                   history={history}

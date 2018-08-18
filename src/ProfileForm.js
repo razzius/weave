@@ -38,9 +38,13 @@ export default class ProfileForm extends Component {
     imageUrl: null,
     imageSuccess: false,
     uploadingImage: false,
+
     affiliations: [],
     clinicalSpecialties: [],
     additionalInterests: [],
+    partsOfMe: [],
+    activities: [],
+
     additionalInformation: '',
 
     willingShadowing: false,
@@ -61,21 +65,9 @@ export default class ProfileForm extends Component {
     }
   }
 
-  handleSelectClinicalSpecialties = specialties => {
+  handleSelect = key => selected => {
     this.setState({
-      clinicalSpecialties: specialties.map(specialty => specialty.value)
-    })
-  }
-
-  handleSelectAffiliations = affiliations => {
-    this.setState({
-      affiliations: affiliations.map(affiliation => affiliation.value)
-    })
-  }
-
-  handleSelectAdditionalInterests = interests => {
-    this.setState({
-      additionalInterests: interests.map(interest => interest.value)
+      [key]: selected.map(choice => choice.value)
     })
   }
 
@@ -93,6 +85,9 @@ export default class ProfileForm extends Component {
     when(unsavedImage, this.saveImage).then(() => {
       this.props.saveProfile(this.props.token, this.state, this.props.profileId)
         .then(profile => {
+          if (!this.props.profileId) {
+            this.props.setAvailableForMentoring()
+          }
           this.props.setProfileId(profile.id)
           this.props.history.push(`/profiles/${profile.id}`)
         })
@@ -254,7 +249,7 @@ export default class ProfileForm extends Component {
               multi
               options={hospitalOptions}
               value={this.state.affiliations}
-              onChange={this.handleSelectAffiliations}
+              onChange={this.handleSelect('affiliations')}
             />
 
             <p>Clinical Interests</p>
@@ -263,19 +258,38 @@ export default class ProfileForm extends Component {
               multi
               options={clinicalSpecialtyOptions}
               value={this.state.clinicalSpecialties}
-              onChange={this.handleSelectClinicalSpecialties}
+              onChange={this.handleSelect('clinicalSpecialties')}
             />
 
             <p>Additional Interests</p>
-            <Select
+            <Select.Creatable
+              name="partsOfMe"
               className="column"
               multi
               options={additionalInterestOptions}
               value={this.state.additionalInterests}
-              onChange={this.handleSelectAdditionalInterests}
-            />
+              onChange={this.handleSelect('additionalInterests')}
+              />
 
-            <p>Additional Information</p>
+            <p>Parts of me</p>
+            <Select.Creatable
+              className="column"
+              multi
+              options={additionalInterestOptions}
+              value={this.state.partsOfMe}
+              onChange={this.handleSelect('partsOfMe')}
+              />
+
+            <p>Activities I enjoy</p>
+            <Select.Creatable
+              className="column"
+              multi
+              options={additionalInterestOptions}
+              value={this.state.activities}
+              onChange={this.handleSelect('activities')}
+              />
+
+            <p>What else would you like to share with potential mentees?</p>
             <textarea
               onChange={this.update('additionalInformation')}
               value={this.state.additionalInformation}

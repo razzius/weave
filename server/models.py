@@ -8,6 +8,11 @@ from sqlalchemy.orm import relationship
 db = SQLAlchemy()
 
 
+def save(instance):
+    db.session.add(instance)
+    db.session.commit()
+
+
 class StringEncodedList(TypeDecorator):
 
     impl = VARCHAR
@@ -48,6 +53,8 @@ class Profile(db.Model):
     clinical_specialties = db.Column(StringEncodedList(1024))
     affiliations = db.Column(StringEncodedList(1024))
     additional_interests = db.Column(StringEncodedList(1024))
+    parts_of_me = db.Column(StringEncodedList(1024))
+    activities = db.Column(StringEncodedList(1024))
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
@@ -73,9 +80,11 @@ class Profile(db.Model):
 class VerificationToken(db.Model):
     token = db.Column(db.String(36), primary_key=True)
     email_id = db.Column(
-        db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False, unique=True
+        db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
     )
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     verified = db.Column(db.Boolean, default=False)
+
+    expired = db.Column(db.Boolean, default=False)
 
     email_log = db.Column(db.Text)

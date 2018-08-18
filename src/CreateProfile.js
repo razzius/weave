@@ -6,6 +6,7 @@ const CreateProfile = props => (
   <ProfileForm
     loadInitial={false}
     saveProfile={createProfile}
+    setAvailableForMentoring={props.setAvailableForMentoring}
     {...props}
     />
 )

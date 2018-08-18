@@ -14,7 +14,7 @@ from .emails import (
     send_student_login_email,
     send_student_registration_email
 )
-from .models import Profile, VerificationEmail, VerificationToken, db
+from .models import Profile, VerificationEmail, VerificationToken, db, save
 
 
 api = Blueprint('api', __name__)
@@ -38,9 +38,11 @@ class ProfileSchema(Schema):
     contact_email = fields.String()
     profile_image_url = fields.String(allow_none=True)
 
+    affiliations = RenderedList(fields.String)
     clinical_specialties = RenderedList(fields.String)
     additional_interests = RenderedList(fields.String)
-    affiliations = RenderedList(fields.String)
+    parts_of_me = RenderedList(fields.String)
+    activities = RenderedList(fields.String)
 
     additional_information = fields.String()
 
@@ -88,7 +90,9 @@ def matching_profiles(query):
         Profile.clinical_specialties,
         Profile.additional_interests,
         Profile.affiliations,
-        # cadence
+        Profile.activities,
+        Profile.parts_of_me,
+        Profile.cadence
     ]
 
     search_filters = [
@@ -183,8 +187,7 @@ def create_profile(profile_id=None):
 
     profile = Profile(**profile_data)
 
-    db.session.add(profile)
-    db.session.commit()
+    save(profile)
 
     return jsonify(profile_schema.dump(profile).data)
 
@@ -213,8 +216,7 @@ def update_profile(profile_id=None):
     for key, value in schema.data.items():
         setattr(profile, key, value)
 
-    db.session.add(profile)
-    db.session.commit()
+    save(profile)
 
     return jsonify(ProfileSchema().dump(profile).data)
 
@@ -247,40 +249,41 @@ def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
     if existing_email:
         return existing_email, False
 
-    email_row = VerificationEmail(email=email, is_mentor=is_mentor)
+    verification_email = VerificationEmail(email=email, is_mentor=is_mentor)
 
-    db.session.add(email_row)
-    db.session.commit()
+    save(verification_email)
 
-    return email_row, True
+    return verification_email, True
 
 
-def save_verification_token(email_id, token, email_response):
-    email_log = dump.dump_all(email_response).decode('utf-8')
-
+def save_verification_token(email_id, token):
     verification_token = VerificationToken(
-        email_id=email_id, token=token, email_log=email_log
+        email_id=email_id, token=token
     )
 
-    db.session.add(verification_token)
-    db.session.commit()
+    save(verification_token)
+
+    return verification_token
 
 
-def send_token(verification_email, new_user, email_function):
-    if new_user:
-        token = generate_token()
+def send_token(verification_email, email_function):
+    VerificationToken.query.filter(
+        VerificationToken.email_id == verification_email.id
+    ).update({
+        VerificationToken.expired: True
+    })
 
-        email_response = email_function(verification_email.email, token)
+    token = generate_token()
 
-        save_verification_token(verification_email.id, token, email_response)
-    else:
-        token = VerificationToken.query.filter(
-            VerificationToken.email_id == verification_email.id
-        ).one().token
+    verification_token = save_verification_token(verification_email.id, token)
 
-        email_function(verification_email.email, token)
-        # TODO no email log
-        # TODO re-uses token
+    email_response = email_function(verification_email.email, token)
+
+    email_log = dump.dump_all(email_response).decode('utf-8')
+
+    verification_token.email_log = email_log
+
+    return save(verification_token)
 
 
 @api_post('send-faculty-verification-email')
@@ -292,9 +295,9 @@ def send_faculty_verification_email():
 
     email = schema.data['email']
 
-    verification_email, created = get_verification_email(email, is_mentor=True)
+    verification_email, _ = get_verification_email(email, is_mentor=True)
 
-    send_token(verification_email, created, email_function=send_faculty_registration_email)
+    send_token(verification_email, email_function=send_faculty_registration_email)
 
     return jsonify({'id': verification_email.id, 'email': email})
 
@@ -308,9 +311,9 @@ def send_student_verification_email():
 
     email = schema.data['email']
 
-    verification_email, created = get_verification_email(email, is_mentor=False)
+    verification_email, _ = get_verification_email(email, is_mentor=False)
 
-    send_token(verification_email, created, email_function=send_student_registration_email)
+    send_token(verification_email, email_function=send_student_registration_email)
 
     return jsonify({'id': verification_email.id, 'email': email})
 
@@ -329,14 +332,13 @@ def login():
     if verification_email is None:
         return error({'email': ['unregistered']})
 
-    verification_token = VerificationToken.query.filter(
-        VerificationToken.email_id == verification_email.id
-    ).one_or_none()
+    email_function = (
+        send_faculty_login_email
+        if verification_email.is_mentor
+        else send_student_login_email
+    )
 
-    if verification_email.is_mentor:
-        send_faculty_login_email(email, verification_token.token)
-    else:
-        send_student_login_email(email, verification_token.token)
+    send_token(verification_email, email_function=email_function)
 
     return jsonify({
         'email': email
@@ -348,14 +350,18 @@ def verify_token():
     token = request.json['token']
 
     query = VerificationToken.query.filter(VerificationToken.token == token)
+
     match = query.one_or_none()
 
     if match is None:
         return error({'token': ['not recognized']})
 
+    if match.expired:
+        return error({'token': ['expired']})
+
     match.verified = True
-    db.session.add(match)
-    db.session.commit()
+
+    save(match)
 
     verification_email = VerificationEmail.query.get(match.email_id)
 
@@ -399,7 +405,6 @@ def availability():
 
     profile.available_for_mentoring = available
 
-    db.session.add(profile)
-    db.session.commit()
+    save(profile)
 
     return jsonify({'available': available})
