@@ -39,7 +39,7 @@ class App extends Component {
         this.setState({
           profileId: response.profile_id,
           isMentor: response.is_mentor,
-          availableForMentoring: response.available_for_mentoring,
+          availableForMentoring: response.profileId === null ? true : response.available_for_mentoring
         })
       }).catch(() => {
         window.localStorage.removeItem('token')

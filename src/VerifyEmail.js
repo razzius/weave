@@ -72,7 +72,7 @@ export default class VerifyEmail extends Component {
         verified: response,
         profileId: response.profile_id,
         isMentor: response.is_mentor,
-        availableForMentoring: response.available_for_mentoring
+        availableForMentoring: response.profileId === null ? true : response.available_for_mentoring
       })
       window.localStorage.setItem('token', this.state.token)
     }).catch(err => {
