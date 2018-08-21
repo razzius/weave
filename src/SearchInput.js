@@ -2,11 +2,18 @@ import React, { Component } from "react"
 import Select from 'react-select'
 import {
   clinicalSpecialtyOptions,
-  additionalInterestOptions,
-  hospitalOptions
+  professionalInterestOptions,
+  hospitalOptions,
+  partsOfMeOptions,
+  activitiesIEnjoyOptions
 } from './options'
 
-const options = clinicalSpecialtyOptions.concat(additionalInterestOptions, hospitalOptions)
+const options = clinicalSpecialtyOptions.concat(
+  professionalInterestOptions,
+  hospitalOptions,
+  partsOfMeOptions,
+  activitiesIEnjoyOptions
+)
 
 export default class SearchInput extends Component {
 

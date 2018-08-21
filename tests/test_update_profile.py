@@ -33,8 +33,8 @@ def test_update_profile(client):
 
     assert response.json == {
         'activities': [],
-        'additional_information': '',
-        'additional_interests': [],
+        'professional_information': '',
+        'professional_interests': [],
         'affiliations': [],
         'cadence': None,
         'clinical_specialties': [],

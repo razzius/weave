@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
+import ReactTooltip from 'react-tooltip'
 
 function displayError(error) {
   if (error === null) {
@@ -74,10 +75,15 @@ export default class SubmitEmailForm extends Component {
             <p>
               <input name="email" type="email" onChange={this.updateEmail} />
             </p>
+            <ReactTooltip place="bottom" id="emailTooltip">
+              Please enter your Harvard or hospital-affiliated email
+            </ReactTooltip>
             {displayError(this.state.error)}
             <div
-              data-tip="Please enter your Harvard or hospital-affiliated email"
-              data-tip-disable={emailValid}>
+              id="toggle"
+              data-tip
+              data-for="emailTooltip"
+              data-tip-disable={email === '' && !emailValid}>
               <button
                 disabled={!emailValid}
                 className="button">Send verification email</button>

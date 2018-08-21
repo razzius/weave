@@ -82,7 +82,7 @@ const profilePayloadMapping = {
 
   affiliations: 'affiliations',
   clinical_specialties: 'clinicalSpecialties',
-  additional_interests: 'additionalInterests',
+  professional_interests: 'professionalInterests',
   parts_of_me: 'partsOfMe',
   activities: 'activities',
 

@@ -95,10 +95,16 @@ const ProfileView = ({ data, ownProfile }) => (
             {data.clinical_specialties.join(', ')}
           </p>
 
-          <h4>Additional Interests</h4>
+          <h4>Professional Interests</h4>
           <p style={{ paddingBottom: '1em' }}>
-            {data.additional_interests.join(', ')}
+            {data.professional_interests.join(', ')}
           </p>
+
+          <h4>Parts Of Me</h4>
+          <p style={{ paddingBottom: '1em' }}>
+            {data.parts_of_me.join(', ')}
+          </p>
+
           {data.additional_information && (
             <div>
               <h4>Additional Information</h4>

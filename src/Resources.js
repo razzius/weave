@@ -1,11 +1,38 @@
 import React from "react"
+import { Link } from "react-router-dom"
 import AppScreen from './AppScreen'
 
 const Resources = () => (
   <AppScreen className="resources">
     <h1>Resources</h1>
+
+    <h3><Link to="https://medstudenthandbook.hms.harvard.edu/1019-thrive-mobile-app">Thrive Mobile App</Link></h3>
+
+    <p>The Thrive Mobile App is Harvard University’s mobile application for health and wellness. Features include quick access to emergency contact information, Vanderbilt exercise schedules, dining services menus, Countway Library hours, and shuttle schedules, as well as a campus map and directory. The app allows students to access these University resources and more in an easy-to-use platform for any mobile device.</p>
+
+    <h3><Link to="https://collaborate.hms.harvard.edu/display/hmsadvising/Personal+Advising">Personal Advising</Link></h3>
+    <p>The Office of Student Affairs and Academic Society Advisors are available to address any academic or personal issue that may arise. Your Society Advisor may also assist you in finding mentors to explore your clinical interests.</p>
+
+    <p>Links for each of the societies are included below:</p>
+
+    <h4><a href="https://meded.hms.harvard.edu/cannon-society">Cannon Society</a></h4>
+
+    <h4><a href="https://meded.hms.harvard.edu/castle-society">Castle Society</a></h4>
+
+    <h4><a href="https://meded.hms.harvard.edu/holmes-society">Holmes Society</a></h4>
+
+    <h4><a href="https://meded.hms.harvard.edu/london-society-hst">London Society</a></h4>
+
+    <h4><a href="https://meded.hms.harvard.edu/peabody-society">Peabody Society</a></h4>
+
+    <h4><a href="https://meded.hms.harvard.edu/office-recruitment-multicultural-affairs"> Office of Recruitment and Multicultural Affairs </a></h4>
+
+    <p>The Office of Recruitment and Multicultural Affairs (ORMA) recruits and provides support services to students underrepresented in medicine and dentistry and students who are economically disadvantaged. ORMA fosters an inclusive and respectful environment that is supportive of lesbian, gay, bisexual, and transgender students, faculty, and staff.</p>
+
     <h3>
-      Ombuds Office
+      <Link to="https://hms.harvard.edu/departments/ombuds-office">
+        Ombuds Office
+      </Link>
     </h3>
 
     <p>
@@ -19,38 +46,57 @@ const Resources = () => (
       The contact information of the Ombudsperson is as follows:
     </p>
 
-    <b>Ombudsperson</b>
-    <p>Melissa Brodrick</p>
-    <p>Email: melissa_brodrick@hms.harvard.edu</p>
-    <p>Phone: 617-432-4040</p>
+    <div className="contact-block">
+      <b>Ombudsperson</b>
+      <div>Melissa Brodrick</div>
+      <div>Email: melissa_brodrick@hms.harvard.edu</div>
+      <div>Phone: 617-432-4040</div>
+    </div>
 
-    <h3>Gender-based and sexual harassment</h3>
-    <p>The Harvard Medical School (HMS) and School of Dental Medicine (HSDM) are committed to maintaining a safe and healthy educational and work environment in which no member of the HMS|HSDM community is, on the basis of sex, sexual orientation, or gender identity, excluded from participation in, denied the benefits of, or subjected to discrimination in any University program or activity. Gender-based and sexual harassment, including sexual violence, are forms of sex discrimination in that they deny or limit an individual's ability to participate in or benefit from University programs or activities.</p>
+    <h3>
+      <Link to="https://hms.harvard.edu/departments/ombuds-office/policies-guidelines">
+        Gender-based and sexual harassment
+      </Link>
+    </h3>
+    <p>The Harvard Medical School (HMS) and School of Dental Medicine (HSDM) are committed to maintaining a safe and healthy educational and work environment in which no member of the HMS|HSDM community is, on the basis of sex, sexual orientation, or gender identity, excluded from participation in, denied the benefits of, or subjected to discrimination in any University program or activity. Gender-based and sexual harassment, including sexual violence, are forms of sex discrimination in that they deny or limit an individual&apos;s ability to participate in or benefit from University programs or activities.</p>
 
     <p>
       For support regarding issues of gender-based and sexual harassment and procedures for formal complaints, please visit:
     </p>
     <a href="https://hms.harvard.edu/departments/ombuds-office/policies-guidelines">https://hms.harvard.edu/departments/ombuds-office/policies-guidelines</a>
 
-    <h3>Title IX</h3>
+    <h3>
+      <Link to="https://titleix.harvard.edu/">
+        Title IX
+      </Link>
+    </h3>
     <p>Harvard has designated Title IX Coordinators throughout the University to help address issues of sexual and gender-based harassment within their specific School or unit. The Title IX Coordinators play an integral role in carrying out the University’s commitment to provide a positive learning, teaching and working environment for the entire community.</p>
     <p>The local Title IX Coordinators’ responsibilities include receiving information about allegations of unwelcome conduct of a sexual nature and gender-based harassment, providing interim measures, and serving as resources for questions about sexual and gender-based harassment. Title IX Coordinators are knowledgeable about, and will provide information on, the University Policy and Procedures and on the wide range of resources available to the community.</p>
     <p>The Title IX coordinators for HMS are listed below:</p>
 
-    <b>Title IX Coordinator for Students and Staff</b>
-    <p>José Martinez, Senior HR Compliance Manager</p>
-    <p>Email: jose_martinez@hms.harvard.edu</p>
-    <p>Phone: (617) 432-1492</p>
+    <div className="contact-block">
+      <b>Title IX Coordinator for Students and Staff</b>
+      <div>José Martinez, Senior HR Compliance Manager</div>
+      <div>Email: jose_martinez@hms.harvard.edu</div>
+      <div>Phone: (617) 432-1492</div>
+    </div>
 
-    <b>Title IX Coordinator for Faculty</b>
-    <p>Carol Bates, Associate Dean for Faculty Affairs</p>
-    <p>Email: carol_bates@hms.harvard.edu</p>
-    <p>Phone: (617) 432-1165</p>
+    <br/>
 
-    <p>Please visit the following link for more information about Title IX at Harvard:</p>
-    <a href="https://titleix.harvard.edu/office-sexual-and-gender-based-dispute-resolution-odr">https://titleix.harvard.edu/office-sexual-and-gender-based-dispute-resolution-odr</a>
+    <div className="contact-block">
+      <b>Title IX Coordinator for Faculty</b>
+      <div>Carol Bates, Associate Dean for Faculty Affairs</div>
+      <div>Email: carol_bates@hms.harvard.edu</div>
+      <div>Phone: (617) 432-1165</div>
+    </div>
 
-    <h3>Disability</h3>
+    <p>To request information or advice, including whether certain conduct may violate Title IX Policy, seek informal resolution, or file a formal complaint, please visit the webpage for the <Link to="https://titleix.harvard.edu/office-sexual-and-gender-based-dispute-resolution-odr">Office for Dispute Resolution</Link>.</p>
+
+    <h3>
+      <Link to="https://medstudenthandbook.hms.harvard.edu/1003-policies-and-procedures-students-disabilities">
+        Disability
+      </Link>
+    </h3>
 
     <p>
       Harvard Medical School (HMS) complies with federal and state law prohibiting discrimination against any applicant or enrolled student on the basis of race, color, religion, sexual preference, age, disability, or other protected status. In accordance with its obligations under the Americans with Disabilities Act of 1990 and Section 504 of the Rehabilitation Act of 1973, Harvard Medical School does not discriminate against qualified individuals with disabilities in admission or in access to programs and activities.
@@ -58,42 +104,19 @@ const Resources = () => (
 
     <p>Please find contact information for the HMS disability coordinator below:</p>
 
-    <b>HMS disability coordinator</b>
-    <p>Yolanda Paul</p>
-    <p>25 Shattuck Street, Gordon Hall, Room 211, Boston, MA 02115</p>
-    <p>Email: Yolanda_Paul@hms.harvard.edu</p>
-    <p>Phone: (617) 432-0449</p>
+    <div className="contact-block">
+      <b>HMS Disability Coordinator</b>
+      <div>Yolanda Paul</div>
+      <div>25 Shattuck Street, Gordon Hall, Room 211, Boston, MA 02115</div>
+      <div>Email: Yolanda_Paul@hms.harvard.edu</div>
+      <div>Phone: (617) 432-0449</div>
+    </div>
 
-    <p>For more information regarding policies and procedures for students with disabilities, please visit:</p>
-
-    <a href="https://medstudenthandbook.hms.harvard.edu/1003-policies-and-procedures-students-disabilities">https://medstudenthandbook.hms.harvard.edu/1003-policies-and-procedures-students-disabilities</a>
-
-    <h3>Discrimination and Mistreatment</h3>
+    <h3><Link to="https://medstudenthandbook.hms.harvard.edu/716-discrimination-harassment-and-student-mistreatment">Discrimination and Mistreatment</Link></h3>
     <p>Harvard Medical School (HMS) takes issues of mistreatment seriously and aspires to a culture of zero tolerance for instances of abuse, mistreatment, and disrespect. HMS is committed to maintaining an environment free from discrimination, sexual harassment, unprofessional relationships and abuses of authority. It is the strong and consistent policy of Harvard Medical School to treat all members of our community with respect, to provide an environment conducive to learning and working, and to ensure equal access to rights, privileges and opportunities without regard to race, color, sex, sexual orientation, gender identity, religion, age, national or ethnic origin, political beliefs, veteran status, disability or any other legally protected category. Discrimination or harassment on the basis of these characteristics is inconsistent with Harvard’s principles and policies. Harvard expects that all those who interact with members of our community will comply with all applicable anti-discrimination laws.</p>
-    <p>Please find links to each of the Academic Society web pages below; there, you will find contact information for each of the society advisors and program coordinators who are specially trained to deal with issues of discrimination and mistreatment at Harvard Medical School. The Office of Recruitment and Multicultural Affairs is also very skilled in dealing with issues of discrimination, broadly defined; the link to their webpage with faculty contact info is provided below.</p>
-
-    <h3>Cannon Society:</h3>
-    <a href="https://meded.hms.harvard.edu/cannon-society">https://meded.hms.harvard.edu/cannon-society</a>
-
-    <h3>Castle Society:</h3>
-    <a href="https://meded.hms.harvard.edu/castle-society">https://meded.hms.harvard.edu/castle-society</a>
-
-    <h3>Holmes Society:</h3>
-    <a href="https://meded.hms.harvard.edu/holmes-society">https://meded.hms.harvard.edu/holmes-society</a>
-
-    <h3>London Society:</h3>
-    <a href="https://meded.hms.harvard.edu/london-society-hst">https://meded.hms.harvard.edu/london-society-hst</a>
-
-    <h3>Peabody Society:</h3>
-    <a href="https://meded.hms.harvard.edu/peabody-society">https://meded.hms.harvard.edu/peabody-society</a>
-
-    <h3>Office of Recruitment and Multicultural Affairs:</h3>
-    <a href="https://meded.hms.harvard.edu/office-recruitment-multicultural-affairs">https://meded.hms.harvard.edu/office-recruitment-multicultural-affairs</a>
-
-    <p>If you would like additional guidance on where best to address your complaint, please consult the student handbook section on discrimination, harassment, and student-mistreatment where definitions and examples of complaints are provided and appropriate resources are linked:</p>
-    <a href="https://medstudenthandbook.hms.harvard.edu/716-discrimination-harassment-and-student-mistreatment">https://medstudenthandbook.hms.harvard.edu/716-discrimination-harassment-and-student-mistreatment</a>
+    <p>The <Link to="https://meded.hms.harvard.edu/office-recruitment-multicultural-affairs">Office of Recruitment and Multicultural Affairs</Link>, as well as Academic Society advisors and program coordinators, are also skilled in dealing with issues of discrimination and mistreatment at Harvard Medical School.</p>
+    <p>If you would like additional guidance on where best to address your concern, please consult the <Link to="https://medstudenthandbook.hms.harvard.edu/716-discrimination-harassment-and-student-mistreatment">student handbook section on discrimination, harassment, and student-mistreatment</Link> where definitions and examples of complaints are provided and appropriate resources are linked.</p>
   </AppScreen>
 )
 
 export default Resources
-

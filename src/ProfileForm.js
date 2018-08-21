@@ -9,7 +9,9 @@ import ProfileView from './ProfileView'
 import { uploadPicture, profileToPayload } from './api'
 import {
   clinicalSpecialtyOptions,
-  additionalInterestOptions,
+  professionalInterestOptions,
+  partsOfMeOptions,
+  activitiesIEnjoyOptions,
   hospitalOptions
 } from './options'
 import AppScreen from './AppScreen'
@@ -41,7 +43,7 @@ export default class ProfileForm extends Component {
 
     affiliations: [],
     clinicalSpecialties: [],
-    additionalInterests: [],
+    professionalInterests: [],
     partsOfMe: [],
     activities: [],
 
@@ -222,7 +224,6 @@ export default class ProfileForm extends Component {
 
           <div
             className="about"
-            style={{ width: '450px', paddingLeft: '50px' }}
           >
             <p>Name</p>
             <input
@@ -261,33 +262,37 @@ export default class ProfileForm extends Component {
               onChange={this.handleSelect('clinicalSpecialties')}
             />
 
-            <p>Additional Interests</p>
+            <p>Professional Interests</p>
             <Select.Creatable
               name="partsOfMe"
               className="column"
               multi
-              options={additionalInterestOptions}
-              value={this.state.additionalInterests}
-              onChange={this.handleSelect('additionalInterests')}
+              options={professionalInterestOptions}
+              value={this.state.professionalInterests}
+              onChange={this.handleSelect('professionalInterests')}
               />
 
-            <p>Parts of me</p>
-            <Select.Creatable
-              className="column"
-              multi
-              options={additionalInterestOptions}
-              value={this.state.partsOfMe}
-              onChange={this.handleSelect('partsOfMe')}
-              />
+            <div data-tip="Please feel free to create your own tags with identities or locations that are important to you.">
+              <p>Parts Of Me</p>
+              <Select.Creatable
+                className="column"
+                multi
+                options={partsOfMeOptions}
+                value={this.state.partsOfMe}
+                onChange={this.handleSelect('partsOfMe')}
+                />
+            </div>
 
-            <p>Activities I enjoy</p>
-            <Select.Creatable
-              className="column"
-              multi
-              options={additionalInterestOptions}
-              value={this.state.activities}
-              onChange={this.handleSelect('activities')}
-              />
+            <div data-tip="Please feel free to create your own tags with activities that you enjoy.">
+              <p>Activities I enjoy</p>
+              <Select.Creatable
+                className="column"
+                multi
+                options={activitiesIEnjoyOptions}
+                value={this.state.activities}
+                onChange={this.handleSelect('activities')}
+                />
+            </div>
 
             <p>What else would you like to share with potential mentees?</p>
             <textarea

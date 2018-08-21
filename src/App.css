@@ -21,7 +21,8 @@ body,
 }
 
 #background {
-  height: 100%;
+  height: calc(100%);
+  height: calc(100% - 100px);
   background: url('https://i.imgur.com/sfsm06I.png');
   background-size: cover;
   width: 100%;
@@ -128,7 +129,16 @@ input[type='email'] {
   margin-bottom: 1em;
 }
 .about {
-  padding: 0px 50px;
+  width: 450px;
+}
+
+@media screen and (min-width: 750px) {
+    .columns {
+        display: flex;
+    }
+    .about {
+        padding-left: 50px;
+    }
 }
 
 .profile-result {
@@ -216,15 +226,6 @@ input[type='email'] {
   margin: 0 auto;
 }
 
-#additional-resources {
-  max-width: 700px;
-  margin: 3em auto;
-}
-
-#additional-resources li {
-  padding: 0.5em;
-}
-
 .cadence {
   margin-bottom: 20px;
 }
@@ -269,4 +270,12 @@ input[disabled]:checked {
 
 .App-body h3 {
   margin-top: 2em;
+}
+
+.contact-block {
+    margin-left: 50px;
+}
+
+h3 a, h4 a {
+    text-decoration: none;
 }

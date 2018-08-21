@@ -126,10 +126,14 @@ class App extends Component {
 
               {this.state.isMentor && (
                 <span
-                  data-tip="Controls whether your profile will be visible to mentees."
+                  data-tip
                   className="App-title available-for-mentoring"
+                  data-for="toggleTooltip"
                 >
                   Available for mentoring:
+                  <ReactTooltip id='toggleTooltip' place="bottom">
+                    Controls whether your profile will be visible to mentees.
+                  </ReactTooltip>
                   <Toggle
                     on={this.state.availableForMentoring}
                     onClick={() => {
@@ -145,7 +149,13 @@ class App extends Component {
             </div>
           </header>
           <Switch>
-            <Route exact path="/" render={() => <Home token={this.state.token} isMentor={this.state.isMentor}/>} />
+            <Route exact path="/" render={() => (
+              <Home
+                token={this.state.token}
+                isMentor={this.state.isMentor}
+                profileId={this.state.profileId}
+                />
+            )} />
             <Route
               path="/faculty-expectations"
               component={FacultyExpectations}

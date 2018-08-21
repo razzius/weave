@@ -29,8 +29,8 @@ export default props => {
           ))}
         </p>
         <p>
-          {props.additional_interests.map(interest => (
-            <span key={interest} className="additional interest">
+          {props.professional_interests.map(interest => (
+            <span key={interest} className="professional interest">
               {" "}
               {interest}{" "}
             </span>
