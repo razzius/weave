@@ -1,3 +1,5 @@
+import datetime
+from dateutil.relativedelta import relativedelta
 import uuid
 from http import HTTPStatus
 
@@ -133,6 +135,9 @@ def get_token(headers):
 
     if verification_token is None:
         return error({'token': ['unknown token']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
+
+    if _token_expired(verification_token):
+        return error({'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
 
     return None, verification_token
 
@@ -366,7 +371,7 @@ def verify_token():
     if match is None:
         return error({'token': ['not recognized']})
 
-    if match.expired:
+    if _token_expired(match):
         return error({'token': ['expired']})
 
     match.verified = True
