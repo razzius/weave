@@ -64,6 +64,7 @@ class App extends Component {
     this.setState({ token: null }, () => {
       window.location.pathname = '/' // wtfff
     })
+    // todo logout on server as well
   }
 
   setAvailableForMentoring = () => {
