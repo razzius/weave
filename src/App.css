@@ -99,10 +99,6 @@ body,
   display: inline-block;
 }
 
-.columns {
-  display: flex;
-}
-
 .profile-image {
   border-radius: 100%;
   box-sizing: border-box;

@@ -43,14 +43,14 @@ class RenderedList(fields.List):
 
 
 class ProfileSchema(Schema):
-    id = fields.Int(dump_only=True)
+    id = fields.String(dump_only=True)
     name = fields.String()
     contact_email = fields.String()
     profile_image_url = fields.String(allow_none=True)
 
     affiliations = RenderedList(fields.String)
     clinical_specialties = RenderedList(fields.String)
-    additional_interests = RenderedList(fields.String)
+    professional_interests = RenderedList(fields.String)
     parts_of_me = RenderedList(fields.String)
     activities = RenderedList(fields.String)
 
@@ -98,7 +98,7 @@ def matching_profiles(query):
         Profile.name,
         Profile.additional_information,
         Profile.clinical_specialties,
-        Profile.additional_interests,
+        Profile.professional_interests,
         Profile.affiliations,
         Profile.activities,
         Profile.parts_of_me,
@@ -358,6 +358,18 @@ def login():
     return jsonify({
         'email': email
     })
+
+
+def _token_expired(verification_token):
+    max_age = datetime.datetime.today() + relativedelta(days=TOKEN_EXPIRY_AGE_DAYS)
+
+    return (
+        verification_token.expired
+        or verification_token.date_created > max_age
+    )
+
+
+TOKEN_EXPIRY_AGE_DAYS = 1
 
 
 @api_post('verify-token')

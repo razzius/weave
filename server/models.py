@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
@@ -17,6 +18,10 @@ def get_verification_email_by_email(email):
     return VerificationEmail.query.filter(
         VerificationEmail.email == email
     ).one_or_none()
+
+
+def generate_uuid():
+    return str(uuid.uuid4())
 
 
 class StringEncodedList(TypeDecorator):
@@ -46,7 +51,7 @@ class VerificationEmail(db.Model):
 
 
 class Profile(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(db.String, primary_key=True, default=generate_uuid)
     name = db.Column(db.String(255), nullable=False)
     verification_email_id = db.Column(
         db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
@@ -58,7 +63,7 @@ class Profile(db.Model):
 
     clinical_specialties = db.Column(StringEncodedList(1024))
     affiliations = db.Column(StringEncodedList(1024))
-    additional_interests = db.Column(StringEncodedList(1024))
+    professional_interests = db.Column(StringEncodedList(1024))
     parts_of_me = db.Column(StringEncodedList(1024))
     activities = db.Column(StringEncodedList(1024))
 

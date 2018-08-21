@@ -105,7 +105,6 @@ class App extends Component {
     return (
       <Router>
         <div className="App">
-          <ReactTooltip place="bottom" />
           <header className="App-header">
             <div className="header-inner">
               <Link to="/" className="App-title left">
