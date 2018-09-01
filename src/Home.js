@@ -4,13 +4,13 @@ import { Link } from 'react-router-dom'
 function getFacultyLink(token, profileId) {
   if (token === null) return '/faculty-expectations'
   if (profileId === null) return '/create-profile'
-  return 'edit-profile'
+  return `/profiles/${profileId}`
 }
 
 function getFacultyText(token, profileId) {
   if (token === null) return 'Register as a mentor'
   if (profileId === null) return 'Create profile'
-  return 'Edit profile'
+  return 'View profile'
 }
 
 const FacultyLanding = ({ profileId, token, isMentor }) => {
