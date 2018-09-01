@@ -36,6 +36,7 @@ body,
 }
 
 .button {
+  border-radius: 6px;
   border: 1px solid lightgrey;
   text-decoration: none;
   color: black;
