@@ -361,15 +361,15 @@ def login():
 
 
 def _token_expired(verification_token):
-    max_age = datetime.datetime.today() + relativedelta(days=TOKEN_EXPIRY_AGE_DAYS)
+    expire_time = verification_token.date_created + relativedelta(hours=TOKEN_EXPIRY_AGE_HOURS)
 
     return (
         verification_token.expired
-        or verification_token.date_created > max_age
+        or datetime.datetime.now() > expire_time
     )
 
 
-TOKEN_EXPIRY_AGE_DAYS = 1
+TOKEN_EXPIRY_AGE_HOURS = 1
 
 
 @api_post('verify-token')
