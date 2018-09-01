@@ -113,7 +113,7 @@ export default class FacultyExpectationsSlider extends React.Component {
           />
           {this.state.nextText === "I agree" &&
             <div style={{marginTop: '1em'}}>
-              <Link target="_blank" to="/expectations">
+              <Link target="_blank" to="/mentor-expectations">
                 Read more about expectations.
               </Link>
             </div>
