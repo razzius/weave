@@ -6,6 +6,7 @@ from flask_cors import CORS
 from flask_basicauth import BasicAuth
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
+from flask_sslify import SSLify
 from .models import Profile, VerificationEmail, VerificationToken, db
 import server.views
 
@@ -21,6 +22,7 @@ app.config['MAILGUN_DOMAIN'] = os.environ['MAILGUN_DOMAIN']
 db.init_app(app)
 CORS(app)
 Sentry(app)
+SSLify(app)
 
 app.config['BASIC_AUTH_USERNAME'] = os.environ['BASIC_AUTH_USERNAME']
 app.config['BASIC_AUTH_PASSWORD'] = os.environ['BASIC_AUTH_PASSWORD']

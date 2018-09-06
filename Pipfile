@@ -18,6 +18,7 @@ flask-admin = "*"
 raven = {version = "*", extras = ["flask"]}
 flask-basicauth = "*"
 python-dateutil = "*"
+flask-sslify = "*"
 
 [dev-packages]
 ipython = "*"
