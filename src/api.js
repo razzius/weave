@@ -18,7 +18,7 @@ function buildURL(path, params) {
 async function http(token, url, options = {}) {
   const existingHeaders = options.headers || {}
   const authHeaders = {
-    'Authorization': `Token ${token}`,
+    Authorization: `Token ${token}`,
     ...existingHeaders
   }
   const optionsWithAuth = {
@@ -45,7 +45,7 @@ async function post(token, path, payload) {
   return http(token, buildURL(`api/${path}`, null), {
     method: 'POST',
     headers: {
-      'content-type': 'application/json',
+      'content-type': 'application/json'
     },
     body: JSON.stringify(payload)
   })
@@ -55,7 +55,7 @@ async function put(token, path, payload) {
   return http(token, buildURL(`api/${path}`, null), {
     method: 'PUT',
     headers: {
-      'content-type': 'application/json',
+      'content-type': 'application/json'
     },
     body: JSON.stringify(payload)
   })
@@ -64,7 +64,7 @@ async function put(token, path, payload) {
 export async function getProfiles(token, search = null) {
   let params
   if (search !== null) {
-    params = {query: search}
+    params = { query: search }
   } else {
     params = {}
   }
@@ -100,26 +100,31 @@ const profilePayloadMapping = {
 }
 
 export function profileToPayload(profile) {
-  return Object.keys(profilePayloadMapping).reduce((payload, key) => (
-    {
+  return Object.keys(profilePayloadMapping).reduce(
+    (payload, key) => ({
       ...payload,
       [key]: profile[profilePayloadMapping[key]]
-    }
-  ), {})
+    }),
+    {}
+  )
 }
 
 function reverseObject(obj) {
-  return Object.keys(obj).reduce((result, key) => ({[obj[key]]: key, ...result}), {})
+  return Object.keys(obj).reduce(
+    (result, key) => ({ [obj[key]]: key, ...result }),
+    {}
+  )
 }
 
 export function payloadToProfile(payload) {
   const mapping = reverseObject(profilePayloadMapping)
-  return Object.keys(mapping).reduce((profile, key) => (
-    {
+  return Object.keys(mapping).reduce(
+    (profile, key) => ({
       ...profile,
       [key]: payload[mapping[key]]
-    }
-  ), {})
+    }),
+    {}
+  )
 }
 
 export async function createProfile(token, profile) {
@@ -159,6 +164,6 @@ export async function uploadPicture(token, file) {
 
   return http(token, url, {
     method: 'POST',
-    body: file,
+    body: file
   })
 }

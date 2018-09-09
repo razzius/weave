@@ -85,7 +85,8 @@ export default class ProfileForm extends Component {
     // todo see if image changed
     const unsavedImage = !this.state.imageSuccess && this.state.image !== null
     when(unsavedImage, this.saveImage).then(() => {
-      this.props.saveProfile(this.props.token, this.state, this.props.profileId)
+      this.props
+        .saveProfile(this.props.token, this.state, this.props.profileId)
         .then(profile => {
           if (!this.props.profileId) {
             this.props.setAvailableForMentoring()
@@ -221,81 +222,78 @@ export default class ProfileForm extends Component {
               {this.state.imageSuccess ? 'Image uploaded' : null}
             </div>
 
-          <div className="expectations">
-            <h3>I am available to mentor in the following ways:</h3>
+            <div className="expectations">
+              <h3>I am available to mentor in the following ways:</h3>
 
-            <div className="expectation">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={this.state.willingShadowing}
-                  onChange={this.updateBoolean('willingShadowing')}
-                />
-                Clinical shadowing opportunities
-              </label>
-            </div>
-
-            <div className="expectation">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={this.state.willingNetworking}
-                  onChange={this.updateBoolean('willingNetworking')}
-                />
-                Networking
-              </label>
-            </div>
-
-            <div className="expectation">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={this.state.willingGoalSetting}
-                  onChange={this.updateBoolean('willingGoalSetting')}
-                />
-                Goal setting
-              </label>
-            </div>
-
-            <div className="expectation">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={this.state.willingDiscussPersonal}
-                  onChange={this.updateBoolean('willingDiscussPersonal')}
-                />
-                Discussing personal as well as professional life
-              </label>
-            </div>
-
-            <div className="expectation">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={this.state.willingCareerGuidance}
-                  onChange={this.updateBoolean('willingCareerGuidance')}
-                />
-                Career guidance
-              </label>
-            </div>
-
-            <div className="expectation">
-              <label>
-                <input
-                  type="checkbox"
-                  checked={this.state.willingStudentGroup}
-                  onChange={this.updateBoolean('willingStudentGroup')}
+              <div className="expectation">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={this.state.willingShadowing}
+                    onChange={this.updateBoolean('willingShadowing')}
                   />
-                Student interest group support or speaking at student events
-              </label>
+                  Clinical shadowing opportunities
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={this.state.willingNetworking}
+                    onChange={this.updateBoolean('willingNetworking')}
+                  />
+                  Networking
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={this.state.willingGoalSetting}
+                    onChange={this.updateBoolean('willingGoalSetting')}
+                  />
+                  Goal setting
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={this.state.willingDiscussPersonal}
+                    onChange={this.updateBoolean('willingDiscussPersonal')}
+                  />
+                  Discussing personal as well as professional life
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={this.state.willingCareerGuidance}
+                    onChange={this.updateBoolean('willingCareerGuidance')}
+                  />
+                  Career guidance
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={this.state.willingStudentGroup}
+                    onChange={this.updateBoolean('willingStudentGroup')}
+                  />
+                  Student interest group support or speaking at student events
+                </label>
+              </div>
             </div>
           </div>
 
-          </div>
-
-          <div
-            className="about"
-          >
+          <div className="about">
             <p>Name</p>
             <input
               type="text"
@@ -341,7 +339,7 @@ export default class ProfileForm extends Component {
               options={professionalInterestOptions}
               value={this.state.professionalInterests}
               onChange={this.handleSelect('professionalInterests')}
-              />
+            />
 
             <div data-tip="Please feel free to create your own tags with identities or locations that are important to you.">
               <p>Parts Of Me</p>
@@ -351,7 +349,7 @@ export default class ProfileForm extends Component {
                 options={partsOfMeOptions}
                 value={this.state.partsOfMe}
                 onChange={this.handleSelect('partsOfMe')}
-                />
+              />
             </div>
 
             <div data-tip="Please feel free to create your own tags with activities that you enjoy.">
@@ -362,7 +360,7 @@ export default class ProfileForm extends Component {
                 options={activitiesIEnjoyOptions}
                 value={this.state.activities}
                 onChange={this.handleSelect('activities')}
-                />
+              />
             </div>
 
             <p>What else would you like to share with potential mentees?</p>
@@ -438,7 +436,8 @@ export default class ProfileForm extends Component {
           <button
             className="button"
             onClick={() => {
-              const unsavedImage = this.state.image !== null && this.state.imageUrl === null
+              const unsavedImage =
+                this.state.image !== null && this.state.imageUrl === null
               when(unsavedImage, this.saveImage).then(this.setPreview)
             }}
           >

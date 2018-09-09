@@ -84,4 +84,4 @@ West Virginia
 West Coast
 Wisconsin
 Wyoming
-`.split("\n")
+`.split('\n')

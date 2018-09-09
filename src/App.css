@@ -134,12 +134,12 @@ input[type='email'] {
 }
 
 @media screen and (min-width: 750px) {
-    .columns {
-        display: flex;
-    }
-    .about {
-        padding-left: 50px;
-    }
+  .columns {
+    display: flex;
+  }
+  .about {
+    padding-left: 50px;
+  }
 }
 
 .profile-result {
@@ -274,9 +274,10 @@ input[disabled]:checked {
 }
 
 .contact-block {
-    margin-left: 50px;
+  margin-left: 50px;
 }
 
-h3 a, h4 a {
-    text-decoration: none;
+h3 a,
+h4 a {
+  text-decoration: none;
 }

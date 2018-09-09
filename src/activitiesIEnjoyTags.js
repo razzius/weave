@@ -26,4 +26,4 @@ Video Games
 Water Color
 Writing
 Yoga
-`.split("\n")
+`.split('\n')

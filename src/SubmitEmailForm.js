@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from "react-router-dom"
+import { Link } from 'react-router-dom'
 import ReactTooltip from 'react-tooltip'
 import { any } from './utils'
 
@@ -26,15 +26,12 @@ function displayError(error) {
   if (error.email[0] === 'claimed') {
     return (
       <p>
-        That email has already been registered. Please <Link to="/login">log in</Link>.
+        That email has already been registered. Please{' '}
+        <Link to="/login">log in</Link>.
       </p>
     )
   }
-  return (
-    <p>
-      {error.email[0]}
-    </p>
-  )
+  return <p>{error.email[0]}</p>
 }
 
 export default class SubmitEmailForm extends Component {
@@ -68,7 +65,9 @@ export default class SubmitEmailForm extends Component {
       const { email } = this.state
       const VALID_DOMAINS = ['harvard.edu', 'partners.org', 'hmsweave.com']
 
-      const emailValid = any(VALID_DOMAINS.map(domain => email.endsWith(domain)))
+      const emailValid = any(
+        VALID_DOMAINS.map(domain => email.endsWith(domain))
+      )
 
       return (
         <div>
@@ -86,10 +85,11 @@ export default class SubmitEmailForm extends Component {
               id="toggle"
               data-tip
               data-for="emailTooltip"
-              data-tip-disable={email === '' && !emailValid}>
-              <button
-                disabled={!emailValid}
-                className="button">Send verification email</button>
+              data-tip-disable={email === '' && !emailValid}
+            >
+              <button disabled={!emailValid} className="button">
+                Send verification email
+              </button>
             </div>
           </form>
         </div>

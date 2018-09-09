@@ -22,4 +22,4 @@ Start-ups
 Translational Research
 Wellness
 Writing
-`.split("\n")
+`.split('\n')

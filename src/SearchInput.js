@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component } from 'react'
 import Select from 'react-select'
 import {
   clinicalSpecialtyOptions,
@@ -16,27 +16,30 @@ const options = clinicalSpecialtyOptions.concat(
 )
 
 export default class SearchInput extends Component {
-
-  handleSubmit = (e) => {
+  handleSubmit = e => {
     e.preventDefault()
     this.props.onSubmit()
   }
 
-  handleInputKeyDown = (e) => {
-    if (e.key === 'Enter'){
+  handleInputKeyDown = e => {
+    if (e.key === 'Enter') {
       this.props.onSubmit()
     }
   }
 
   render() {
     return (
-      <form style={{display: 'flex'}} className="search" onSubmit={this.handleSubmit}>
+      <form
+        style={{ display: 'flex' }}
+        className="search"
+        onSubmit={this.handleSubmit}
+      >
         <Select
           style={{
-            width: '500px',
+            width: '500px'
           }}
           options={options}
-          placeholder={"Search"}
+          placeholder={'Search'}
           onBlurResetsInput={false}
           noResultsText={null}
           onChange={this.props.onChange}
@@ -44,7 +47,7 @@ export default class SearchInput extends Component {
           onInputKeyDown={this.handleInputKeyDown}
           value={this.props.value}
           multi
-          />
+        />
         <button className="search-submit" type="submit">
           Submit
         </button>

@@ -88,14 +88,12 @@ const ProfileView = ({ data, ownProfile }) => (
           </div>
 
           <div className="expectation">
-            <label
-              className={!data.willing_student_group ? 'grayed-out' : ''}
-              >
+            <label className={!data.willing_student_group ? 'grayed-out' : ''}>
               <input
                 type="checkbox"
                 disabled="true"
                 checked={data.willing_student_group}
-                />
+              />
               Student interest group support or speaking at student events
             </label>
           </div>

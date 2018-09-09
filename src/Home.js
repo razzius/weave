@@ -43,7 +43,11 @@ const Home = ({ token, isMentor, profileId }) => (
             </Link>
           </div>
         )}
-        <FacultyLanding token={token} isMentor={isMentor} profileId={profileId}/>
+        <FacultyLanding
+          token={token}
+          isMentor={isMentor}
+          profileId={profileId}
+        />
         {isMentor && (
           <div>
             <Link className="button" to="/browse">

@@ -8,7 +8,7 @@ const CreateProfile = props => (
     saveProfile={createProfile}
     setAvailableForMentoring={props.setAvailableForMentoring}
     {...props}
-    />
+  />
 )
 
 export default CreateProfile

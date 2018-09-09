@@ -116,4 +116,4 @@ Transplant Hepatology
 Urology
 Vascular & Interventional Radiology
 Vascular Surgery
-`.split("\n")
+`.split('\n')

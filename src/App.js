@@ -37,30 +37,36 @@ class App extends Component {
 
   componentDidMount() {
     if (this.state.token !== null) {
-      verifyToken(this.state.token).then(response => {
-        this.setState({
-          profileId: response.profile_id,
-          isMentor: response.is_mentor,
-          availableForMentoring: response.profileId === null ? true : response.available_for_mentoring
+      verifyToken(this.state.token)
+        .then(response => {
+          this.setState({
+            profileId: response.profile_id,
+            isMentor: response.is_mentor,
+            availableForMentoring:
+              response.profileId === null
+                ? true
+                : response.available_for_mentoring
+          })
         })
-      }).catch(() => {
-        window.localStorage.removeItem('token')
-        this.setState({ token: null })
-      })
+        .catch(() => {
+          window.localStorage.removeItem('token')
+          this.setState({ token: null })
+        })
     }
   }
 
-  authenticate = ({ token, profileId, isMentor, availableForMentoring }) => (
+  authenticate = ({ token, profileId, isMentor, availableForMentoring }) =>
     new Promise(resolve => {
-      this.setState({ token, profileId, isMentor, availableForMentoring }, () => resolve())
+      this.setState({ token, profileId, isMentor, availableForMentoring }, () =>
+        resolve()
+      )
     })
-  )
 
   setProfileId = profileId => {
     this.setState({ profileId })
   }
 
-  logout = (e) => {
+  logout = e => {
     e.preventDefault()
     window.localStorage.removeItem('token')
     this.setState({ token: null }, () => {
@@ -70,7 +76,7 @@ class App extends Component {
   }
 
   setAvailableForMentoring = () => {
-    this.setState({availableForMentoring: true})
+    this.setState({ availableForMentoring: true })
   }
 
   render() {
@@ -100,7 +106,9 @@ class App extends Component {
           paddingRight: '2em',
           cursor: 'pointer'
         }}
-        >Logout</a>
+      >
+        Logout
+      </a>
     )
 
     const loginAction = loggedOut ? loginButton : logoutButton
@@ -134,7 +142,7 @@ class App extends Component {
                   data-for="toggleTooltip"
                 >
                   Available for mentoring:
-                  <ReactTooltip id='toggleTooltip' place="bottom">
+                  <ReactTooltip id="toggleTooltip" place="bottom">
                     Controls whether your profile will be visible to mentees.
                   </ReactTooltip>
                   <Toggle
@@ -152,13 +160,17 @@ class App extends Component {
             </div>
           </header>
           <Switch>
-            <Route exact path="/" render={() => (
-              <Home
-                token={this.state.token}
-                isMentor={this.state.isMentor}
-                profileId={this.state.profileId}
+            <Route
+              exact
+              path="/"
+              render={() => (
+                <Home
+                  token={this.state.token}
+                  isMentor={this.state.isMentor}
+                  profileId={this.state.profileId}
                 />
-            )} />
+              )}
+            />
             <Route
               path="/faculty-expectations"
               component={FacultyExpectations}
@@ -176,20 +188,22 @@ class App extends Component {
                   setProfileId={this.setProfileId}
                   token={this.state.token}
                   history={history}
-                  />
+                />
               )}
             />
             <Route
               path="/edit-profile"
               render={({ history }) => {
                 if (this.state.profileId !== null) {
-                  return <EditProfile
-                    availableForMentoring={this.state.availableForMentoring}
-                    setProfileId={this.setProfileId}
-                    token={this.state.token}
-                    history={history}
-                    profileId={this.state.profileId}
-                  />
+                  return (
+                    <EditProfile
+                      availableForMentoring={this.state.availableForMentoring}
+                      setProfileId={this.setProfileId}
+                      token={this.state.token}
+                      history={history}
+                      profileId={this.state.profileId}
+                    />
+                  )
                 }
 
                 return null
@@ -197,11 +211,15 @@ class App extends Component {
             />
             <Route
               path="/register-faculty-email"
-              render={({ history }) => <RegisterFacultyEmail history={history} />}
+              render={({ history }) => (
+                <RegisterFacultyEmail history={history} />
+              )}
             />
             <Route
               path="/register-student-email"
-              render={({ history }) => <RegisterStudentEmail history={history} />}
+              render={({ history }) => (
+                <RegisterStudentEmail history={history} />
+              )}
             />
             <Route
               path="/verify"
@@ -228,7 +246,13 @@ class App extends Component {
 
             <Route
               path="/profiles/:id"
-              render={props => <Profile profileId={this.state.profileId} token={this.state.token} {...props} />}
+              render={props => (
+                <Profile
+                  profileId={this.state.profileId}
+                  token={this.state.token}
+                  {...props}
+                />
+              )}
             />
             <Route component={() => <p>404 Not found</p>} />
           </Switch>

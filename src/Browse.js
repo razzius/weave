@@ -37,7 +37,10 @@ export default class Browse extends Component {
     const { token } = this.props
     const { searchTerms, search } = this.state
     const searchArray = search === '' ? [] : [search]
-    const searchString = searchTerms.concat(searchArray).join(' ').toLowerCase()
+    const searchString = searchTerms
+      .concat(searchArray)
+      .join(' ')
+      .toLowerCase()
 
     const query = reset ? '' : searchString
 
@@ -50,7 +53,10 @@ export default class Browse extends Component {
   }
 
   handleChange = tags => {
-    this.setState({ searchTerms: tags.map(tag => tag.value) }, this.handleSearch)
+    this.setState(
+      { searchTerms: tags.map(tag => tag.value) },
+      this.handleSearch
+    )
   }
 
   handleInputChange = value => {
@@ -74,18 +80,23 @@ export default class Browse extends Component {
             <div>
               <p>
                 Showing {this.state.results.length}{' '}
-                {pluralizeResults(this.state.results.length)}.
-                {" "}
-                {this.state.queried && <button onClick={() => {
-                  this.setState({
-                    searchTerms: [],
-                    search: '',
-                  })
-                  this.handleSearch(true)
-                  this.setState({
-                    queried: false
-                  })
-                }}>Clear search</button>}
+                {pluralizeResults(this.state.results.length)}.{' '}
+                {this.state.queried && (
+                  <button
+                    onClick={() => {
+                      this.setState({
+                        searchTerms: [],
+                        search: ''
+                      })
+                      this.handleSearch(true)
+                      this.setState({
+                        queried: false
+                      })
+                    }}
+                  >
+                    Clear search
+                  </button>
+                )}
               </p>
               <div>
                 {this.state.results.map(result => (

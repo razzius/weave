@@ -1,6 +1,6 @@
-import React from "react"
-import FacultyExpectationsSlider from "./FacultySlider"
-import AppScreen from "./AppScreen"
+import React from 'react'
+import FacultyExpectationsSlider from './FacultySlider'
+import AppScreen from './AppScreen'
 
 export default () => (
   <AppScreen>
