@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { Link } from "react-router-dom"
 import ReactTooltip from 'react-tooltip'
+import { any } from './utils'
 
 function displayError(error) {
   if (error === null) {
@@ -65,7 +66,9 @@ export default class SubmitEmailForm extends Component {
   render() {
     if (!this.state.success) {
       const { email } = this.state
-      const emailValid = email.endsWith('harvard.edu') || email.endsWith('partners.org')
+      const VALID_DOMAINS = ['harvard.edu', 'partners.org', 'hmsweave.com']
+
+      const emailValid = any(VALID_DOMAINS.map(domain => email.endsWith(domain)))
 
       return (
         <div>

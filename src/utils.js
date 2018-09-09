@@ -13,3 +13,7 @@ export function when(condition, promiseCallable) {
   }
   return Promise.resolve(true)
 }
+
+export function any(values) {
+  return values.reduce((acc, value) => acc || value, false)
+}

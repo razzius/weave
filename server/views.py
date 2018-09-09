@@ -67,6 +67,13 @@ class ProfileSchema(Schema):
     other_cadence = fields.String(allow_none=True)
 
 
+VALID_DOMAINS = {
+    'harvard.edu',
+    'partners.org',
+    'hmsweave.com'
+}
+
+
 class ValidEmailSchema(Schema):
     email = fields.String(required=True)
 
@@ -74,7 +81,7 @@ class ValidEmailSchema(Schema):
     def validate_email(self, in_data):
         email = in_data.get('email', '')
 
-        if not email.endswith('harvard.edu') and not email.endswith('partners.org'):
+        if not any(email.endswith(domain) for domain in VALID_DOMAINS):
             raise ValidationError('Email must end with harvard.edu or partners.org', 'email')
 
 
