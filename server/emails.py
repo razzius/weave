@@ -52,7 +52,7 @@ def send_faculty_registration_email(email, token):
         faculty at Harvard Medical School. You have successfully registered for a faculty mentor profile.
         The following link will direct you to create your profile page: {verify_link}.
         You may return to edit your profile or change your availability
-        settings anytime by returning to HMSWeave.com and clicking “Login” in
+        settings anytime by returning to {SERVER_URL} and clicking “Login” in
         the top right-hand corner.
     </p>
 
@@ -76,7 +76,7 @@ def send_student_registration_email(email, token):
         Welcome to Weave, a mentorship platform to connect students and
         faculty at Harvard Medical School. You have successfully registered for a student mentee profile. The
         following link will direct you to view the database of faculty mentors: {verify_link}.
-        You may access this database of mentors anytime by returning to HMSWeave.com
+        You may access this database of mentors anytime by returning to {SERVER_URL}
         and clicking “Login” in the top right-hand corner.
     </p>
 
