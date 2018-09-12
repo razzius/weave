@@ -430,7 +430,7 @@ def _token_expired(verification_token):
         hours=TOKEN_EXPIRY_AGE_HOURS
     )
 
-    return verification_token.expired or datetime.datetime.now() > expire_time
+    return verification_token.expired or datetime.datetime.utcnow() > expire_time
 
 
 TOKEN_EXPIRY_AGE_HOURS = 1
