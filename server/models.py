@@ -60,7 +60,7 @@ class ProfileActivity(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     activity_id = db.Column(db.Integer, db.ForeignKey(Activity.id), nullable=False)
     activity = relationship(Activity)
-    profile_id = db.Column(db.Integer, db.ForeignKey('profile.id'), nullable=False)
+    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
 class Profile(db.Model):
