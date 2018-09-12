@@ -137,6 +137,15 @@ const ProfileView = ({ data, ownProfile }) => (
             </div>
           )}
 
+          {data.activities.length > 0 && (
+            <div>
+              <h4>Activities I enjoy</h4>
+              <p style={{ paddingBottom: '1em' }}>
+                {data.activities.join(', ')}
+              </p>
+            </div>
+          )}
+
           {data.additional_information && (
             <div>
               <h4>Additional Information</h4>

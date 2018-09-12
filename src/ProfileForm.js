@@ -357,7 +357,9 @@ export default class ProfileForm extends Component {
               <Select.Creatable
                 className="column"
                 multi
-                options={activitiesIEnjoyOptions}
+                options={activitiesIEnjoyOptions.concat(
+                  this.state.activities.map(value => ({label: value, value}))
+                )}
                 value={this.state.activities}
                 onChange={this.handleSelect('activities')}
               />

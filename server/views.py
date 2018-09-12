@@ -1,8 +1,8 @@
 import datetime
-from dateutil.relativedelta import relativedelta
 import uuid
 from http import HTTPStatus
 
+from dateutil.relativedelta import relativedelta
 from flask import Blueprint, jsonify, request
 
 from cloudinary import uploader
@@ -15,7 +15,7 @@ from .emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
-    send_student_registration_email,
+    send_student_registration_email
 )
 from .models import (
     Activity,
@@ -25,7 +25,7 @@ from .models import (
     VerificationToken,
     db,
     get_verification_email_by_email,
-    save,
+    save
 )
 
 
@@ -187,7 +187,7 @@ def get_profile(profile_id=None):
     return jsonify(
         profile_schema.dump(
             Profile.query.filter(Profile.id == profile_id).one_or_none()
-        ).data
+        )
     )
 
 
@@ -197,6 +197,50 @@ def error(reason, status_code=HTTPStatus.BAD_REQUEST.value):
 
 def api_post(route):
     return api.route(f'/api/{route}', methods=['POST'])
+
+
+def save_activities(profile, schema_activities):
+    activity_values = [value['activity']['value'] for value in schema_activities]
+
+    existing_activities = Activity.query.filter(Activity.value.in_(activity_values))
+
+    existing_activity_values = [
+        tup[0] for tup in existing_activities.values('value')
+    ]
+
+    new_activity_values = [
+        value for value in activity_values if value not in existing_activity_values
+    ]
+
+    new_activities = [Activity(value=value) for value in new_activity_values]
+
+    db.session.add_all(new_activities)
+    db.session.commit()
+
+    profile_activities = [
+        ProfileActivity(activity_id=activity.id, profile_id=profile.id)
+        for activity in existing_activities  # All activities exist by this point
+    ]
+
+    db.session.add_all(profile_activities)
+    db.session.commit()
+
+
+def basic_profile_data(verification_token, schema):
+    return {
+        'verification_email_id': verification_token.email_id,
+        **{
+            key: value
+            for key, value in schema.items()
+            if key not in {
+                # 'affiliations',
+                # 'clinical_specialties',
+                # 'professional_interests',
+                # 'parts_of_me',
+                'activities',
+            }
+        }
+    }
 
 
 @api_post('profile')
@@ -216,48 +260,13 @@ def create_profile(profile_id=None):
     ).scalar():
         return error({'email': ['This email already exists in the database']})
 
-    values = [value['activity']['value'] for value in schema['activities']]
-
-    existing_activities = Activity.query.filter(Activity.value.in_(values))
-
-    existing_activity_values = [
-        tup[0] for tup in existing_activities.values('value')
-    ]
-
-    new_activity_values = [
-        value for value in values if value not in existing_activity_values
-    ]
-
-    new_activities = [Activity(value=value) for value in new_activity_values]
-
-    profile_data = {
-        'verification_email_id': verification_token.email_id,
-        **{
-            key: value
-            for key, value in schema.items()
-            if key not in {
-                # 'affiliations',
-                # 'clinical_specialties',
-                # 'professional_interests',
-                # 'parts_of_me',
-                'activities',
-            }
-        }}
+    profile_data = basic_profile_data(verification_token, schema)
 
     profile = Profile(**profile_data)
 
     save(profile)
 
-    db.session.add_all(new_activities)
-    db.session.commit()
-
-    profile_activities = [
-        ProfileActivity(activity_id=activity.id, profile_id=profile.id)
-        for activity in new_activities
-    ]
-
-    db.session.add_all(profile_activities)
-    db.session.commit()
+    save_activities(profile, schema['activities'])
 
     return jsonify(profile_schema.dump(profile)), 201
 
@@ -278,10 +287,18 @@ def update_profile(profile_id=None):
 
     assert profile.verification_email_id == verification_token.email_id
 
-    for key, value in schema.items():
+    profile_data = basic_profile_data(verification_token, schema)
+
+    for key, value in profile_data.items():
         setattr(profile, key, value)
 
     save(profile)
+
+    # TODO delete activities that are no longer associated
+    # lazy approach for now
+    ProfileActivity.query.filter(ProfileActivity.profile_id == profile.id).delete()
+    # TODO delete dangling activities
+    save_activities(profile, schema['activities'])
 
     return jsonify(profile_schema.dump(profile))
 

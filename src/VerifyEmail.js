@@ -86,11 +86,15 @@ export default class VerifyEmail extends Component {
         window.localStorage.setItem('token', this.state.token)
       })
       .catch(err => {
-        if (err.token[0] === 'not recognized')
+        const errorMessage = err.token[0]
+        if (errorMessage === 'not recognized') {
           this.setState({
             error:
-              'Your token is invalid or has expired. Try signing up or logging in again.'
+            'Your token is invalid. Try signing up or logging in again.'
           })
+        } else if (errorMessage === 'expired') {
+          this.setState({error: 'Your login token has expired. Try logging in again.'})
+        }
       })
   }
 
