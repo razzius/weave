@@ -7,7 +7,7 @@ from flask_basicauth import BasicAuth
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_sslify import SSLify
-from .models import Profile, VerificationEmail, VerificationToken, db
+from .models import Activity, Profile, VerificationEmail, VerificationToken, db
 import server.views
 
 app = Flask(__name__, static_url_path='/static', static_folder='../build/static')
@@ -70,6 +70,7 @@ admin = Admin(app, index_view=BasicAuthAdminView())
 admin.add_view(BasicAuthModelView(VerificationToken, db.session))
 admin.add_view(BasicAuthModelView(VerificationEmail, db.session))
 admin.add_view(BasicAuthModelView(Profile, db.session))
+admin.add_view(BasicAuthModelView(Activity, db.session))
 
 
 @app.route('/')
