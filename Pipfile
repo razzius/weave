@@ -19,6 +19,7 @@ raven = {version = "*", extras = ["flask"]}
 flask-basicauth = "*"
 python-dateutil = "*"
 flask-sslify = "*"
+marshmallow = "==3.0.0b13"
 
 [dev-packages]
 ipython = "*"
@@ -32,3 +33,6 @@ python_version = "3.6"
 [scripts]
 start = "flask run"
 shell = "ipython -i scripts/shell.py"
+
+[pipenv]
+allow_prereleases = true

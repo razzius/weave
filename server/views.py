@@ -15,15 +15,17 @@ from .emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
-    send_student_registration_email
+    send_student_registration_email,
 )
 from .models import (
+    Activity,
     Profile,
+    ProfileActivity,
     VerificationEmail,
     VerificationToken,
     db,
     get_verification_email_by_email,
-    save
+    save,
 )
 
 
@@ -42,6 +44,14 @@ class RenderedList(fields.List):
         return super()._deserialize(value, attr, data)
 
 
+class ActivitySchema(Schema):
+    value = fields.String()
+
+
+class ProfileActivitySchema(Schema):
+    activity = fields.Nested(ActivitySchema, only='value')
+
+
 class ProfileSchema(Schema):
     id = fields.String(dump_only=True)
     name = fields.String()
@@ -52,7 +62,7 @@ class ProfileSchema(Schema):
     clinical_specialties = RenderedList(fields.String)
     professional_interests = RenderedList(fields.String)
     parts_of_me = RenderedList(fields.String)
-    activities = RenderedList(fields.String)
+    activities = fields.Nested(ProfileActivitySchema, only='activity', many=True)
 
     additional_information = fields.String()
 
@@ -67,11 +77,7 @@ class ProfileSchema(Schema):
     other_cadence = fields.String(allow_none=True)
 
 
-VALID_DOMAINS = {
-    'harvard.edu',
-    'partners.org',
-    'hmsweave.com'
-}
+VALID_DOMAINS = {'harvard.edu', 'partners.org', 'hmsweave.com'}
 
 
 class ValidEmailSchema(Schema):
@@ -82,7 +88,9 @@ class ValidEmailSchema(Schema):
         email = in_data.get('email', '')
 
         if not any(email.endswith(domain) for domain in VALID_DOMAINS):
-            raise ValidationError('Email must end with harvard.edu or partners.org', 'email')
+            raise ValidationError(
+                'Email must end with harvard.edu or partners.org', 'email'
+            )
 
 
 profile_schema = ProfileSchema()
@@ -109,7 +117,7 @@ def matching_profiles(query):
         Profile.affiliations,
         Profile.activities,
         Profile.parts_of_me,
-        Profile.cadence
+        Profile.cadence,
     ]
 
     search_filters = [
@@ -117,10 +125,7 @@ def matching_profiles(query):
         for word in words
     ]
 
-    filters = [
-        Profile.available_for_mentoring,
-        *search_filters
-    ]
+    filters = [Profile.available_for_mentoring, *search_filters]
 
     return Profile.query.filter(*filters)
 
@@ -129,22 +134,38 @@ def get_token(headers):
     token = request.headers.get('Authorization')
 
     if token is None:
-        return error({'token': ['unauthorized']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
+        return (
+            error(
+                {'token': ['unauthorized']}, status_code=HTTPStatus.UNAUTHORIZED.value
+            ),
+            None,
+        )
 
     token_parts = token.split()
 
     if token_parts[0].lower() != 'token' or len(token_parts) != 2:
-        return error({'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
+        return (
+            error({'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value),
+            None,
+        )
 
     token_value = token_parts[1]
 
     verification_token = VerificationToken.query.get(token_value)
 
     if verification_token is None:
-        return error({'token': ['unknown token']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
+        return (
+            error(
+                {'token': ['unknown token']}, status_code=HTTPStatus.UNAUTHORIZED.value
+            ),
+            None,
+        )
 
     if _token_expired(verification_token):
-        return error({'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value), None
+        return (
+            error({'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value),
+            None,
+        )
 
     return None, verification_token
 
@@ -158,7 +179,7 @@ def get_profiles():
 
     query = request.args.get('query')
 
-    return jsonify(profiles_schema.dump(matching_profiles(query)).data)
+    return jsonify(profiles_schema.dump(matching_profiles(query)))
 
 
 @api.route('/api/profiles/<profile_id>')
@@ -185,44 +206,68 @@ def create_profile(profile_id=None):
     if error:
         return error
 
-    schema = profile_schema.load(request.json)
-
     try:
         schema = profile_schema.load(request.json)
     except ValidationError as err:
         return jsonify(err.messages), 422
 
-    if schema.errors:
-        return jsonify(schema.errors), 422
-
     if db.session.query(
-        exists().where(Profile.contact_email == schema.data['contact_email'])
+        exists().where(Profile.contact_email == schema['contact_email'])
     ).scalar():
         return error({'email': ['This email already exists in the database']})
 
+    values = [value['activity']['value'] for value in schema['activities']]
+
+    existing_activities = Activity.query.filter(Activity.value.in_(values))
+
+    existing_activity_values = [
+        tup[0] for tup in existing_activities.values('value')
+    ]
+
+    new_activity_values = [
+        value for value in values if value not in existing_activity_values
+    ]
+
+    new_activities = [Activity(value=value) for value in new_activity_values]
+
     profile_data = {
         'verification_email_id': verification_token.email_id,
-        **schema.data
-    }
+        **{
+            key: value
+            for key, value in schema.items()
+            if key not in {
+                # 'affiliations',
+                # 'clinical_specialties',
+                # 'professional_interests',
+                # 'parts_of_me',
+                'activities',
+            }
+        }}
 
     profile = Profile(**profile_data)
 
     save(profile)
 
-    return jsonify(profile_schema.dump(profile).data)
+    db.session.add_all(new_activities)
+    db.session.commit()
+
+    profile_activities = [
+        ProfileActivity(activity_id=activity.id, profile_id=profile.id)
+        for activity in new_activities
+    ]
+
+    db.session.add_all(profile_activities)
+    db.session.commit()
+
+    return jsonify(profile_schema.dump(profile)), 201
 
 
 @api.route('/api/profiles/<profile_id>', methods=['PUT'])
 def update_profile(profile_id=None):
-    schema = profile_schema.load(request.json)
-
     try:
         schema = profile_schema.load(request.json)
     except ValidationError as err:
         return jsonify(err.messages), 422
-
-    if schema.errors:
-        return jsonify(schema.errors), 422
 
     profile = Profile.query.get(profile_id)
 
@@ -233,12 +278,12 @@ def update_profile(profile_id=None):
 
     assert profile.verification_email_id == verification_token.email_id
 
-    for key, value in schema.data.items():
+    for key, value in schema.items():
         setattr(profile, key, value)
 
     save(profile)
 
-    return jsonify(ProfileSchema().dump(profile).data)
+    return jsonify(profile_schema.dump(profile))
 
 
 def generate_token():
@@ -275,9 +320,7 @@ def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
 
 
 def save_verification_token(email_id, token):
-    verification_token = VerificationToken(
-        email_id=email_id, token=token
-    )
+    verification_token = VerificationToken(email_id=email_id, token=token)
 
     save(verification_token)
 
@@ -287,9 +330,7 @@ def save_verification_token(email_id, token):
 def send_token(verification_email, email_function):
     VerificationToken.query.filter(
         VerificationToken.email_id == verification_email.id
-    ).update({
-        VerificationToken.expired: True
-    })
+    ).update({VerificationToken.expired: True})
 
     token = generate_token()
 
@@ -311,12 +352,12 @@ def process_send_verification_email(is_mentor):
         else send_student_registration_email
     )
 
-    schema = valid_email_schema.load(request.json)
+    try:
+        schema = valid_email_schema.load(request.json)
+    except ValidationError as err:
+        return error(err.messages)
 
-    if schema.errors:
-        return error(schema.errors)
-
-    email = schema.data['email']
+    email = schema['email']
 
     existing_email = get_verification_email_by_email(email)
 
@@ -344,12 +385,14 @@ def send_student_verification_email():
 def login():
     schema = valid_email_schema.load(request.json)
 
-    if schema.errors:
+    if 'errors' in schema:
         return error(schema.errors)
 
-    email = schema.data['email']
+    email = schema['email']
 
-    verification_email = VerificationEmail.query.filter(VerificationEmail.email == email).one_or_none()
+    verification_email = VerificationEmail.query.filter(
+        VerificationEmail.email == email
+    ).one_or_none()
 
     if verification_email is None:
         return error({'email': ['unregistered']})
@@ -362,18 +405,15 @@ def login():
 
     send_token(verification_email, email_function=email_function)
 
-    return jsonify({
-        'email': email
-    })
+    return jsonify({'email': email})
 
 
 def _token_expired(verification_token):
-    expire_time = verification_token.date_created + relativedelta(hours=TOKEN_EXPIRY_AGE_HOURS)
-
-    return (
-        verification_token.expired
-        or datetime.datetime.now() > expire_time
+    expire_time = verification_token.date_created + relativedelta(
+        hours=TOKEN_EXPIRY_AGE_HOURS
     )
+
+    return verification_token.expired or datetime.datetime.now() > expire_time
 
 
 TOKEN_EXPIRY_AGE_HOURS = 1
@@ -403,14 +443,18 @@ def verify_token():
 
     profile_id = profile.id if profile is not None else None
 
-    available_for_mentoring = profile.available_for_mentoring if profile is not None else None
+    available_for_mentoring = (
+        profile.available_for_mentoring if profile is not None else None
+    )
 
-    return jsonify({
-        'email': verification_email.email,
-        'is_mentor': verification_email.is_mentor,
-        'profile_id': profile_id,
-        'available_for_mentoring': available_for_mentoring
-    })
+    return jsonify(
+        {
+            'email': verification_email.email,
+            'is_mentor': verification_email.is_mentor,
+            'profile_id': profile_id,
+            'available_for_mentoring': available_for_mentoring,
+        }
+    )
 
 
 def get_profile_by_token(token):

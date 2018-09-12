@@ -50,6 +50,19 @@ class VerificationEmail(db.Model):
     is_mentor = db.Column(db.Boolean)
 
 
+class Activity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    value = db.Column(db.String(50))
+    public = db.Column(db.Boolean, default=False)
+
+
+class ProfileActivity(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    activity_id = db.Column(db.Integer, db.ForeignKey(Activity.id), nullable=False)
+    activity = relationship(Activity)
+    profile_id = db.Column(db.Integer, db.ForeignKey('profile.id'), nullable=False)
+
+
 class Profile(db.Model):
     id = db.Column(db.String, primary_key=True, default=generate_uuid)
     name = db.Column(db.String(255), nullable=False)
@@ -65,7 +78,7 @@ class Profile(db.Model):
     affiliations = db.Column(StringEncodedList(1024))
     professional_interests = db.Column(StringEncodedList(1024))
     parts_of_me = db.Column(StringEncodedList(1024))
-    activities = db.Column(StringEncodedList(1024))
+    activities = relationship(ProfileActivity)
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

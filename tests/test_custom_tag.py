@@ -1,51 +1,52 @@
 import http
 
-from server.models import Profile, VerificationEmail, VerificationToken
+from server.models import VerificationEmail, VerificationToken, Activity
 
 from .utils import save
 
 
-def test_update_profile(client):
+def test_create_profile_with_custom_tag(client):
     token = '1234'
 
-    verification_email = save(VerificationEmail(email='test@test.com'))
+    name = 'New User'
+    email = 'test@test.com'
+
+    verification_email = save(VerificationEmail(email=email))
 
     save(VerificationToken(token=token, email_id=verification_email.id))
 
-    profile = save(Profile(
-        name='Test User',
-        verification_email_id=verification_email.id,
-        contact_email='test@test.com',
-    ))
+    # activities = []
+    activities = ['Surfing the web']
 
-    new_profile = {
-        'name': 'New User',
-        'contact_email': 'new@test.com'
+    profile = {
+        'name': name,
+        'contact_email': email,
+        'activities': activities
     }
 
-    response = client.put(
-        f'/api/profiles/{profile.id}',
-        json=new_profile,
+    response = client.post(
+        f'/api/profile',
+        json=profile,
         headers={'Authorization': f'Token {token}'}
     )
 
-    assert response.status_code == http.HTTPStatus.OK.value
+    assert response.status_code == http.HTTPStatus.CREATED.value
 
-    check_json = {
+    checked_fields = {
         key: value
         for key, value in response.json.items()
         if key != 'id'
     }
 
-    assert check_json == {
-        'activities': [],
+    assert checked_fields == {
+        'activities': activities,
         'additional_information': '',
         'professional_interests': [],
         'affiliations': [],
         'cadence': None,
         'clinical_specialties': [],
-        'contact_email': 'new@test.com',
-        'name': 'New User',
+        'contact_email': email,
+        'name': name,
         'other_cadence': None,
         'parts_of_me': [],
         'profile_image_url': None,
@@ -56,3 +57,5 @@ def test_update_profile(client):
         'willing_student_group': False,
         'willing_shadowing': False
     }
+
+    assert Activity.query.filter(Activity.value == activities[0]).one()
