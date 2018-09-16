@@ -222,9 +222,10 @@ input[type='email'] {
   font-size: 17px;
   line-height: 1.5;
 }
-#about {
+.Home section {
   max-width: 700px;
   margin: 0 auto;
+  padding-bottom: 3em;
 }
 
 .cadence {
