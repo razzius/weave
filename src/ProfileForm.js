@@ -336,7 +336,9 @@ export default class ProfileForm extends Component {
               name="partsOfMe"
               className="column"
               multi
-              options={professionalInterestOptions}
+              options={professionalInterestOptions.concat(
+                this.state.professionalInterests.map(value => ({label: value, value}))
+              )}
               value={this.state.professionalInterests}
               onChange={this.handleSelect('professionalInterests')}
             />
@@ -346,7 +348,9 @@ export default class ProfileForm extends Component {
               <Select.Creatable
                 className="column"
                 multi
-                options={partsOfMeOptions}
+                options={partsOfMeOptions.concat(
+                  this.state.partsOfMe.map(value => ({label: value, value}))
+                )}
                 value={this.state.partsOfMe}
                 onChange={this.handleSelect('partsOfMe')}
               />

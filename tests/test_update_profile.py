@@ -20,7 +20,12 @@ def test_update_profile(client):
 
     new_profile = {
         'name': 'New User',
-        'contact_email': 'new@test.com'
+        'contact_email': 'new@test.com',
+        'affiliations': [],
+        'clinical_specialties': [],
+        'professional_interests': [],
+        'parts_of_me': [],
+        'activities': []
     }
 
     response = client.put(

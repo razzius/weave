@@ -7,7 +7,15 @@ from flask_basicauth import BasicAuth
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_sslify import SSLify
-from .models import Activity, Profile, VerificationEmail, VerificationToken, db
+from .models import (
+    ActivityOption,
+    Profile,
+    VerificationEmail,
+    VerificationToken,
+    db,
+    ProfessionalInterestOption,
+    PartsOfMeOption,
+)
 import server.views
 
 app = Flask(__name__, static_url_path='/static', static_folder='../build/static')
@@ -31,7 +39,6 @@ basic_auth = BasicAuth(app)
 
 
 class BasicAuthAdminView(AdminIndexView):
-
     @expose('/')
     @basic_auth.required
     def index(self):
@@ -39,7 +46,6 @@ class BasicAuthAdminView(AdminIndexView):
 
 
 class BasicAuthModelView(ModelView):
-
     @expose('/', methods=('GET',))
     @basic_auth.required
     def index_view(self):
@@ -70,7 +76,11 @@ admin = Admin(app, index_view=BasicAuthAdminView())
 admin.add_view(BasicAuthModelView(VerificationToken, db.session))
 admin.add_view(BasicAuthModelView(VerificationEmail, db.session))
 admin.add_view(BasicAuthModelView(Profile, db.session))
-admin.add_view(BasicAuthModelView(Activity, db.session))
+# admin.add_view(BasicAuthModelView(HospitalAffiliationOption, db.session))
+# admin.add_view(BasicAuthModelView(ClinicalSpecialtyOption, db.session))
+admin.add_view(BasicAuthModelView(ProfessionalInterestOption, db.session))
+admin.add_view(BasicAuthModelView(PartsOfMeOption, db.session))
+admin.add_view(BasicAuthModelView(ActivityOption, db.session))
 
 
 @app.route('/')

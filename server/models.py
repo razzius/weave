@@ -2,7 +2,6 @@ import uuid
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.types import VARCHAR, TypeDecorator
 from sqlalchemy.orm import relationship
 
 
@@ -24,42 +23,86 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 
-class StringEncodedList(TypeDecorator):
-
-    impl = VARCHAR
-
-    def process_bind_param(self, value, dialect):
-        if isinstance(value, str):
-            return value
-
-        if value is None:
-            return ''
-
-        return ','.join(value)
-
-    def process_result_value(self, value, dialect):
-        if value == '':
-            return []
-        else:
-            return value.split(',')
-
-
-class VerificationEmail(db.Model):
+class IDMixin():
     id = db.Column(db.Integer, primary_key=True)
+
+
+class VerificationEmail(IDMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     is_mentor = db.Column(db.Boolean)
 
 
-class Activity(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+class PredefinedTag(IDMixin, db.Model):
+    value = db.Column(db.String(50))
+
+
+class UserEditableTag(IDMixin, db.Model):
     value = db.Column(db.String(50))
     public = db.Column(db.Boolean, default=False)
 
 
-class ProfileActivity(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    activity_id = db.Column(db.Integer, db.ForeignKey(Activity.id), nullable=False)
-    activity = relationship(Activity)
+class HospitalAffiliationOption(PredefinedTag):
+    pass
+
+
+class ClinicalSpecialtyOption(PredefinedTag):
+    pass
+
+
+class ProfessionalInterestOption(UserEditableTag):
+    pass
+
+
+class PartsOfMeOption(UserEditableTag):
+    pass
+
+
+class ActivityOption(UserEditableTag):
+    pass
+
+
+class HospitalAffiliation(IDMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(HospitalAffiliationOption.id), nullable=False
+    )
+    tag = relationship(HospitalAffiliationOption)
+
+    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+
+
+class ClinicalSpecialty(IDMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(ClinicalSpecialtyOption.id), nullable=False
+    )
+    tag = relationship(ClinicalSpecialtyOption)
+
+    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+
+
+class PartsOfMe(IDMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(PartsOfMeOption.id), nullable=False
+    )
+    tag = relationship(PartsOfMeOption)
+
+    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+
+
+class ProfessionalInterest(IDMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(ProfessionalInterestOption.id), nullable=False
+    )
+    tag = relationship(ProfessionalInterestOption)
+
+    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+
+
+class ProfileActivity(IDMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(ActivityOption.id), nullable=False
+    )
+    tag = relationship(ActivityOption)
+
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
@@ -74,10 +117,10 @@ class Profile(db.Model):
 
     profile_image_url = db.Column(db.String(255))
 
-    clinical_specialties = db.Column(StringEncodedList(1024))
-    affiliations = db.Column(StringEncodedList(1024))
-    professional_interests = db.Column(StringEncodedList(1024))
-    parts_of_me = db.Column(StringEncodedList(1024))
+    clinical_specialties = relationship(ClinicalSpecialty)
+    affiliations = relationship(HospitalAffiliation)
+    professional_interests = relationship(ProfessionalInterest)
+    parts_of_me = relationship(PartsOfMe)
     activities = relationship(ProfileActivity)
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

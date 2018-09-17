@@ -1,4 +1,5 @@
 import datetime
+import itertools
 import uuid
 from http import HTTPStatus
 
@@ -6,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from flask import Blueprint, jsonify, request
 
 from cloudinary import uploader
-from marshmallow import Schema, ValidationError, fields, validates_schema
+from marshmallow import ValidationError
 from requests_toolbelt.utils import dump
 from sqlalchemy import func, or_
 from sqlalchemy.sql import exists
@@ -18,7 +19,15 @@ from .emails import (
     send_student_registration_email
 )
 from .models import (
-    Activity,
+    ActivityOption,
+    ClinicalSpecialty,
+    ClinicalSpecialtyOption,
+    HospitalAffiliation,
+    HospitalAffiliationOption,
+    PartsOfMe,
+    PartsOfMeOption,
+    ProfessionalInterest,
+    ProfessionalInterestOption,
     Profile,
     ProfileActivity,
     VerificationEmail,
@@ -27,75 +36,10 @@ from .models import (
     get_verification_email_by_email,
     save
 )
+from .schemas import profile_schema, profiles_schema, valid_email_schema
 
 
 api = Blueprint('api', __name__)
-
-
-class RenderedList(fields.List):
-    def _serialize(self, value, attr, obj):
-        if value is None:
-            return []
-        return super()._serialize(value, attr, obj)
-
-    def _deserialize(self, value, attr, data):
-        if value is None:
-            return ''
-        return super()._deserialize(value, attr, data)
-
-
-class ActivitySchema(Schema):
-    value = fields.String()
-
-
-class ProfileActivitySchema(Schema):
-    activity = fields.Nested(ActivitySchema, only='value')
-
-
-class ProfileSchema(Schema):
-    id = fields.String(dump_only=True)
-    name = fields.String()
-    contact_email = fields.String()
-    profile_image_url = fields.String(allow_none=True)
-
-    affiliations = RenderedList(fields.String)
-    clinical_specialties = RenderedList(fields.String)
-    professional_interests = RenderedList(fields.String)
-    parts_of_me = RenderedList(fields.String)
-    activities = fields.Nested(ProfileActivitySchema, only='activity', many=True)
-
-    additional_information = fields.String()
-
-    willing_shadowing = fields.Boolean()
-    willing_networking = fields.Boolean()
-    willing_goal_setting = fields.Boolean()
-    willing_discuss_personal = fields.Boolean()
-    willing_career_guidance = fields.Boolean()
-    willing_student_group = fields.Boolean()
-
-    cadence = fields.String()
-    other_cadence = fields.String(allow_none=True)
-
-
-VALID_DOMAINS = {'harvard.edu', 'partners.org', 'hmsweave.com'}
-
-
-class ValidEmailSchema(Schema):
-    email = fields.String(required=True)
-
-    @validates_schema
-    def validate_email(self, in_data):
-        email = in_data.get('email', '')
-
-        if not any(email.endswith(domain) for domain in VALID_DOMAINS):
-            raise ValidationError(
-                'Email must end with harvard.edu or partners.org', 'email'
-            )
-
-
-profile_schema = ProfileSchema()
-profiles_schema = ProfileSchema(many=True)
-valid_email_schema = ValidEmailSchema()
 
 
 @api.errorhandler(ValidationError)
@@ -135,7 +79,7 @@ def get_token(headers):
 
     if token is None:
         return (
-            error(
+            error_response(
                 {'token': ['unauthorized']}, status_code=HTTPStatus.UNAUTHORIZED.value
             ),
             None,
@@ -145,7 +89,7 @@ def get_token(headers):
 
     if token_parts[0].lower() != 'token' or len(token_parts) != 2:
         return (
-            error({'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value),
+            error_response({'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value),
             None,
         )
 
@@ -155,7 +99,7 @@ def get_token(headers):
 
     if verification_token is None:
         return (
-            error(
+            error_response(
                 {'token': ['unknown token']}, status_code=HTTPStatus.UNAUTHORIZED.value
             ),
             None,
@@ -163,7 +107,7 @@ def get_token(headers):
 
     if _token_expired(verification_token):
         return (
-            error({'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value),
+            error_response({'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value),
             None,
         )
 
@@ -184,14 +128,19 @@ def get_profiles():
 
 @api.route('/api/profiles/<profile_id>')
 def get_profile(profile_id=None):
+    profile = Profile.query.filter(Profile.id == profile_id).one_or_none()
+
+    if profile is None:
+        return error_response({'profile_id': ['Not found']}, 404)
+
     return jsonify(
         profile_schema.dump(
-            Profile.query.filter(Profile.id == profile_id).one_or_none()
+            Profile.query.filter(Profile.id == profile_id).one()
         )
     )
 
 
-def error(reason, status_code=HTTPStatus.BAD_REQUEST.value):
+def error_response(reason, status_code=HTTPStatus.BAD_REQUEST.value):
     return jsonify(reason), status_code
 
 
@@ -199,31 +148,47 @@ def api_post(route):
     return api.route(f'/api/{route}', methods=['POST'])
 
 
-def save_activities(profile, schema_activities):
-    activity_values = [value['activity']['value'] for value in schema_activities]
+def flat_values(values):
+    return [tup[0] for tup in values]
 
-    existing_activities = Activity.query.filter(Activity.value.in_(activity_values))
 
-    existing_activity_values = [
-        tup[0] for tup in existing_activities.values('value')
-    ]
+def save_tags(profile, tag_values, option_class, profile_relation_class):
+    activity_values = [value['tag']['value'] for value in tag_values]
+
+    existing_activity_options = option_class.query.filter(option_class.value.in_(activity_values))
+
+    existing_activity_values = flat_values(existing_activity_options.values('value'))
 
     new_activity_values = [
         value for value in activity_values if value not in existing_activity_values
     ]
 
-    new_activities = [Activity(value=value) for value in new_activity_values]
+    new_activities = [option_class(value=value) for value in new_activity_values]
 
     db.session.add_all(new_activities)
     db.session.commit()
 
-    profile_activities = [
-        ProfileActivity(activity_id=activity.id, profile_id=profile.id)
-        for activity in existing_activities  # All activities exist by this point
+    existing_profile_relation_tag_ids = flat_values(profile_relation_class.query.filter(
+        profile_relation_class.tag_id.in_(flat_values(existing_activity_options.values('id'))),
+        profile_relation_class.profile_id == profile.id
+    ).values('tag_id'))
+
+    profile_relations = [
+        profile_relation_class(tag_id=activity.id, profile_id=profile.id)
+        for activity in existing_activity_options  # All activities exist by this point
+        if activity.id not in existing_profile_relation_tag_ids
     ]
 
-    db.session.add_all(profile_activities)
+    db.session.add_all(profile_relations)
     db.session.commit()
+
+
+def save_all_tags(profile, schema):
+    save_tags(profile, schema['affiliations'], HospitalAffiliationOption, HospitalAffiliation)
+    save_tags(profile, schema['clinical_specialties'], ClinicalSpecialtyOption, ClinicalSpecialty)
+    save_tags(profile, schema['professional_interests'], ProfessionalInterestOption, ProfessionalInterest)
+    save_tags(profile, schema['parts_of_me'], PartsOfMeOption, PartsOfMe)
+    save_tags(profile, schema['activities'], ActivityOption, ProfileActivity)
 
 
 def basic_profile_data(verification_token, schema):
@@ -233,10 +198,10 @@ def basic_profile_data(verification_token, schema):
             key: value
             for key, value in schema.items()
             if key not in {
-                # 'affiliations',
-                # 'clinical_specialties',
-                # 'professional_interests',
-                # 'parts_of_me',
+                'affiliations',
+                'clinical_specialties',
+                'professional_interests',
+                'parts_of_me',
                 'activities',
             }
         }
@@ -258,15 +223,15 @@ def create_profile(profile_id=None):
     if db.session.query(
         exists().where(Profile.contact_email == schema['contact_email'])
     ).scalar():
-        return error({'email': ['This email already exists in the database']})
+        return error_response({'email': ['This email already exists in the database']})
 
     profile_data = basic_profile_data(verification_token, schema)
 
     profile = Profile(**profile_data)
 
-    save(profile)
+    db.session.add(profile)
 
-    save_activities(profile, schema['activities'])
+    save_all_tags(profile, schema)
 
     return jsonify(profile_schema.dump(profile)), 201
 
@@ -297,8 +262,9 @@ def update_profile(profile_id=None):
     # TODO delete activities that are no longer associated
     # lazy approach for now
     ProfileActivity.query.filter(ProfileActivity.profile_id == profile.id).delete()
+
     # TODO delete dangling activities
-    save_activities(profile, schema['activities'])
+    save_all_tags(profile, schema)
 
     return jsonify(profile_schema.dump(profile))
 
@@ -312,7 +278,7 @@ def upload_image():
     data = request.data
 
     if not data:
-        return error({'file': ['No image sent']})
+        return error_response({'file': ['No image sent']})
 
     response = uploader.upload(
         data, eager=[{'width': 200, 'height': 200, 'crop': 'crop'}]
@@ -372,14 +338,14 @@ def process_send_verification_email(is_mentor):
     try:
         schema = valid_email_schema.load(request.json)
     except ValidationError as err:
-        return error(err.messages)
+        return error_response(err.messages)
 
     email = schema['email']
 
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:
-        return error({'email': ['claimed']})
+        return error_response({'email': ['claimed']})
 
     verification_email, _ = get_verification_email(email, is_mentor=is_mentor)
 
@@ -403,7 +369,7 @@ def login():
     schema = valid_email_schema.load(request.json)
 
     if 'errors' in schema:
-        return error(schema.errors)
+        return error_response(schema.errors)
 
     email = schema['email']
 
@@ -412,7 +378,7 @@ def login():
     ).one_or_none()
 
     if verification_email is None:
-        return error({'email': ['unregistered']})
+        return error_response({'email': ['unregistered']})
 
     email_function = (
         send_faculty_login_email
@@ -445,10 +411,10 @@ def verify_token():
     match = query.one_or_none()
 
     if match is None:
-        return error({'token': ['not recognized']})
+        return error_response({'token': ['not recognized']})
 
     if _token_expired(match):
-        return error({'token': ['expired']})
+        return error_response({'token': ['expired']})
 
     match.verified = True
 

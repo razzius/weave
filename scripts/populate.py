@@ -1,5 +1,4 @@
 import uuid
-import context
 
 from server.models import VerificationEmail, VerificationToken, save, Profile
 

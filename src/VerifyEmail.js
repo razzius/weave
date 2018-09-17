@@ -83,6 +83,11 @@ export default class VerifyEmail extends Component {
         window.localStorage.setItem('token', this.state.token)
       })
       .catch(err => {
+        if (err.message === 'Failed to fetch') {
+          this.setState({error: 'There was a problem with our server. Please try again in a moment.'})
+          return
+        }
+
         const errorMessage = err.token[0]
         if (errorMessage === 'not recognized') {
           this.setState({

@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import ReactTooltip from 'react-tooltip'
-import { any } from './utils'
+import { any, getParam } from './utils'
 
-function displayError(error) {
+function displayError(error, email) {
   if (error === null) {
     return null
   }
@@ -27,7 +27,7 @@ function displayError(error) {
     return (
       <p>
         That email has already been registered. Please{' '}
-        <Link to="/login">log in</Link>.
+        <Link to={`/login?email=${email}`}>log in</Link>.
       </p>
     )
   }
@@ -38,7 +38,7 @@ export default class SubmitEmailForm extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      email: '',
+      email: getParam('email') || '',
       success: false,
       error: null
     }
@@ -75,12 +75,12 @@ export default class SubmitEmailForm extends Component {
           <div>{this.props.instructions}</div>
           <form onSubmit={this.submitEmail}>
             <p>
-              <input name="email" type="email" onChange={this.updateEmail} />
+              <input name="email" type="email" onChange={this.updateEmail} value={this.state.email} />
             </p>
             <ReactTooltip place="bottom" id="emailTooltip">
               Please enter your Harvard or hospital-affiliated email
             </ReactTooltip>
-            {displayError(this.state.error)}
+            {displayError(this.state.error, this.state.email)}
             <div
               id="toggle"
               data-tip
