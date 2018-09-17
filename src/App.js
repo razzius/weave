@@ -22,6 +22,7 @@ import StudentExpectations from './StudentExpectations'
 import EditProfile from './EditProfile'
 import CreateProfile from './CreateProfile'
 import Profile from './Profile'
+import { availableForMentoringFromVerifyTokenResponse } from './utils'
 
 import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
@@ -43,10 +44,7 @@ class App extends Component {
           this.setState({
             profileId: response.profile_id,
             isMentor: response.is_mentor,
-            availableForMentoring:
-              response.profileId === null
-                ? true
-                : response.available_for_mentoring
+            availableForMentoring: availableForMentoringFromVerifyTokenResponse(response)
           })
         })
         .catch(() => {

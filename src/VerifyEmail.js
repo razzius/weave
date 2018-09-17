@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import AppScreen from './AppScreen'
-import { getParam } from './utils'
+import { availableForMentoringFromVerifyTokenResponse, getParam } from './utils'
 import { verifyToken } from './api'
 import NextButton from './NextButton'
 
@@ -78,10 +78,7 @@ export default class VerifyEmail extends Component {
           verified: response,
           profileId: response.profile_id,
           isMentor: response.is_mentor,
-          availableForMentoring:
-            response.profileId === null
-              ? true
-              : response.available_for_mentoring
+          availableForMentoring: availableForMentoringFromVerifyTokenResponse(response)
         })
         window.localStorage.setItem('token', this.state.token)
       })

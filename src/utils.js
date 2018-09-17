@@ -17,3 +17,7 @@ export function when(condition, promiseCallable) {
 export function any(values) {
   return values.reduce((acc, value) => acc || value, false)
 }
+
+export function availableForMentoringFromVerifyTokenResponse(response) {
+  return response.profile_id === null ? true : response.available_for_mentoring
+}
