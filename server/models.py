@@ -32,32 +32,32 @@ class VerificationEmail(IDMixin, db.Model):
     is_mentor = db.Column(db.Boolean)
 
 
-class PredefinedTag(IDMixin, db.Model):
+class PredefinedTagMixin(IDMixin):
     value = db.Column(db.String(50))
 
 
-class UserEditableTag(IDMixin, db.Model):
+class UserEditableTagMixin(IDMixin):
     value = db.Column(db.String(50))
     public = db.Column(db.Boolean, default=False)
 
 
-class HospitalAffiliationOption(PredefinedTag):
+class HospitalAffiliationOption(PredefinedTagMixin, db.Model):
     pass
 
 
-class ClinicalSpecialtyOption(PredefinedTag):
+class ClinicalSpecialtyOption(PredefinedTagMixin, db.Model):
     pass
 
 
-class ProfessionalInterestOption(UserEditableTag):
+class ProfessionalInterestOption(UserEditableTagMixin, db.Model):
     pass
 
 
-class PartsOfMeOption(UserEditableTag):
+class PartsOfMeOption(UserEditableTagMixin, db.Model):
     pass
 
 
-class ActivityOption(UserEditableTag):
+class ActivityOption(UserEditableTagMixin, db.Model):
     pass
 
 

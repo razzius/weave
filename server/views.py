@@ -1,5 +1,4 @@
 import datetime
-import itertools
 import uuid
 from http import HTTPStatus
 
@@ -48,30 +47,49 @@ def handle_invalid_schema(error):
 
 
 def matching_profiles(query):
-    if query is None:
+    if query is None or query == '':
         return Profile.query.filter(Profile.available_for_mentoring)
 
-    words = query.lower().split()
+    words = ''.join(
+        character
+        if character.isalnum() or character == ' '
+        else ' '
+        for character in query.lower()
+    ).split()
 
     searchable_fields = [
         Profile.name,
         Profile.additional_information,
-        Profile.clinical_specialties,
-        Profile.professional_interests,
-        Profile.affiliations,
-        Profile.activities,
-        Profile.parts_of_me,
         Profile.cadence,
     ]
 
+    tag_fields = [
+        (HospitalAffiliation, HospitalAffiliationOption),
+        (ClinicalSpecialty, ClinicalSpecialtyOption),
+        (ProfessionalInterest, ProfessionalInterestOption),
+        (PartsOfMe, PartsOfMeOption),
+        (ProfileActivity, ActivityOption)
+    ]
+
     search_filters = [
-        or_(*[func.lower(field).contains(word) for field in searchable_fields])
+        or_(*[
+            func.lower(field).contains(word)
+            for field in searchable_fields
+        ] + [
+            func.lower(option_class.value).contains(word)
+            for _, option_class in tag_fields
+        ])
         for word in words
     ]
 
     filters = [Profile.available_for_mentoring, *search_filters]
 
-    return Profile.query.filter(*filters)
+    query = Profile.query
+
+    for relation, option_class in tag_fields:
+        query = query.join(relation).join(option_class)
+
+    return query.filter(*filters)
 
 
 def get_token(headers):
