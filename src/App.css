@@ -282,3 +282,9 @@ h3 a,
 h4 a {
   text-decoration: none;
 }
+
+.user-tip {
+    padding-top: 2em;
+    font-size: 14px;
+    color: gray;
+}

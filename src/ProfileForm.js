@@ -331,6 +331,8 @@ export default class ProfileForm extends Component {
               onChange={this.handleSelect('clinicalSpecialties')}
             />
 
+            <div className="user-tip">In the following sections, you can create your own tags by typing them in and pressing enter.</div>
+
             <p>Professional Interests</p>
             <Select.Creatable
               name="partsOfMe"
