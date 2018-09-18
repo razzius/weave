@@ -106,7 +106,7 @@ const Home = ({ token, isMentor, profileId }) => (
       <h1>Roadmap</h1>
 
       <p>
-        Weave is an open-source platform attempting to improve the mentorship
+        Weave is an open-source platform aimed to improve the mentorship
         structures at a large, diverse medical school with an expansive clinical
         enterprise. Such institutions are found throughout the United States and
         the world. In the spirit of open-source development, we value
@@ -121,16 +121,16 @@ const Home = ({ token, isMentor, profileId }) => (
       <h2>Functions</h2>
       <p>
         We are planning the development of further functions on the Weave
-        platform that will continue to align incentives for, and lower barriers
-        to, forming invested relationship between students and faculty at
-        Harvard Medical School. Among these is the creation of a “Faculty
-        Investment” interface that will prompt students to report and record the
-        number of hours and types of mentorship that their mentors are
-        providing. This will allow students the opportunity to give back to
-        their mentors by accurately recording the investment of the mentor. For
-        faculty, we hope that this information can be used in promotional
-        packages to credibly illustrate their service to the students and the
-        institution of Harvard Medical School.
+        platform that will continue to align incentives for and lower barriers
+        to forming invested relationship between students and faculty at Harvard
+        Medical School. Among these is the creation of a “Faculty Investment”
+        interface that will prompt students to report and record the number of
+        hours and types of mentorship that their mentors are providing. This
+        will allow students the opportunity to give back to their mentors by
+        accurately recording the investment of the mentor. For faculty, we hope
+        that this information can be used in promotional packages to credibly
+        illustrate their service to the students and the institution of Harvard
+        Medical School.{' '}
       </p>
 
       <h2>Usability</h2>
@@ -140,23 +140,23 @@ const Home = ({ token, isMentor, profileId }) => (
         improve the utility of the platform. In addition to the “Faculty
         Investment” function described above, we hope to generalize Weave’s
         faculty-student interface to allow for student peer-to-peer mentoring to
-        further improve the support and relationships between medical school
-        classes, as well as expand the opportunities for students to develop
-        their skills as a mentor early in their career.{' '}
+        improve the support and relationships between medical school classes, as
+        well as expand the opportunities for students to develop their skills as
+        a mentor early in their career.{' '}
       </p>
 
       <h2>Sustainability</h2>
       <p>
-        Weave is a response to unsustainable and informal mentorship lists that
-        are developed through the efforts of individual students. These lists
-        are often not well maintained and soon become outmoded and unusable.
-        Weave endeavors to be a bridging platform that facilitates
-        relationships. It calls users to own and update their data. In order to
-        take that bold stance, Weave must reliably live up to its end of the
-        bargain and be a well maintained and sustainable platform. We are
-        working to better install Weave as a program within the Office of
-        Student Affairs at Harvard Medical School, where it can be maintained by
-        the institution’s existing Information Technology department.
+        Weave is a response to informal mentorship lists that are developed
+        through the efforts of individual students. These lists are often not
+        well maintained and soon become outmoded and unusable. Weave endeavors
+        to be a bridging platform that facilitates relationships. It calls users
+        to own and update their data. In order to take that bold stance, Weave
+        must reliably live up to its end of the bargain and be a well maintained
+        and sustainable platform. We are working to better install Weave as a
+        program within the Office of Student Affairs at Harvard Medical School,
+        where it can be maintained by the institution’s existing Information
+        Technology department.{' '}
       </p>
 
       <h2>Look</h2>
@@ -177,8 +177,8 @@ const Home = ({ token, isMentor, profileId }) => (
         <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>
       </p>
 
-      <h2 style={{paddingTop: '2em'}}>Progress</h2>
-      <img width="700px" src="https://i.imgur.com/hzbnZC5.jpg"/>
+      <h2 style={{ paddingTop: '2em' }}>Progress</h2>
+      <img width="700px" src="https://i.imgur.com/hzbnZC5.jpg" />
     </section>
   </div>
 )
