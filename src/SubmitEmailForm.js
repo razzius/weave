@@ -63,7 +63,7 @@ export default class SubmitEmailForm extends Component {
   render() {
     if (!this.state.success) {
       const { email } = this.state
-      const VALID_DOMAINS = ['harvard.edu', 'partners.org', 'hmsweave.com']
+      const VALID_DOMAINS = ['harvard.edu', 'partners.org', 'hmsweave.com', 'challiance.org', 'hphc.org']
 
       const emailValid = any(
         VALID_DOMAINS.map(domain => email.endsWith(domain))

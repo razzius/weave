@@ -37,7 +37,7 @@ class ProfileSchema(Schema):
     other_cadence = fields.String(allow_none=True)
 
 
-VALID_DOMAINS = {'harvard.edu', 'partners.org', 'hmsweave.com'}
+VALID_DOMAINS = {'harvard.edu', 'partners.org', 'hmsweave.com', 'challiance.org', 'hphc.org'}
 
 
 class ValidEmailSchema(Schema):
