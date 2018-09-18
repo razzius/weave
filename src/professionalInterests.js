@@ -1,7 +1,7 @@
 export default `\
 Advocacy
 Artificial Intelligence
-Basic science Research
+Basic Science Research
 Business
 Clinical Research
 Criminal Justice Reform

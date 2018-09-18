@@ -9,7 +9,6 @@ Hiking
 Journaling
 Museums
 Music
-Music
 Nature
 Painting
 Philosophy
