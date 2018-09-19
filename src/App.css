@@ -1,14 +1,14 @@
-:root {
-  --primary: #434d59;
-  --secondary: #f3e2d8;
-  --burnt-orange: #b23322;
-  --crimson: #9c2b1c;
-  --pastel-yellow: #f1e4b8;
-  --teal-gray: #6e8c8e;
-  --off-black: #343a49;
-  --dark: #1c2231;
-  --gray: #666a76;
-}
+/* :root { */
+/*   --primary: #434d59; */
+/*   --secondary: #f3e2d8; */
+/*   --burnt-orange: #b23322; */
+/*   --crimson: #9c2b1c; */
+/*   --pastel-yellow: #f1e4b8; */
+/*   --teal-gray: #6e8c8e; */
+/*   --off-black: #343a49; */
+/*   --dark: #1c2231; */
+/*   --gray: #666a76; */
+/* } */
 html,
 body,
 #root {
@@ -53,7 +53,7 @@ body,
   border: 1px solid black;
 }
 .button:hover:enabled {
-  background: var(--pastel-yellow);
+  background: #f1e4b8;;
 }
 .button:disabled {
   color: lightgrey;
@@ -79,8 +79,8 @@ body,
   text-align: center;
 }
 .App-header {
-  border-bottom: 3px solid var(--crimson);
-  background: var(--crimson);
+  border-bottom: 3px solid #9c2b1c;
+  background: #9c2b1c;
   width: 100%;
 }
 
@@ -202,7 +202,7 @@ input[type='email'] {
   cursor: pointer;
 }
 .search-submit:hover {
-  background: var(--pastel-yellow);
+  background: #f1e4b8;
 }
 
 /* .next-button { */
@@ -237,8 +237,7 @@ input[type='email'] {
 }
 
 input[disabled]:checked {
-  box-shadow: 0px 0px 0px 2px var(--burnt-orange);
-  border-radius: 3px;
+  box-shadow: 0px 0px 0px 2px #b23322;
 }
 
 .available-for-mentoring {
