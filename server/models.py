@@ -45,7 +45,7 @@ class HospitalAffiliationOption(PredefinedTagMixin, db.Model):
     pass
 
 
-class ClinicalSpecialtyOption(PredefinedTagMixin, db.Model):
+class ClinicalSpecialtyOption(UserEditableTagMixin, db.Model):
     pass
 
 

@@ -323,7 +323,7 @@ export default class ProfileForm extends Component {
             />
 
             <p>Clinical Interests</p>
-            <Select
+            <Select.Creatable
               className="column"
               multi
               options={clinicalSpecialtyOptions}
