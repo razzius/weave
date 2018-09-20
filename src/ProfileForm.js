@@ -40,6 +40,7 @@ export default class ProfileForm extends Component {
     imageUrl: null,
     imageSuccess: false,
     uploadingImage: false,
+    imageEdited: false,
 
     affiliations: [],
     clinicalSpecialties: [],
@@ -83,7 +84,7 @@ export default class ProfileForm extends Component {
 
   submit = () => {
     // todo see if image changed
-    const unsavedImage = !this.state.imageSuccess && this.state.image !== null
+    const unsavedImage = this.state.imageEdited || (!this.state.imageSuccess && this.state.image !== null)
     when(unsavedImage, this.saveImage).then(() => {
       this.props
         .saveProfile(this.props.token, this.state, this.props.profileId)
@@ -101,16 +102,16 @@ export default class ProfileForm extends Component {
   }
 
   handleDrop = acceptedFiles => {
-    this.setState({ image: acceptedFiles[0] })
+    this.setState({ image: acceptedFiles[0], imageEdited: true })
   }
 
   handleNewImage = e => {
-    this.setState({ image: e.target.files[0] })
+    this.setState({ image: e.target.files[0], imageEdited: true })
   }
 
   handleScale = e => {
     const scale = parseFloat(e.target.value)
-    this.setState({ scale })
+    this.setState({ scale, imageEdited: true })
   }
 
   saveImage = () => {
@@ -128,7 +129,8 @@ export default class ProfileForm extends Component {
           this.setState({
             imageUrl: response.image_url,
             imageSuccess: true,
-            uploadingImage: false
+            uploadingImage: false,
+            imageEdited: false
           })
           resolve(response)
         })
@@ -142,7 +144,7 @@ export default class ProfileForm extends Component {
 
   rotateRight = () => {
     const rotation = (90 + this.state.rotate) % 360
-    this.setState({ rotate: rotation })
+    this.setState({ rotate: rotation, imageEdited: true })
   }
 
   setPreview = () => {
@@ -191,6 +193,7 @@ export default class ProfileForm extends Component {
                 scale={parseFloat(this.state.scale)}
                 width={180}
                 height={180}
+                onImageChange={() => this.setState({imageEdited: true})}
                 rotate={this.state.rotate}
               />
             </Dropzone>
@@ -208,6 +211,7 @@ export default class ProfileForm extends Component {
                 min={this.state.allowZoomOut ? '0.1' : '1'}
                 max="2"
                 step="0.01"
+                disabled={!this.state.image}
                 defaultValue="1"
               />
               <button onClick={this.rotateRight}>Rotate</button>
@@ -215,11 +219,11 @@ export default class ProfileForm extends Component {
                 value={
                   this.state.uploadingImage ? 'Uploading...' : 'Save image'
                 }
-                disabled={!this.state.image}
+                disabled={!this.state.imageEdited}
                 type="submit"
                 onClick={this.saveImage}
               />
-              {this.state.imageSuccess ? 'Image uploaded' : null}
+              {' '}{this.state.imageSuccess && !this.state.imageEdited ? 'Image uploaded' : null}
             </div>
 
             <div className="expectations">
