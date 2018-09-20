@@ -10,7 +10,7 @@ function getFacultyLink(token, profileId) {
 function getFacultyText(token, profileId) {
   if (token === null) return 'Register as a mentor'
   if (profileId === null) return 'Create profile'
-  return 'View profile'
+  return 'View my profile'
 }
 
 const FacultyLanding = ({ profileId, token, isMentor }) => {
@@ -51,7 +51,7 @@ const Home = ({ token, isMentor, profileId }) => (
         {isMentor && (
           <div>
             <Link className="button" to="/browse">
-              Browse profiles
+              Browse all faculty profiles
             </Link>
           </div>
         )}
