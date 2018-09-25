@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import 'react-select/dist/react-select.css'
 import ProfileResult from './ProfileResult'
 import SearchInput from './SearchInput'
 import { getProfiles } from './api'

@@ -1,7 +1,7 @@
 import React from 'react'
 import AppScreen from './AppScreen'
 
-const Resources = () => (
+const Help = () => (
   <AppScreen className="resources">
     <iframe
       frameBorder="0"
@@ -12,4 +12,4 @@ const Resources = () => (
   </AppScreen>
 )
 
-export default Resources
+export default Help

@@ -112,7 +112,7 @@ const ProfileView = ({ data, ownProfile }) => (
 
           {data.clinical_specialties.length > 0 && (
             <div>
-              <h4>Clinical Specialties</h4>
+              <h4>Clinical Interests</h4>
               <p style={{ paddingBottom: '1em' }}>
                 {data.clinical_specialties.join(', ')}
               </p>
@@ -132,7 +132,7 @@ const ProfileView = ({ data, ownProfile }) => (
             <div>
               <h4>Parts Of Me</h4>
               <p style={{ paddingBottom: '1em' }}>
-                {data.parts_of_me.join(', ')}
+                {data.parts_of_me.map(({value}) => value).join(', ')}
               </p>
             </div>
           )}

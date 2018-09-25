@@ -12,7 +12,7 @@ import './App.css'
 import Home from './Home'
 import Browse from './Browse'
 import Login from './Login'
-import FAQ from './FAQ'
+import Help from './Help'
 import Expectations from './Expectations'
 import MentorExpectations from './MentorExpectations'
 import MenteeExpectations from './MenteeExpectations'
@@ -132,8 +132,8 @@ class App extends Component {
                 Resources
               </a>
 
-              <a href="/faq" className="App-title">
-                FAQ
+              <a href="/help" className="App-title">
+               Help
               </a>
 
               {loginAction}
@@ -246,7 +246,7 @@ class App extends Component {
             <Route path="/mentor-expectations" component={MentorExpectations} />
             <Route path="/mentee-expectations" component={MenteeExpectations} />
             <Route path="/resources" component={Resources} />
-            <Route path="/faq" component={FAQ} />
+            <Route path="/help" component={Help} />
 
             <Route
               path="/profiles/:id"

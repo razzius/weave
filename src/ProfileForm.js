@@ -1,16 +1,16 @@
 import React, { Component } from 'react'
 import AvatarEditor from 'react-avatar-editor'
 import Select from 'react-select'
+import CreatableSelect from 'react-select/lib/Creatable'
 import Dropzone from 'react-dropzone'
-import 'react-select/dist/react-select.css'
 
 import ProfileView from './ProfileView'
+import CreatableInputOnly from './CreatableInputOnly'
 
 import { uploadPicture, profileToPayload } from './api'
 import {
   clinicalSpecialtyOptions,
   professionalInterestOptions,
-  partsOfMeOptions,
   activitiesIEnjoyOptions,
   hospitalOptions
 } from './options'
@@ -26,6 +26,19 @@ function scaleCanvas(canvas) {
   context.drawImage(canvas, 0, 0, size, size)
   return scaled
 }
+
+const CreatableTagSelect = ({ options, handleSelect, values }) => (
+  <CreatableSelect
+    styles={{
+      control: base => ({ ...base, backgroundColor: 'white' })
+    }}
+    value={values.map(value => ({label: value, value}))}
+    className="column"
+    isMulti
+    options={options}
+    onChange={handleSelect}
+  />
+)
 
 export default class ProfileForm extends Component {
   state = {
@@ -48,6 +61,8 @@ export default class ProfileForm extends Component {
     partsOfMe: [],
     activities: [],
 
+    partsOfMeOptions: [],
+
     additionalInformation: '',
 
     willingShadowing: false,
@@ -68,9 +83,31 @@ export default class ProfileForm extends Component {
     }
   }
 
-  handleSelect = key => selected => {
+  handleCreate = key => selected => {
+    const current = this.state[key]
+
+    const createOption = label => ({
+      label,
+      value: label
+    })
+
     this.setState({
-      [key]: selected.map(choice => choice.value)
+      [key]: [...current, createOption(selected)]
+    })
+  }
+
+  handleChange = key => values => {
+    this.setState({ [key]: values.map(({value}) => value) })
+  }
+
+  handleSelect = key => options => {
+    const values = options.map(({ value }) => value)
+    this.setState({ [key]: values })
+  }
+
+  handleSet = key => value => {
+    this.setState({
+      [key]: value
     })
   }
 
@@ -83,8 +120,9 @@ export default class ProfileForm extends Component {
   }
 
   submit = () => {
-    // todo see if image changed
-    const unsavedImage = this.state.imageEdited || (!this.state.imageSuccess && this.state.image !== null)
+    const unsavedImage =
+      this.state.imageEdited ||
+      (!this.state.imageSuccess && this.state.image !== null)
     when(unsavedImage, this.saveImage).then(() => {
       this.props
         .saveProfile(this.props.token, this.state, this.props.profileId)
@@ -193,7 +231,6 @@ export default class ProfileForm extends Component {
                 scale={parseFloat(this.state.scale)}
                 width={180}
                 height={180}
-                onImageChange={() => this.setState({imageEdited: true})}
                 rotate={this.state.rotate}
               />
             </Dropzone>
@@ -222,8 +259,10 @@ export default class ProfileForm extends Component {
                 disabled={!this.state.imageEdited}
                 type="submit"
                 onClick={this.saveImage}
-              />
-              {' '}{this.state.imageSuccess && !this.state.imageEdited ? 'Image uploaded' : null}
+              />{' '}
+              {this.state.imageSuccess && !this.state.imageEdited
+                ? 'Image uploaded'
+                : null}
             </div>
 
             <div className="expectations">
@@ -319,61 +358,64 @@ export default class ProfileForm extends Component {
 
             <p>Hospital Affiliations</p>
             <Select
+              styles={{
+                control: base => ({ ...base, backgroundColor: 'white' })
+              }}
               className="column"
-              multi
+              isMulti
               options={hospitalOptions}
-              value={this.state.affiliations}
-              onChange={this.handleSelect('affiliations')}
-            />
-
-            <p>Clinical Interests</p>
-            <Select.Creatable
-              className="column"
-              multi
-              options={clinicalSpecialtyOptions}
-              value={this.state.clinicalSpecialties}
-              onChange={this.handleSelect('clinicalSpecialties')}
+              value={this.state.affiliations.map(value => ({label: value, value}))}
+              onChange={this.handleChange('affiliations')}
             />
 
             <div className="user-tip">
-              In the following sections, in addition to choosing from the tags below, you may also create your own tags by typing them in and pressing enter. You may create as many tags as you would like.
+              In the following sections, in addition to choosing from the tags
+              below, you may also create your own tags by typing them in and
+              pressing enter. You may create as many tags as you would like.
             </div>
 
-            <p>Professional Interests</p>
-            <Select.Creatable
-              name="partsOfMe"
-              className="column"
-              multi
-              options={professionalInterestOptions.concat(
-                this.state.professionalInterests.map(value => ({label: value, value}))
-              )}
-              value={this.state.professionalInterests}
-              onChange={this.handleSelect('professionalInterests')}
+            <p>Clinical Interests</p>
+            <CreatableTagSelect
+              values={this.state.clinicalSpecialties}
+              options={clinicalSpecialtyOptions}
+              handleSelect={this.handleSelect('clinicalSpecialties')}
             />
 
+            <p>Professional Interests</p>
+            <CreatableTagSelect
+              values={this.state.professionalInterests}
+              options={professionalInterestOptions}
+              handleSelect={this.handleSelect('professionalInterests')}
+            />
+
+            <div className="user-tip">
+              Please use this section to share parts of your identity. This is
+              where faculty may share optional demographic data, such as but not
+              limited to race/ethnicity, sexual or gender identity, preferred
+              pronouns, religious identity, or family identity, that is to be
+              viewable by HMS students and other faculty. Please{' '}
+              <a href="#">create your own tags</a> in this section. You may
+              create as many “Parts of me” tags as you would like.
+              <p>
+                Examples of tags are: American Samoan, Mother, First generation,
+                Latino, Christian, LGBTQ+, she/her/hers
+              </p>
+            </div>
             <div data-tip="Please feel free to create your own tags with identities or locations that are important to you.">
               <p>Parts Of Me</p>
-              <Select.Creatable
-                className="column"
-                multi
-                options={partsOfMeOptions.concat(
-                  this.state.partsOfMe.map(value => ({label: value, value}))
-                )}
+              <CreatableInputOnly
                 value={this.state.partsOfMe}
-                onChange={this.handleSelect('partsOfMe')}
+                handleChange={this.handleCreate('partsOfMe')}
+                handleSet={this.handleSet('partsOfMe')}
               />
             </div>
 
             <div data-tip="Please feel free to create your own tags with activities that you enjoy.">
               <p>Activities I enjoy</p>
-              <Select.Creatable
-                className="column"
-                multi
-                options={activitiesIEnjoyOptions.concat(
-                  this.state.activities.map(value => ({label: value, value}))
-                )}
-                value={this.state.activities}
-                onChange={this.handleSelect('activities')}
+              <CreatableTagSelect
+                values={this.state.activities}
+                options={activitiesIEnjoyOptions}
+                handleSelect={this.handleSelect('activities')}
               />
             </div>
 
