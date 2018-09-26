@@ -35,9 +35,10 @@ export default class SearchInput extends Component {
         onSubmit={this.handleSubmit}
       >
         <Select
-          style={{
-            width: '500px'
+          styles={{
+            control: base => ({ ...base, width: '500px', backgroundColor: 'white' }),
           }}
+          isMulti
           options={options}
           placeholder={'Search'}
           onBlurResetsInput={false}
@@ -45,8 +46,7 @@ export default class SearchInput extends Component {
           onChange={this.props.onChange}
           onInputChange={this.props.onInputChange}
           onInputKeyDown={this.handleInputKeyDown}
-          value={this.props.value}
-          multi
+          value={this.props.value.map(value => ({ label: value, value }))}
         />
         <button className="search-submit" type="submit">
           Submit
