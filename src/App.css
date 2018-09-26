@@ -104,11 +104,10 @@ body,
 .profile-image {
   border-radius: 100%;
   box-sizing: border-box;
-  width: 200px;
-  height: 200px;
 }
-
 .profile-result .profile-image {
+    width: 200px;
+    height: 200px;
   padding: 20px;
 }
 

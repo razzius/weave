@@ -88,13 +88,8 @@ export default class ProfileForm extends Component {
   handleCreate = key => selected => {
     const current = this.state[key]
 
-    const createOption = label => ({
-      label,
-      value: label
-    })
-
     this.setState({
-      [key]: [...current, createOption(selected)]
+      [key]: [...current, selected]
     })
   }
 
@@ -410,7 +405,7 @@ export default class ProfileForm extends Component {
             <div data-tip="Please feel free to create your own tags with identities or locations that are important to you.">
               <p>Parts Of Me</p>
               <CreatableInputOnly
-                value={this.state.partsOfMe}
+                value={this.state.partsOfMe.map(value => ({label: value, value}))}
                 handleChange={this.handleCreate('partsOfMe')}
                 handleSet={this.handleSet('partsOfMe')}
               />

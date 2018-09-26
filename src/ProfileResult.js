@@ -12,6 +12,7 @@ const ProfileResult = props => (
     <ProfileAvatar
       profileImageUrl={props.profile_image_url}
       name={props.name}
+      size={160}
     />
     <div style={{ width: '400px' }}>
       <h2>{props.name}</h2>

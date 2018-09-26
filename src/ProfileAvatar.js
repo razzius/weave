@@ -1,18 +1,17 @@
 import React from 'react'
 import Avatar from 'react-avatar'
 
-const ProfileAvatar = ({ profileImageUrl, name }) => (
-  <div className="avatar">
-    {profileImageUrl ? (
-      <img
-        alt="Profile"
-        className="profile-image column"
-        src={profileImageUrl}
+const ProfileAvatar = ({ profileImageUrl, name, size }) => (
+  profileImageUrl ? (
+    <img
+      alt="Profile"
+      className="profile-image column"
+      style={{padding: '20px'}}
+      src={profileImageUrl}
       />
-    ) : (
-      <Avatar name={name} size={200} round textSizeRatio={3} />
-    )}
-  </div>
+  ) : (
+    <Avatar style={{padding: '20px'}} name={name} size={size} round textSizeRatio={3} />
+  )
 )
 
 export default ProfileAvatar

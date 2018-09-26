@@ -10,7 +10,7 @@ const ProfileView = ({ data, ownProfile }) => (
     <div className="profile-contact">
       <div className="columns">
         <div className="column contact">
-          <ProfileAvatar profileImageUrl={data.profile_image_url} name={data.name} />
+          <ProfileAvatar profileImageUrl={data.profile_image_url} name={data.name} size={200}/>
 
           <h4>Contact Information</h4>
 
@@ -131,7 +131,7 @@ const ProfileView = ({ data, ownProfile }) => (
             <div>
               <h4>Parts Of Me</h4>
               <p style={{ paddingBottom: '1em' }}>
-                {data.parts_of_me.map(({ value }) => value).join(', ')}
+                {data.parts_of_me.join(', ')}
               </p>
             </div>
           )}
