@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "react": "^16.3.2",
+    "react-avatar": "^3.4.4",
     "react-avatar-editor": "^11.0.2",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.9",

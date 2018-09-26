@@ -32,7 +32,7 @@ const CreatableTagSelect = ({ options, handleSelect, values }) => (
     styles={{
       control: base => ({ ...base, backgroundColor: 'white' })
     }}
-    value={values.map(value => ({label: value, value}))}
+    value={values.map(value => ({ label: value, value }))}
     className="column"
     isMulti
     options={options}
@@ -97,7 +97,7 @@ export default class ProfileForm extends Component {
   }
 
   handleChange = key => values => {
-    this.setState({ [key]: values.map(({value}) => value) })
+    this.setState({ [key]: values.map(({ value }) => value) })
   }
 
   handleSelect = key => options => {
@@ -364,7 +364,10 @@ export default class ProfileForm extends Component {
               className="column"
               isMulti
               options={hospitalOptions}
-              value={this.state.affiliations.map(value => ({label: value, value}))}
+              value={this.state.affiliations.map(value => ({
+                label: value,
+                value
+              }))}
               onChange={this.handleChange('affiliations')}
             />
 
@@ -389,16 +392,16 @@ export default class ProfileForm extends Component {
             />
 
             <div className="user-tip">
-              Please use this section to share parts of your identity. This is
-              where faculty may share optional demographic data, such as but not
-              limited to race/ethnicity, sexual or gender identity, preferred
-              pronouns, religious identity, or family identity, that is to be
-              viewable by HMS students and other faculty. Please{' '}
-              <a href="#">create your own tags</a> in this section. You may
-              create as many “Parts of me” tags as you would like.
               <p>
-                Examples of tags are: American Samoan, Mother, First generation,
-                Latino, Christian, LGBTQ+, she/her/hers
+                Please use this section to share parts of your identity. This is
+                where faculty may share optional demographic data that is
+                viewable by HMS students and faculty on Weave. Please{' '}
+                <a href="#">create your own tags</a> in this section. You may
+                create as many “Parts of me” tags as you would like.
+              </p>
+              <p>
+                Example tags: American Samoan, Mother, First generation, Latino,
+                Christian, LGBTQ+, she/her/hers
               </p>
             </div>
             <div data-tip="Please feel free to create your own tags with identities or locations that are important to you.">
@@ -411,7 +414,7 @@ export default class ProfileForm extends Component {
             </div>
 
             <div data-tip="Please feel free to create your own tags with activities that you enjoy.">
-              <p>Activities I enjoy</p>
+              <p>Activities I Enjoy</p>
               <CreatableTagSelect
                 values={this.state.activities}
                 options={activitiesIEnjoyOptions}

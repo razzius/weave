@@ -1,4 +1,6 @@
 import React from 'react'
+import Avatar from 'react-avatar'
+
 import AppScreen from './AppScreen'
 import { capitalize } from './utils'
 import NextButton from './NextButton'
@@ -8,13 +10,18 @@ const ProfileView = ({ data, ownProfile }) => (
     <div className="profile-contact">
       <div className="columns">
         <div className="column contact">
-          <img
-            alt="Profile"
-            className="profile-image column"
-            src={data.profile_image_url}
-          />
+          {data.profile_image_url ? (
+            <img
+              alt="Profile"
+              className="profile-image column"
+              src={data.profile_image_url}
+            />
+          ) : (
+            <Avatar name={data.name} size={200} round textSizeRatio={3} />
+          )}
 
           <h4>Contact Information</h4>
+
           <p>
             <a href={`mailto:${data.contact_email}`}>{data.contact_email}</a>
           </p>
@@ -132,14 +139,14 @@ const ProfileView = ({ data, ownProfile }) => (
             <div>
               <h4>Parts Of Me</h4>
               <p style={{ paddingBottom: '1em' }}>
-                {data.parts_of_me.map(({value}) => value).join(', ')}
+                {data.parts_of_me.map(({ value }) => value).join(', ')}
               </p>
             </div>
           )}
 
           {data.activities.length > 0 && (
             <div>
-              <h4>Activities I enjoy</h4>
+              <h4>Activities I Enjoy</h4>
               <p style={{ paddingBottom: '1em' }}>
                 {data.activities.join(', ')}
               </p>
