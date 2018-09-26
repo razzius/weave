@@ -361,7 +361,8 @@ export default class ProfileForm extends Component {
             <p>Hospital Affiliations</p>
             <Select
               styles={{
-                control: base => ({ ...base, backgroundColor: 'white' })
+                control: base => ({ ...base, backgroundColor: 'white' }),
+                multiValue: styles => ({...styles, backgroundColor: '#edf4fe' })
               }}
               className="column"
               isMulti

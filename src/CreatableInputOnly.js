@@ -38,7 +38,8 @@ export default class CreatableInputOnly extends Component {
     return (
       <CreatableSelect
         styles={{
-          control: (base) => ({ ...base, backgroundColor: 'white' })
+          control: (base) => ({ ...base, backgroundColor: 'white' }),
+          multiValue: styles => ({...styles, backgroundColor: '#edf4fe' })
         }}
         components={components}
         inputValue={inputValue}

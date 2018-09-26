@@ -37,6 +37,7 @@ export default class SearchInput extends Component {
         <Select
           styles={{
             control: base => ({ ...base, width: '500px', backgroundColor: 'white' }),
+            multiValue: styles => ({...styles, backgroundColor: '#edf4fe' })
           }}
           isMulti
           options={options}
