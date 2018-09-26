@@ -287,3 +287,7 @@ h4 a {
     font-size: 14px;
     color: gray;
 }
+
+.avatar {
+    width: 200px;
+}
