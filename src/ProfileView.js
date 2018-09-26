@@ -1,24 +1,16 @@
 import React from 'react'
-import Avatar from 'react-avatar'
 
 import AppScreen from './AppScreen'
 import { capitalize } from './utils'
 import NextButton from './NextButton'
+import ProfileAvatar from './ProfileAvatar'
 
 const ProfileView = ({ data, ownProfile }) => (
   <AppScreen>
     <div className="profile-contact">
       <div className="columns">
         <div className="column contact">
-          {data.profile_image_url ? (
-            <img
-              alt="Profile"
-              className="profile-image column"
-              src={data.profile_image_url}
-            />
-          ) : (
-            <Avatar name={data.name} size={200} round textSizeRatio={3} />
-          )}
+          <ProfileAvatar profileImageUrl={data.profile_image_url} name={data.name} />
 
           <h4>Contact Information</h4>
 

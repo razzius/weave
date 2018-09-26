@@ -30,13 +30,15 @@ function scaleCanvas(canvas) {
 const CreatableTagSelect = ({ options, handleSelect, values }) => (
   <CreatableSelect
     styles={{
-      control: base => ({ ...base, backgroundColor: 'white' })
+      control: base => ({ ...base, backgroundColor: 'white' }),
+      multiValue: styles => ({...styles, backgroundColor: '#edf4fe' })
     }}
     value={values.map(value => ({ label: value, value }))}
     className="column"
     isMulti
     options={options}
     onChange={handleSelect}
+    placeholder="Select or type something and press enter..."
   />
 )
 
