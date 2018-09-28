@@ -207,11 +207,11 @@ export default class ProfileForm extends Component {
         <div>
           <ProfileView
             data={profileToPayload(this.state)}
+            editing
             firstTimePublish={firstTimePublish}
           />
           <div style={{ width: '850px', margin: 'auto' }}>
             <button
-              style={{ marginRight: '1em' }}
               className="button"
               onClick={this.unsetPreview}
             >
