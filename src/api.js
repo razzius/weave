@@ -28,6 +28,12 @@ async function http(token, url, options = {}) {
 
   const response = await fetch(url, optionsWithAuth)
 
+  if (response.status === 401) {
+    window.localStorage.removeItem('token')
+    alert('You have been logged out after 1 hour since logging in. You may log in again.')
+    window.location.pathname = '/login'
+  }
+
   if (!response.ok) {
     throw await response.json()
   }

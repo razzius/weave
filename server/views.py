@@ -432,7 +432,7 @@ def verify_token():
         return error_response({'token': ['not recognized']})
 
     if _token_expired(match):
-        return error_response({'token': ['expired']})
+        return error_response({'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value)
 
     match.verified = True
 
