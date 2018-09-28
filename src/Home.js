@@ -178,7 +178,7 @@ const Home = ({ token, isMentor, profileId }) => (
       </p>
 
       <h2 style={{ paddingTop: '2em' }}>Progress</h2>
-      <img width="700px" src="https://i.imgur.com/hzbnZC5.jpg" />
+      <img width="700px" src="https://i.imgur.com/hzbnZC5.jpg" alt="HMS Weave project progress bars"/>
     </section>
   </div>
 )

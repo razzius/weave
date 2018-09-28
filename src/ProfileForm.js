@@ -27,20 +27,35 @@ function scaleCanvas(canvas) {
   return scaled
 }
 
-const CreatableTagSelect = ({ options, handleSelect, values }) => (
-  <CreatableSelect
-    styles={{
-      control: base => ({ ...base, backgroundColor: 'white' }),
-      multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' })
-    }}
-    value={values.map(value => ({ label: value, value }))}
-    className="column"
-    isMulti
-    options={options}
-    onChange={handleSelect}
-    placeholder="Select or type something and press enter..."
-  />
-)
+class CreatableTagSelect extends Component {
+  state = {
+    inputValue: '',
+  }
+
+  handleInputChange = inputValue => {
+    this.setState({ inputValue: inputValue.slice(0, 50) })
+  }
+
+  render() {
+    const { options, handleSelect, values } = this.props
+    return (
+      <CreatableSelect
+        styles={{
+          control: base => ({ ...base, backgroundColor: 'white' }),
+          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' })
+        }}
+        inputValue={this.state.inputValue}
+        value={values.map(value => ({ label: value, value }))}
+        onInputChange={this.handleInputChange}
+        className="column"
+        isMulti
+        options={options}
+        onChange={handleSelect}
+        placeholder="Select or type something and press enter..."
+      />
+    )
+  }
+}
 
 export default class ProfileForm extends Component {
   state = {

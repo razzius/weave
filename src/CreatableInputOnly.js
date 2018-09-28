@@ -1,45 +1,45 @@
-import React, { Component } from 'react';
+import React, { Component } from 'react'
 
-import CreatableSelect from 'react-select/lib/Creatable';
+import CreatableSelect from 'react-select/lib/Creatable'
 
 import { capitalize } from './utils'
 
 const components = {
-  DropdownIndicator: null,
-};
+  DropdownIndicator: null
+}
 
 export default class CreatableInputOnly extends Component {
   state = {
-    inputValue: '',
-  };
+    inputValue: ''
+  }
 
-  handleChange = (value) => {
-    this.props.handleSet( value );
-  };
+  handleChange = value => {
+    this.props.handleSet(value)
+  }
 
-  handleInputChange = (inputValue) => {
-    this.setState({ inputValue: inputValue.slice(0, 50) });
-  };
+  handleInputChange = inputValue => {
+    this.setState({ inputValue: inputValue.slice(0, 50) })
+  }
 
-  handleKeyDown = (event) => {
-    const { inputValue } = this.state;
-    if (!inputValue) return;
+  handleKeyDown = event => {
+    const { inputValue } = this.state
+    if (!inputValue) return
     if (['Enter', 'Tab'].includes(event.key)) {
       this.setState({
-        inputValue: '',
-      });
+        inputValue: ''
+      })
       this.props.handleChange(capitalize(inputValue))
-      event.preventDefault();
+      event.preventDefault()
     }
-  };
+  }
 
   render() {
-    const { inputValue } = this.state;
+    const { inputValue } = this.state
     return (
       <CreatableSelect
         styles={{
-          control: (base) => ({ ...base, backgroundColor: 'white' }),
-          multiValue: styles => ({...styles, backgroundColor: '#edf4fe' })
+          control: base => ({ ...base, backgroundColor: 'white' }),
+          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' })
         }}
         components={components}
         inputValue={inputValue}
@@ -52,6 +52,6 @@ export default class CreatableInputOnly extends Component {
         placeholder="Type something and press enter..."
         value={this.props.value}
       />
-    );
+    )
   }
 }
