@@ -102,12 +102,6 @@ export default class ProfileForm extends Component {
     this.setState({ [key]: values })
   }
 
-  handleSet = key => value => {
-    this.setState({
-      [key]: value
-    })
-  }
-
   update = field => ({ target }) => {
     this.setState({ [field]: target.value })
   }
@@ -426,7 +420,7 @@ export default class ProfileForm extends Component {
                   value
                 }))}
                 handleChange={this.handleCreate('partsOfMe')}
-                handleSet={this.handleSet('partsOfMe')}
+                handleSet={this.handleChange('partsOfMe')}
               />
             </div>
 

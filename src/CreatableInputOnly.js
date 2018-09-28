@@ -18,7 +18,7 @@ export default class CreatableInputOnly extends Component {
   };
 
   handleInputChange = (inputValue) => {
-    this.setState({ inputValue });
+    this.setState({ inputValue: inputValue.slice(0, 50) });
   };
 
   handleKeyDown = (event) => {
