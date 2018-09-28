@@ -5,7 +5,7 @@ import { capitalize } from './utils'
 import NextButton from './NextButton'
 import ProfileAvatar from './ProfileAvatar'
 
-const ProfileView = ({ data, ownProfile }) => (
+const ProfileView = ({ data, ownProfile, firstTimePublish }) => (
   <AppScreen>
     <div className="profile-contact">
       <div className="columns">
@@ -101,7 +101,7 @@ const ProfileView = ({ data, ownProfile }) => (
           {ownProfile && (
             <NextButton href="/edit-profile" text="Edit profile" />
           )}
-          {ownProfile === false && (
+          {!firstTimePublish && (
             <NextButton href="/browse" text="Back to list" />
           )}
           <h1>{data.name}</h1>

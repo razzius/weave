@@ -191,10 +191,15 @@ export default class ProfileForm extends Component {
   }
 
   render() {
+    const { firstTimePublish } = this.props
+
     if (this.state.preview) {
       return (
         <div>
-          <ProfileView data={profileToPayload(this.state)} />
+          <ProfileView
+            data={profileToPayload(this.state)}
+            firstTimePublish={firstTimePublish}
+          />
           <div style={{ width: '850px', margin: 'auto' }}>
             <button
               style={{ marginRight: '1em' }}
@@ -204,7 +209,7 @@ export default class ProfileForm extends Component {
               Edit
             </button>
             <button className="button" onClick={this.submit}>
-              Publish profile
+              {firstTimePublish ? 'Publish' : 'Save'} profile
             </button>
           </div>
         </div>
@@ -398,7 +403,11 @@ export default class ProfileForm extends Component {
                 where faculty may share optional demographic or personally
                 meaningful information that is viewable by HMS students and
                 faculty on Weave. Please{' '}
-                <a href="https://weave.hms.harvard.edu/help" target="_blank">
+                <a
+                  href="https://weave.hms.harvard.edu/help"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   create your own tags
                 </a>{' '}
                 in this section. You may create as many “Parts of me” tags as

@@ -5,6 +5,7 @@ import ProfileForm from './ProfileForm'
 const CreateProfile = props => (
   <ProfileForm
     loadInitial={false}
+    firstTimePublish={false}
     saveProfile={createProfile}
     setAvailableForMentoring={props.setAvailableForMentoring}
     {...props}

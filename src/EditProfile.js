@@ -9,6 +9,7 @@ const EditProfile = props => (
         payloadToProfile(response)
       )
     }
+    firstTimePublish={false}
     saveProfile={updateProfile}
     {...props}
   />
