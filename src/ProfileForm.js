@@ -31,7 +31,7 @@ const CreatableTagSelect = ({ options, handleSelect, values }) => (
   <CreatableSelect
     styles={{
       control: base => ({ ...base, backgroundColor: 'white' }),
-      multiValue: styles => ({...styles, backgroundColor: '#edf4fe' })
+      multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' })
     }}
     value={values.map(value => ({ label: value, value }))}
     className="column"
@@ -357,7 +357,10 @@ export default class ProfileForm extends Component {
             <Select
               styles={{
                 control: base => ({ ...base, backgroundColor: 'white' }),
-                multiValue: styles => ({...styles, backgroundColor: '#edf4fe' })
+                multiValue: styles => ({
+                  ...styles,
+                  backgroundColor: '#edf4fe'
+                })
               }}
               className="column"
               isMulti
@@ -392,20 +395,27 @@ export default class ProfileForm extends Component {
             <div className="user-tip">
               <p>
                 Please use this section to share parts of your identity. This is
-                where faculty may share optional demographic data that is
-                viewable by HMS students and faculty on Weave. Please{' '}
-                <a href="#">create your own tags</a> in this section. You may
-                create as many “Parts of me” tags as you would like.
+                where faculty may share optional demographic or personally
+                meaningful information that is viewable by HMS students and
+                faculty on Weave. Please{' '}
+                <a href="https://weave.hms.harvard.edu/help" target="_blank">
+                  create your own tags
+                </a>{' '}
+                in this section. You may create as many “Parts of me” tags as
+                you would like.
               </p>
               <p>
-                Example tags: American Samoan, Mother, First generation, Latino,
-                Christian, LGBTQ+, she/her/hers
+                Example tags: American Samoan, Mother, First generation, New
+                Englander, Christian, Latino, LGBTQ+
               </p>
             </div>
             <div data-tip="Please feel free to create your own tags with identities or locations that are important to you.">
               <p>Parts Of Me</p>
               <CreatableInputOnly
-                value={this.state.partsOfMe.map(value => ({label: value, value}))}
+                value={this.state.partsOfMe.map(value => ({
+                  label: value,
+                  value
+                }))}
                 handleChange={this.handleCreate('partsOfMe')}
                 handleSet={this.handleSet('partsOfMe')}
               />
