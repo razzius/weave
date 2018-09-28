@@ -30,7 +30,9 @@ async function http(token, url, options = {}) {
 
   if (response.status === 401) {
     window.localStorage.removeItem('token')
-    alert('You have been logged out after 1 hour since logging in. You may log in again.')
+    alert(
+      'For your security, you have been logged out due to reaching a maximum time of 1 hour since initial log in. You may log in again.'
+    )
     window.location.pathname = '/login'
   }
 
