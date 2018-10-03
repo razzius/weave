@@ -22,7 +22,6 @@ Colon & Rectal Surgery
 Congenital Cardiac Surgery
 Craniofacial Surgery
 Critical Care Medicine
-Critical Care Medicine
 Cytopathology
 Dermatology
 Dermatopathology
@@ -50,8 +49,8 @@ Medical Genetics
 Medical Microbiology
 Medical Toxicology
 Molecular Genetic Pathology
-Musculoskeletal Radiology
 Musculoskeletal Oncology
+Musculoskeletal Radiology
 Neonatal-Perinatal Medicine
 Nephrology
 Neurological Surgery
@@ -77,7 +76,6 @@ Pathology-Anatomic & Clinical
 Pediatric Anesthesiology
 Pediatric Cardiology
 Pediatric Critical Care Medicine
-Pediatric Emergency Medicine
 Pediatric Emergency Medicine
 Pediatric Endocrinology
 Pediatric Gastroenterology
@@ -111,7 +109,6 @@ Sports Medicine
 Surgery-General
 Surgical Critical Care
 Thoracic Surgery
-Thoracic Surgery-Integrated
 Transplant Hepatology
 Urology
 Vascular & Interventional Radiology
