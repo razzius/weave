@@ -17,7 +17,7 @@ export function loadToken() {
     return null
   }
 
-  const oneHourAgo = subHours(new Date(), .001)
+  const oneHourAgo = subHours(new Date(), 1)
 
   if (new Date(tokenTimestamp) < oneHourAgo) {
     clearToken()
