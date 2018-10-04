@@ -17,11 +17,10 @@ export function loadToken() {
     return null
   }
 
-  const oneHourAgo = subHours(new Date(), 1)
+  const oneHourAgo = subHours(new Date(), .001)
 
   if (new Date(tokenTimestamp) < oneHourAgo) {
     clearToken()
-    loggedOutNotification()
     return null
   }
   return window.localStorage.getItem('token')
