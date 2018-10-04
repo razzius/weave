@@ -277,11 +277,17 @@ def update_profile(profile_id=None):
 
     save(profile)
 
-    # TODO delete activities that are no longer associated
-    # lazy approach for now
-    ProfileActivity.query.filter(ProfileActivity.profile_id == profile.id).delete()
+    # TODO rather than deleting all, delete only ones that haven't changed
+    profile_relation_classes = {
+        ProfessionalInterest,
+        ProfileActivity,
+        HospitalAffiliation,
+        PartsOfMe,
+        ClinicalSpecialty
+    }
+    for profile_relation_class in profile_relation_classes:
+        profile_relation_class.query.filter(profile_relation_class.profile_id == profile.id).delete()
 
-    # TODO delete dangling activities
     save_all_tags(profile, schema)
 
     return jsonify(profile_schema.dump(profile))
