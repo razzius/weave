@@ -1,3 +1,5 @@
+import { clearToken } from "./persistence";
+
 const serverUrl = process.env.REACT_APP_SERVER_URL
 
 // -_-
@@ -29,7 +31,7 @@ async function http(token, url, options = {}) {
   const response = await fetch(url, optionsWithAuth)
 
   if (response.status === 401) {
-    window.localStorage.removeItem('token')
+    clearToken()
     alert(
       'For your security, you have been logged out due to reaching a maximum time of 1 hour since initial log in. You may log in again.'
     )

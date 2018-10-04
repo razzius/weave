@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import AppScreen from './AppScreen'
 import { availableForMentoringFromVerifyTokenResponse, getParam } from './utils'
+import { saveToken } from './persistence'
 import { verifyToken } from './api'
 import NextButton from './NextButton'
 
@@ -80,7 +81,7 @@ export default class VerifyEmail extends Component {
           isMentor: response.is_mentor,
           availableForMentoring: availableForMentoringFromVerifyTokenResponse(response)
         })
-        window.localStorage.setItem('token', this.state.token)
+        saveToken(this.state.token)
       })
       .catch(err => {
         if (err.message === 'Failed to fetch') {

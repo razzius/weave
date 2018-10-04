@@ -28,11 +28,12 @@ import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
 import { setAvailabilityForMentoring, verifyToken } from './api'
+import { clearToken, saveToken, loadToken } from './persistence';
 
 class App extends Component {
   state = {
     availableForMentoring: null,
-    token: window.localStorage.getItem('token'),
+    token: loadToken(),
     isMentor: null,
     profileId: null
   }
@@ -46,9 +47,10 @@ class App extends Component {
             isMentor: response.is_mentor,
             availableForMentoring: availableForMentoringFromVerifyTokenResponse(response)
           })
+          saveToken(response.token)
         })
         .catch(() => {
-          window.localStorage.removeItem('token')
+          clearToken()
           this.setState({ token: null })
         })
     }
@@ -67,7 +69,7 @@ class App extends Component {
 
   logout = e => {
     e.preventDefault()
-    window.localStorage.removeItem('token')
+    clearToken()
     this.setState({ token: null }, () => {
       window.location.pathname = '/' // wtfff
     })
