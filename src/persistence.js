@@ -1,4 +1,10 @@
-import subHours from 'date-fns'
+import { subHours } from 'date-fns'
+
+export function loggedOutNotification() {
+  alert(
+    'For your security, you have been logged out due to reaching a maximum time of 1 hour since initial log in. You may log in again.'
+  )
+}
 
 export function saveToken(token) {
   window.localStorage.setItem('tokenTimestamp', new Date().toISOString())
@@ -15,6 +21,7 @@ export function loadToken() {
 
   if (new Date(tokenTimestamp) < oneHourAgo) {
     clearToken()
+    loggedOutNotification()
     return null
   }
   return window.localStorage.getItem('token')

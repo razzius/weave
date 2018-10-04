@@ -1,4 +1,4 @@
-import { clearToken } from "./persistence";
+import { clearToken, loggedOutNotification } from "./persistence";
 
 const serverUrl = process.env.REACT_APP_SERVER_URL
 
@@ -32,9 +32,7 @@ async function http(token, url, options = {}) {
 
   if (response.status === 401) {
     clearToken()
-    alert(
-      'For your security, you have been logged out due to reaching a maximum time of 1 hour since initial log in. You may log in again.'
-    )
+    loggedOutNotification()
     window.location.pathname = '/login'
   }
 
