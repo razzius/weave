@@ -47,7 +47,6 @@ class App extends Component {
             isMentor: response.is_mentor,
             availableForMentoring: availableForMentoringFromVerifyTokenResponse(response)
           })
-          saveToken(response.token)
         })
         .catch(() => {
           clearToken()
