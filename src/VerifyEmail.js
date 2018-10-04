@@ -45,6 +45,11 @@ const VerifiedView = props => {
   return (
     <div>
       <p>{welcomeMessage}</p>
+      <div>
+        {
+          isMentor && <iframe src="https://player.vimeo.com/video/293299501" width="640" height="480" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+        }
+      </div>
       <NextButton
         onClick={() => {
           authenticate({
@@ -85,7 +90,7 @@ export default class VerifyEmail extends Component {
       })
       .catch(err => {
         if (err.message === 'Failed to fetch') {
-          this.setState({error: 'There was a problem with our server. Please try again in a moment.'})
+          this.setState({ error: 'There was a problem with our server. Please try again in a moment.' })
           return
         }
 
@@ -93,10 +98,10 @@ export default class VerifyEmail extends Component {
         if (errorMessage === 'not recognized') {
           this.setState({
             error:
-            'Your token is invalid. Try signing up or logging in again.'
+              'Your token is invalid. Try signing up or logging in again.'
           })
         } else if (errorMessage === 'expired') {
-          this.setState({error: 'Your login token has expired. Try logging in again.'})
+          this.setState({ error: 'Your login token has expired. Try logging in again.' })
         }
       })
   }
