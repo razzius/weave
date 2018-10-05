@@ -139,9 +139,6 @@ export default class ProfileForm extends Component {
           this.props.setProfileId(profile.id)
           this.props.history.push(`/profiles/${profile.id}`)
         })
-        .catch(error => {
-          console.error(error)
-        })
     })
   }
 
