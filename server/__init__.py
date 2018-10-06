@@ -1,12 +1,13 @@
 from flask import Flask, send_from_directory
 import os
 
-from raven.contrib.flask import Sentry
 from flask_cors import CORS
 from flask_basicauth import BasicAuth
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_sslify import SSLify
+import sentry_sdk
+
 from .models import (
     ActivityOption,
     Profile,
@@ -18,6 +19,9 @@ from .models import (
 )
 import server.views
 
+
+sentry_sdk.init(os.environ['PYTHON_SENTRY_DSN'])
+
 app = Flask(__name__, static_url_path='/static', static_folder='../build/static')
 app.secret_key = os.environ['SECRET_KEY']
 
@@ -26,10 +30,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['MAILGUN_DOMAIN'] = os.environ['MAILGUN_DOMAIN']
 # app.config['SQLALCHEMY_ECHO'] = app.debug
 
-
 db.init_app(app)
 CORS(app)
-Sentry(app)
 SSLify(app)
 
 app.config['BASIC_AUTH_USERNAME'] = os.environ['BASIC_AUTH_USERNAME']

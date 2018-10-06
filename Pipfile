@@ -20,6 +20,7 @@ flask-basicauth = "*"
 python-dateutil = "*"
 flask-sslify = "*"
 marshmallow = "==3.0.0b13"
+sentry-sdk = "*"
 
 [dev-packages]
 ipython = "*"

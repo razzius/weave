@@ -8,7 +8,7 @@ import App from './App'
 
 if (window.location.hostname !== 'localhost') {
   init({
-    dsn: process.env.SENTRY_DSN
+    dsn: process.env.JAVASCRIPT_SENTRY_DSN
   })
 }
 
