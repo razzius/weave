@@ -19,7 +19,10 @@ from .models import (
 import server.views
 
 
-sentry_sdk.init(os.environ['PYTHON_SENTRY_DSN'])
+sentry_dsn = os.environ.get('PYTHON_SENTRY_DSN')
+
+if sentry_dsn is not None:
+    sentry_sdk.init(os.environ['PYTHON_SENTRY_DSN'])
 
 app = Flask(__name__, static_url_path='/static', static_folder='../build/static')
 app.secret_key = os.environ['SECRET_KEY']
