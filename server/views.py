@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from flask import Blueprint, jsonify, request
 
 from cloudinary import uploader
+from sentry_sdk import capture_exception
 from marshmallow import ValidationError
 from requests_toolbelt.utils import dump
 from sqlalchemy import func, or_
@@ -39,11 +40,6 @@ from .schemas import profile_schema, profiles_schema, valid_email_schema
 
 
 api = Blueprint('api', __name__)
-
-
-@api.errorhandler(ValidationError)
-def handle_invalid_schema(error):
-    return {'hi': 'there'}
 
 
 def matching_profiles(query):
@@ -236,6 +232,7 @@ def create_profile(profile_id=None):
     try:
         schema = profile_schema.load(request.json)
     except ValidationError as err:
+        capture_exception(err)
         return jsonify(err.messages), 422
 
     if db.session.query(
@@ -259,6 +256,7 @@ def update_profile(profile_id=None):
     try:
         schema = profile_schema.load(request.json)
     except ValidationError as err:
+        capture_exception(err)
         return jsonify(err.messages), 422
 
     profile = Profile.query.get(profile_id)
@@ -362,6 +360,7 @@ def process_send_verification_email(is_mentor):
     try:
         schema = valid_email_schema.load(request.json)
     except ValidationError as err:
+        capture_exception(err)
         return error_response(err.messages)
 
     email = schema['email'].lower()

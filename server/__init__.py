@@ -1,6 +1,5 @@
 from flask import Flask, send_from_directory
 import os
-
 from flask_cors import CORS
 from flask_basicauth import BasicAuth
 from flask_admin import Admin, AdminIndexView, expose
