@@ -103,7 +103,7 @@ export default class StudentExpectationsSlider extends React.Component {
               If ever something occurs in the context of the mentor/mentee
               relationship that makes you uncomfortable or if you are unsure how
               to respond, please do not suffer alone.{' '}
-              <Link href="/resources" target="_blank">
+              <Link to="/resources" target="_blank">
                 Here
               </Link>{' '}
               are resources that may be helpful starting points in addressing
