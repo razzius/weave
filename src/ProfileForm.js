@@ -128,12 +128,6 @@ export default class ProfileForm extends Component {
   }
 
   submit = async () => {
-    const unsavedImage =
-      this.state.imageEdited ||
-      (!this.state.imageSuccess && this.state.image !== null)
-
-    await when(unsavedImage, this.saveImage)
-
     const profile = await this.props.saveProfile(
       this.props.token,
       this.state,
@@ -265,17 +259,6 @@ export default class ProfileForm extends Component {
                 defaultValue="1"
               />
               <button onClick={this.rotateRight}>Rotate</button>
-              <input
-                value={
-                  this.state.uploadingImage ? 'Uploading...' : 'Save image'
-                }
-                disabled={!this.state.imageEdited}
-                type="submit"
-                onClick={this.saveImage}
-              />{' '}
-              {this.state.imageSuccess && !this.state.imageEdited
-                ? 'Image uploaded'
-                : null}
             </div>
 
             <div className="expectations">
@@ -414,10 +397,7 @@ export default class ProfileForm extends Component {
                 where faculty may share optional demographic or personally
                 meaningful information that is viewable by HMS students and
                 faculty on Weave. Please{' '}
-                <Link
-                  to="/help"
-                  target="_blank"
-                >
+                <Link to="/help" target="_blank">
                   create your own tags
                 </Link>{' '}
                 in this section. You may create as many “Parts of me” tags as
@@ -521,16 +501,18 @@ export default class ProfileForm extends Component {
 
           <button
             className="button"
+            disabled={this.state.uploadingImage}
             onClick={async () => {
               const unsavedImage =
-                this.state.image !== null && this.state.imageUrl === null
+                this.state.imageEdited ||
+                (!this.state.imageSuccess && this.state.image !== null)
 
               await when(unsavedImage, this.saveImage)
 
               this.setPreview()
             }}
           >
-            Preview profile
+            {this.state.uploadingImage ? "Loading preview..." : "Preview profile"}
           </button>
         </div>
       </AppScreen>
