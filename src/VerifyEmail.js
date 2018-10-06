@@ -48,13 +48,12 @@ const VerifiedView = props => {
       <div>
         {isMentor && (
           <iframe
-            src="https://player.vimeo.com/video/293299501"
-            width="640"
-            height="400"
-            frameBorder="0"
+            width="640px"
+            height="360px"
+            src="https://www.youtube.com/embed/6nAUk502ycA?modestbranding=1&rel=0"
             title="Weave tutorial video: How to create a faculty profile"
-            webkitallowfullscreen
-            mozallowfullscreen
+            frameBorder="0"
+            allow="autoplay; encrypted-media"
             allowFullScreen
           />
         )}
