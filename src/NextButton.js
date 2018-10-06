@@ -10,9 +10,9 @@ const NextButton = props => {
     )
   }
   return (
-    <a onClick={props.onClick} className="button next-button">
+    <button onClick={props.onClick} className="button next-button">
       {props.text}
-    </a>
+    </button>
   )
 }
 
