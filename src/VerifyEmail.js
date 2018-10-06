@@ -29,11 +29,6 @@ const VerifiedView = props => {
     isMentor,
     returningUser,
     verified,
-    history,
-    authenticate,
-    token,
-    profileId,
-    availableForMentoring
   } = props
 
   const { buttonText, linkUrl } = getButtonInfo(isMentor, returningUser)
@@ -58,66 +53,66 @@ const VerifiedView = props => {
           />
         )}
       </div>
-      <NextButton
-        onClick={() => {
-          authenticate({
-            token,
-            profileId,
-            isMentor,
-            availableForMentoring
-          }).then(() => {
-            history.push(linkUrl)
-          })
-        }}
-        text={buttonText}
-      />
+      <NextButton to={linkUrl} text={buttonText} />
     </div>
   )
 }
+
 export default class VerifyEmail extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      error: null,
-      verified: null,
-      token: getParam('token'),
-      profileId: null
-    }
+
+  state = {
+    error: null,
+    verified: null,
+    token: getParam('token'),
+    profileId: null
   }
 
-  componentDidMount() {
-    verifyToken(this.state.token)
-      .then(response => {
-        this.setState({
-          verified: response,
-          profileId: response.profile_id,
-          isMentor: response.is_mentor,
-          availableForMentoring: availableForMentoringFromVerifyTokenResponse(
-            response
-          )
-        })
-        saveToken(this.state.token)
-      })
-      .catch(err => {
-        if (err.message === 'Failed to fetch') {
-          this.setState({
-            error:
-              'There was a problem with our server. Please try again in a moment.'
-          })
-          return
-        }
+  async componentDidMount() {
+    try {
+      const response = await verifyToken(this.state.token)
 
-        const errorMessage = err.token[0]
-        if (errorMessage === 'not recognized') {
-          this.setState({
-            error: 'Your token is invalid. Try signing up or logging in again.'
-          })
-        } else if (errorMessage === 'expired') {
-          this.setState({
-            error: 'Your login token has expired. Try logging in again.'
-          })
-        }
+      const isMentor = response.is_mentor
+      const profileId = response.profile_id
+
+      const availableForMentoring = availableForMentoringFromVerifyTokenResponse(
+        response
+      )
+
+      this.setState({
+        verified: response,
+        profileId,
+        isMentor,
+        availableForMentoring
       })
+
+      saveToken(this.state.token)
+
+      this.props.authenticate({
+        token: this.state.token,
+        profileId,
+        isMentor,
+        availableForMentoring
+      })
+    } catch (err) {
+      if (err.message === 'Failed to fetch') {
+        this.setState({
+          error:
+            'There was a problem with our server. Please try again in a moment.'
+        })
+        return
+      }
+
+      const errorMessage = err.token[0]
+      if (errorMessage === 'not recognized') {
+        this.setState({
+          error: 'Your token is invalid. Try signing up or logging in again.'
+        })
+      } else if (errorMessage === 'expired') {
+        this.setState({
+          error: 'Your login token has expired. Try logging in again.'
+        })
+      }
+    }
   }
 
   render() {
