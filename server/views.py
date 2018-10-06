@@ -364,7 +364,7 @@ def process_send_verification_email(is_mentor):
     except ValidationError as err:
         return error_response(err.messages)
 
-    email = schema['email']
+    email = schema['email'].lower()
 
     existing_email = get_verification_email_by_email(email)
 
@@ -395,7 +395,7 @@ def login():
     if 'errors' in schema:
         return error_response(schema.errors)
 
-    email = schema['email']
+    email = schema['email'].lower()
 
     verification_email = VerificationEmail.query.filter(
         VerificationEmail.email == email
