@@ -52,6 +52,7 @@ const VerifiedView = props => {
             width="640"
             height="400"
             frameBorder="0"
+            title="Weave tutorial video: How to create a faculty profile"
             webkitallowfullscreen
             mozallowfullscreen
             allowFullScreen

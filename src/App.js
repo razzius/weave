@@ -28,7 +28,7 @@ import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
 import { setAvailabilityForMentoring, verifyToken } from './api'
-import { clearToken, saveToken, loadToken } from './persistence';
+import { clearToken, loadToken } from './persistence';
 
 class App extends Component {
   state = {

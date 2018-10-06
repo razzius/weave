@@ -29,7 +29,7 @@ function scaleCanvas(canvas) {
 
 class CreatableTagSelect extends Component {
   state = {
-    inputValue: '',
+    inputValue: ''
   }
 
   handleInputChange = inputValue => {
@@ -94,9 +94,10 @@ export default class ProfileForm extends Component {
     preview: false
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (this.props.loadInitial) {
-      this.props.loadInitial().then(data => this.setState(data))
+      const data = await this.props.loadInitial()
+      this.setState(data)
     }
   }
 
@@ -125,21 +126,24 @@ export default class ProfileForm extends Component {
     this.setState({ [field]: target.checked })
   }
 
-  submit = () => {
+  submit = async () => {
     const unsavedImage =
       this.state.imageEdited ||
       (!this.state.imageSuccess && this.state.image !== null)
-    when(unsavedImage, this.saveImage).then(() => {
-      this.props
-        .saveProfile(this.props.token, this.state, this.props.profileId)
-        .then(profile => {
-          if (!this.props.profileId) {
-            this.props.setAvailableForMentoring()
-          }
-          this.props.setProfileId(profile.id)
-          this.props.history.push(`/profiles/${profile.id}`)
-        })
-    })
+
+    await when(unsavedImage, this.saveImage)
+
+    const profile = await this.props.saveProfile(
+      this.props.token,
+      this.state,
+      this.props.profileId
+    )
+
+    if (!this.props.profileId) {
+      this.props.setAvailableForMentoring()
+    }
+    this.props.setProfileId(profile.id)
+    this.props.history.push(`/profiles/${profile.id}`)
   }
 
   handleDrop = acceptedFiles => {
@@ -165,17 +169,19 @@ export default class ProfileForm extends Component {
     const scaled = scaleCanvas(canvas)
 
     return new Promise(resolve => {
-      scaled.toBlob(blob =>
-        uploadPicture(token, blob).then(response => {
-          this.setState({
+      scaled.toBlob(async blob => {
+        const response = await uploadPicture(token, blob)
+
+        this.setState(
+          {
             imageUrl: response.image_url,
             imageSuccess: true,
             uploadingImage: false,
             imageEdited: false
-          })
-          resolve(response)
-        })
-      )
+          },
+          () => resolve(response)
+        )
+      })
     })
   }
 
@@ -208,10 +214,7 @@ export default class ProfileForm extends Component {
             firstTimePublish={firstTimePublish}
           />
           <div style={{ width: '850px', margin: 'auto' }}>
-            <button
-              className="button"
-              onClick={this.unsetPreview}
-            >
+            <button className="button" onClick={this.unsetPreview}>
               Edit
             </button>
             <button className="button" onClick={this.submit}>
@@ -517,10 +520,13 @@ export default class ProfileForm extends Component {
 
           <button
             className="button"
-            onClick={() => {
+            onClick={async () => {
               const unsavedImage =
                 this.state.image !== null && this.state.imageUrl === null
-              when(unsavedImage, this.saveImage).then(this.setPreview)
+
+              await when(unsavedImage, this.saveImage)
+
+              this.setPreview()
             }}
           >
             Preview profile
