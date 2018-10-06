@@ -99,10 +99,10 @@ const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
         </div>
         <div className="about" style={{ width: '450px' }}>
           {ownProfile && (
-            <NextButton href="/edit-profile" text="Edit profile" />
+            <NextButton to="/edit-profile" text="Edit profile" />
           )}
           {!firstTimePublish && !editing && (
-            <NextButton href="/browse" text="Back to list" />
+            <NextButton to="/browse" text="Back to list" />
           )}
           <h1>{data.name}</h1>
 
