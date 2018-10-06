@@ -1,9 +1,11 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+
 
 const NextButton = props => (
-  <a href={props.href} onClick={props.onClick} className="button next-button">
+  <Link to={props.href} onClick={props.onClick} className="button next-button">
     {props.text}
-  </a>
+  </Link>
 )
 
 export default NextButton

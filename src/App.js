@@ -83,8 +83,8 @@ class App extends Component {
     const loggedOut = this.state.token === null
 
     const loginButton = (
-      <a
-        href="/login"
+      <Link
+        to="/login"
         className="App-title"
         style={{
           paddingTop: '1.4em',
@@ -93,7 +93,7 @@ class App extends Component {
         }}
       >
         Login
-      </a>
+      </Link>
     )
 
     const logoutButton = (
@@ -125,17 +125,17 @@ class App extends Component {
                 About
               </a>
 
-              <a href="/expectations" className="App-title">
+              <Link to="/expectations" className="App-title">
                 Expectations
-              </a>
+              </Link>
 
-              <a href="/resources" className="App-title">
+              <Link to="/resources" className="App-title">
                 Resources
-              </a>
+              </Link>
 
-              <a href="/help" className="App-title">
+              <Link to="/help" className="App-title">
                Help
-              </a>
+              </Link>
 
               {loginAction}
 

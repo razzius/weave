@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link } from 'react-router-dom'
 import AvatarEditor from 'react-avatar-editor'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/lib/Creatable'
@@ -239,6 +240,7 @@ export default class ProfileForm extends Component {
                 ref={this.setEditorRef}
                 borderRadius={100}
                 image={this.state.image || this.state.imageUrl}
+                crossOrigin="anonymous"
                 scale={parseFloat(this.state.scale)}
                 width={180}
                 height={180}
@@ -412,13 +414,12 @@ export default class ProfileForm extends Component {
                 where faculty may share optional demographic or personally
                 meaningful information that is viewable by HMS students and
                 faculty on Weave. Please{' '}
-                <a
-                  href="https://weave.hms.harvard.edu/help"
+                <Link
+                  to="/help"
                   target="_blank"
-                  rel="noopener noreferrer"
                 >
                   create your own tags
-                </a>{' '}
+                </Link>{' '}
                 in this section. You may create as many “Parts of me” tags as
                 you would like.
               </p>
