@@ -32,7 +32,7 @@ const Home = ({ token, isMentor, profileId }) => (
   <div className="Home">
     <main id="background">
       <div className="App-intro">
-        {isMentor !== true && (
+        {(token === null || isMentor === false) && (
           <div>
             <h1>Students</h1>
             <Link
