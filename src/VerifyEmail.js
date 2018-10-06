@@ -46,9 +46,17 @@ const VerifiedView = props => {
     <div>
       <p>{welcomeMessage}</p>
       <div>
-        {
-          isMentor && <iframe src="https://player.vimeo.com/video/293299501" width="640" height="480" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
-        }
+        {isMentor && (
+          <iframe
+            src="https://player.vimeo.com/video/293299501"
+            width="640"
+            height="400"
+            frameBorder="0"
+            webkitallowfullscreen
+            mozallowfullscreen
+            allowFullScreen
+          />
+        )}
       </div>
       <NextButton
         onClick={() => {
@@ -84,24 +92,30 @@ export default class VerifyEmail extends Component {
           verified: response,
           profileId: response.profile_id,
           isMentor: response.is_mentor,
-          availableForMentoring: availableForMentoringFromVerifyTokenResponse(response)
+          availableForMentoring: availableForMentoringFromVerifyTokenResponse(
+            response
+          )
         })
         saveToken(this.state.token)
       })
       .catch(err => {
         if (err.message === 'Failed to fetch') {
-          this.setState({ error: 'There was a problem with our server. Please try again in a moment.' })
+          this.setState({
+            error:
+              'There was a problem with our server. Please try again in a moment.'
+          })
           return
         }
 
         const errorMessage = err.token[0]
         if (errorMessage === 'not recognized') {
           this.setState({
-            error:
-              'Your token is invalid. Try signing up or logging in again.'
+            error: 'Your token is invalid. Try signing up or logging in again.'
           })
         } else if (errorMessage === 'expired') {
-          this.setState({ error: 'Your login token has expired. Try logging in again.' })
+          this.setState({
+            error: 'Your login token has expired. Try logging in again.'
+          })
         }
       })
   }
