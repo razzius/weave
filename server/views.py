@@ -137,7 +137,20 @@ def get_profiles():
 
     query = request.args.get('query')
 
-    return jsonify(profiles_schema.dump(matching_profiles(query)))
+    return jsonify(profiles_schema.dump(
+        matching_profiles(query)
+        .order_by(
+            # Get the last word in the name.
+            # Won't work with suffixes.
+            func.split_part(
+                Profile.name,
+                ' ',
+                func.array_length(
+                    func.string_to_array(Profile.name, ' '), 1  # How many words in the name
+                )
+            )
+        )
+    ))
 
 
 @api.route('/api/profiles/<profile_id>')
