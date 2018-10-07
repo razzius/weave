@@ -108,13 +108,23 @@ const profilePayloadMapping = {
 }
 
 export function profileToPayload(profile) {
-  return Object.keys(profilePayloadMapping).reduce(
+  const profilePayload = Object.keys(profilePayloadMapping).reduce(
     (payload, key) => ({
       ...payload,
       [key]: profile[profilePayloadMapping[key]]
     }),
     {}
   )
+
+  // TODO why would this happen?
+  if (profilePayload.additional_information === null) {
+    return {
+      ...profilePayload,
+      additional_information: ''
+    }
+  }
+
+  return profilePayload
 }
 
 function reverseObject(obj) {

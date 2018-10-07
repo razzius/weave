@@ -512,7 +512,9 @@ export default class ProfileForm extends Component {
               this.setPreview()
             }}
           >
-            {this.state.uploadingImage ? "Loading preview..." : "Preview profile"}
+            {this.state.uploadingImage
+              ? 'Loading preview...'
+              : 'Preview profile'}
           </button>
         </div>
       </AppScreen>
