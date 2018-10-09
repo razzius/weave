@@ -9,12 +9,13 @@ import sentry_sdk
 
 from .models import (
     ActivityOption,
+    ClinicalSpecialtyOption,
+    PartsOfMeOption,
+    ProfessionalInterestOption,
     Profile,
     VerificationEmail,
     VerificationToken,
     db,
-    ProfessionalInterestOption,
-    PartsOfMeOption,
 )
 import server.views
 
@@ -80,8 +81,7 @@ admin = Admin(app, index_view=BasicAuthAdminView())
 admin.add_view(BasicAuthModelView(VerificationToken, db.session))
 admin.add_view(BasicAuthModelView(VerificationEmail, db.session))
 admin.add_view(BasicAuthModelView(Profile, db.session))
-# admin.add_view(BasicAuthModelView(HospitalAffiliationOption, db.session))
-# admin.add_view(BasicAuthModelView(ClinicalSpecialtyOption, db.session))
+admin.add_view(BasicAuthModelView(ClinicalSpecialtyOption, db.session))
 admin.add_view(BasicAuthModelView(ProfessionalInterestOption, db.session))
 admin.add_view(BasicAuthModelView(PartsOfMeOption, db.session))
 admin.add_view(BasicAuthModelView(ActivityOption, db.session))

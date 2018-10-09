@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 
 db = SQLAlchemy()
@@ -117,11 +117,11 @@ class Profile(db.Model):
 
     profile_image_url = db.Column(db.String(255))
 
-    clinical_specialties = relationship(ClinicalSpecialty)
-    affiliations = relationship(HospitalAffiliation)
-    professional_interests = relationship(ProfessionalInterest)
-    parts_of_me = relationship(PartsOfMe)
-    activities = relationship(ProfileActivity)
+    clinical_specialties = relationship(ClinicalSpecialty, cascade='all, delete')
+    affiliations = relationship(HospitalAffiliation, cascade='all, delete')
+    professional_interests = relationship(ProfessionalInterest, cascade='all, delete')
+    parts_of_me = relationship(PartsOfMe, cascade='all, delete')
+    activities = relationship(ProfileActivity, cascade='all, delete')
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
