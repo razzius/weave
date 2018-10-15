@@ -89,7 +89,7 @@ def matching_profiles(query):
 
 
 def get_token(headers):
-    token = request.headers.get('Authorization')
+    token = headers.get('Authorization')
 
     if token is None:
         return (
@@ -236,7 +236,7 @@ def basic_profile_data(verification_token, schema):
 
 
 @api_post('profile')
-def create_profile(profile_id=None):
+def create_profile():
     error, verification_token = get_token(request.headers)
 
     if error:
@@ -323,8 +323,6 @@ def upload_image():
 
 
 def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
-    email = request.json['email']
-
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:
