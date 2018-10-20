@@ -183,7 +183,7 @@ const Resources = () => (
 
     <h3>
       <a href="https://medstudenthandbook.hms.harvard.edu/1003-policies-and-procedures-students-disabilities">
-        Disability
+        Disability and Accessibility
       </a>
     </h3>
 
@@ -203,12 +203,14 @@ const Resources = () => (
     </p>
 
     <div className="contact-block">
-      <b>HMS Disability Coordinator</b>
-      <div>Yolanda Paul</div>
+      <b>Director of Disability Services at HMS & HSDM</b>
+      <div>Timothy Rogers</div>
       <div>25 Shattuck Street, Gordon Hall, Room 211, Boston, MA 02115</div>
-      <div>Email: Yolanda_Paul@hms.harvard.edu</div>
+      <div>Email: timothy_rogers@hms.harvard.edu</div>
       <div>Phone: (617) 432-0449</div>
     </div>
+
+    <p>Tim directs the Office of Disability Services to support medical, dental and master’s students at HMS and HSDM.</p>
 
     <h3>
       <a href="https://medstudenthandbook.hms.harvard.edu/716-discrimination-harassment-and-student-mistreatment">
