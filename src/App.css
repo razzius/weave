@@ -156,6 +156,7 @@ input[type='email'].fullWidth {
 }
 
 .profile-result-right {
+  text-align: right;
   margin-left: auto;
   padding: 10px;
 }
