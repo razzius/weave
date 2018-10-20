@@ -134,9 +134,6 @@ export default class ProfileForm extends Component {
       this.props.profileId
     )
 
-    if (!this.props.profileId) {
-      this.props.setAvailableForMentoring()
-    }
     this.props.setProfileId(profile.id)
     this.props.history.push(`/profiles/${profile.id}`)
   }
