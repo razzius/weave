@@ -97,7 +97,7 @@ const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
             </label>
           </div>
         </div>
-        <div className="about" style={{ width: '450px' }}>
+        <div className="about">
           {ownProfile && (
             <NextButton to="/edit-profile" text="Edit profile" />
           )}

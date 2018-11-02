@@ -57,7 +57,7 @@ const Home = ({ token, isMentor, profileId }) => (
         )}
       </div>
     </main>
-    <section id="about">
+    <section id="about-weave">
       <h1>About</h1>
       <p>
         Soon after entering medical school, students are faced with a new

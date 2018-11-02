@@ -20,9 +20,10 @@ body,
   padding: 20px;
 }
 
+section {
+    margin: 1em;
+}
 #background {
-  height: 100%;
-  height: calc(100% - 100px);
   background: url('https://i.imgur.com/sfsm06I.png');
   background-size: cover;
   width: 100%;
@@ -145,6 +146,10 @@ input[type='email'].fullWidth {
   .about {
     padding-left: 50px;
   }
+  #background {
+    height: 100%;
+    height: calc(100% - 100px);
+  }
 }
 
 .profile-result {
@@ -230,6 +235,7 @@ input[type='email'].fullWidth {
 }
 .Home section {
   max-width: 700px;
+  padding: 0 1em;
   margin: 0 auto;
   padding-bottom: 3em;
 }
