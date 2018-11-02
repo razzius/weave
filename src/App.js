@@ -121,6 +121,8 @@ class App extends Component {
               <Link to="/" className="App-title left">
                 <h1>HMS Weave</h1>
               </Link>
+              {loginAction}
+
               <a href="/#about" className="App-title">
                 About
               </a>
@@ -136,8 +138,6 @@ class App extends Component {
               <Link to="/help" className="App-title">
                Help
               </Link>
-
-              {loginAction}
 
               {this.state.isMentor && (
                 <span
