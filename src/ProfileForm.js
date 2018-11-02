@@ -240,6 +240,7 @@ export default class ProfileForm extends Component {
             </Dropzone>
             <div>
               <input
+                id="image-upload"
                 name="newImage"
                 type="file"
                 accept="image/*"

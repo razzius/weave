@@ -94,7 +94,7 @@ section {
   margin: 10px;
 }
 .App-title:hover {
-  color: white;
+  color: inherit;
 }
 
 .App-title h1 {
@@ -138,28 +138,7 @@ input[type='email'].fullWidth {
   margin-bottom: 1em;
 }
 .about {
-  width: 450px;
-}
-
-@media screen and (min-width: 750px) {
-  .columns {
-    display: flex;
-  }
-  .about {
-    padding-left: 50px;
-  }
-  #background {
-    height: 100%;
-    height: calc(100% - 100px);
-  }
-  .slick-slider {
-    margin: 40px;
-  }
-  .expectation div {
-    margin: 40px 100px 0px;
-    font-size: 17px;
-    line-height: 1.5;
-  }
+  max-width: 450px;
 }
 
 .profile-result {
@@ -235,7 +214,7 @@ input[type='email'].fullWidth {
 /* } */
 
 .slick-dots {
-    position: initial;
+  position: initial;
 }
 
 .Home section {
@@ -261,6 +240,7 @@ input[disabled]:checked {
   margin-top: 25px;
   margin-right: 25px;
   float: right;
+  color: black;
   /* display: inline; */
 }
 
@@ -316,4 +296,35 @@ input::-webkit-contacts-auto-fill-button {
   height: 0;
   width: 0;
   margin: 0;
+}
+#image-upload {
+    margin-top: 2em;
+}
+
+@media screen and (min-width: 750px) {
+    .columns {
+        display: flex;
+    }
+    .about {
+        padding-left: 50px;
+    }
+    #background {
+        height: 100%;
+        height: calc(100% - 100px);
+    }
+    .slick-slider {
+        margin: 40px;
+    }
+    .expectation div {
+        margin: 40px 100px 0px;
+        font-size: 17px;
+        line-height: 1.5;
+    }
+    .available-for-mentoring {
+        color: white;
+    }
+
+    #image-upload {
+        margin-top: 0;
+    }
 }
