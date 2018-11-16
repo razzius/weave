@@ -83,7 +83,7 @@ def matching_profiles(query):
     query = Profile.query
 
     for relation, option_class in tag_fields:
-        query = query.join(relation).join(option_class)
+        query = query.outerjoin(relation).outerjoin(option_class)
 
     return query.filter(*filters)
 
