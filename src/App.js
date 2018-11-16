@@ -28,7 +28,7 @@ import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
 import { setAvailabilityForMentoring, verifyToken } from './api'
-import { clearToken, loadToken } from './persistence';
+import { clearToken, loadToken } from './persistence'
 
 class App extends Component {
   state = {
@@ -45,7 +45,9 @@ class App extends Component {
           this.setState({
             profileId: response.profile_id,
             isMentor: response.is_mentor,
-            availableForMentoring: availableForMentoringFromVerifyTokenResponse(response)
+            availableForMentoring: availableForMentoringFromVerifyTokenResponse(
+              response
+            )
           })
         })
         .catch(() => {
@@ -121,30 +123,15 @@ class App extends Component {
               <Link to="/" className="App-title left">
                 <h1>HMS Weave</h1>
               </Link>
+
               {loginAction}
 
-              <a href="/#about" className="App-title">
-                About
-              </a>
-
-              <Link to="/expectations" className="App-title">
-                Expectations
-              </Link>
-
-              <Link to="/resources" className="App-title">
-                Resources
-              </Link>
-
-              <Link to="/help" className="App-title">
-               Help
-              </Link>
-
               {this.state.isMentor && (
-                <span
+                <div
                   data-tip
-                  className="App-title available-for-mentoring"
+                  className="available-for-mentoring"
                   data-for="toggleTooltip"
-                >
+                  >
                   Available for mentoring:
                   <ReactTooltip id="toggleTooltip" place="bottom">
                     Controls whether your profile will be visible to mentees.
@@ -158,9 +145,27 @@ class App extends Component {
                         setAvailabilityForMentoring(this.state.token, available)
                       }
                     }}
-                  />
-                </span>
+                    />
+                </div>
               )}
+
+              <nav>
+                <a href="/#about-weave" className="App-title">
+                  About
+                </a>
+
+                <Link to="/expectations" className="App-title">
+                  Expectations
+                </Link>
+
+                <Link to="/resources" className="App-title">
+                  Resources
+                </Link>
+
+                <Link to="/help" className="App-title">
+                  Help
+                </Link>
+              </nav>
             </div>
           </header>
           <Switch>
