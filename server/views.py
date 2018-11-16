@@ -130,16 +130,23 @@ def get_token(headers):
 
 @api.route('/api/profiles')
 def get_profiles():
-    error, _ = get_token(request.headers)
+    error, verification_token = get_token(request.headers)
 
     if error:
         return error
 
     query = request.args.get('query')
 
+    verification_email_id = VerificationToken.query.filter(
+        VerificationToken.token == verification_token.token
+    ).value(VerificationToken.email_id)
+
     return jsonify(profiles_schema.dump(
         matching_profiles(query)
         .order_by(
+            # Is this the logged-in user's profile? If so, return it first (false)
+            Profile.verification_email_id != verification_email_id,
+
             # Get the last word in the name.
             # Won't work with suffixes.
             func.split_part(
