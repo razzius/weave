@@ -28,6 +28,20 @@ function scaleCanvas(canvas) {
   return scaled
 }
 
+function displayError({name, email}) {
+  let missing
+  if (name === '' && email === '') {
+    missing = 'name and email'
+  } else if (name === '') {
+    missing = 'name'
+  } else if (email === '') {
+    missing = 'email'
+  } else {
+    return null
+  }
+  return <p>Before previewing profile, please enter your {missing}.</p>
+}
+
 class CreatableTagSelect extends Component {
   state = {
     inputValue: ''
@@ -499,7 +513,7 @@ export default class ProfileForm extends Component {
 
           <button
             className="button"
-            disabled={this.state.uploadingImage}
+            disabled={this.state.uploadingImage || this.state.name === '' || this.state.contactEmail === ''}
             onClick={async () => {
               const unsavedImage =
                 this.state.imageEdited ||
@@ -514,6 +528,9 @@ export default class ProfileForm extends Component {
               ? 'Loading preview...'
               : 'Preview profile'}
           </button>
+          {
+            displayError({name: this.name, email: this.contactEmail})
+          }
         </div>
       </AppScreen>
     )

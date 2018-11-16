@@ -142,10 +142,10 @@ input[type='email'].fullWidth {
 
 .profile-result {
   cursor: pointer;
-  display: flex;
   text-decoration: none;
   transition: all 0.4s;
   color: black;
+  margin-bottom: 1em;
 }
 
 .profile-result-right {
@@ -305,6 +305,10 @@ input::-webkit-contacts-auto-fill-button {
     margin-top: 25px;
     margin-right: 25px;
     float: right;
+  }
+
+  .profile-result {
+    display: flex;
   }
 }
 

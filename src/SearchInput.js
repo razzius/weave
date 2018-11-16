@@ -30,20 +30,25 @@ export default class SearchInput extends Component {
   render() {
     return (
       <form
-        style={{ display: 'flex' }}
+        style={{ display: 'flex', maxWidth: '700px' }}
         className="search"
         onSubmit={this.handleSubmit}
       >
         <Select
+          className='fullWidth'
           styles={{
-            control: base => ({ ...base, width: '500px', backgroundColor: 'white' }),
-            multiValue: styles => ({...styles, backgroundColor: '#edf4fe' })
+            control: base => ({
+              ...base,
+              width: '100%',
+              backgroundColor: 'white'
+            }),
+            multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' })
           }}
           isMulti
           options={options}
           placeholder={'Search'}
           onBlurResetsInput={false}
-          noResultsText={null}
+          noOptionsMessage={() => null}
           onChange={this.props.onChange}
           onInputChange={this.props.onInputChange}
           onInputKeyDown={this.handleInputKeyDown}

@@ -12,20 +12,21 @@ function pluralizeResults(length) {
 }
 
 export default class Browse extends Component {
+  state = {
+    loading: true,
+    searchTerms: [],
+    search: '',
+    results: null,
+    queried: false,
+    error: null
+  }
+
   constructor(props) {
     super(props)
 
-    this.state = {
-      searchTerms: [],
-      search: '',
-      results: null,
-      queried: false,
-      error: null
-    }
-
     getProfiles(props.token)
       .then(results => {
-        this.setState({ results })
+        this.setState({ results, loading: false })
       })
       .catch(() =>
         this.setState({ error: 'Unable to load profiles. Try again later.' })
@@ -33,6 +34,7 @@ export default class Browse extends Component {
   }
 
   handleSearch = (reset = false) => {
+    this.setState({ loading: true })
     const { token } = this.props
     const { searchTerms, search } = this.state
     const searchArray = search === '' ? [] : [search]
@@ -44,10 +46,8 @@ export default class Browse extends Component {
     const query = reset ? '' : searchString
 
     getProfiles(token, query).then(results => {
-      this.setState({ results })
-      if (!reset) {
-        this.setState({ queried: true })
-      }
+      const canReset = !reset && searchString !== ''
+      this.setState({ results, queried: canReset, loading: false })
     })
   }
 
@@ -64,7 +64,7 @@ export default class Browse extends Component {
   }
 
   render() {
-    const { error, results } = this.state
+    const { error, loading, results } = this.state
     return (
       <AppScreen>
         <SearchInput
@@ -74,36 +74,39 @@ export default class Browse extends Component {
           onInputChange={this.handleInputChange}
           onSubmit={this.handleSearch}
         />
-        {(error !== null && error) ||
-          (results === null && <p>Loading...</p>) || (
-            <div>
-              <p>
-                Showing {this.state.results.length}{' '}
-                {pluralizeResults(this.state.results.length)}.{' '}
-                {this.state.queried && (
-                  <button
-                    onClick={() => {
-                      this.setState({
-                        searchTerms: [],
-                        search: ''
-                      })
-                      this.handleSearch(true)
-                      this.setState({
-                        queried: false
-                      })
-                    }}
-                  >
-                    Clear search
-                  </button>
-                )}
-              </p>
+        <div style={{ padding: '1em 0' }}>
+          {(error !== null && error) ||
+            (results === null && <p>Loading...</p>) || (
               <div>
-                {this.state.results.map(result => (
-                  <ProfileResult key={result.id} {...result} />
-                ))}
+                <p>
+                  Showing {results.length}{' '}
+                  {pluralizeResults(this.state.results.length)}.{' '}
+                  {loading && <span>Loading...</span>}
+                  {this.state.queried && (
+                    <button
+                      onClick={() => {
+                        this.setState({
+                          searchTerms: [],
+                          search: ''
+                        })
+                        this.handleSearch(true)
+                        this.setState({
+                          queried: false
+                        })
+                      }}
+                    >
+                      Clear search
+                    </button>
+                  )}
+                </p>
+                <div>
+                  {this.state.results.map(result => (
+                    <ProfileResult key={result.id} {...result} />
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+        </div>
       </AppScreen>
     )
   }
