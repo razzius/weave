@@ -291,7 +291,12 @@ def update_profile(profile_id=None):
     profile_data = basic_profile_data(verification_token, schema)
 
     for key, value in profile_data.items():
-        setattr(profile, key, value)
+
+        # TODO put this with the schema
+        if key in {'name', 'contact_email'}:
+            setattr(profile, key, value.strip())
+        else:
+            setattr(profile, key, value)
 
     save(profile)
 
