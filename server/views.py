@@ -153,7 +153,9 @@ def get_profiles():
                 Profile.name,
                 ' ',
                 func.array_length(
-                    func.string_to_array(Profile.name, ' '), 1  # How many words in the name
+                    func.string_to_array(
+                        func.regexp_replace(Profile.name, '(,|MD).*', ''),  # Remove suffixes after comma and MD
+                    ' '), 1  # How many words in the name
                 )
             )
         )
