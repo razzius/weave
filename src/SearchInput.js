@@ -4,14 +4,12 @@ import {
   clinicalSpecialtyOptions,
   professionalInterestOptions,
   hospitalOptions,
-  partsOfMeOptions,
   activitiesIEnjoyOptions
 } from './options'
 
 const options = clinicalSpecialtyOptions.concat(
   professionalInterestOptions,
   hospitalOptions,
-  partsOfMeOptions,
   activitiesIEnjoyOptions
 )
 

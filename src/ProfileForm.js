@@ -93,8 +93,6 @@ export default class ProfileForm extends Component {
     partsOfMe: [],
     activities: [],
 
-    partsOfMeOptions: [],
-
     additionalInformation: '',
 
     willingShadowing: false,
