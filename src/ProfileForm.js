@@ -28,7 +28,7 @@ function scaleCanvas(canvas) {
   return scaled
 }
 
-function displayError({name, email}) {
+function displayError({ name, email }) {
   let missing
   if (name === '' && email === '') {
     missing = 'name and email'
@@ -206,6 +206,10 @@ export default class ProfileForm extends Component {
     this.setState({ preview: false })
   }
 
+  removeProfileImage = () => {
+    this.setState({ imageUrl: null, image: null }, () => this.editor.clearImage())
+  }
+
   render() {
     const { firstTimePublish } = this.props
 
@@ -269,6 +273,9 @@ export default class ProfileForm extends Component {
                 defaultValue="1"
               />
               <button onClick={this.rotateRight}>Rotate</button>
+              {(this.state.imageUrl || this.state.image) && (
+                <button onClick={this.removeProfileImage}>Remove image</button>
+              )}
             </div>
 
             <div className="expectations">
@@ -511,7 +518,11 @@ export default class ProfileForm extends Component {
 
           <button
             className="button"
-            disabled={this.state.uploadingImage || this.state.name === '' || this.state.contactEmail === ''}
+            disabled={
+              this.state.uploadingImage ||
+              this.state.name === '' ||
+              this.state.contactEmail === ''
+            }
             onClick={async () => {
               const unsavedImage =
                 this.state.imageEdited ||
@@ -526,9 +537,7 @@ export default class ProfileForm extends Component {
               ? 'Loading preview...'
               : 'Preview profile'}
           </button>
-          {
-            displayError({name: this.name, email: this.contactEmail})
-          }
+          {displayError({ name: this.name, email: this.contactEmail })}
         </div>
       </AppScreen>
     )
