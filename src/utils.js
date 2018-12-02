@@ -1,3 +1,5 @@
+import React from 'react'
+
 export function capitalize(text) {
   return text[0].toUpperCase() + text.slice(1)
 }
@@ -20,4 +22,8 @@ export function any(values) {
 
 export function availableForMentoringFromVerifyTokenResponse(response) {
   return response.profile_id === null ? true : response.available_for_mentoring
+}
+
+export function LiteralLink({href}) {
+  return <a href={href}>{href}</a>
 }

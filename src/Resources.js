@@ -1,5 +1,6 @@
 import React from 'react'
 import AppScreen from './AppScreen'
+import { LiteralLink } from './utils'
 
 const Resources = () => (
   <AppScreen className="resources">
@@ -73,6 +74,38 @@ const Resources = () => (
       bisexual, and transgender students, faculty, and staff.
     </p>
 
+    <h3>
+      <a href="https://meded.hms.harvard.edu/about-scholars-medicine">
+        Scholars in Medicine Office (SMO)
+      </a>
+    </h3>
+
+    <p>
+      The Scholars in Medicine Office (SMO) curates a research opportunities
+      database, in which students may access listings of research/scholarly
+      project opportunities with HMS faculty. Steps to access the SMO database
+      include:
+    </p>
+
+    <ol>
+      <li>
+        Log into <a href="http://ecommons.med.harvard.edu/">eCommons</a>
+      </li>
+      <li>Select &quot;Shortcuts&quot; in the left column</li>
+      <li>Select &quot;S,&quot; then &quot;SiM,&quot;</li>
+      <li>Select &quot;Searchable Project Database&quot; on the right.</li>
+    </ol>
+    <p>
+      Alternatively, students may contact the Scholars in Medicine Office for
+      more information at
+      {' '}
+      <LiteralLink href="scholarsinmedicine@hms.harvard.edu" />. Faculty who
+      wish to post scholarly project opportunities for students may do so at
+      {' '}
+      <LiteralLink href="http://ecommons.med.harvard.edu/smo_postf.asp" />.
+      {' '}
+      Weave does not provide listings of faculty research opportunities.
+    </p>
     <h3>
       <a href="https://hms.harvard.edu/departments/ombuds-office">
         Ombuds Office
@@ -210,7 +243,10 @@ const Resources = () => (
       <div>Phone: (617) 432-0449</div>
     </div>
 
-    <p>Tim directs the Office of Disability Services to support medical, dental and master’s students at HMS and HSDM.</p>
+    <p>
+      Tim directs the Office of Disability Services to support medical, dental
+      and master’s students at HMS and HSDM.
+    </p>
 
     <h3>
       <a href="https://medstudenthandbook.hms.harvard.edu/716-discrimination-harassment-and-student-mistreatment">
