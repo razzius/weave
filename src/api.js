@@ -69,12 +69,10 @@ async function put(token, path, payload) {
   })
 }
 
-export async function getProfiles(token, search = null) {
-  let params
-  if (search !== null) {
-    params = { query: search }
-  } else {
-    params = {}
+export async function getProfiles({token, query = null, page = 1}) {
+  let params = { page }
+  if (query !== null) {
+    params = { ...params, query }
   }
   return get(token, 'profiles', params)
 }

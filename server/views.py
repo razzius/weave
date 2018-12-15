@@ -16,7 +16,7 @@ from .emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
-    send_student_registration_email
+    send_student_registration_email,
 )
 from .models import (
     ActivityOption,
@@ -34,7 +34,7 @@ from .models import (
     VerificationToken,
     db,
     get_verification_email_by_email,
-    save
+    save,
 )
 from .schemas import profile_schema, profiles_schema, valid_email_schema
 
@@ -47,34 +47,28 @@ def matching_profiles(query):
         return Profile.query.filter(Profile.available_for_mentoring)
 
     words = ''.join(
-        character
-        if character.isalnum() or character == ' '
-        else ' '
+        character if character.isalnum() or character == ' ' else ' '
         for character in query.lower()
     ).split()
 
-    searchable_fields = [
-        Profile.name,
-        Profile.additional_information,
-        Profile.cadence,
-    ]
+    searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
 
     tag_fields = [
         (HospitalAffiliation, HospitalAffiliationOption),
         (ClinicalSpecialty, ClinicalSpecialtyOption),
         (ProfessionalInterest, ProfessionalInterestOption),
         (PartsOfMe, PartsOfMeOption),
-        (ProfileActivity, ActivityOption)
+        (ProfileActivity, ActivityOption),
     ]
 
     search_filters = [
-        or_(*[
-            func.lower(field).contains(word)
-            for field in searchable_fields
-        ] + [
-            func.lower(option_class.value).contains(word)
-            for _, option_class in tag_fields
-        ])
+        or_(
+            *[func.lower(field).contains(word) for field in searchable_fields]
+            + [
+                func.lower(option_class.value).contains(word)
+                for _, option_class in tag_fields
+            ]
+        )
         for word in words
     ]
 
@@ -103,7 +97,9 @@ def get_token(headers):
 
     if token_parts[0].lower() != 'token' or len(token_parts) != 2:
         return (
-            error_response({'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value),
+            error_response(
+                {'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value
+            ),
             None,
         )
 
@@ -121,11 +117,23 @@ def get_token(headers):
 
     if _token_expired(verification_token):
         return (
-            error_response({'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value),
+            error_response(
+                {'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value
+            ),
             None,
         )
 
     return None, verification_token
+
+
+def pagination(page):
+    size = 20
+
+    start = (page - 1) * size
+
+    end = start + size
+
+    return start, end
 
 
 @api.route('/api/profiles')
@@ -137,29 +145,37 @@ def get_profiles():
 
     query = request.args.get('query')
 
+    page = int(request.args.get('page', 1))
+
+    start, end = pagination(page)
+
     verification_email_id = VerificationToken.query.filter(
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    return jsonify(profiles_schema.dump(
-        matching_profiles(query)
-        .order_by(
-            # Is this the logged-in user's profile? If so, return it first (false)
-            Profile.verification_email_id != verification_email_id,
-
-            # Get the last word in the name.
-            # Won't work with suffixes.
-            func.split_part(
-                Profile.name,
-                ' ',
-                func.array_length(
-                    func.string_to_array(
-                        func.regexp_replace(Profile.name, '(,|MD).*', ''),  # Remove suffixes after comma and MD
-                    ' '), 1  # How many words in the name
-                )
-            )
+    return jsonify(
+        profiles_schema.dump(
+            matching_profiles(query).order_by(
+                # Is this the logged-in user's profile? If so, return it first (false)
+                Profile.verification_email_id != verification_email_id,
+                # Get the last word in the name.
+                # Won't work with suffixes.
+                func.split_part(
+                    Profile.name,
+                    ' ',
+                    func.array_length(
+                        func.string_to_array(
+                            func.regexp_replace(
+                                Profile.name, '(,|MD).*', ''
+                            ),  # Remove suffixes after comma and MD
+                            ' ',
+                        ),
+                        1,  # How many words in the name
+                    ),
+                ),
+            )[start:end]
         )
-    ))
+    )
 
 
 @api.route('/api/profiles/<profile_id>')
@@ -170,9 +186,7 @@ def get_profile(profile_id=None):
         return error_response({'profile_id': ['Not found']}, 404)
 
     return jsonify(
-        profile_schema.dump(
-            Profile.query.filter(Profile.id == profile_id).one()
-        )
+        profile_schema.dump(Profile.query.filter(Profile.id == profile_id).one())
     )
 
 
@@ -191,7 +205,9 @@ def flat_values(values):
 def save_tags(profile, tag_values, option_class, profile_relation_class):
     activity_values = [value['tag']['value'] for value in tag_values]
 
-    existing_activity_options = option_class.query.filter(option_class.value.in_(activity_values))
+    existing_activity_options = option_class.query.filter(
+        option_class.value.in_(activity_values)
+    )
 
     existing_activity_values = flat_values(existing_activity_options.values('value'))
 
@@ -204,10 +220,14 @@ def save_tags(profile, tag_values, option_class, profile_relation_class):
     db.session.add_all(new_activities)
     db.session.commit()
 
-    existing_profile_relation_tag_ids = flat_values(profile_relation_class.query.filter(
-        profile_relation_class.tag_id.in_(flat_values(existing_activity_options.values('id'))),
-        profile_relation_class.profile_id == profile.id
-    ).values('tag_id'))
+    existing_profile_relation_tag_ids = flat_values(
+        profile_relation_class.query.filter(
+            profile_relation_class.tag_id.in_(
+                flat_values(existing_activity_options.values('id'))
+            ),
+            profile_relation_class.profile_id == profile.id,
+        ).values('tag_id')
+    )
 
     profile_relations = [
         profile_relation_class(tag_id=activity.id, profile_id=profile.id)
@@ -220,9 +240,21 @@ def save_tags(profile, tag_values, option_class, profile_relation_class):
 
 
 def save_all_tags(profile, schema):
-    save_tags(profile, schema['affiliations'], HospitalAffiliationOption, HospitalAffiliation)
-    save_tags(profile, schema['clinical_specialties'], ClinicalSpecialtyOption, ClinicalSpecialty)
-    save_tags(profile, schema['professional_interests'], ProfessionalInterestOption, ProfessionalInterest)
+    save_tags(
+        profile, schema['affiliations'], HospitalAffiliationOption, HospitalAffiliation
+    )
+    save_tags(
+        profile,
+        schema['clinical_specialties'],
+        ClinicalSpecialtyOption,
+        ClinicalSpecialty,
+    )
+    save_tags(
+        profile,
+        schema['professional_interests'],
+        ProfessionalInterestOption,
+        ProfessionalInterest,
+    )
     save_tags(profile, schema['parts_of_me'], PartsOfMeOption, PartsOfMe)
     save_tags(profile, schema['activities'], ActivityOption, ProfileActivity)
 
@@ -233,14 +265,15 @@ def basic_profile_data(verification_token, schema):
         **{
             key: value
             for key, value in schema.items()
-            if key not in {
+            if key
+            not in {
                 'affiliations',
                 'clinical_specialties',
                 'professional_interests',
                 'parts_of_me',
                 'activities',
             }
-        }
+        },
     }
 
 
@@ -308,10 +341,12 @@ def update_profile(profile_id=None):
         ProfileActivity,
         HospitalAffiliation,
         PartsOfMe,
-        ClinicalSpecialty
+        ClinicalSpecialty,
     }
     for profile_relation_class in profile_relation_classes:
-        profile_relation_class.query.filter(profile_relation_class.profile_id == profile.id).delete()
+        profile_relation_class.query.filter(
+            profile_relation_class.profile_id == profile.id
+        ).delete()
 
     save_all_tags(profile, schema)
 
@@ -462,7 +497,9 @@ def verify_token():
         return error_response({'token': ['not recognized']})
 
     if _token_expired(match):
-        return error_response({'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value)
+        return error_response(
+            {'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value
+        )
 
     match.verified = True
 

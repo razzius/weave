@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import Waypoint from 'react-waypoint'
+
 import ProfileResult from './ProfileResult'
 import SearchInput from './SearchInput'
 import { getProfiles } from './api'
@@ -18,15 +20,16 @@ export default class Browse extends Component {
     search: '',
     results: null,
     queried: false,
-    error: null
+    error: null,
+    page: 1,
   }
 
   constructor(props) {
     super(props)
 
-    getProfiles(props.token)
       .then(results => {
         this.setState({ results, loading: false })
+    getProfiles({ token: props.token, page: this.state.page })
       })
       .catch(() =>
         this.setState({ error: 'Unable to load profiles. Try again later.' })
@@ -34,7 +37,7 @@ export default class Browse extends Component {
   }
 
   handleSearch = (reset = false) => {
-    this.setState({ loading: true })
+    this.setState({ loading: true, page: 1 })
     const { token } = this.props
     const { searchTerms, search } = this.state
     const searchArray = search === '' ? [] : [search]
@@ -45,7 +48,7 @@ export default class Browse extends Component {
 
     const query = reset ? '' : searchString
 
-    getProfiles(token, query).then(results => {
+    getProfiles({ token, query, page: this.state.page }).then(results => {
       const canReset = !reset && searchString !== ''
       this.setState({ results, queried: canReset, loading: false })
     })
@@ -104,6 +107,31 @@ export default class Browse extends Component {
                     <ProfileResult key={result.id} {...result} />
                   ))}
                 </div>
+                {!this.state.loading && (
+                  <div>
+                    <Waypoint
+                      onEnter={() => {
+                        this.setState({ loading: true })
+                        const { token } = this.props
+                        const newPage = this.state.page + 1
+                        this.setState({ page: newPage })
+                        getProfiles({
+                          token,
+                          query: this.search,
+                          page: this.state.page
+                        }).then(moreResults => {
+                          const updatedResults = this.state.results.concat(
+                            moreResults
+                          )
+                          this.setState({
+                            results: updatedResults,
+                            loading: false
+                          })
+                        })
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             )}
         </div>
