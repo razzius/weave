@@ -68,7 +68,7 @@ export default class Browse extends Component {
 
   handleChange = tags => {
     this.setState(
-      { searchTerms: tags.map(tag => tag.value) },
+      { searchTerms: tags.map(tag => tag.value), page: 1 },
       this.handleSearch
     )
   }
