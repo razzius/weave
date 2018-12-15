@@ -153,28 +153,31 @@ def get_profiles():
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    return jsonify(
-        profiles_schema.dump(
-            matching_profiles(query).order_by(
-                # Is this the logged-in user's profile? If so, return it first (false)
-                Profile.verification_email_id != verification_email_id,
-                # Get the last word in the name.
-                # Won't work with suffixes.
-                func.split_part(
-                    Profile.name,
+    queryset = matching_profiles(query).order_by(
+        # Is this the logged-in user's profile? If so, return it first (false)
+        Profile.verification_email_id != verification_email_id,
+        # Get the last word in the name.
+        # Won't work with suffixes.
+        func.split_part(
+            Profile.name,
+            ' ',
+            func.array_length(
+                func.string_to_array(
+                    func.regexp_replace(
+                        Profile.name, '(,|MD).*', ''
+                    ),  # Remove suffixes after comma and MD
                     ' ',
-                    func.array_length(
-                        func.string_to_array(
-                            func.regexp_replace(
-                                Profile.name, '(,|MD).*', ''
-                            ),  # Remove suffixes after comma and MD
-                            ' ',
-                        ),
-                        1,  # How many words in the name
-                    ),
                 ),
-            )[start:end]
-        )
+                1,  # How many words in the name
+            ),
+        ),
+    )
+
+    return jsonify(
+        {
+            'profileCount': queryset.count(),
+            'profiles': profiles_schema.dump(queryset[start:end]),
+        }
     )
 
 
