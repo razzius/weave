@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 import Toggle from 'react-toggle-switch'
 import ReactTooltip from 'react-tooltip'
 
-import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
 import 'react-toggle-switch/dist/css/switch.min.css'
 
