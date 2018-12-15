@@ -50,7 +50,9 @@ export default class Browse extends Component {
     return getProfiles({ token, query, page: this.state.page }).then(
       results => {
         if (page > 1) {
-          const updatedProfiles = this.state.results.profiles.concat(results.profiles)
+          const updatedProfiles = this.state.results.profiles.concat(
+            results.profiles
+          )
 
           this.setState({
             results: {
@@ -73,9 +75,15 @@ export default class Browse extends Component {
     )
   }
 
-  handleInputChange = value => {
+  handleInputChange = (value, {action}) => {
+    // Weird case. Deserves being written up. See
+    // https://github.com/JedWatson/react-select/issues/1826#issuecomment-406020708
+    if (['input-blur', 'menu-close'].includes(action)) {
+      console.log(`Not going to do anything on action ${action}`)
+      return
+    }
+
     this.setState({ search: value })
-    return value
   }
 
   resetSearch = () => {
@@ -91,6 +99,36 @@ export default class Browse extends Component {
 
   render() {
     const { error, loading, results } = this.state
+
+    const waypoint = !this.state.loading &&
+      this.state.results.profiles.length < this.state.results.profileCount && (
+        <Waypoint
+          onEnter={() => {
+            this.setState({ page: this.state.page + 1 }, this.handleSearch)
+          }}
+        />
+      )
+
+    const profileElements =
+      results !== null
+        ? results.profiles.map(result => (
+            <ProfileResult key={result.id} {...result} />
+          ))
+        : null
+
+    let profileItems
+
+    if (waypoint) {
+      const insertionPoint = profileElements.length - 10
+      profileItems = [
+        ...profileElements.slice(0, insertionPoint),
+        waypoint,
+        ...profileElements.slice(insertionPoint)
+      ]
+    } else {
+      profileItems = profileElements
+    }
+
     return (
       <AppScreen>
         <SearchInput
@@ -112,28 +150,7 @@ export default class Browse extends Component {
                     <button onClick={this.resetSearch}>Clear search</button>
                   )}
                 </p>
-                <div>
-                  {results.profiles.map(result => (
-                    <ProfileResult key={result.id} {...result} />
-                  ))}
-                </div>
-                {!this.state.loading &&
-                  this.state.results.profiles.length <
-                    this.state.results.profileCount && (
-                    <div>
-                      <p style={{ marginTop: '3em', fontSize: '20px' }}>
-                        Loading more results...
-                      </p>
-                      <Waypoint
-                        onEnter={() => {
-                          this.setState(
-                            { page: this.state.page + 1 },
-                            this.handleSearch
-                          )
-                        }}
-                      />
-                    </div>
-                  )}
+                <div>{profileItems}</div>
               </div>
             )}
         </div>

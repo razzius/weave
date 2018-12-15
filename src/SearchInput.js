@@ -45,12 +45,12 @@ export default class SearchInput extends Component {
           isMulti
           options={options}
           placeholder={'Search'}
-          onBlurResetsInput={false}
           noOptionsMessage={() => null}
           onChange={this.props.onChange}
           onInputChange={this.props.onInputChange}
           onInputKeyDown={this.handleInputKeyDown}
           value={this.props.value.map(value => ({ label: value, value }))}
+          inputValue={this.props.inputValue}
         />
         <button className="search-submit" type="submit">
           Submit
