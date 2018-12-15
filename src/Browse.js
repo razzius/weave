@@ -83,7 +83,7 @@ export default class Browse extends Component {
       return
     }
 
-    this.setState({ search: value })
+    this.setState({ search: value, page: 1})
   }
 
   resetSearch = () => {
