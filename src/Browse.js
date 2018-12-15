@@ -21,15 +21,15 @@ export default class Browse extends Component {
     results: null,
     queried: false,
     error: null,
-    page: 1,
+    page: 1
   }
 
   constructor(props) {
     super(props)
 
+    getProfiles({ token: props.token, page: this.state.page })
       .then(results => {
         this.setState({ results, loading: false })
-    getProfiles({ token: props.token, page: this.state.page })
       })
       .catch(() =>
         this.setState({ error: 'Unable to load profiles. Try again later.' })
