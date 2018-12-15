@@ -171,7 +171,7 @@ def get_profiles():
                 1,  # How many words in the name
             ),
         ),
-    )
+    ).group_by(Profile.id)
 
     return jsonify(
         {

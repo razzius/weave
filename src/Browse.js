@@ -36,22 +36,34 @@ export default class Browse extends Component {
       )
   }
 
-  handleSearch = (reset = false) => {
-    this.setState({ loading: true, page: 1 })
+  handleSearch = () => {
+    this.setState({ loading: true })
+
     const { token } = this.props
-    const { searchTerms, search } = this.state
+    const { searchTerms, search, page } = this.state
     const searchArray = search === '' ? [] : [search]
-    const searchString = searchTerms
+    const query = searchTerms
       .concat(searchArray)
       .join(' ')
       .toLowerCase()
 
-    const query = reset ? '' : searchString
+    return getProfiles({ token, query, page: this.state.page }).then(
+      results => {
+        if (page > 1) {
+          const updatedProfiles = this.state.results.profiles.concat(results.profiles)
 
-    getProfiles({ token, query, page: this.state.page }).then(results => {
-      const canReset = !reset && searchString !== ''
-      this.setState({ results, queried: canReset, loading: false })
-    })
+          this.setState({
+            results: {
+              ...this.state.results,
+              profiles: updatedProfiles
+            },
+            loading: false
+          })
+        } else {
+          this.setState({ results, loading: false })
+        }
+      }
+    )
   }
 
   handleChange = tags => {
@@ -67,14 +79,14 @@ export default class Browse extends Component {
   }
 
   resetSearch = () => {
-    this.setState({
-      searchTerms: [],
-      search: ''
-    })
-    this.handleSearch(true)
-    this.setState({
-      queried: false
-    })
+    this.setState(
+      {
+        searchTerms: [],
+        search: '',
+        queried: false
+      },
+      this.handleSearch
+    )
   }
 
   render() {
@@ -114,27 +126,10 @@ export default class Browse extends Component {
                       </p>
                       <Waypoint
                         onEnter={() => {
-                          this.setState({ loading: true })
-                          const { token } = this.props
-                          const newPage = this.state.page + 1
-                          this.setState({ page: newPage })
-                          getProfiles({
-                            token,
-                            query: this.search,
-                            page: this.state.page
-                          }).then(moreResults => {
-                            const updatedProfiles = results.profiles.concat(
-                              moreResults.profiles
-                            )
-
-                            this.setState({
-                              results: {
-                                ...results,
-                                profiles: updatedProfiles
-                              },
-                              loading: false
-                            })
-                          })
+                          this.setState(
+                            { page: this.state.page + 1 },
+                            this.handleSearch
+                          )
                         }}
                       />
                     </div>
