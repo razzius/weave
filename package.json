@@ -9,6 +9,7 @@
     "react": "^16.3.2",
     "react-avatar": "^3.4.4",
     "react-avatar-editor": "^11.0.2",
+    "react-dev-utils": "^7.0.0",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.9",
     "react-router-dom": "^4.2.2",
@@ -20,6 +21,7 @@
     "react-waypoint": "^8.1.0",
     "slick-carousel": "^1.8.1",
     "url-polyfill": "^1.1.0",
+    "webpack-dev-server": "^3.1.14",
     "yarn": "^1.7.0"
   },
   "scripts": {
