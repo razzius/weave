@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import Waypoint from 'react-waypoint'
 
 import ProfileResult from './ProfileResult'
 import SearchInput from './SearchInput'
 import { getProfiles } from './api'
+import Button from './Button'
 import AppScreen from './AppScreen'
 
 function pluralizeResults(length) {
@@ -75,7 +75,7 @@ export default class Browse extends Component {
     )
   }
 
-  handleInputChange = (value, {action}) => {
+  handleInputChange = (value, { action }) => {
     // Weird case. Deserves being written up. See
     // https://github.com/JedWatson/react-select/issues/1826#issuecomment-406020708
     if (['input-blur', 'menu-close'].includes(action)) {
@@ -83,7 +83,7 @@ export default class Browse extends Component {
       return
     }
 
-    this.setState({ search: value, page: 1})
+    this.setState({ search: value, page: 1 })
   }
 
   resetSearch = () => {
@@ -100,14 +100,27 @@ export default class Browse extends Component {
   render() {
     const { error, loading, results } = this.state
 
-    const waypoint = !this.state.loading &&
+    const nextButton = results !== null &&
       this.state.results.profiles.length < this.state.results.profileCount && (
-        <Waypoint
-          onEnter={() => {
+        <Button
+          disabled={loading}
+          onClick={() => {
             this.setState({ page: this.state.page + 1 }, this.handleSearch)
           }}
-        />
+        >
+          Load 20 more
+        </Button>
       )
+
+    const scrollToTopButton = (
+      <Button onClick={() => {window.scrollTo(0, 0)}}>Scroll to top</Button>
+    )
+
+    const navigationButtons = (
+      <div style={{textAlign: 'center'}}>
+        {nextButton} {scrollToTopButton}
+      </div>
+    )
 
     const profileElements =
       results !== null
@@ -115,19 +128,6 @@ export default class Browse extends Component {
             <ProfileResult key={result.id} {...result} />
           ))
         : null
-
-    let profileItems
-
-    if (waypoint) {
-      const insertionPoint = profileElements.length - 10
-      profileItems = [
-        ...profileElements.slice(0, insertionPoint),
-        waypoint,
-        ...profileElements.slice(insertionPoint)
-      ]
-    } else {
-      profileItems = profileElements
-    }
 
     return (
       <AppScreen>
@@ -150,7 +150,8 @@ export default class Browse extends Component {
                     <button onClick={this.resetSearch}>Clear search</button>
                   )}
                 </p>
-                <div>{profileItems}</div>
+                <div>{profileElements}</div>
+                {navigationButtons}
               </div>
             )}
         </div>
