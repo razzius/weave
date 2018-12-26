@@ -6,6 +6,7 @@ import ReactTooltip from 'react-tooltip'
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import 'promise-polyfill/src/polyfill'
 import 'react-toggle-switch/dist/css/switch.min.css'
 
 import './App.css'
@@ -131,7 +132,7 @@ class App extends Component {
                   data-tip
                   className="available-for-mentoring"
                   data-for="toggleTooltip"
-                  >
+                >
                   Available for mentoring:
                   <ReactTooltip id="toggleTooltip" place="bottom">
                     Controls whether your profile will be visible to mentees.
@@ -145,7 +146,7 @@ class App extends Component {
                         setAvailabilityForMentoring(this.state.token, available)
                       }
                     }}
-                    />
+                  />
                 </div>
               )}
 
