@@ -3166,7 +3166,7 @@ eslint@5.6.0:
     table "^4.0.3"
     text-table "^0.2.0"
 
-eslint@^5.2.0:
+eslint@^5.11.0:
   version "5.11.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-5.11.0.tgz#51a0e70f137a425fe044cd48273b96f28a774b1f"
   dependencies:
