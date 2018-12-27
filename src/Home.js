@@ -30,7 +30,7 @@ const FacultyLanding = ({ profileId, token, isMentor }) => {
 
 const Home = ({ token, isMentor, profileId }) => (
   <div className="Home">
-    <main id="background">
+    <div id="background">
       <div className="App-intro">
         {(token === null || isMentor === false) && (
           <div>
@@ -56,7 +56,7 @@ const Home = ({ token, isMentor, profileId }) => (
           </div>
         )}
       </div>
-    </main>
+    </div>
     <section id="about-weave">
       <h1>About</h1>
       <p>
