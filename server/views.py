@@ -486,7 +486,7 @@ def _token_expired(verification_token):
     return verification_token.expired or datetime.datetime.utcnow() > expire_time
 
 
-TOKEN_EXPIRY_AGE_HOURS = int(os.environ.get('WEAVE_TOKEN_EXPIRY_AGE_HOURS', 1))
+TOKEN_EXPIRY_AGE_HOURS = int(os.environ.get('REACT_APP_TOKEN_EXPIRY_AGE_HOURS', 1))
 
 
 @api_post('verify-token')
