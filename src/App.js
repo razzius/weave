@@ -10,6 +10,7 @@ import 'promise-polyfill/src/polyfill'
 import 'react-toggle-switch/dist/css/switch.min.css'
 
 import './App.css'
+import NotLoggedIn from './NotLoggedIn'
 import Home from './Home'
 import Browse from './Browse'
 import Login from './Login'
@@ -216,7 +217,7 @@ class App extends Component {
                   )
                 }
 
-                return null
+                return <NotLoggedIn/>
               }}
             />
             <Route
