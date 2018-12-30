@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import AvatarEditor from 'react-avatar-editor'
+import AvatarEditor from '@razzi/react-avatar-editor'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/lib/Creatable'
 import Dropzone from 'react-dropzone'

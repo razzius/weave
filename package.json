@@ -3,12 +3,12 @@
   "version": "0.4.0",
   "private": true,
   "dependencies": {
+    "@razzi/react-avatar-editor": "^11.0.4-patched",
     "@sentry/browser": "^4.0.6",
     "date-fns": "^1.29.0",
     "promise-polyfill": "^8.1.0",
     "react": "^16.3.2",
     "react-avatar": "^3.4.4",
-    "react-avatar-editor": "^11.0.4",
     "react-dev-utils": "^7.0.0",
     "react-dom": "^16.3.2",
     "react-dropzone": "^4.2.9",
