@@ -37,7 +37,8 @@ class App extends Component {
     availableForMentoring: null,
     token: loadToken(),
     isMentor: null,
-    profileId: null
+    profileId: null,
+    loading: true
   }
 
   componentDidMount() {
@@ -55,6 +56,8 @@ class App extends Component {
         .catch(() => {
           clearToken()
           this.setState({ token: null })
+        }).finally(() => {
+          this.setState({loading: false})
         })
     }
   }
@@ -217,7 +220,7 @@ class App extends Component {
                   )
                 }
 
-                return <NotLoggedIn/>
+                return this.state.loading ? null : <NotLoggedIn/>
               }}
             />
             <Route
