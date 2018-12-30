@@ -233,6 +233,8 @@ export default class ProfileForm extends Component {
       )
     }
 
+    const hasImage = this.state.imageUrl || this.state.image
+
     return (
       <AppScreen className="edit-profile">
         <div className="columns">
@@ -269,11 +271,13 @@ export default class ProfileForm extends Component {
                 min={this.state.allowZoomOut ? '0.1' : '1'}
                 max="2"
                 step="0.01"
-                disabled={!this.state.image}
+                disabled={!hasImage}
                 defaultValue="1"
               />
-              <button onClick={this.rotateRight}>Rotate</button>
-              {(this.state.imageUrl || this.state.image) && (
+              <button
+                disabled={!hasImage}
+                onClick={this.rotateRight}>Rotate</button>
+              {hasImage && (
                 <button onClick={this.removeProfileImage}>Remove image</button>
               )}
             </div>
