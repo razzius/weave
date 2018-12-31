@@ -106,7 +106,7 @@ const ClinicalInterests = ({ interests }) => (
   </div>
 )
 
-const AboutInfo = ({ data }) => (
+const AboutInfo = data => (
   <Fragment>
     <HospitalAffiliations affiliations={data.affiliations.join(', ')} />
 
@@ -146,6 +146,16 @@ const AboutInfo = ({ data }) => (
   </Fragment>
 )
 
+const ContactInformation = data => (
+  <Fragment>
+    <h4>Contact Information</h4>
+
+    <a className="contact-email" href={`mailto:${data.contact_email}`}>
+      {data.contact_email}
+    </a>
+  </Fragment>
+)
+
 const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
   <AppScreen>
     <MediaQuery query="(max-device-width: 750px)">
@@ -160,14 +170,12 @@ const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
 
         <h1>{data.name}</h1>
 
-        <h4>Contact Information</h4>
-
-        <a href={`mailto:${data.contact_email}`}>{data.contact_email}</a>
+        <ContactInformation {...data} />
 
         <Cadence cadence={data.cadence} otherCadence={data.other_cadence} />
 
         <Expectations {...data} />
-        <AboutInfo data={data} />
+        <AboutInfo {...data} />
       </div>
     </MediaQuery>
 
@@ -179,11 +187,9 @@ const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
               profileImageUrl={data.profile_image_url}
               name={data.name}
               size={200}
-              />
+            />
 
-            <h4>Contact Information</h4>
-
-            <a href={`mailto:${data.contact_email}`}>{data.contact_email}</a>
+            <ContactInformation {...data} />
 
             <Cadence cadence={data.cadence} otherCadence={data.other_cadence} />
 
@@ -194,7 +200,7 @@ const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
 
             <h1>{data.name}</h1>
 
-            <AboutInfo data={data} />
+            <AboutInfo {...data} />
           </div>
         </div>
       </div>
