@@ -117,11 +117,11 @@ input[type='text'],
 input[type='email'] {
   box-sizing: border-box;
   font-size: 22px;
+  border: 1px solid lightgray;
 }
 input[type='email'] {
   max-width: 100%;
   width: 340px;
-  border: 1px solid lightgray;
 }
 .fullWidth {
   width: 100%;

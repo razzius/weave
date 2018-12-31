@@ -458,7 +458,8 @@ export default class ProfileForm extends Component {
               style={{
                 width: '100%',
                 height: '3em',
-                fontSize: '18px'
+                fontSize: '18px',
+                border: '1px solid lightgray'
               }}
             />
           </div>
