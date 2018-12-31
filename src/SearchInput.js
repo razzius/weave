@@ -21,6 +21,7 @@ export default class SearchInput extends Component {
 
   handleInputKeyDown = e => {
     if (e.key === 'Enter') {
+      e.preventDefault()
       this.props.onSubmit()
     }
   }
@@ -33,7 +34,7 @@ export default class SearchInput extends Component {
         onSubmit={this.handleSubmit}
       >
         <Select
-          className='fullWidth'
+          className="fullWidth"
           styles={{
             control: base => ({
               ...base,
@@ -48,9 +49,9 @@ export default class SearchInput extends Component {
           noOptionsMessage={() => null}
           onChange={this.props.onChange}
           onInputChange={this.props.onInputChange}
-          onInputKeyDown={this.handleInputKeyDown}
           value={this.props.value.map(value => ({ label: value, value }))}
           inputValue={this.props.inputValue}
+          onKeyDown={this.handleInputKeyDown}
         />
         <button className="search-submit" type="submit">
           Submit
