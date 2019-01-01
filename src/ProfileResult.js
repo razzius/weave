@@ -43,7 +43,7 @@ const ProfileResult = props => {
           name={props.name}
           size={160}
         />
-        <div style={{ width: '400px' }}>
+        <div style={{ padding: '0 2em', maxWidth: '400px' }}>
           <h2>{props.name}</h2>
           {affiliations}
           <p className="clinical-interests">
