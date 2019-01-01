@@ -149,12 +149,6 @@ input[type='email'].fullWidth {
   margin-bottom: 1em;
 }
 
-.profile-result-right {
-  text-align: right;
-  margin-left: auto;
-  padding: 10px;
-}
-
 .profile-result:hover {
   box-shadow: 0 0 2px rgba(35, 173, 255, 1);
 }
@@ -338,6 +332,11 @@ input::-webkit-contacts-auto-fill-button {
   }
   #image-upload {
     margin-top: 0;
+  }
+  .profile-result-right {
+    text-align: right;
+    margin-left: auto;
+    padding: 10px;
   }
 }
 

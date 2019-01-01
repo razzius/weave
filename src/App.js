@@ -56,8 +56,9 @@ class App extends Component {
         .catch(() => {
           clearToken()
           this.setState({ token: null })
-        }).finally(() => {
-          this.setState({loading: false})
+        })
+        .finally(() => {
+          this.setState({ loading: false })
         })
     }
   }
@@ -220,7 +221,7 @@ class App extends Component {
                   )
                 }
 
-                return this.state.loading ? null : <NotLoggedIn/>
+                return this.state.loading ? null : <NotLoggedIn />
               }}
             />
             <Route

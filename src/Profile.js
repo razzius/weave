@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+
+import AppScreen from './AppScreen'
 import { getProfile } from './api'
 import ProfileView from './ProfileView'
 
@@ -11,14 +13,13 @@ function errorView(error) {
 }
 
 export default class Profile extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      data: null,
-      error: null
-    }
+  state = {
+    data: null,
+    error: null
+  }
 
-    getProfile(props.token, props.match.params.id)
+  componentDidMount = () => {
+    getProfile(this.props.token, this.props.match.params.id)
       .then(data => this.setState({ data }))
       .catch(error => this.setState({ error }))
   }
@@ -26,10 +27,19 @@ export default class Profile extends Component {
   render() {
     const { data, error } = this.state
     const ownProfile = data !== null && this.props.profileId === data.id
+
+    if (error !== null) {
+      return <h4>error: {errorView(error)}</h4>
+    }
+
+    if (data === null) {
+      return null
+    }
+
     return (
-      (error !== null && <h4>error: {errorView(error)}</h4>) ||
-      // could use spread props below
-      (data !== null && <ProfileView ownProfile={ownProfile} data={data} />)
+      <AppScreen>
+        <ProfileView ownProfile={ownProfile} data={data} />
+      </AppScreen>
     )
   }
 }
