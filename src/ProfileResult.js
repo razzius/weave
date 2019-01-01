@@ -19,7 +19,6 @@ const ProfileResult = props => {
     <Link
       to={`/profiles/${props.id}`}
       className="profile-result"
-      params={{ test: 'tricky' }}
     >
       <ProfileAvatar
         profileImageUrl={props.profile_image_url}

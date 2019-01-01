@@ -70,7 +70,11 @@ export default class Browse extends Component {
 
   handleChange = tags => {
     this.setState(
-      { searchTerms: tags.map(tag => tag.value), page: 1 },
+      {
+        queried: true,
+        searchTerms: tags.map(tag => tag.value),
+        page: 1
+      },
       this.handleSearch
     )
   }
@@ -113,11 +117,17 @@ export default class Browse extends Component {
       )
 
     const scrollToTopButton = (
-      <Button onClick={() => {window.scrollTo(0, 0)}}>Scroll to top</Button>
+      <Button
+        onClick={() => {
+          window.scrollTo(0, 0)
+        }}
+      >
+        Scroll to top
+      </Button>
     )
 
     const navigationButtons = (
-      <div style={{textAlign: 'center'}}>
+      <div style={{ textAlign: 'center' }}>
         {nextButton} {scrollToTopButton}
       </div>
     )
@@ -136,7 +146,9 @@ export default class Browse extends Component {
           inputValue={this.state.search}
           onChange={this.handleChange}
           onInputChange={this.handleInputChange}
-          onSubmit={this.handleSearch}
+          onSubmit={() => {
+            this.setState({ queried: true }, this.handleSearch)
+          }}
         />
         <div style={{ padding: '1em 0' }}>
           {(error !== null && error) ||
