@@ -1,7 +1,6 @@
 import React, { Fragment } from 'react'
 import MediaQuery from 'react-responsive'
 
-import AppScreen from './AppScreen'
 import { capitalize } from './utils'
 import NextButton from './NextButton'
 import ProfileAvatar from './ProfileAvatar'
@@ -157,7 +156,7 @@ const ContactInformation = data => (
 )
 
 const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
-  <AppScreen>
+  <Fragment>
     <MediaQuery query="(max-device-width: 750px)">
       <div className="profile-contact">
         <Buttons {...{ ownProfile, firstTimePublish, editing }} />
@@ -205,7 +204,7 @@ const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
         </div>
       </div>
     </MediaQuery>
-  </AppScreen>
+  </Fragment>
 )
 
 export default ProfileView
