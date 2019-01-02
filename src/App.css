@@ -299,7 +299,7 @@ input::-webkit-contacts-auto-fill-button {
   margin-top: 2em;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 625px) {
   .available-for-mentoring {
     margin-top: 25px;
     margin-right: 25px;

@@ -1,3 +1,4 @@
+from flask import current_app
 from http import HTTPStatus
 import datetime
 import os
@@ -397,6 +398,8 @@ def save_verification_token(email_id, token):
 
 
 def send_token(verification_email, email_function):
+    current_app.logger.info('Invalidating token with id %s', verification_email.id)
+
     VerificationToken.query.filter(
         VerificationToken.email_id == verification_email.id
     ).update({VerificationToken.expired: True})

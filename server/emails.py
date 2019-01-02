@@ -1,5 +1,6 @@
 import os
 
+from flask import current_app
 import requests
 
 
@@ -44,6 +45,8 @@ def self_link(href):
 def send_faculty_registration_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
+    current_app.logger.info('Sending faculty registration verify_link %s', verify_link)
+
     html = f"""
     <p>Hello,</p>
 
@@ -69,6 +72,8 @@ def send_faculty_registration_email(email, token):
 def send_student_registration_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
+    current_app.logger.info('Sending student registration verify_link %s', verify_link)
+
     html = f"""
     <p>Hello,</p>
 
@@ -93,6 +98,8 @@ def send_student_registration_email(email, token):
 def send_faculty_login_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
+    current_app.logger.info('Sending faculty login verify_link %s', verify_link)
+
     html = f"""
     <p>Hello,</p>
 
@@ -110,6 +117,8 @@ def send_faculty_login_email(email, token):
 
 def send_student_login_email(email, token):
     verify_link = self_link(get_verification_url(token))
+
+    current_app.logger.info('Sending student login verify_link %s', verify_link)
 
     html = f"""
     <p>Hello,</p>

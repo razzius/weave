@@ -43,14 +43,13 @@ const ProfileResult = props => {
           name={props.name}
           size={160}
         />
-        <div style={{ padding: '0 2em', maxWidth: '400px' }}>
+        <div style={{ flex: '1 1 auto', flexBasis: '400px' }}>
           <h2>{props.name}</h2>
           {affiliations}
           <p className="clinical-interests">
             {props.clinical_specialties.map(interest => (
               <span key={interest} className="clinical interest">
-                {' '}
-                {interest.replace(/ /g, '\u00a0')}{' '}
+                {' '}{interest}{' '}
               </span>
             ))}
           </p>
@@ -63,7 +62,7 @@ const ProfileResult = props => {
             ))}
           </p>
         </div>
-        <div>
+        <div style={{flexBasis: '200px', flexShrink: '0'}}>
           <div>
             <p>Cadence: {capitalize(props.cadence)}</p>
           </div>
