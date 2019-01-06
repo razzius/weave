@@ -113,6 +113,11 @@ section {
 .profile-result .profile-image {
   padding: 20px;
 }
+.profile-result-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
 
 input[type='text'],
 input[type='email'] {
@@ -143,17 +148,6 @@ input[type='email'].fullWidth {
 
 .profile-result {
   margin-bottom: 1em;
-}
-
-.profile-result-link {
-  transition: all 0.4s;
-  cursor: pointer;
-  text-decoration: none;
-  color: black;
-}
-
-.profile-result-link:hover {
-  box-shadow: 0 0 2px rgba(35, 173, 255, 1);
 }
 
 .interest {
@@ -341,6 +335,13 @@ input::-webkit-contacts-auto-fill-button {
     margin-left: auto;
     padding: 10px;
   }
+  .profile-result-link:hover {
+    box-shadow: 0 0 2px rgba(35, 173, 255, 1);
+  }
+  .profile-result-link {
+    transition: all 0.4s;
+  }
+
 }
 
 @media screen and (min-width: 920px) {
