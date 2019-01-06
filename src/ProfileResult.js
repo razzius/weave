@@ -37,11 +37,8 @@ const CheckboxIndicator = ({
           {title}
         </div>
       </MediaQuery>
-      <MediaQuery query="(max-device-width: 18050px)">
-        <span data-tip data-for={title}>
-          <ReactTooltip id={title} place="bottom" event="click">
-            {title}
-          </ReactTooltip>
+      <MediaQuery query="(max-device-width: 750px)">
+        <span data-tip={title} data-for="indicator">
           {checkbox}
         </span>
       </MediaQuery>
@@ -119,6 +116,8 @@ const ProfileResult = ({
         </div>
       </Link>
       <div>
+        <ReactTooltip id="indicator" place="bottom" event="click" />
+
         <div style={{ flexBasis: '200px', flexShrink: '0' }}>
           <div>
             <p>Cadence: {capitalize(cadence)}</p>
