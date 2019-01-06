@@ -486,7 +486,18 @@ def _token_expired(verification_token):
         hours=TOKEN_EXPIRY_AGE_HOURS
     )
 
-    return verification_token.expired or datetime.datetime.utcnow() > expire_time
+    if verification_token.expired:
+        current_app.logger.info('token %s expired', verification_token.id)
+
+        return True
+
+    current_time = datetime.datetime.utcnow()
+
+    expired = datetime.datetime.utcnow() > expire_time
+
+    current_app.logger.info('current time %s versus expire time %s is expired? %s', current_time, expire_time, expired)
+
+    return expired
 
 
 TOKEN_EXPIRY_AGE_HOURS = int(os.environ.get('REACT_APP_TOKEN_EXPIRY_AGE_HOURS', 1))

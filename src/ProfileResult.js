@@ -23,7 +23,6 @@ const CheckboxIndicator = ({
         bottom: '1px',
       }}
       disabled
-      title={title}
       type="checkbox"
       checked={checked}
     />
@@ -38,9 +37,17 @@ const CheckboxIndicator = ({
         </div>
       </MediaQuery>
       <MediaQuery query="(max-device-width: 750px)">
-        <span data-tip={title} data-for="indicator">
+        <button
+          type="button"
+          onClick={e => {
+            e.preventDefault()
+            ReactTooltip.show()
+          }}
+          data-tip={title}
+          data-for="indicator"
+        >
           {checkbox}
-        </span>
+        </button>
       </MediaQuery>
     </Fragment>
   )
@@ -88,60 +95,63 @@ const ProfileResult = ({
 
   return (
     <div style={{ paddingBottom: '3em' }}>
-      <Link to={`/profiles/${id}`} className="profile-result">
-        <ProfileAvatar
-          profileImageUrl={profileImageUrl}
-          name={name}
-          size={160}
-        />
-        <div style={{ flex: '1 1 auto', flexBasis: '400px' }}>
-          <h2>{name}</h2>
-          {formattedAffiliations}
-          <p className="clinical-interests">
-            {clinicalSpecialties.map(interest => (
-              <span key={interest} className="clinical interest">
-                {' '}
-                {interest}{' '}
-              </span>
-            ))}
-          </p>
-          <p>
-            {professionalInterests.map(interest => (
-              <span key={interest} className="professional interest">
-                {' '}
-                {interest}{' '}
-              </span>
-            ))}
-          </p>
-        </div>
-      </Link>
-      <div>
-        <ReactTooltip id="indicator" place="bottom" event="click" />
-
-        <div style={{ flexBasis: '200px', flexShrink: '0' }}>
-          <div>
-            <p>Cadence: {capitalize(cadence)}</p>
+      <div className="profile-result">
+        <Link to={`/profiles/${id}`} className="profile-result-link">
+          <ProfileAvatar
+            profileImageUrl={profileImageUrl}
+            name={name}
+            size={160}
+          />
+          <div style={{ flex: '1 1 auto', flexBasis: '400px' }}>
+            <h2>{name}</h2>
+            {formattedAffiliations}
+            <p className="clinical-interests">
+              {clinicalSpecialties.map(interest => (
+                <span key={interest} className="clinical interest">
+                  {' '}
+                  {interest}{' '}
+                </span>
+              ))}
+            </p>
+            <p>
+              {professionalInterests.map(interest => (
+                <span key={interest} className="professional interest">
+                  {' '}
+                  {interest}{' '}
+                </span>
+              ))}
+            </p>
           </div>
+          <ReactTooltip id="indicator" place="bottom" />
 
-          <CheckboxIndicator title="Shadowing" checked={willingShadowing} />
-          <CheckboxIndicator title="Networking" checked={willingNetworking} />
-          <CheckboxIndicator
-            title="Goal setting"
-            checked={willingGoalSetting}
-          />
-          <CheckboxIndicator
-            title="Discuss personal life"
-            checked={willingDiscussPersonal}
-          />
-          <CheckboxIndicator
-            title="Career guidance"
-            checked={willingCareerGuidance}
-          />
-          <CheckboxIndicator
-            title="Student group support"
-            checked={willingStudentGroup}
-          />
-        </div>
+          <div
+            className="profile-result-right"
+            style={{ flexBasis: '200px', flexShrink: '0', textAlign: 'left' }}
+          >
+            <div>
+              <p>Cadence: {capitalize(cadence)}</p>
+            </div>
+
+            <CheckboxIndicator title="Shadowing" checked={willingShadowing} />
+            <CheckboxIndicator title="Networking" checked={willingNetworking} />
+            <CheckboxIndicator
+              title="Goal setting"
+              checked={willingGoalSetting}
+            />
+            <CheckboxIndicator
+              title="Discuss personal life"
+              checked={willingDiscussPersonal}
+            />
+            <CheckboxIndicator
+              title="Career guidance"
+              checked={willingCareerGuidance}
+            />
+            <CheckboxIndicator
+              title="Student group support"
+              checked={willingStudentGroup}
+            />
+          </div>
+        </Link>
       </div>
     </div>
   )

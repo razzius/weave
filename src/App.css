@@ -142,14 +142,17 @@ input[type='email'].fullWidth {
 }
 
 .profile-result {
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.4s;
-  color: black;
   margin-bottom: 1em;
 }
 
-.profile-result:hover {
+.profile-result-link {
+  transition: all 0.4s;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.profile-result-link:hover {
   box-shadow: 0 0 2px rgba(35, 173, 255, 1);
 }
 
@@ -306,7 +309,7 @@ input::-webkit-contacts-auto-fill-button {
     float: right;
   }
 
-  .profile-result {
+  .profile-result, .profile-result-link {
     display: flex;
   }
 }
