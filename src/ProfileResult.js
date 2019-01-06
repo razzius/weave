@@ -1,9 +1,16 @@
+// @flow
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { capitalize } from './utils'
 import ProfileAvatar from './ProfileAvatar'
 
-const CheckboxIndicator = props => (
+const CheckboxIndicator = ({
+  title,
+  checked
+}: {
+  title: string,
+  checked: boolean
+}) => (
   <div style={{ marginTop: '5px', marginBottom: '5px' }}>
     <label>
       <input
@@ -14,19 +21,47 @@ const CheckboxIndicator = props => (
           bottom: '1px'
         }}
         disabled
-        title={props.title}
+        title={title}
         type="checkbox"
-        checked={props.checked}
+        checked={checked}
       />
-      {props.title}
+      {title}
     </label>
   </div>
 )
 
-const ProfileResult = props => {
-  const affiliations = (
+const ProfileResult = ({
+  id,
+  affiliations,
+  profileImageUrl,
+  name,
+  clinicalSpecialties,
+  professionalInterests,
+  cadence,
+  willingShadowing,
+  willingNetworking,
+  willingGoalSetting,
+  willingDiscussPersonal,
+  willingCareerGuidance,
+  willingStudentGroup
+}: {
+  id: number,
+  affiliations: Array<string>,
+  profileImageUrl: string,
+  name: string,
+  clinicalSpecialties: Array<string>,
+  professionalInterests: Array<string>,
+  cadence: string,
+  willingShadowing: boolean,
+  willingNetworking: boolean,
+  willingGoalSetting: boolean,
+  willingDiscussPersonal: boolean,
+  willingCareerGuidance: boolean,
+  willingStudentGroup: boolean
+}) => {
+  const formattedAffiliations = (
     <p>
-      {props.affiliations.map((affiliation, index) => (
+      {affiliations.map((affiliation, index) => (
         <span key={affiliation} className="affiliation">
           {index === 0 ? ' ' : ', '}
           {affiliation}
@@ -37,24 +72,25 @@ const ProfileResult = props => {
 
   return (
     <div style={{ paddingBottom: '3em' }}>
-      <Link to={`/profiles/${props.id}`} className="profile-result">
+      <Link to={`/profiles/${id}`} className="profile-result">
         <ProfileAvatar
-          profileImageUrl={props.profile_image_url}
-          name={props.name}
+          profileImageUrl={profileImageUrl}
+          name={name}
           size={160}
         />
         <div style={{ flex: '1 1 auto', flexBasis: '400px' }}>
-          <h2>{props.name}</h2>
-          {affiliations}
+          <h2>{name}</h2>
+          {formattedAffiliations}
           <p className="clinical-interests">
-            {props.clinical_specialties.map(interest => (
+            {clinicalSpecialties.map(interest => (
               <span key={interest} className="clinical interest">
-                {' '}{interest}{' '}
+                {' '}
+                {interest}{' '}
               </span>
             ))}
           </p>
           <p>
-            {props.professional_interests.map(interest => (
+            {professionalInterests.map(interest => (
               <span key={interest} className="professional interest">
                 {' '}
                 {interest}{' '}
@@ -62,39 +98,36 @@ const ProfileResult = props => {
             ))}
           </p>
         </div>
-        <div style={{flexBasis: '200px', flexShrink: '0'}}>
+        <div style={{ flexBasis: '200px', flexShrink: '0' }}>
           <div>
-            <p>Cadence: {capitalize(props.cadence)}</p>
+            <p>Cadence: {capitalize(cadence)}</p>
           </div>
 
-          <CheckboxIndicator
-            title="Shadowing"
-            checked={props.willing_shadowing}
-          />
-          <CheckboxIndicator
-            title="Networking"
-            checked={props.willing_networking}
-          />
+          <CheckboxIndicator title="Shadowing" checked={willingShadowing} />
+          <CheckboxIndicator title="Networking" checked={willingNetworking} />
           <CheckboxIndicator
             title="Goal setting"
-            checked={props.willing_goal_setting}
+            checked={willingGoalSetting}
           />
           <CheckboxIndicator
             title="Discuss personal life"
-            checked={props.willing_discuss_personal}
+            checked={willingDiscussPersonal}
           />
           <CheckboxIndicator
             title="Career guidance"
-            checked={props.willing_career_guidance}
+            checked={willingCareerGuidance}
           />
           <CheckboxIndicator
             title="Student group support"
-            checked={props.willing_student_group}
+            checked={willingStudentGroup}
           />
         </div>
       </Link>
     </div>
   )
+
+
+
 }
 
 export default ProfileResult

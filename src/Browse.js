@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import ProfileResult from './ProfileResult'
 import SearchInput from './SearchInput'
-import { getProfiles } from './api'
+import { getProfiles, payloadToProfile } from './api'
 import Button from './Button'
 import AppScreen from './AppScreen'
 
@@ -29,7 +29,7 @@ export default class Browse extends Component {
 
     getProfiles({ token: props.token, page: this.state.page })
       .then(results => {
-        this.setState({ results, loading: false })
+        this.setState({ results: results.map(payloadToProfile), loading: false })
       })
       .catch(() =>
         this.setState({ error: 'Unable to load profiles. Try again later.' })
