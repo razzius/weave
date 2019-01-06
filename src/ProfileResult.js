@@ -1,34 +1,38 @@
 // @flow
-import React from 'react'
-import { Link } from 'react-router-dom'
-import { capitalize } from './utils'
-import ProfileAvatar from './ProfileAvatar'
+import React, { Fragment } from 'react';
+import MediaQuery from 'react-responsive';
+import { Link } from 'react-router-dom';
+import { capitalize } from './utils';
+import ProfileAvatar from './ProfileAvatar';
 
 const CheckboxIndicator = ({
   title,
-  checked
+  checked,
 }: {
   title: string,
-  checked: boolean
+  checked: boolean,
 }) => (
-  <div style={{ marginTop: '5px', marginBottom: '5px' }}>
-    <label>
-      <input
-        style={{
-          marginRight: '6px',
-          verticalAlign: 'middle',
-          position: 'relative',
-          bottom: '1px'
-        }}
-        disabled
-        title={title}
-        type="checkbox"
-        checked={checked}
-      />
-      {title}
-    </label>
-  </div>
-)
+  <Fragment>
+    <MediaQuery query="(min-device-width: 750px)">
+      <div style={{ marginTop: '5px', marginBottom: '5px' }}>
+        <input
+          style={{
+            marginRight: '6px',
+            verticalAlign: 'middle',
+            position: 'relative',
+            bottom: '1px',
+          }}
+          disabled
+          title={title}
+          type="checkbox"
+          checked={checked}
+        />
+        {title}
+      </div>
+    </MediaQuery>
+    <MediaQuery query="(max-device-width: 750px)">nice smal</MediaQuery>
+  </Fragment>
+);
 
 const ProfileResult = ({
   id,
@@ -43,7 +47,7 @@ const ProfileResult = ({
   willingGoalSetting,
   willingDiscussPersonal,
   willingCareerGuidance,
-  willingStudentGroup
+  willingStudentGroup,
 }: {
   id: number,
   affiliations: Array<string>,
@@ -57,7 +61,7 @@ const ProfileResult = ({
   willingGoalSetting: boolean,
   willingDiscussPersonal: boolean,
   willingCareerGuidance: boolean,
-  willingStudentGroup: boolean
+  willingStudentGroup: boolean,
 }) => {
   const formattedAffiliations = (
     <p>
@@ -68,7 +72,7 @@ const ProfileResult = ({
         </span>
       ))}
     </p>
-  )
+  );
 
   return (
     <div style={{ paddingBottom: '3em' }}>
@@ -124,10 +128,7 @@ const ProfileResult = ({
         </div>
       </Link>
     </div>
-  )
+  );
+};
 
-
-
-}
-
-export default ProfileResult
+export default ProfileResult;
