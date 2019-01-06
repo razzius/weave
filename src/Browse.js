@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import ReactTooltip from 'react-tooltip'
 
 import ProfileResult from './ProfileResult'
 import SearchInput from './SearchInput'
@@ -175,6 +176,7 @@ export default class Browse extends Component {
                     </button>
                   )}
                 </p>
+                <ReactTooltip id="indicator" place="bottom" />
                 <div>{profileElements}</div>
                 {navigationButtons}
               </div>

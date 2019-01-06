@@ -122,7 +122,6 @@ const ProfileResult = ({
               ))}
             </p>
           </div>
-          <ReactTooltip id="indicator" place="bottom" />
 
           <div
             className="profile-result-right"
