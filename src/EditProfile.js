@@ -1,17 +1,13 @@
 import React from 'react'
 
 import AppScreen from './AppScreen'
-import { getProfile, updateProfile, payloadToProfile } from './api'
+import { getProfile, updateProfile } from './api'
 import ProfileForm from './ProfileForm'
 
 const EditProfile = props => (
   <AppScreen>
     <ProfileForm
-      loadInitial={() =>
-        getProfile(props.token, props.profileId).then(response =>
-          payloadToProfile(response)
-        )
-      }
+      loadInitial={() => getProfile(props.token, props.profileId)}
       firstTimePublish={false}
       saveProfile={updateProfile}
       {...props}

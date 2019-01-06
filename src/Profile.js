@@ -15,7 +15,7 @@ function errorView(error) {
 export default class Profile extends Component {
   state = {
     data: null,
-    error: null
+    error: null,
   }
 
   componentDidMount = () => {

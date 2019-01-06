@@ -1,9 +1,11 @@
 // @flow
-import React, { Fragment } from 'react';
-import MediaQuery from 'react-responsive';
-import { Link } from 'react-router-dom';
-import { capitalize } from './utils';
-import ProfileAvatar from './ProfileAvatar';
+import React, { Fragment } from 'react'
+import MediaQuery from 'react-responsive'
+import { Link } from 'react-router-dom'
+import ReactTooltip from 'react-tooltip'
+
+import { capitalize } from './utils'
+import ProfileAvatar from './ProfileAvatar'
 
 const CheckboxIndicator = ({
   title,
@@ -11,28 +13,41 @@ const CheckboxIndicator = ({
 }: {
   title: string,
   checked: boolean,
-}) => (
-  <Fragment>
-    <MediaQuery query="(min-device-width: 750px)">
-      <div style={{ marginTop: '5px', marginBottom: '5px' }}>
-        <input
-          style={{
-            marginRight: '6px',
-            verticalAlign: 'middle',
-            position: 'relative',
-            bottom: '1px',
-          }}
-          disabled
-          title={title}
-          type="checkbox"
-          checked={checked}
-        />
-        {title}
-      </div>
-    </MediaQuery>
-    <MediaQuery query="(max-device-width: 750px)">nice smal</MediaQuery>
-  </Fragment>
-);
+}) => {
+  const checkbox = (
+    <input
+      style={{
+        marginRight: '6px',
+        verticalAlign: 'middle',
+        position: 'relative',
+        bottom: '1px',
+      }}
+      disabled
+      title={title}
+      type="checkbox"
+      checked={checked}
+    />
+  )
+
+  return (
+    <Fragment>
+      <MediaQuery query="(min-device-width: 750px)">
+        <div style={{ marginTop: '5px', marginBottom: '5px' }}>
+          {checkbox}
+          {title}
+        </div>
+      </MediaQuery>
+      <MediaQuery query="(max-device-width: 18050px)">
+        <span data-tip data-for={title}>
+          <ReactTooltip id={title} place="bottom" event="click">
+            {title}
+          </ReactTooltip>
+          {checkbox}
+        </span>
+      </MediaQuery>
+    </Fragment>
+  )
+}
 
 const ProfileResult = ({
   id,
@@ -72,7 +87,7 @@ const ProfileResult = ({
         </span>
       ))}
     </p>
-  );
+  )
 
   return (
     <div style={{ paddingBottom: '3em' }}>
@@ -102,6 +117,8 @@ const ProfileResult = ({
             ))}
           </p>
         </div>
+      </Link>
+      <div>
         <div style={{ flexBasis: '200px', flexShrink: '0' }}>
           <div>
             <p>Cadence: {capitalize(cadence)}</p>
@@ -126,9 +143,9 @@ const ProfileResult = ({
             checked={willingStudentGroup}
           />
         </div>
-      </Link>
+      </div>
     </div>
-  );
-};
+  )
+}
 
-export default ProfileResult;
+export default ProfileResult

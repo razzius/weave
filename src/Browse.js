@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import ProfileResult from './ProfileResult'
 import SearchInput from './SearchInput'
-import { getProfiles, payloadToProfile } from './api'
+import { getProfiles } from './api'
 import Button from './Button'
 import AppScreen from './AppScreen'
 
@@ -24,51 +24,50 @@ export default class Browse extends Component {
     page: 1,
   }
 
-  constructor(props) {
-    super(props)
+  async componentDidMount() {
+    const { token } = this.props
+    const { page } = this.state
 
-    getProfiles({ token: props.token, page: this.state.page })
-      .then(results => {
-        this.setState({
-          results: results.map(payloadToProfile),
-          loading: false,
-        })
+    try {
+      const results = await getProfiles({ token, page })
+      this.setState({
+        results,
+        loading: false,
       })
-      .catch(() =>
-        this.setState({ error: 'Unable to load profiles. Try again later.' })
-      )
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err)
+      this.setState({ error: 'Unable to load profiles. Try again later.' })
+      throw err
+    }
   }
 
-  handleSearch = () => {
+  handleSearch = async () => {
     this.setState({ loading: true })
 
     const { token } = this.props
-    const { searchTerms, search, page } = this.state
+    const { searchTerms, search, page, results } = this.state
     const searchArray = search === '' ? [] : [search]
     const query = searchTerms
       .concat(searchArray)
       .join(' ')
       .toLowerCase()
 
-    return getProfiles({ token, query, page: this.state.page }).then(
-      results => {
-        if (page > 1) {
-          const updatedProfiles = this.state.results.profiles.concat(
-            results.profiles
-          )
+    const newResults = await getProfiles({ token, query, page })
 
-          this.setState({
-            results: {
-              ...this.state.results,
-              profiles: updatedProfiles,
-            },
-            loading: false,
-          })
-        } else {
-          this.setState({ results, loading: false })
-        }
-      }
-    )
+    if (page > 1) {
+      const updatedProfiles = results.profiles.concat(newResults.profiles)
+
+      this.setState({
+        results: {
+          ...results,
+          profiles: updatedProfiles,
+        },
+        loading: false,
+      })
+    } else {
+      this.setState({ results: newResults, loading: false })
+    }
   }
 
   handleChange = tags => {
@@ -86,6 +85,7 @@ export default class Browse extends Component {
     // Weird case. Deserves being written up. See
     // https://github.com/JedWatson/react-select/issues/1826#issuecomment-406020708
     if (['input-blur', 'menu-close'].includes(action)) {
+      // eslint-disable-next-line no-console
       console.log(`Not going to do anything on action ${action}`)
       return
     }
@@ -105,14 +105,22 @@ export default class Browse extends Component {
   }
 
   render() {
-    const { error, loading, results } = this.state
+    const {
+      error,
+      loading,
+      results,
+      page,
+      searchTerms,
+      search,
+      queried,
+    } = this.state
 
     const nextButton = results !== null &&
-      this.state.results.profiles.length < this.state.results.profileCount && (
+      results.profiles.length < results.profileCount && (
         <Button
           disabled={loading}
           onClick={() => {
-            this.setState({ page: this.state.page + 1 }, this.handleSearch)
+            this.setState({ page: page + 1 }, this.handleSearch)
           }}
         >
           Load 20 more
@@ -145,8 +153,8 @@ export default class Browse extends Component {
     return (
       <AppScreen>
         <SearchInput
-          value={this.state.searchTerms}
-          inputValue={this.state.search}
+          value={searchTerms}
+          inputValue={search}
           onChange={this.handleChange}
           onInputChange={this.handleInputChange}
           onSubmit={() => {
@@ -161,8 +169,10 @@ export default class Browse extends Component {
                   Showing {results.profiles.length}{' '}
                   {pluralizeResults(results.profiles.length)} of{' '}
                   {results.profileCount}. {loading && <span>Loading...</span>}
-                  {this.state.queried && (
-                    <button onClick={this.resetSearch}>Clear search</button>
+                  {queried && (
+                    <button type="button" onClick={this.resetSearch}>
+                      Clear search
+                    </button>
                   )}
                 </p>
                 <div>{profileElements}</div>

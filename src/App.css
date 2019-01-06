@@ -345,3 +345,7 @@ input::-webkit-contacts-auto-fill-button {
     display: inline;
   }
 }
+
+input[disabled] {
+  pointer-events:none;
+}

@@ -69,19 +69,15 @@ async function put(token, path, payload) {
   })
 }
 
-export async function getProfiles({ token, query = null, page = 1 }) {
-  let params = { page }
-  if (query !== null) {
-    params = { ...params, query }
-  }
-  return get(token, 'profiles', params)
-}
-
-export async function getProfile(token, id) {
-  return get(token, `profiles/${id}`)
+function reverseObject(obj) {
+  return Object.keys(obj).reduce(
+    (result, key) => ({ [obj[key]]: key, ...result }),
+    {}
+  )
 }
 
 const profilePayloadMapping = {
+  id: 'id',
   name: 'name',
   contact_email: 'contactEmail',
   profile_image_url: 'imageUrl',
@@ -105,6 +101,35 @@ const profilePayloadMapping = {
   other_cadence: 'otherCadence',
 }
 
+function payloadToProfile(payload) {
+  const mapping = reverseObject(profilePayloadMapping)
+  return Object.keys(mapping).reduce(
+    (profile, key) => ({
+      ...profile,
+      [key]: payload[mapping[key]],
+    }),
+    {}
+  )
+}
+
+export async function getProfiles({ token, query = null, page = 1 }) {
+  let params = { page }
+  if (query !== null) {
+    params = { ...params, query }
+  }
+  const results = await get(token, 'profiles', params)
+
+  return {
+    ...results,
+    profiles: results.profiles.map(payloadToProfile),
+  }
+}
+
+export async function getProfile(token, id) {
+  const profile = await get(token, `profiles/${id}`)
+  return payloadToProfile(profile)
+}
+
 export function profileToPayload(profile) {
   const profilePayload = Object.keys(profilePayloadMapping).reduce(
     (payload, key) => ({
@@ -123,24 +148,6 @@ export function profileToPayload(profile) {
   }
 
   return profilePayload
-}
-
-function reverseObject(obj) {
-  return Object.keys(obj).reduce(
-    (result, key) => ({ [obj[key]]: key, ...result }),
-    {}
-  )
-}
-
-export function payloadToProfile(payload) {
-  const mapping = reverseObject(profilePayloadMapping)
-  return Object.keys(mapping).reduce(
-    (profile, key) => ({
-      ...profile,
-      [key]: payload[mapping[key]],
-    }),
-    {}
-  )
 }
 
 export async function createProfile(token, profile) {
