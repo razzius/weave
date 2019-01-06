@@ -1,4 +1,4 @@
-import { clearToken, loggedOutNotification } from "./persistence";
+import { clearToken, loggedOutNotification } from './persistence'
 
 const serverUrl = process.env.REACT_APP_SERVER_URL
 
@@ -21,11 +21,11 @@ async function http(token, url, options = {}) {
   const existingHeaders = options.headers || {}
   const authHeaders = {
     Authorization: `Token ${token}`,
-    ...existingHeaders
+    ...existingHeaders,
   }
   const optionsWithAuth = {
     ...options,
-    headers: authHeaders
+    headers: authHeaders,
   }
 
   const response = await fetch(url, optionsWithAuth)
@@ -53,9 +53,9 @@ async function post(token, path, payload) {
   return http(token, buildURL(`api/${path}`, null), {
     method: 'POST',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
 }
 
@@ -63,13 +63,13 @@ async function put(token, path, payload) {
   return http(token, buildURL(`api/${path}`, null), {
     method: 'PUT',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
 }
 
-export async function getProfiles({token, query = null, page = 1}) {
+export async function getProfiles({ token, query = null, page = 1 }) {
   let params = { page }
   if (query !== null) {
     params = { ...params, query }
@@ -102,14 +102,14 @@ const profilePayloadMapping = {
   willing_student_group: 'willingStudentGroup',
 
   cadence: 'cadence',
-  other_cadence: 'otherCadence'
+  other_cadence: 'otherCadence',
 }
 
 export function profileToPayload(profile) {
   const profilePayload = Object.keys(profilePayloadMapping).reduce(
     (payload, key) => ({
       ...payload,
-      [key]: profile[profilePayloadMapping[key]]
+      [key]: profile[profilePayloadMapping[key]],
     }),
     {}
   )
@@ -118,7 +118,7 @@ export function profileToPayload(profile) {
   if (profilePayload.additional_information === null) {
     return {
       ...profilePayload,
-      additional_information: ''
+      additional_information: '',
     }
   }
 
@@ -137,7 +137,7 @@ export function payloadToProfile(payload) {
   return Object.keys(mapping).reduce(
     (profile, key) => ({
       ...profile,
-      [key]: payload[mapping[key]]
+      [key]: payload[mapping[key]],
     }),
     {}
   )
@@ -180,6 +180,6 @@ export async function uploadPicture(token, file) {
 
   return http(token, url, {
     method: 'POST',
-    body: file
+    body: file,
   })
 }

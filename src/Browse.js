@@ -21,7 +21,7 @@ export default class Browse extends Component {
     results: null,
     queried: false,
     error: null,
-    page: 1
+    page: 1,
   }
 
   constructor(props) {
@@ -29,7 +29,10 @@ export default class Browse extends Component {
 
     getProfiles({ token: props.token, page: this.state.page })
       .then(results => {
-        this.setState({ results: results.map(payloadToProfile), loading: false })
+        this.setState({
+          results: results.map(payloadToProfile),
+          loading: false,
+        })
       })
       .catch(() =>
         this.setState({ error: 'Unable to load profiles. Try again later.' })
@@ -57,9 +60,9 @@ export default class Browse extends Component {
           this.setState({
             results: {
               ...this.state.results,
-              profiles: updatedProfiles
+              profiles: updatedProfiles,
             },
-            loading: false
+            loading: false,
           })
         } else {
           this.setState({ results, loading: false })
@@ -73,7 +76,7 @@ export default class Browse extends Component {
       {
         queried: true,
         searchTerms: tags.map(tag => tag.value),
-        page: 1
+        page: 1,
       },
       this.handleSearch
     )
@@ -95,7 +98,7 @@ export default class Browse extends Component {
       {
         searchTerms: [],
         search: '',
-        queried: false
+        queried: false,
       },
       this.handleSearch
     )
