@@ -21,6 +21,7 @@ flask-sslify = "*"
 marshmallow = "==3.0.0b13"
 sentry-sdk = "*"
 "psycopg2" = "*"
+pip = "*"
 
 [dev-packages]
 ipython = "*"
