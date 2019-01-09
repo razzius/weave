@@ -1,18 +1,18 @@
 import React from 'react'
-import { getProfile, updateProfile, payloadToProfile } from './api'
+
+import AppScreen from './AppScreen'
+import { getProfile, updateProfile } from './api'
 import ProfileForm from './ProfileForm'
 
 const EditProfile = props => (
-  <ProfileForm
-    loadInitial={() =>
-      getProfile(props.token, props.profileId).then(response =>
-        payloadToProfile(response)
-      )
-    }
-    firstTimePublish={false}
-    saveProfile={updateProfile}
-    {...props}
-  />
+  <AppScreen>
+    <ProfileForm
+      loadInitial={() => getProfile(props.token, props.profileId)}
+      firstTimePublish={false}
+      saveProfile={updateProfile}
+      {...props}
+    />
+  </AppScreen>
 )
 
 export default EditProfile

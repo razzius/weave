@@ -1,3 +1,6 @@
+// @flow
 import React from 'react'
 
-export default props => <div className="App-body">{props.children}</div>
+export default ({ children }: { children: Object }) => (
+  <div className="App-body">{children}</div>
+)

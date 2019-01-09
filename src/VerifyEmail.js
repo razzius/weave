@@ -25,11 +25,7 @@ function getButtonInfo(isMentor, returningUser) {
 }
 
 const VerifiedView = props => {
-  const {
-    isMentor,
-    returningUser,
-    verified,
-  } = props
+  const { isMentor, returningUser, verified } = props
 
   const { buttonText, linkUrl } = getButtonInfo(isMentor, returningUser)
 
@@ -43,8 +39,11 @@ const VerifiedView = props => {
       <div>
         {isMentor && (
           <iframe
-            width="640px"
-            height="360px"
+            style={{
+              width: '640px',
+              height: '360px',
+              maxWidth: '100%'
+            }}
             src="https://www.youtube.com/embed/6nAUk502ycA?modestbranding=1&rel=0"
             title="Weave tutorial video: How to create a faculty profile"
             frameBorder="0"
@@ -59,7 +58,6 @@ const VerifiedView = props => {
 }
 
 export default class VerifyEmail extends Component {
-
   state = {
     error: null,
     verified: null,

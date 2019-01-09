@@ -38,26 +38,29 @@ class App extends Component {
     token: loadToken(),
     isMentor: null,
     profileId: null,
-    loading: true
+    loading: true,
   }
 
   componentDidMount() {
-    if (this.state.token !== null) {
-      verifyToken(this.state.token)
+    const { token } = this.state
+
+    if (token !== null) {
+      verifyToken(token)
         .then(response => {
           this.setState({
             profileId: response.profile_id,
             isMentor: response.is_mentor,
             availableForMentoring: availableForMentoringFromVerifyTokenResponse(
               response
-            )
+            ),
           })
         })
         .catch(() => {
           clearToken()
           this.setState({ token: null })
-        }).finally(() => {
-          this.setState({loading: false})
+        })
+        .finally(() => {
+          this.setState({ loading: false })
         })
     }
   }
@@ -76,9 +79,7 @@ class App extends Component {
   logout = e => {
     e.preventDefault()
     clearToken()
-    this.setState({ token: null }, () => {
-      window.location.pathname = '/' // wtfff
-    })
+    this.setState({ token: null })
     // todo logout on server as well
   }
 
@@ -87,7 +88,15 @@ class App extends Component {
   }
 
   render() {
-    const loggedOut = this.state.token === null
+    const {
+      token,
+      isMentor,
+      availableForMentoring,
+      profileId,
+      loading,
+    } = this.state
+
+    const loggedOut = token === null
 
     const loginButton = (
       <Link
@@ -96,7 +105,7 @@ class App extends Component {
         style={{
           paddingTop: '1.4em',
           float: 'right',
-          paddingRight: '2em'
+          paddingRight: '2em',
         }}
       >
         Login
@@ -105,13 +114,14 @@ class App extends Component {
 
     const logoutButton = (
       <a
+        href="/"
         onClick={this.logout}
         className="App-title"
         style={{
           paddingTop: '1.4em',
           float: 'right',
           paddingRight: '2em',
-          cursor: 'pointer'
+          cursor: 'pointer',
         }}
       >
         Logout
@@ -131,7 +141,7 @@ class App extends Component {
 
               {loginAction}
 
-              {this.state.isMentor && (
+              {isMentor && (
                 <div
                   data-tip
                   className="available-for-mentoring"
@@ -142,12 +152,12 @@ class App extends Component {
                     Controls whether your profile will be visible to mentees.
                   </ReactTooltip>
                   <Toggle
-                    on={this.state.availableForMentoring}
+                    on={availableForMentoring}
                     onClick={() => {
-                      const available = !this.state.availableForMentoring
-                      this.setState({ availableForMentoring: available })
-                      if (this.state.profileId !== null) {
-                        setAvailabilityForMentoring(this.state.token, available)
+                      const newAvailable = !availableForMentoring
+                      this.setState({ availableForMentoring: newAvailable })
+                      if (profileId !== null) {
+                        setAvailabilityForMentoring(token, newAvailable)
                       }
                     }}
                   />
@@ -178,11 +188,7 @@ class App extends Component {
               exact
               path="/"
               render={() => (
-                <Home
-                  token={this.state.token}
-                  isMentor={this.state.isMentor}
-                  profileId={this.state.profileId}
-                />
+                <Home token={token} isMentor={isMentor} profileId={profileId} />
               )}
             />
             <Route
@@ -197,10 +203,10 @@ class App extends Component {
               path="/create-profile"
               render={({ history }) => (
                 <CreateProfile
-                  availableForMentoring={this.state.availableForMentoring}
+                  availableForMentoring={availableForMentoring}
                   setAvailableForMentoring={this.setAvailableForMentoring}
                   setProfileId={this.setProfileId}
-                  token={this.state.token}
+                  token={token}
                   history={history}
                 />
               )}
@@ -208,19 +214,19 @@ class App extends Component {
             <Route
               path="/edit-profile"
               render={({ history }) => {
-                if (this.state.profileId !== null) {
+                if (profileId !== null) {
                   return (
                     <EditProfile
-                      availableForMentoring={this.state.availableForMentoring}
+                      availableForMentoring={availableForMentoring}
                       setProfileId={this.setProfileId}
-                      token={this.state.token}
+                      token={token}
                       history={history}
-                      profileId={this.state.profileId}
+                      profileId={profileId}
                     />
                   )
                 }
 
-                return this.state.loading ? null : <NotLoggedIn/>
+                return loading ? null : <NotLoggedIn />
               }}
             />
             <Route
@@ -244,10 +250,7 @@ class App extends Component {
                 />
               )}
             />
-            <Route
-              path="/browse"
-              render={() => <Browse token={this.state.token} />}
-            />
+            <Route path="/browse" render={() => <Browse token={token} />} />
             <Route
               path="/login"
               render={({ history }) => <Login history={history} />}
@@ -262,11 +265,7 @@ class App extends Component {
             <Route
               path="/profiles/:id"
               render={props => (
-                <Profile
-                  profileId={this.state.profileId}
-                  token={this.state.token}
-                  {...props}
-                />
+                <Profile profileId={profileId} token={token} {...props} />
               )}
             />
             <Route component={() => <p>404 Not found</p>} />

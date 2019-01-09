@@ -1,4 +1,4 @@
-import { clearToken, loggedOutNotification } from "./persistence";
+import { clearToken, loggedOutNotification } from './persistence'
 
 const serverUrl = process.env.REACT_APP_SERVER_URL
 
@@ -21,11 +21,11 @@ async function http(token, url, options = {}) {
   const existingHeaders = options.headers || {}
   const authHeaders = {
     Authorization: `Token ${token}`,
-    ...existingHeaders
+    ...existingHeaders,
   }
   const optionsWithAuth = {
     ...options,
-    headers: authHeaders
+    headers: authHeaders,
   }
 
   const response = await fetch(url, optionsWithAuth)
@@ -53,9 +53,9 @@ async function post(token, path, payload) {
   return http(token, buildURL(`api/${path}`, null), {
     method: 'POST',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
 }
 
@@ -63,25 +63,21 @@ async function put(token, path, payload) {
   return http(token, buildURL(`api/${path}`, null), {
     method: 'PUT',
     headers: {
-      'content-type': 'application/json'
+      'content-type': 'application/json',
     },
-    body: JSON.stringify(payload)
+    body: JSON.stringify(payload),
   })
 }
 
-export async function getProfiles({token, query = null, page = 1}) {
-  let params = { page }
-  if (query !== null) {
-    params = { ...params, query }
-  }
-  return get(token, 'profiles', params)
-}
-
-export async function getProfile(token, id) {
-  return get(token, `profiles/${id}`)
+function reverseObject(obj) {
+  return Object.keys(obj).reduce(
+    (result, key) => ({ [obj[key]]: key, ...result }),
+    {}
+  )
 }
 
 const profilePayloadMapping = {
+  id: 'id',
   name: 'name',
   contact_email: 'contactEmail',
   profile_image_url: 'imageUrl',
@@ -102,14 +98,43 @@ const profilePayloadMapping = {
   willing_student_group: 'willingStudentGroup',
 
   cadence: 'cadence',
-  other_cadence: 'otherCadence'
+  other_cadence: 'otherCadence',
+}
+
+function payloadToProfile(payload) {
+  const mapping = reverseObject(profilePayloadMapping)
+  return Object.keys(mapping).reduce(
+    (profile, key) => ({
+      ...profile,
+      [key]: payload[mapping[key]],
+    }),
+    {}
+  )
+}
+
+export async function getProfiles({ token, query = null, page = 1 }) {
+  let params = { page }
+  if (query !== null) {
+    params = { ...params, query }
+  }
+  const results = await get(token, 'profiles', params)
+
+  return {
+    ...results,
+    profiles: results.profiles.map(payloadToProfile),
+  }
+}
+
+export async function getProfile(token, id) {
+  const profile = await get(token, `profiles/${id}`)
+  return payloadToProfile(profile)
 }
 
 export function profileToPayload(profile) {
   const profilePayload = Object.keys(profilePayloadMapping).reduce(
     (payload, key) => ({
       ...payload,
-      [key]: profile[profilePayloadMapping[key]]
+      [key]: profile[profilePayloadMapping[key]],
     }),
     {}
   )
@@ -118,29 +143,11 @@ export function profileToPayload(profile) {
   if (profilePayload.additional_information === null) {
     return {
       ...profilePayload,
-      additional_information: ''
+      additional_information: '',
     }
   }
 
   return profilePayload
-}
-
-function reverseObject(obj) {
-  return Object.keys(obj).reduce(
-    (result, key) => ({ [obj[key]]: key, ...result }),
-    {}
-  )
-}
-
-export function payloadToProfile(payload) {
-  const mapping = reverseObject(profilePayloadMapping)
-  return Object.keys(mapping).reduce(
-    (profile, key) => ({
-      ...profile,
-      [key]: payload[mapping[key]]
-    }),
-    {}
-  )
 }
 
 export async function createProfile(token, profile) {
@@ -180,6 +187,6 @@ export async function uploadPicture(token, file) {
 
   return http(token, url, {
     method: 'POST',
-    body: file
+    body: file,
   })
 }

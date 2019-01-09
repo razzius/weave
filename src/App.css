@@ -18,6 +18,7 @@ body,
   max-width: 850px;
   margin: 0 auto;
   padding: 20px;
+  word-wrap: break-word;
 }
 
 section {
@@ -112,16 +113,21 @@ section {
 .profile-result .profile-image {
   padding: 20px;
 }
+.profile-result-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
 
 input[type='text'],
 input[type='email'] {
   box-sizing: border-box;
   font-size: 22px;
+  border: 1px solid lightgray;
 }
 input[type='email'] {
   max-width: 100%;
   width: 340px;
-  border: 1px solid lightgray;
 }
 .fullWidth {
   width: 100%;
@@ -141,21 +147,7 @@ input[type='email'].fullWidth {
 }
 
 .profile-result {
-  cursor: pointer;
-  text-decoration: none;
-  transition: all 0.4s;
-  color: black;
   margin-bottom: 1em;
-}
-
-.profile-result-right {
-  text-align: right;
-  margin-left: auto;
-  padding: 10px;
-}
-
-.profile-result:hover {
-  box-shadow: 0 0 2px rgba(35, 173, 255, 1);
 }
 
 .interest {
@@ -278,6 +270,10 @@ h4 a {
   text-decoration: none;
 }
 
+.contact-email {
+  word-wrap: break-word;
+}
+
 .user-tip {
   padding-top: 2em;
   font-size: 14px;
@@ -300,14 +296,14 @@ input::-webkit-contacts-auto-fill-button {
   margin-top: 2em;
 }
 
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 625px) {
   .available-for-mentoring {
     margin-top: 25px;
     margin-right: 25px;
     float: right;
   }
 
-  .profile-result {
+  .profile-result, .profile-result-link {
     display: flex;
   }
 }
@@ -334,10 +330,26 @@ input::-webkit-contacts-auto-fill-button {
   #image-upload {
     margin-top: 0;
   }
+  .profile-result-right {
+    text-align: right;
+    margin-left: auto;
+    padding: 10px;
+  }
+  .profile-result-link:hover {
+    box-shadow: 0 0 2px rgba(35, 173, 255, 1);
+  }
+  .profile-result-link {
+    transition: all 0.4s;
+  }
+
 }
 
 @media screen and (min-width: 920px) {
   nav {
     display: inline;
   }
+}
+
+input[disabled] {
+  pointer-events:none;
 }

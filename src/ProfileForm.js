@@ -15,7 +15,6 @@ import {
   activitiesIEnjoyOptions,
   hospitalOptions
 } from './options'
-import AppScreen from './AppScreen'
 import { when } from './utils'
 
 function scaleCanvas(canvas) {
@@ -207,7 +206,9 @@ export default class ProfileForm extends Component {
   }
 
   removeProfileImage = () => {
-    this.setState({ imageUrl: null, image: null }, () => this.editor.clearImage())
+    this.setState({ imageUrl: null, image: null }, () =>
+      this.editor.clearImage()
+    )
   }
 
   render() {
@@ -221,7 +222,7 @@ export default class ProfileForm extends Component {
             editing
             firstTimePublish={firstTimePublish}
           />
-          <div style={{ width: '850px', margin: 'auto' }}>
+          <div>
             <button className="button" onClick={this.unsetPreview}>
               Edit
             </button>
@@ -236,7 +237,7 @@ export default class ProfileForm extends Component {
     const hasImage = this.state.imageUrl || this.state.image
 
     return (
-      <AppScreen className="edit-profile">
+      <div>
         <div className="columns">
           <div className="column contact">
             <Dropzone
@@ -274,9 +275,9 @@ export default class ProfileForm extends Component {
                 disabled={!hasImage}
                 defaultValue="1"
               />
-              <button
-                disabled={!hasImage}
-                onClick={this.rotateRight}>Rotate</button>
+              <button disabled={!hasImage} onClick={this.rotateRight}>
+                Rotate
+              </button>
               {hasImage && (
                 <button onClick={this.removeProfileImage}>Remove image</button>
               )}
@@ -458,7 +459,8 @@ export default class ProfileForm extends Component {
               style={{
                 width: '100%',
                 height: '3em',
-                fontSize: '18px'
+                fontSize: '18px',
+                border: '1px solid lightgray'
               }}
             />
           </div>
@@ -541,9 +543,12 @@ export default class ProfileForm extends Component {
               ? 'Loading preview...'
               : 'Preview profile'}
           </button>
-          {displayError({ name: this.name, email: this.contactEmail })}
+          {displayError({
+            name: this.state.name,
+            email: this.statecontactEmail
+          })}
         </div>
-      </AppScreen>
+      </div>
     )
   }
 }

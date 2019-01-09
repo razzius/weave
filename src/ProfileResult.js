@@ -1,12 +1,90 @@
-import React from 'react'
+// @flow
+import React, { Fragment } from 'react'
+import MediaQuery from 'react-responsive'
 import { Link } from 'react-router-dom'
+import ReactTooltip from 'react-tooltip'
+
 import { capitalize } from './utils'
 import ProfileAvatar from './ProfileAvatar'
 
-const ProfileResult = props => {
-  const affiliations = (
+const CheckboxIndicator = ({
+  title,
+  checked,
+}: {
+  title: string,
+  checked: boolean,
+}) => {
+  const checkbox = (
+    <input
+      style={{
+        marginRight: '6px',
+        verticalAlign: 'middle',
+        position: 'relative',
+        bottom: '1px',
+      }}
+      disabled
+      type="checkbox"
+      checked={checked}
+    />
+  )
+
+  return (
+    <Fragment>
+      <MediaQuery query="(min-device-width: 750px)">
+        <div style={{ marginTop: '5px', marginBottom: '5px' }}>
+          {checkbox}
+          {title}
+        </div>
+      </MediaQuery>
+      <MediaQuery query="(max-device-width: 750px)">
+        <button
+          type="button"
+          onClick={e => {
+            e.preventDefault()
+            ReactTooltip.show()
+          }}
+          data-tip={title}
+          data-for="indicator"
+        >
+          {checkbox}
+        </button>
+      </MediaQuery>
+    </Fragment>
+  )
+}
+
+const ProfileResult = ({
+  id,
+  affiliations,
+  profileImageUrl,
+  name,
+  clinicalSpecialties,
+  professionalInterests,
+  cadence,
+  willingShadowing,
+  willingNetworking,
+  willingGoalSetting,
+  willingDiscussPersonal,
+  willingCareerGuidance,
+  willingStudentGroup,
+}: {
+  id: number,
+  affiliations: Array<string>,
+  profileImageUrl: string,
+  name: string,
+  clinicalSpecialties: Array<string>,
+  professionalInterests: Array<string>,
+  cadence: string,
+  willingShadowing: boolean,
+  willingNetworking: boolean,
+  willingGoalSetting: boolean,
+  willingDiscussPersonal: boolean,
+  willingCareerGuidance: boolean,
+  willingStudentGroup: boolean,
+}) => {
+  const formattedAffiliations = (
     <p>
-      {props.affiliations.map((affiliation, index) => (
+      {affiliations.map((affiliation, index) => (
         <span key={affiliation} className="affiliation">
           {index === 0 ? ' ' : ', '}
           {affiliation}
@@ -16,76 +94,65 @@ const ProfileResult = props => {
   )
 
   return (
-    <Link
-      to={`/profiles/${props.id}`}
-      className="profile-result"
-      params={{ test: 'tricky' }}
-    >
-      <ProfileAvatar
-        profileImageUrl={props.profile_image_url}
-        name={props.name}
-        size={160}
-      />
-      <div style={{ width: '400px' }}>
-        <h2>{props.name}</h2>
-        {affiliations}
-        <p className="clinical-interests">
-          {props.clinical_specialties.map(interest => (
-            <span key={interest} className="clinical interest">
-              {' '}
-              {interest.replace(/ /g, '\u00a0')}{' '}
-            </span>
-          ))}
-        </p>
-        <p>
-          {props.professional_interests.map(interest => (
-            <span key={interest} className="professional interest">
-              {' '}
-              {interest}{' '}
-            </span>
-          ))}
-        </p>
+    <div style={{ paddingBottom: '3em' }}>
+      <div className="profile-result">
+        <Link to={`/profiles/${id}`} className="profile-result-link">
+          <ProfileAvatar
+            profileImageUrl={profileImageUrl}
+            name={name}
+            size={160}
+          />
+          <div style={{ flex: '1 1 auto', flexBasis: '400px' }}>
+            <h2>{name}</h2>
+            {formattedAffiliations}
+            <p className="clinical-interests">
+              {clinicalSpecialties.map(interest => (
+                <span key={interest} className="clinical interest">
+                  {' '}
+                  {interest}{' '}
+                </span>
+              ))}
+            </p>
+            <p>
+              {professionalInterests.map(interest => (
+                <span key={interest} className="professional interest">
+                  {' '}
+                  {interest}{' '}
+                </span>
+              ))}
+            </p>
+          </div>
+
+          <div
+            className="profile-result-right"
+            style={{ flexBasis: '200px', flexShrink: '0', textAlign: 'left' }}
+          >
+            <div>
+              <p>Cadence: {capitalize(cadence)}</p>
+            </div>
+
+            <CheckboxIndicator title="Shadowing" checked={willingShadowing} />
+            <CheckboxIndicator title="Networking" checked={willingNetworking} />
+            <CheckboxIndicator
+              title="Goal setting"
+              checked={willingGoalSetting}
+            />
+            <CheckboxIndicator
+              title="Discuss personal life"
+              checked={willingDiscussPersonal}
+            />
+            <CheckboxIndicator
+              title="Career guidance"
+              checked={willingCareerGuidance}
+            />
+            <CheckboxIndicator
+              title="Student group support"
+              checked={willingStudentGroup}
+            />
+          </div>
+        </Link>
       </div>
-      <div className="profile-result-right">
-        <p>{capitalize(props.cadence)}</p>
-        <input
-          disabled
-          title="Shadowing"
-          type="checkbox"
-          checked={props.willing_shadowing}
-        />
-        <input
-          disabled
-          title="Networking"
-          type="checkbox"
-          checked={props.willing_networking}
-        />
-        <input
-          disabled
-          title="Goal setting"
-          type="checkbox"
-          checked={props.willing_goal_setting}
-        />
-        <input
-          disabled
-          title="Personal life"
-          type="checkbox"
-          checked={props.willing_discuss_personal}
-        />
-        <input
-          disabled
-          title="Career guidance"
-          type="checkbox"
-          checked={props.willing_career_guidance}
-        />
-        <input
-          disabled
-          title="Student group support"
-          type="checkbox"
-          checked={props.willing_student_group}
-        />
-      </div>
-    </Link>
+    </div>
   )
 }
 
