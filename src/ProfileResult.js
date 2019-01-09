@@ -102,7 +102,7 @@ const ProfileResult = ({
             name={name}
             size={160}
           />
-          <div style={{ flex: '1 1 auto', flexBasis: '400px' }}>
+          <div style={{ flexGrow: '0', flexShrink: '0', width: '400px' }}>
             <h2>{name}</h2>
             {formattedAffiliations}
             <p className="clinical-interests">
@@ -125,7 +125,12 @@ const ProfileResult = ({
 
           <div
             className="profile-result-right"
-            style={{ flexBasis: '200px', flexShrink: '0', textAlign: 'left' }}
+            style={{
+              flexBasis: '200px',
+              flexGrow: '0',
+              flexShrink: '0',
+              textAlign: 'left',
+            }}
           >
             <div>
               <p>Cadence: {capitalize(cadence)}</p>
