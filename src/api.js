@@ -131,13 +131,15 @@ export async function getProfile(token, id) {
 }
 
 export function profileToPayload(profile) {
-  const profilePayload = Object.keys(profilePayloadMapping).reduce(
-    (payload, key) => ({
-      ...payload,
-      [key]: profile[profilePayloadMapping[key]],
-    }),
-    {}
-  )
+  const profilePayload = Object.keys(profilePayloadMapping)
+    .filter(key => key !== 'id')
+    .reduce(
+      (payload, key) => ({
+        ...payload,
+        [key]: profile[profilePayloadMapping[key]],
+      }),
+      {}
+    )
 
   // TODO why would this happen?
   if (profilePayload.additional_information === null) {

@@ -13,7 +13,7 @@ import {
   clinicalSpecialtyOptions,
   professionalInterestOptions,
   activitiesIEnjoyOptions,
-  hospitalOptions
+  hospitalOptions,
 } from './options'
 import { when } from './utils'
 
@@ -43,7 +43,7 @@ function displayError({ name, email }) {
 
 class CreatableTagSelect extends Component {
   state = {
-    inputValue: ''
+    inputValue: '',
   }
 
   handleInputChange = inputValue => {
@@ -56,7 +56,7 @@ class CreatableTagSelect extends Component {
       <CreatableSelect
         styles={{
           control: base => ({ ...base, backgroundColor: 'white' }),
-          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' })
+          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
         }}
         inputValue={this.state.inputValue}
         value={values.map(value => ({ label: value, value }))}
@@ -103,7 +103,7 @@ export default class ProfileForm extends Component {
 
     cadence: 'monthly',
     otherCadence: null,
-    preview: false
+    preview: false,
   }
 
   async componentDidMount() {
@@ -117,7 +117,7 @@ export default class ProfileForm extends Component {
     const current = this.state[key]
 
     this.setState({
-      [key]: [...current, selected]
+      [key]: [...current, selected],
     })
   }
 
@@ -180,7 +180,7 @@ export default class ProfileForm extends Component {
             imageUrl: response.image_url,
             imageSuccess: true,
             uploadingImage: false,
-            imageEdited: false
+            imageEdited: false,
           },
           () => resolve(response)
         )
@@ -218,7 +218,7 @@ export default class ProfileForm extends Component {
       return (
         <div>
           <ProfileView
-            data={profileToPayload(this.state)}
+            data={this.state}
             editing
             firstTimePublish={firstTimePublish}
           />
@@ -380,15 +380,15 @@ export default class ProfileForm extends Component {
                 control: base => ({ ...base, backgroundColor: 'white' }),
                 multiValue: styles => ({
                   ...styles,
-                  backgroundColor: '#edf4fe'
-                })
+                  backgroundColor: '#edf4fe',
+                }),
               }}
               className="column"
               isMulti
               options={hospitalOptions}
               value={this.state.affiliations.map(value => ({
                 label: value,
-                value
+                value,
               }))}
               onChange={this.handleChange('affiliations')}
             />
@@ -435,7 +435,7 @@ export default class ProfileForm extends Component {
               <CreatableInputOnly
                 value={this.state.partsOfMe.map(value => ({
                   label: value,
-                  value
+                  value,
                 }))}
                 handleChange={this.handleCreate('partsOfMe')}
                 handleSet={this.handleChange('partsOfMe')}
@@ -460,7 +460,7 @@ export default class ProfileForm extends Component {
                 width: '100%',
                 height: '3em',
                 fontSize: '18px',
-                border: '1px solid lightgray'
+                border: '1px solid lightgray',
               }}
             />
           </div>
@@ -545,7 +545,7 @@ export default class ProfileForm extends Component {
           </button>
           {displayError({
             name: this.state.name,
-            email: this.statecontactEmail
+            email: this.statecontactEmail,
           })}
         </div>
       </div>
