@@ -18,51 +18,43 @@ const Expectations = data => (
     <h4>I am available to help in the following ways:</h4>
 
     <div className="expectation">
-      <label className={!data.willing_shadowing ? 'grayed-out' : ''}>
+      <label className={!data.willingShadowing ? 'grayed-out' : ''}>
         <input type="checkbox" disabled checked={data.willing_shadowing} />
         Clinical shadowing opportunities
       </label>
     </div>
 
     <div className="expectation">
-      <label className={!data.willing_networking ? 'grayed-out' : ''}>
+      <label className={!data.willingNetworking ? 'grayed-out' : ''}>
         <input type="checkbox" disabled checked={data.willing_networking} />
         Networking
       </label>
     </div>
 
     <div className="expectation">
-      <label className={!data.willing_goal_setting ? 'grayed-out' : ''}>
+      <label className={!data.willingGoalSetting ? 'grayed-out' : ''}>
         <input type="checkbox" disabled checked={data.willing_goal_setting} />
         Goal setting
       </label>
     </div>
 
     <div className="expectation">
-      <label className={!data.willing_discuss_personal ? 'grayed-out' : ''}>
-        <input
-          type="checkbox"
-          disabled
-          checked={data.willing_discuss_personal}
-        />
+      <label className={!data.willingDiscussPersonal ? 'grayed-out' : ''}>
+        <input type="checkbox" disabled checked={data.willingDiscussPersonal} />
         Discussing personal as well as professional life
       </label>
     </div>
 
     <div className="expectation">
-      <label className={!data.willing_career_guidance ? 'grayed-out' : ''}>
-        <input
-          type="checkbox"
-          disabled
-          checked={data.willing_career_guidance}
-        />
+      <label className={!data.willingCareerGuidance ? 'grayed-out' : ''}>
+        <input type="checkbox" disabled checked={data.willingCareerGuidance} />
         Career guidance
       </label>
     </div>
 
     <div className="expectation">
-      <label className={!data.willing_student_group ? 'grayed-out' : ''}>
-        <input type="checkbox" disabled checked={data.willing_student_group} />
+      <label className={!data.willingStudentGroup ? 'grayed-out' : ''}>
+        <input type="checkbox" disabled checked={data.willingStudentGroup} />
         Student interest group support or speaking at student events
       </label>
     </div>
