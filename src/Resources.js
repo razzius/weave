@@ -61,8 +61,7 @@ const Resources = () => (
 
     <h4>
       <a href="https://meded.hms.harvard.edu/office-recruitment-multicultural-affairs">
-        {' '}
-        Office of Recruitment and Multicultural Affairs{' '}
+        Office of Recruitment and Multicultural Affairs
       </a>
     </h4>
 
@@ -72,6 +71,22 @@ const Resources = () => (
       dentistry and students who are economically disadvantaged. ORMA fosters an
       inclusive and respectful environment that is supportive of lesbian, gay,
       bisexual, and transgender students, faculty, and staff.
+    </p>
+
+    <h3>
+      <a href="https://collaborate.hms.harvard.edu/dashboard.action">
+        HMS Collaborate
+      </a>
+    </h3>
+
+    <p>
+      HMS Collaborate is an interactive wiki-type platform that enables Harvard
+      Medical School faculty, staff, and students to easily create a
+      collaboration space (wiki site) to support an HMS administrative, academic
+      or research department mission. Within HMS Collaborate, the Office of
+      Student Affairs contains information about student organizations,
+      wellness, and career advising resources, such as details about class
+      meetings and the residency application process.
     </p>
 
     <h3>
@@ -97,13 +112,10 @@ const Resources = () => (
     </ol>
     <p>
       Alternatively, students may contact the Scholars in Medicine Office for
-      more information at
-      {' '}
+      more information at{' '}
       <LiteralLink href="scholarsinmedicine@hms.harvard.edu" />. Faculty who
-      wish to post scholarly project opportunities for students may do so at
-      {' '}
-      <LiteralLink href="http://ecommons.med.harvard.edu/smo_postf.asp" />.
-      {' '}
+      wish to post scholarly project opportunities for students may do so at{' '}
+      <LiteralLink href="http://ecommons.med.harvard.edu/smo_postf.asp" />.{' '}
       Weave does not provide listings of faculty research opportunities.
     </p>
     <h3>
