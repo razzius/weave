@@ -176,13 +176,6 @@ const Home = ({ token, isMentor, profileId }) => (
         you! Please reach out to us at:{' '}
         <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>
       </p>
-
-      <h2 style={{ paddingTop: '2em' }}>Progress</h2>
-      <img
-        style={{ maxWidth: '100%', width: '700px' }}
-        src="https://i.imgur.com/hzbnZC5.jpg"
-        alt="HMS Weave project progress bars"
-      />
     </section>
   </div>
 )
