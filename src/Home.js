@@ -100,80 +100,11 @@ const Home = ({ token, isMentor, profileId }) => (
         and mentees that may encourage more longitudinal and meaningful
         mentoring experiences.
       </p>
-    </section>
-
-    <section style={{ paddingBottom: '5em' }}>
-      <h1>Roadmap</h1>
 
       <p>
-        Weave is an open-source platform aimed to improve the mentorship
-        structures at a large, diverse medical school with an expansive clinical
-        enterprise. Such institutions are found throughout the United States and
-        the world. In the spirit of open-source development, we value
-        transparency in our process. The following is a roadmap that presents
-        our progress to date and plans for the future in four domains of Weave’s
-        development: Functions, Usability, Sustainability, and Look. These
-        domains are specific to Weave’s development but we wanted to share them
-        as a way to communicate our process, reduce the duplication of efforts,
-        and promote interest for the development of mentorship frameworks.
-      </p>
-
-      <h2>Functions</h2>
-      <p>
-        We are planning the development of further functions on the Weave
-        platform that will continue to align incentives for and lower barriers
-        to forming invested relationship between students and faculty at Harvard
-        Medical School. Among these is the creation of a “Faculty Investment”
-        interface that will prompt students to report and record the number of
-        hours and types of mentorship that their mentors are providing. This
-        will allow students the opportunity to give back to their mentors by
-        accurately recording the investment of the mentor. For faculty, we hope
-        that this information can be used in promotional packages to credibly
-        illustrate their service to the students and the institution of Harvard
-        Medical School.{' '}
-      </p>
-
-      <h2>Usability</h2>
-      <p>
-        The user interface, accessibility, and intuitive search of Weave is
-        critical to its success. We are planning a number of projects to further
-        improve the utility of the platform. In addition to the “Faculty
-        Investment” function described above, we hope to generalize Weave’s
-        faculty-student interface to allow for student peer-to-peer mentoring to
-        improve the support and relationships between medical school classes, as
-        well as expand the opportunities for students to develop their skills as
-        a mentor early in their career.{' '}
-      </p>
-
-      <h2>Sustainability</h2>
-      <p>
-        Weave is a response to informal mentorship lists that are developed
-        through the efforts of individual students. These lists are often not
-        well maintained and soon become outmoded and unusable. Weave endeavors
-        to be a bridging platform that facilitates relationships. It calls users
-        to own and update their data. In order to take that bold stance, Weave
-        must reliably live up to its end of the bargain and be a well maintained
-        and sustainable platform. We are working to better install Weave as a
-        program within the Office of Student Affairs at Harvard Medical School,
-        where it can be maintained by the institution’s existing Information
-        Technology department.{' '}
-      </p>
-
-      <h2>Look</h2>
-      <p>
-        We believe that Weave will benefit from consistent branding, in the
-        broadest sense. Part of this effort is to establish this roadmap so that
-        we may communicate our goals clearly and be transparent about our
-        intentions. Other ways to achieve this is to define a website culture
-        through the development of graphics and logos that help to honestly
-        display Weave to the world.
-      </p>
-
-      <p>
-        The following is our progress in each of these four domains demonstrated
-        pictorially. If you are passionate about improving mentoring at Harvard
-        Medical School or at similar institutions, we would love to hear from
-        you! Please reach out to us at:{' '}
+        If you are passionate about improving mentoring at Harvard Medical
+        School or at similar institutions, we would love to hear from you!
+        Please reach out to us at:{' '}
         <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>
       </p>
     </section>
