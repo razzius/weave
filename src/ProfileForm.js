@@ -8,7 +8,7 @@ import Dropzone from 'react-dropzone'
 import ProfileView from './ProfileView'
 import CreatableInputOnly from './CreatableInputOnly'
 
-import { uploadPicture, profileToPayload } from './api'
+import { uploadPicture } from './api'
 import {
   clinicalSpecialtyOptions,
   professionalInterestOptions,

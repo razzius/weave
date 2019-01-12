@@ -40,7 +40,7 @@ export default class SubmitEmailForm extends Component {
     this.state = {
       email: getParam('email') || '',
       success: false,
-      error: null
+      error: null,
     }
   }
 
@@ -63,7 +63,20 @@ export default class SubmitEmailForm extends Component {
   render() {
     if (!this.state.success) {
       const { email } = this.state
-      const VALID_DOMAINS = ['harvard.edu', 'partners.org', 'hmsweave.com', 'challiance.org', 'hphc.org', 'atriushealth.org']
+
+      const VALID_DOMAINS = [
+        '@hms.harvard.edu',
+        '@bidmc.harvard.edu',
+        '@bwh.harvard.edu',
+        '@mgh.harvard.edu',
+        '@childrens.harvard.edu',
+        '@dfci.harvard.edu',
+        '@mah.harvard.edu',
+        '@meei.harvard.edu',
+        '@partners.org',
+        '@hphc.org',
+        '@challiance.org',
+      ]
 
       const emailValid = any(
         VALID_DOMAINS.map(domain => email.endsWith(domain))
@@ -75,7 +88,12 @@ export default class SubmitEmailForm extends Component {
           <div>{this.props.instructions}</div>
           <form onSubmit={this.submitEmail}>
             <p>
-              <input name="email" type="email" onChange={this.updateEmail} value={this.state.email} />
+              <input
+                name="email"
+                type="email"
+                onChange={this.updateEmail}
+                value={this.state.email}
+              />
             </p>
             <ReactTooltip place="bottom" id="emailTooltip">
               Please enter your Harvard or hospital-affiliated email

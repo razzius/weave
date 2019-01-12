@@ -37,7 +37,19 @@ class ProfileSchema(Schema):
     other_cadence = fields.String(allow_none=True)
 
 
-VALID_DOMAINS = {'harvard.edu', 'partners.org', 'hmsweave.com', 'challiance.org', 'hphc.org', 'atriushealth.org'}
+VALID_DOMAINS = {
+    '@hms.harvard.edu',
+    '@bidmc.harvard.edu',
+    '@bwh.harvard.edu',
+    '@mgh.harvard.edu',
+    '@childrens.harvard.edu',
+    '@dfci.harvard.edu',
+    '@mah.harvard.edu',
+    '@meei.harvard.edu',
+    '@partners.org',
+    '@hphc.org',
+    '@challiance.org',
+}
 
 
 class ValidEmailSchema(Schema):
