@@ -6,6 +6,7 @@ from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_sslify import SSLify
 import sentry_sdk
+from sentry_sdk.integrations.flask import FlaskIntegration
 
 from .models import (
     ActivityOption,
@@ -17,13 +18,12 @@ from .models import (
     VerificationToken,
     db,
 )
-import server.views
 
+import server.views
 
 sentry_dsn = os.environ.get('PYTHON_SENTRY_DSN')
 
-if sentry_dsn is not None:
-    sentry_sdk.init(os.environ['PYTHON_SENTRY_DSN'])
+sentry_sdk.init(dsn=sentry_dsn, integrations=[FlaskIntegration()])
 
 app = Flask(__name__, static_url_path='/static', static_folder='../build/static')
 app.secret_key = os.environ['SECRET_KEY']

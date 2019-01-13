@@ -1,3 +1,4 @@
+import pathlib
 import json
 
 from marshmallow import Schema, ValidationError, fields, validates_schema
@@ -39,7 +40,8 @@ class ProfileSchema(Schema):
     other_cadence = fields.String(allow_none=True)
 
 
-VALID_DOMAINS = json.load(open('../src/valid_domains.json'))
+PROJECT_ROOT = pathlib.Path(__file__).parent.parent
+VALID_DOMAINS = json.load(open(PROJECT_ROOT / 'src' / 'valid_domains.json'))
 
 
 class ValidEmailSchema(Schema):
