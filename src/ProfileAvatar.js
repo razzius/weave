@@ -6,7 +6,7 @@ const ProfileAvatar = ({ imageUrl, name, size }) =>
     <img
       alt="Profile"
       className="profile-image column"
-      style={{ padding: '20px' }}
+      style={{ padding: '20px', flexBasis: '200px', flexShrink: '0' }}
       src={imageUrl}
     />
   ) : (
