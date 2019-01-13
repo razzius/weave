@@ -138,11 +138,7 @@ const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
       <div className="profile-contact">
         <Buttons {...{ ownProfile, firstTimePublish, editing }} />
 
-        <ProfileAvatar
-          profileImageUrl={data.profileImageUrl}
-          name={data.name}
-          size={200}
-        />
+        <ProfileAvatar imageUrl={data.imageUrl} name={data.name} size={200} />
 
         <h1>{data.name}</h1>
 
@@ -160,7 +156,7 @@ const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
         <div className="columns">
           <div className="column contact">
             <ProfileAvatar
-              profileImageUrl={data.profileImageUrl}
+              imageUrl={data.imageUrl}
               name={data.name}
               size={200}
             />

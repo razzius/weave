@@ -56,7 +56,7 @@ const CheckboxIndicator = ({
 const ProfileResult = ({
   id,
   affiliations,
-  profileImageUrl,
+  imageUrl,
   name,
   clinicalSpecialties,
   professionalInterests,
@@ -70,7 +70,7 @@ const ProfileResult = ({
 }: {
   id: number,
   affiliations: Array<string>,
-  profileImageUrl: string,
+  imageUrl: string,
   name: string,
   clinicalSpecialties: Array<string>,
   professionalInterests: Array<string>,
@@ -97,11 +97,7 @@ const ProfileResult = ({
     <div style={{ paddingBottom: '3em' }}>
       <div className="profile-result">
         <Link to={`/profiles/${id}`} className="profile-result-link">
-          <ProfileAvatar
-            profileImageUrl={profileImageUrl}
-            name={name}
-            size={160}
-          />
+          <ProfileAvatar imageUrl={imageUrl} name={name} size={160} />
           <div style={{ flexGrow: '0', flexShrink: '0', width: '400px' }}>
             <h2>{name}</h2>
             {formattedAffiliations}
