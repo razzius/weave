@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import ReactTooltip from 'react-tooltip'
+
 import { any, getParam } from './utils'
+import VALID_DOMAINS from './valid_domains.json'
 
 function displayError(error, email) {
   if (error === null) {
@@ -63,20 +65,6 @@ export default class SubmitEmailForm extends Component {
   render() {
     if (!this.state.success) {
       const { email } = this.state
-
-      const VALID_DOMAINS = [
-        '@hms.harvard.edu',
-        '@bidmc.harvard.edu',
-        '@bwh.harvard.edu',
-        '@mgh.harvard.edu',
-        '@childrens.harvard.edu',
-        '@dfci.harvard.edu',
-        '@mah.harvard.edu',
-        '@meei.harvard.edu',
-        '@partners.org',
-        '@hphc.org',
-        '@challiance.org',
-      ]
 
       const emailValid = any(
         VALID_DOMAINS.map(domain => email.endsWith(domain))

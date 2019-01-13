@@ -1,3 +1,5 @@
+import json
+
 from marshmallow import Schema, ValidationError, fields, validates_schema
 
 
@@ -37,19 +39,7 @@ class ProfileSchema(Schema):
     other_cadence = fields.String(allow_none=True)
 
 
-VALID_DOMAINS = {
-    '@hms.harvard.edu',
-    '@bidmc.harvard.edu',
-    '@bwh.harvard.edu',
-    '@mgh.harvard.edu',
-    '@childrens.harvard.edu',
-    '@dfci.harvard.edu',
-    '@mah.harvard.edu',
-    '@meei.harvard.edu',
-    '@partners.org',
-    '@hphc.org',
-    '@challiance.org',
-}
+VALID_DOMAINS = json.load(open('../src/valid_domains.json'))
 
 
 class ValidEmailSchema(Schema):
