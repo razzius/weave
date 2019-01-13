@@ -487,7 +487,7 @@ def _token_expired(verification_token):
     )
 
     if verification_token.expired:
-        current_app.logger.info('token %s expired', verification_token.id)
+        current_app.logger.info('token %s expired', verification_token.token)
 
         return True
 
