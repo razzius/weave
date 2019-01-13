@@ -265,7 +265,6 @@
                 "sha256:dc775d5d6672cf555d721c3cc9329cc9caed6369ef9aa1b87286017d4ad49614"
             ],
             "index": "pypi",
-            "markers": null,
             "version": "==0.6.6"
         },
         "six": {
