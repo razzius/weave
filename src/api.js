@@ -142,6 +142,7 @@ export function profileToPayload(profile) {
     )
 
   // TODO why would this happen?
+  // Answer: somehow null got in to the database. Field is currently nullable
   if (profilePayload.additional_information === null) {
     return {
       ...profilePayload,

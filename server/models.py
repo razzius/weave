@@ -126,6 +126,7 @@ class Profile(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
 
+    # TODO make not nullable and remove additional_information === null workarounds
     additional_information = db.Column(db.String(500), default='')
 
     willing_shadowing = db.Column(db.Boolean, default=False)
