@@ -1,3 +1,4 @@
+// @flow
 import React, { Fragment } from 'react'
 import MediaQuery from 'react-responsive'
 
@@ -5,7 +6,15 @@ import { capitalize } from './utils'
 import NextButton from './NextButton'
 import ProfileAvatar from './ProfileAvatar'
 
-const Buttons = ({ ownProfile, firstTimePublish, editing }) => (
+const Buttons = ({
+  ownProfile,
+  firstTimePublish,
+  editing,
+}: {
+  ownProfile: boolean,
+  firstTimePublish: boolean,
+  editing: boolean,
+}) => (
   <Fragment>
     {ownProfile && <NextButton to="/edit-profile" text="Edit profile" />}
     {!firstTimePublish &&
@@ -13,55 +22,86 @@ const Buttons = ({ ownProfile, firstTimePublish, editing }) => (
   </Fragment>
 )
 
-const Expectations = data => (
+const ExpectationDisplay = ({
+  name,
+  value,
+}: {
+  name: string,
+  value: boolean,
+}) => {
+  const id = name.split().join('-')
+
+  return (
+    <div className="expectation">
+      <label for={id} className={!value ? 'grayed-out' : ''}>
+        <input id={id} type="checkbox" disabled checked={value} />
+        {name}
+      </label>
+    </div>
+  )
+}
+
+type ProfileData = {|
+  id: string,
+  name: string,
+  contactEmail: string,
+  imageUrl: ?string,
+
+  affiliations: Array<string>,
+  clinicalSpecialties: Array<string>,
+  professionalInterests: Array<string>,
+  partsOfMe: Array<string>,
+  activities: Array<string>,
+
+  additionalInformation: string,
+
+  willingShadowing: boolean,
+  willingNetworking: boolean,
+  willingGoalSetting: boolean,
+  willingDiscussPersonal: boolean,
+  willingCareerGuidance: boolean,
+  willingStudentGroup: boolean,
+
+  cadence: string,
+  otherCadence: ?string,
+|}
+
+const Expectations = (data: ProfileData) => (
   <Fragment>
     <h4>I am available to help in the following ways:</h4>
 
-    <div className="expectation">
-      <label className={!data.willingShadowing ? 'grayed-out' : ''}>
-        <input type="checkbox" disabled checked={data.willing_shadowing} />
-        Clinical shadowing opportunities
-      </label>
-    </div>
+    <ExpectationDisplay
+      name="Clinical shadowing opportunities"
+      value={data.willingShadowing}
+    />
 
-    <div className="expectation">
-      <label className={!data.willingNetworking ? 'grayed-out' : ''}>
-        <input type="checkbox" disabled checked={data.willing_networking} />
-        Networking
-      </label>
-    </div>
+    <ExpectationDisplay name="Networking" value={data.willingNetworking} />
 
-    <div className="expectation">
-      <label className={!data.willingGoalSetting ? 'grayed-out' : ''}>
-        <input type="checkbox" disabled checked={data.willing_goal_setting} />
-        Goal setting
-      </label>
-    </div>
+    <ExpectationDisplay name="Goal setting" value={data.willingGoalSetting} />
 
-    <div className="expectation">
-      <label className={!data.willingDiscussPersonal ? 'grayed-out' : ''}>
-        <input type="checkbox" disabled checked={data.willingDiscussPersonal} />
-        Discussing personal as well as professional life
-      </label>
-    </div>
+    <ExpectationDisplay
+      name="Discussing personal as well as professional life"
+      value={data.willingDiscussPersonal}
+    />
 
-    <div className="expectation">
-      <label className={!data.willingCareerGuidance ? 'grayed-out' : ''}>
-        <input type="checkbox" disabled checked={data.willingCareerGuidance} />
-        Career guidance
-      </label>
-    </div>
-
-    <div className="expectation">
-      <label className={!data.willingStudentGroup ? 'grayed-out' : ''}>
-        <input type="checkbox" disabled checked={data.willingStudentGroup} />
-        Student interest group support or speaking at student events
-      </label>
-    </div>
+    <ExpectationDisplay
+      name="Career guidance"
+      value={data.willingCareerGuidance}
+    />
+    <ExpectationDisplay
+      name="Student interest group support or speaking at student events"
+      value={data.willingStudentGroup}
+    />
   </Fragment>
 )
 
-const Cadence = ({ cadence, otherCadence }) => (
+const Cadence = ({
+  cadence,
+  otherCadence,
+}: {
+  cadence: string,
+  otherCadence: string,
+}) => (
   <div style={{ marginTop: '1.2em' }}>
     <h4>Meeting Cadence</h4>
     {cadence === 'other' ? otherCadence : capitalize(cadence)}
@@ -132,7 +172,17 @@ const ContactInformation = data => (
   </Fragment>
 )
 
-const ProfileView = ({ data, ownProfile, firstTimePublish, editing }) => (
+const ProfileView = ({
+  data,
+  ownProfile,
+  firstTimePublish,
+  editing,
+}: {
+  data: ProfileData,
+  ownProfile: boolean,
+  firstTimePublish: boolean,
+  editing: boolean,
+}) => (
   <Fragment>
     <MediaQuery query="(max-device-width: 750px)">
       <div className="profile-contact">
