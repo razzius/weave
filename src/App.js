@@ -37,6 +37,7 @@ class App extends Component {
     availableForMentoring: null,
     token: loadToken(),
     isMentor: null,
+    isAdmin: null,
     profileId: null,
     loading: true,
   }
@@ -50,6 +51,7 @@ class App extends Component {
           this.setState({
             profileId: response.profile_id,
             isMentor: response.is_mentor,
+            isAdmin: response.is_admin,
             availableForMentoring: availableForMentoringFromVerifyTokenResponse(
               response
             ),
@@ -65,10 +67,17 @@ class App extends Component {
     }
   }
 
-  authenticate = ({ token, profileId, isMentor, availableForMentoring }) =>
+  authenticate = ({
+    token,
+    profileId,
+    isMentor,
+    isAdmin,
+    availableForMentoring,
+  }) =>
     new Promise(resolve => {
-      this.setState({ token, profileId, isMentor, availableForMentoring }, () =>
-        resolve()
+      this.setState(
+        { token, profileId, isMentor, isAdmin, availableForMentoring },
+        () => resolve()
       )
     })
 
@@ -91,6 +100,7 @@ class App extends Component {
     const {
       token,
       isMentor,
+      isAdmin,
       availableForMentoring,
       profileId,
       loading,
@@ -230,6 +240,23 @@ class App extends Component {
               }}
             />
             <Route
+              path="/admin-edit-profile/:id"
+              render={({ history, match }) => {
+                if (profileId !== null) {
+                  return (
+                    <EditProfile
+                      token={token}
+                      isAdmin={isAdmin}
+                      history={history}
+                      profileId={match.params.id}
+                    />
+                  )
+                }
+
+                return loading ? null : <NotLoggedIn />
+              }}
+            />
+            <Route
               path="/register-faculty-email"
               render={({ history }) => (
                 <RegisterFacultyEmail history={history} />
@@ -265,7 +292,12 @@ class App extends Component {
             <Route
               path="/profiles/:id"
               render={props => (
-                <Profile profileId={profileId} token={token} {...props} />
+                <Profile
+                  profileId={profileId}
+                  token={token}
+                  isAdmin={isAdmin}
+                  {...props}
+                />
               )}
             />
             <Route component={() => <p>404 Not found</p>} />

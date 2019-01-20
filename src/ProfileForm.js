@@ -145,7 +145,9 @@ export default class ProfileForm extends Component {
       this.props.profileId
     )
 
-    this.props.setProfileId(profile.id)
+    if (this.props.setProfileId) {
+      this.props.setProfileId(profile.id)
+    }
     this.props.history.push(`/profiles/${profile.id}`)
   }
 

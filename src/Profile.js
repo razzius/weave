@@ -19,26 +19,35 @@ export default class Profile extends Component {
   }
 
   componentDidMount = () => {
-    getProfile(this.props.token, this.props.match.params.id)
+    const {
+      token,
+      match: {
+        params: { id },
+      },
+    } = this.props
+
+    getProfile(token, id)
       .then(data => this.setState({ data }))
       .catch(error => this.setState({ error }))
   }
 
   render() {
     const { data, error } = this.state
-    const ownProfile = data !== null && this.props.profileId === data.id
-
-    if (error !== null) {
-      return <h4>error: {errorView(error)}</h4>
-    }
+    const { profileId, isAdmin } = this.props
 
     if (data === null) {
       return null
     }
 
+    const ownProfile = profileId === data.id
+
+    if (error !== null) {
+      return <h4>error: {errorView(error)}</h4>
+    }
+
     return (
       <AppScreen>
-        <ProfileView ownProfile={ownProfile} data={data} />
+        <ProfileView isAdmin={isAdmin} ownProfile={ownProfile} data={data} />
       </AppScreen>
     )
   }

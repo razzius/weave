@@ -266,19 +266,16 @@ def save_all_tags(profile, schema):
 
 def basic_profile_data(verification_token, schema):
     return {
-        'verification_email_id': verification_token.email_id,
-        **{
-            key: value
-            for key, value in schema.items()
-            if key
-            not in {
-                'affiliations',
-                'clinical_specialties',
-                'professional_interests',
-                'parts_of_me',
-                'activities',
-            }
-        },
+        key: value
+        for key, value in schema.items()
+        if key
+        not in {
+            'affiliations',
+            'clinical_specialties',
+            'professional_interests',
+            'parts_of_me',
+            'activities',
+        }
     }
 
 
@@ -300,7 +297,10 @@ def create_profile():
     ).scalar():
         return error_response({'email': ['This email already exists in the database']})
 
-    profile_data = basic_profile_data(verification_token, schema)
+    profile_data = {
+        'verification_email_id': verification_token.email_id,
+        **basic_profile_data(verification_token, schema)
+    }
 
     profile = Profile(**profile_data)
 
@@ -326,7 +326,13 @@ def update_profile(profile_id=None):
     if error:
         return error  # TODO exceptions
 
-    assert profile.verification_email_id == verification_token.email_id
+    is_admin = VerificationEmail.query.filter(
+        VerificationEmail.id == verification_token.email_id
+    ).value(VerificationEmail.is_admin)
+
+    current_app.logger.info('Edit to profile %s is_admin: %s', profile_id, is_admin)
+
+    assert is_admin or profile.verification_email_id == verification_token.email_id
 
     profile_data = basic_profile_data(verification_token, schema)
 
@@ -537,6 +543,7 @@ def verify_token():
         {
             'email': verification_email.email,
             'is_mentor': verification_email.is_mentor,
+            'is_admin': verification_email.is_admin,
             'profile_id': profile_id,
             'available_for_mentoring': available_for_mentoring,
         }

@@ -10,13 +10,23 @@ const Buttons = ({
   ownProfile,
   firstTimePublish,
   editing,
+  profileId,
+  isAdmin,
 }: {
   ownProfile: boolean,
   firstTimePublish: boolean,
   editing: boolean,
+  profileId: string,
+  isAdmin: boolean,
 }) => (
   <Fragment>
     {ownProfile && <NextButton to="/edit-profile" text="Edit profile" />}
+    {isAdmin && (
+      <NextButton
+        to={`/admin-edit-profile/${profileId}`}
+        text="Edit profile as admin"
+      />
+    )}
     {!firstTimePublish &&
       !editing && <NextButton to="/browse" text="Back to list" />}
   </Fragment>
@@ -33,7 +43,7 @@ const ExpectationDisplay = ({
 
   return (
     <div className="expectation">
-      <label for={id} className={!value ? 'grayed-out' : ''}>
+      <label htmlFor={id} className={!value ? 'grayed-out' : ''}>
         <input id={id} type="checkbox" disabled checked={value} />
         {name}
       </label>
@@ -100,7 +110,7 @@ const Cadence = ({
   otherCadence,
 }: {
   cadence: string,
-  otherCadence: string,
+  otherCadence: ?string,
 }) => (
   <div style={{ marginTop: '1.2em' }}>
     <h4>Meeting Cadence</h4>
@@ -108,14 +118,14 @@ const Cadence = ({
   </div>
 )
 
-const HospitalAffiliations = ({ affiliations }) => (
+const HospitalAffiliations = ({ affiliations }: { affiliations: string }) => (
   <Fragment>
     <h4 style={{ marginTop: '2em' }}>Hospital Affiliations</h4>
     <p style={{ paddingBottom: '1em' }}>{affiliations}</p>
   </Fragment>
 )
 
-const ClinicalInterests = ({ interests }) => (
+const ClinicalInterests = ({ interests }: { interests: string }) => (
   <div>
     <h4>Clinical Interests</h4>
     <p style={{ paddingBottom: '1em' }}>{interests}</p>
@@ -177,57 +187,70 @@ const ProfileView = ({
   ownProfile,
   firstTimePublish,
   editing,
+  isAdmin,
 }: {
   data: ProfileData,
   ownProfile: boolean,
   firstTimePublish: boolean,
   editing: boolean,
-}) => (
-  <Fragment>
-    <MediaQuery query="(max-device-width: 750px)">
-      <div className="profile-contact">
-        <Buttons {...{ ownProfile, firstTimePublish, editing }} />
+  isAdmin: boolean,
+}) => {
+  const buttons = (
+    <Buttons
+      profileId={data.id}
+      {...{ ownProfile, firstTimePublish, editing, isAdmin }}
+    />
+  )
+  return (
+    <Fragment>
+      <MediaQuery query="(max-device-width: 750px)">
+        <div className="profile-contact">
+          {buttons}
 
-        <ProfileAvatar imageUrl={data.imageUrl} name={data.name} size={200} />
+          <ProfileAvatar imageUrl={data.imageUrl} name={data.name} size={200} />
 
-        <h1>{data.name}</h1>
+          <h1>{data.name}</h1>
 
-        <ContactInformation {...data} />
+          <ContactInformation {...data} />
 
-        <Cadence cadence={data.cadence} otherCadence={data.otherCadence} />
+          <Cadence cadence={data.cadence} otherCadence={data.otherCadence} />
 
-        <Expectations {...data} />
-        <AboutInfo {...data} />
-      </div>
-    </MediaQuery>
+          <Expectations {...data} />
+          <AboutInfo {...data} />
+        </div>
+      </MediaQuery>
 
-    <MediaQuery query="(min-device-width: 750px)">
-      <div className="profile-contact">
-        <div className="columns">
-          <div className="column contact">
-            <ProfileAvatar
-              imageUrl={data.imageUrl}
-              name={data.name}
-              size={200}
-            />
+      <MediaQuery query="(min-device-width: 750px)">
+        <div className="profile-contact">
+          <div className="columns">
+            <div className="column contact">
+              <ProfileAvatar
+                imageUrl={data.imageUrl}
+                name={data.name}
+                size={200}
+              />
 
-            <ContactInformation {...data} />
+              <ContactInformation {...data} />
 
-            <Cadence cadence={data.cadence} otherCadence={data.otherCadence} />
+              <Cadence
+                cadence={data.cadence}
+                otherCadence={data.otherCadence}
+              />
 
-            <Expectations {...data} />
-          </div>
-          <div className="about">
-            <Buttons {...{ ownProfile, firstTimePublish, editing }} />
+              <Expectations {...data} />
+            </div>
+            <div className="about">
+              {buttons}
 
-            <h1>{data.name}</h1>
+              <h1>{data.name}</h1>
 
-            <AboutInfo {...data} />
+              <AboutInfo {...data} />
+            </div>
           </div>
         </div>
-      </div>
-    </MediaQuery>
-  </Fragment>
-)
+      </MediaQuery>
+    </Fragment>
+  )
+}
 
 export default ProfileView

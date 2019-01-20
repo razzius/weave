@@ -9,18 +9,18 @@ function getButtonInfo(isMentor, returningUser) {
   if (!isMentor) {
     return {
       buttonText: 'Browse profiles',
-      linkUrl: '/browse'
+      linkUrl: '/browse',
     }
   }
   if (returningUser) {
     return {
       buttonText: 'Continue to home',
-      linkUrl: '/'
+      linkUrl: '/',
     }
   }
   return {
     buttonText: 'Create profile',
-    linkUrl: '/create-profile'
+    linkUrl: '/create-profile',
   }
 }
 
@@ -42,7 +42,7 @@ const VerifiedView = props => {
             style={{
               width: '640px',
               height: '360px',
-              maxWidth: '100%'
+              maxWidth: '100%',
             }}
             src="https://www.youtube.com/embed/6nAUk502ycA?modestbranding=1&rel=0"
             title="Weave tutorial video: How to create a faculty profile"
@@ -62,14 +62,18 @@ export default class VerifyEmail extends Component {
     error: null,
     verified: null,
     token: getParam('token'),
-    profileId: null
+    profileId: null,
   }
 
   async componentDidMount() {
+    const { token } = this.state
+    const { authenticate } = this.props
+
     try {
-      const response = await verifyToken(this.state.token)
+      const response = await verifyToken(token)
 
       const isMentor = response.is_mentor
+      const isAdmin = response.is_admin
       const profileId = response.profile_id
 
       const availableForMentoring = availableForMentoringFromVerifyTokenResponse(
@@ -80,22 +84,23 @@ export default class VerifyEmail extends Component {
         verified: response,
         profileId,
         isMentor,
-        availableForMentoring
+        availableForMentoring,
       })
 
-      saveToken(this.state.token)
+      saveToken(token)
 
-      this.props.authenticate({
-        token: this.state.token,
+      authenticate({
+        token,
         profileId,
         isMentor,
-        availableForMentoring
+        isAdmin,
+        availableForMentoring,
       })
     } catch (err) {
       if (err.message === 'Failed to fetch') {
         this.setState({
           error:
-            'There was a problem with our server. Please try again in a moment.'
+            'There was a problem with our server. Please try again in a moment.',
         })
         return
       }
@@ -103,24 +108,25 @@ export default class VerifyEmail extends Component {
       const errorMessage = err.token[0]
       if (errorMessage === 'not recognized') {
         this.setState({
-          error: 'Your token is invalid. Try signing up or logging in again.'
+          error: 'Your token is invalid. Try signing up or logging in again.',
         })
       } else if (errorMessage === 'expired') {
         this.setState({
-          error: 'Your login token has expired. Try logging in again.'
+          error: 'Your login token has expired. Try logging in again.',
         })
       }
     }
   }
 
   render() {
+    // TODO isMentor should come from props
     const {
       error,
       isMentor,
       profileId,
       verified,
       token,
-      availableForMentoring
+      availableForMentoring,
     } = this.state
 
     const { authenticate, history } = this.props

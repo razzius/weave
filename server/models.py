@@ -29,6 +29,7 @@ class IDMixin():
 
 class VerificationEmail(IDMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
+    is_admin = db.Column(db.Boolean)
     is_mentor = db.Column(db.Boolean)
 
 
