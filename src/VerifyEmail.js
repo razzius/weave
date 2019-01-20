@@ -61,16 +61,16 @@ export default class VerifyEmail extends Component {
   state = {
     error: null,
     verified: null,
-    token: getParam('token'),
-    profileId: null,
   }
 
   async componentDidMount() {
-    const { token } = this.state
+    const token = getParam('token')
     const { authenticate } = this.props
 
     try {
       const response = await verifyToken(token)
+
+      this.setState({ verified: response })
 
       const isMentor = response.is_mentor
       const isAdmin = response.is_admin
@@ -79,13 +79,6 @@ export default class VerifyEmail extends Component {
       const availableForMentoring = availableForMentoringFromVerifyTokenResponse(
         response
       )
-
-      this.setState({
-        verified: response,
-        profileId,
-        isMentor,
-        availableForMentoring,
-      })
 
       saveToken(token)
 
@@ -119,17 +112,17 @@ export default class VerifyEmail extends Component {
   }
 
   render() {
-    // TODO isMentor should come from props
+    const { error, verified } = this.state
+
     const {
-      error,
+      authenticate,
+      availableForMentoring,
+      history,
+      isAdmin,
       isMentor,
       profileId,
-      verified,
       token,
-      availableForMentoring,
-    } = this.state
-
-    const { authenticate, history } = this.props
+    } = this.props
 
     const errorView = error && <p>{error}</p>
 
@@ -139,7 +132,7 @@ export default class VerifyEmail extends Component {
       <AppScreen>
         <h1>Confirm email verification</h1>
         {errorView}
-        {this.state.verified && (
+        {verified && (
           <VerifiedView
             isMentor={isMentor}
             returningUser={returningUser}

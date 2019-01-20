@@ -87,6 +87,8 @@ def matching_profiles(query):
 def get_token(headers):
     token = headers.get('Authorization')
 
+    current_app.logger.info('Getting token from header %s', token)
+
     if token is None:
         return (
             error_response(

@@ -42,28 +42,25 @@ class App extends Component {
     loading: true,
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     const { token } = this.state
 
-    if (token !== null) {
-      verifyToken(token)
-        .then(response => {
-          this.setState({
-            profileId: response.profile_id,
-            isMentor: response.is_mentor,
-            isAdmin: response.is_admin,
-            availableForMentoring: availableForMentoringFromVerifyTokenResponse(
-              response
-            ),
-          })
+    if (token !== null && window.location.pathname !== '/verify') {
+      try {
+        const response = await verifyToken(token)
+        this.setState({
+          profileId: response.profile_id,
+          isMentor: response.is_mentor,
+          isAdmin: response.is_admin,
+          availableForMentoring: availableForMentoringFromVerifyTokenResponse(
+            response
+          ),
         })
-        .catch(() => {
-          clearToken()
-          this.setState({ token: null })
-        })
-        .finally(() => {
-          this.setState({ loading: false })
-        })
+      } catch (e) {
+        clearToken()
+        this.setState({ token: null })
+      }
+      this.setState({ loading: false })
     }
   }
 
@@ -274,6 +271,14 @@ class App extends Component {
                 <VerifyEmail
                   authenticate={this.authenticate}
                   history={history}
+                  {...{
+                    availableForMentoring,
+                    isAdmin,
+                    isMentor,
+                    loading,
+                    profileId,
+                    token,
+                  }}
                 />
               )}
             />
