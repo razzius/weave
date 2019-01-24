@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@razzi/react-avatar-editor": "^11.0.4-patched",
-    "@sentry/browser": "^4.0.6",
+    "@sentry/browser": "^4.5.3",
     "babel-eslint": "^10.0.1",
     "date-fns": "^1.29.0",
     "eslint-config-airbnb": "^17.1.0",
