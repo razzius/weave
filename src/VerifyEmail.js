@@ -1,66 +1,17 @@
+// @flow
 import React, { Component } from 'react'
 import AppScreen from './AppScreen'
-import { availableForMentoringFromVerifyTokenResponse, getParam } from './utils'
+import { getParam } from './utils'
 import { saveToken } from './persistence'
 import { verifyToken } from './api'
-import NextButton from './NextButton'
+import VerifiedView from './VerifiedView'
 
-function getButtonInfo(isMentor, returningUser) {
-  if (!isMentor) {
-    return {
-      buttonText: 'Browse profiles',
-      linkUrl: '/browse',
-    }
-  }
-  if (returningUser) {
-    return {
-      buttonText: 'Continue to home',
-      linkUrl: '/',
-    }
-  }
-  return {
-    buttonText: 'Create profile',
-    linkUrl: '/create-profile',
-  }
-}
+type Props = Object
+type State = {| error: string | null |}
 
-const VerifiedView = props => {
-  const { isMentor, returningUser, verified } = props
-
-  const { buttonText, linkUrl } = getButtonInfo(isMentor, returningUser)
-
-  const welcomeMessage = returningUser
-    ? `Successfully logged in as ${verified.email}.`
-    : `Successfully verified ${verified.email}.`
-
-  return (
-    <div>
-      <p>{welcomeMessage}</p>
-      <div>
-        {isMentor && (
-          <iframe
-            style={{
-              width: '640px',
-              height: '360px',
-              maxWidth: '100%',
-            }}
-            src="https://www.youtube.com/embed/6nAUk502ycA?modestbranding=1&rel=0"
-            title="Weave tutorial video: How to create a faculty profile"
-            frameBorder="0"
-            allow="autoplay; encrypted-media"
-            allowFullScreen
-          />
-        )}
-      </div>
-      <NextButton to={linkUrl} text={buttonText} />
-    </div>
-  )
-}
-
-export default class VerifyEmail extends Component {
+export default class VerifyEmail extends Component<Props, State> {
   state = {
     error: null,
-    verified: null,
   }
 
   async componentDidMount() {
@@ -68,26 +19,13 @@ export default class VerifyEmail extends Component {
     const { authenticate } = this.props
 
     try {
-      const response = await verifyToken(token)
-
-      this.setState({ verified: response })
-
-      const isMentor = response.is_mentor
-      const isAdmin = response.is_admin
-      const profileId = response.profile_id
-
-      const availableForMentoring = availableForMentoringFromVerifyTokenResponse(
-        response
-      )
+      const account = await verifyToken(token)
 
       saveToken(token)
 
       authenticate({
         token,
-        profileId,
-        isMentor,
-        isAdmin,
-        availableForMentoring,
+        account,
       })
     } catch (err) {
       if (err.message === 'Failed to fetch') {
@@ -112,36 +50,22 @@ export default class VerifyEmail extends Component {
   }
 
   render() {
-    const { error, verified } = this.state
+    const { error } = this.state
 
-    const {
-      authenticate,
-      availableForMentoring,
-      history,
-      isAdmin,
-      isMentor,
-      profileId,
-      token,
-    } = this.props
+    const { authenticate, account, history, token } = this.props
 
-    const errorView = error && <p>{error}</p>
-
-    const returningUser = profileId !== null
+    const errorView = error !== null ? <p>{error}</p> : null
 
     return (
       <AppScreen>
         <h1>Confirm email verification</h1>
         {errorView}
-        {verified && (
+        {account && (
           <VerifiedView
-            isMentor={isMentor}
-            returningUser={returningUser}
-            verified={verified}
+            account={account}
             authenticate={authenticate}
             history={history}
             token={token}
-            profileId={profileId}
-            availableForMentoring={availableForMentoring}
           />
         )}
       </AppScreen>

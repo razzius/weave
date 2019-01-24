@@ -1,6 +1,8 @@
 // @flow
-import React from 'react'
+import React, { type ChildrenArray, type Element } from 'react'
 
-export default ({ children }: { children: Object }) => (
-  <div className="App-body">{children}</div>
-)
+export default ({
+  children,
+}: {
+  children: ChildrenArray<Element<any> | null>,
+}) => <div className="App-body">{children}</div>

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 
@@ -24,21 +25,24 @@ import StudentExpectations from './StudentExpectations'
 import EditProfile from './EditProfile'
 import CreateProfile from './CreateProfile'
 import Profile from './Profile'
-import { availableForMentoringFromVerifyTokenResponse } from './utils'
 
 import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
-import { setAvailabilityForMentoring, verifyToken } from './api'
+import { setAvailabilityForMentoring, verifyToken, type Account } from './api'
 import { clearToken, loadToken } from './persistence'
 
-class App extends Component {
+type Props = empty
+type State = {|
+  token: string | null,
+  account: Account | null,
+  loading: boolean,
+|}
+
+class App extends Component<Props, State> {
   state = {
-    availableForMentoring: null,
     token: loadToken(),
-    isMentor: null,
-    isAdmin: null,
-    profileId: null,
+    account: null,
     loading: true,
   }
 
@@ -47,15 +51,8 @@ class App extends Component {
 
     if (token !== null && window.location.pathname !== '/verify') {
       try {
-        const response = await verifyToken(token)
-        this.setState({
-          profileId: response.profile_id,
-          isMentor: response.is_mentor,
-          isAdmin: response.is_admin,
-          availableForMentoring: availableForMentoringFromVerifyTokenResponse(
-            response
-          ),
-        })
+        const account = await verifyToken(token)
+        this.setState({ account })
       } catch (e) {
         clearToken()
         this.setState({ token: null })
@@ -64,25 +61,17 @@ class App extends Component {
     }
   }
 
-  authenticate = ({
-    token,
-    profileId,
-    isMentor,
-    isAdmin,
-    availableForMentoring,
-  }) =>
-    new Promise(resolve => {
-      this.setState(
-        { token, profileId, isMentor, isAdmin, availableForMentoring },
-        () => resolve()
-      )
-    })
-
-  setProfileId = profileId => {
-    this.setState({ profileId })
+  authenticate = ({ token, account }: { token: string, account: Account }) => {
+    this.setState({ token, account })
   }
 
-  logout = e => {
+  setProfileId = (profileId: string) => {
+    const { account } = this.state
+    const newAccount = { ...account, profileId }
+    this.setState({ account: newAccount })
+  }
+
+  logout = (e: Event) => {
     e.preventDefault()
     clearToken()
     this.setState({ token: null })
@@ -90,18 +79,18 @@ class App extends Component {
   }
 
   setAvailableForMentoring = () => {
-    this.setState({ availableForMentoring: true })
+    const { account } = this.state
+
+    const updatedAccount = {
+      ...account,
+      availableForMentoring: true,
+    }
+
+    this.setState({ account: updatedAccount })
   }
 
   render() {
-    const {
-      token,
-      isMentor,
-      isAdmin,
-      availableForMentoring,
-      profileId,
-      loading,
-    } = this.state
+    const { token, account, loading } = this.state
 
     const loggedOut = token === null
 
@@ -148,28 +137,34 @@ class App extends Component {
 
               {loginAction}
 
-              {isMentor && (
-                <div
-                  data-tip
-                  className="available-for-mentoring"
-                  data-for="toggleTooltip"
-                >
-                  Available for mentoring:
-                  <ReactTooltip id="toggleTooltip" place="bottom">
-                    Controls whether your profile will be visible to mentees.
-                  </ReactTooltip>
-                  <Toggle
-                    on={availableForMentoring}
-                    onClick={() => {
-                      const newAvailable = !availableForMentoring
-                      this.setState({ availableForMentoring: newAvailable })
-                      if (profileId !== null) {
-                        setAvailabilityForMentoring(token, newAvailable)
-                      }
-                    }}
-                  />
-                </div>
-              )}
+              {token &&
+                account &&
+                account.isMentor && (
+                  <div
+                    data-tip
+                    className="available-for-mentoring"
+                    data-for="toggleTooltip"
+                  >
+                    Available for mentoring:
+                    <ReactTooltip id="toggleTooltip" place="bottom">
+                      Controls whether your profile will be visible to mentees.
+                    </ReactTooltip>
+                    <Toggle
+                      on={account.availableForMentoring}
+                      onClick={() => {
+                        const newAvailable = !account.availableForMentoring
+                        const newAccount = {
+                          ...account,
+                          availableForMentoring: newAvailable,
+                        }
+                        this.setState({ account: newAccount })
+                        if (account.profileId !== null) {
+                          setAvailabilityForMentoring(token, newAvailable)
+                        }
+                      }}
+                    />
+                  </div>
+                )}
 
               <nav>
                 <a href="/#about-weave" className="App-title">
@@ -194,9 +189,15 @@ class App extends Component {
             <Route
               exact
               path="/"
-              render={() => (
-                <Home token={token} isMentor={isMentor} profileId={profileId} />
-              )}
+              render={() =>
+                account && (
+                  <Home
+                    token={token}
+                    isMentor={account.isMentor}
+                    profileId={account.profileId}
+                  />
+                )
+              }
             />
             <Route
               path="/faculty-expectations"
@@ -210,7 +211,9 @@ class App extends Component {
               path="/create-profile"
               render={({ history }) => (
                 <CreateProfile
-                  availableForMentoring={availableForMentoring}
+                  availableForMentoring={
+                    account && account.availableForMentoring
+                  }
                   setAvailableForMentoring={this.setAvailableForMentoring}
                   setProfileId={this.setProfileId}
                   token={token}
@@ -221,14 +224,14 @@ class App extends Component {
             <Route
               path="/edit-profile"
               render={({ history }) => {
-                if (profileId !== null) {
+                if (account !== null) {
                   return (
                     <EditProfile
-                      availableForMentoring={availableForMentoring}
+                      availableForMentoring={account.availableForMentoring}
                       setProfileId={this.setProfileId}
                       token={token}
                       history={history}
-                      profileId={profileId}
+                      profileId={account.profileId}
                     />
                   )
                 }
@@ -239,11 +242,11 @@ class App extends Component {
             <Route
               path="/admin-edit-profile/:id"
               render={({ history, match }) => {
-                if (profileId !== null) {
+                if (account !== null) {
                   return (
                     <EditProfile
                       token={token}
-                      isAdmin={isAdmin}
+                      isAdmin={account.isAdmin}
                       history={history}
                       profileId={match.params.id}
                     />
@@ -271,14 +274,8 @@ class App extends Component {
                 <VerifyEmail
                   authenticate={this.authenticate}
                   history={history}
-                  {...{
-                    availableForMentoring,
-                    isAdmin,
-                    isMentor,
-                    loading,
-                    profileId,
-                    token,
-                  }}
+                  account={account}
+                  token={token}
                 />
               )}
             />
@@ -296,14 +293,16 @@ class App extends Component {
 
             <Route
               path="/profiles/:id"
-              render={props => (
-                <Profile
-                  profileId={profileId}
-                  token={token}
-                  isAdmin={isAdmin}
-                  {...props}
-                />
-              )}
+              render={props =>
+                account && (
+                  <Profile
+                    profileId={account.profileId}
+                    token={token}
+                    isAdmin={account.isAdmin}
+                    {...props}
+                  />
+                )
+              }
             />
             <Route component={() => <p>404 Not found</p>} />
           </Switch>

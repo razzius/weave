@@ -1,16 +1,17 @@
+// @flow
 import { clearToken, loggedOutNotification } from './persistence'
-
-const serverUrl = process.env.REACT_APP_SERVER_URL
+import { availableForMentoringFromVerifyTokenResponse } from './utils'
+import settings from './settings'
 
 // -_-
 function addQueryString(url, params) {
   return Object.keys(params).forEach(key => {
-    url.searchParams.append(key, params[key])
+    url.searchParams.append(key, String(params[key]))
   })
 }
 
-function buildURL(path, params) {
-  const url = new URL(`${serverUrl}/${path}`)
+function buildURL(path, params = null) {
+  const url = new URL(`${settings.serverUrl}/${path}`)
   if (params) {
     addQueryString(url, params)
   }
@@ -20,7 +21,7 @@ function buildURL(path, params) {
 async function http(token, url, options = {}) {
   const existingHeaders = options.headers || {}
   const authHeaders = {
-    Authorization: `Token ${token}`,
+    ...(token ? { Authorization: `Token ${token}` } : {}),
     ...existingHeaders,
   }
   const optionsWithAuth = {
@@ -50,7 +51,7 @@ async function get(token, path, params = null) {
 }
 
 async function post(token, path, payload) {
-  return http(token, buildURL(`api/${path}`, null), {
+  return http(token, buildURL(`api/${path}`), {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
@@ -60,7 +61,7 @@ async function post(token, path, payload) {
 }
 
 async function put(token, path, payload) {
-  return http(token, buildURL(`api/${path}`, null), {
+  return http(token, buildURL(`api/${path}`), {
     method: 'PUT',
     headers: {
       'content-type': 'application/json',
@@ -112,11 +113,16 @@ function payloadToProfile(payload) {
   )
 }
 
-export async function getProfiles({ token, query = null, page = 1 }) {
-  let params = { page }
-  if (query !== null) {
-    params = { ...params, query }
-  }
+export async function getProfiles({
+  token,
+  query = '',
+  page = 1,
+}: {
+  token: string,
+  query?: string,
+  page: number,
+}) {
+  const params = { page, query }
   const results = await get(token, 'profiles', params)
 
   return {
@@ -125,12 +131,16 @@ export async function getProfiles({ token, query = null, page = 1 }) {
   }
 }
 
-export async function getProfile(token, id) {
+type Profile = Object
+
+export async function getProfile(token: string, id: string): Profile {
   const profile = await get(token, `profiles/${id}`)
   return payloadToProfile(profile)
 }
 
-export function profileToPayload(profile) {
+type ProfilePayload = Object
+
+export function profileToPayload(profile: Profile): ProfilePayload {
   const profilePayload = Object.keys(profilePayloadMapping)
     .filter(key => key !== 'id')
     .reduce(
@@ -153,39 +163,65 @@ export function profileToPayload(profile) {
   return profilePayload
 }
 
-export async function createProfile(token, profile) {
+export async function createProfile(token: string, profile: Profile) {
   const payload = profileToPayload(profile)
 
   return post(token, 'profile', payload)
 }
 
-export async function updateProfile(token, profile, profileId) {
+export async function updateProfile(
+  token: string,
+  profile: Profile,
+  profileId: string
+) {
   const payload = profileToPayload(profile)
 
   return put(token, `profiles/${profileId}`, payload)
 }
 
-export async function sendFacultyVerificationEmail(email) {
+export async function sendFacultyVerificationEmail(email: string) {
   return post(null, 'send-faculty-verification-email', { email })
 }
 
-export async function sendStudentVerificationEmail(email) {
+export async function sendStudentVerificationEmail(email: string) {
   return post(null, 'send-student-verification-email', { email })
 }
 
-export async function sendLoginEmail(email) {
+export async function sendLoginEmail(email: string) {
   return post(null, 'login', { email })
 }
 
-export async function verifyToken(token) {
-  return post(null, 'verify-token', { token })
+export type Account = {|
+  +isMentor: boolean,
+  +isAdmin: boolean,
+  +profileId: string,
+  +email: string,
+  +availableForMentoring: boolean,
+|}
+
+export async function verifyToken(token: string): Promise<Account> {
+  const response = await post(null, 'verify-token', { token })
+
+  return {
+    isMentor: response.is_mentor,
+    isAdmin: response.is_admin,
+    profileId: response.profile_id,
+    email: response.email,
+
+    availableForMentoring: availableForMentoringFromVerifyTokenResponse(
+      response
+    ),
+  }
 }
 
-export async function setAvailabilityForMentoring(token, available) {
+export async function setAvailabilityForMentoring(
+  token: string,
+  available: boolean
+) {
   return post(token, 'availability', { available })
 }
 
-export async function uploadPicture(token, file) {
+export async function uploadPicture(token: string, file: File) {
   const url = buildURL('api/upload-image')
 
   return http(token, url, {

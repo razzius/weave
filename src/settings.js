@@ -14,5 +14,5 @@ function getEnv(name, defaultValue) {
 
 export default {
   maxTokenAgeHours: getEnv('REACT_APP_TOKEN_EXPIRY_AGE_HOURS', 1),
-  serverUrl: getEnv('REACT_APP_SERVER_URL')
+  serverUrl: getEnv('REACT_APP_SERVER_URL', 'localhost:5000'),
 }
