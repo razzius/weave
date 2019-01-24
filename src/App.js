@@ -189,15 +189,7 @@ class App extends Component<Props, State> {
             <Route
               exact
               path="/"
-              render={() =>
-                account && (
-                  <Home
-                    token={token}
-                    isMentor={account.isMentor}
-                    profileId={account.profileId}
-                  />
-                )
-              }
+              render={() => <Home token={token} account={account} />}
             />
             <Route
               path="/faculty-expectations"
