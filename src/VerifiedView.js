@@ -5,8 +5,8 @@ import NextButton from './NextButton'
 
 import { type Account } from './api'
 
-function getButtonInfo(account: Account | null) {
-  if (account === null) {
+function getButtonInfo(account: Account) {
+  if (!account.isMentor) {
     return {
       buttonText: 'Browse profiles',
       linkUrl: '/browse',
@@ -35,7 +35,7 @@ const welcomeMessage = (account: Account | null): string => {
 }
 
 type Props = {
-  account: Account | null,
+  account: Account,
 }
 
 const VerifiedView = (props: Props) => {
@@ -47,7 +47,7 @@ const VerifiedView = (props: Props) => {
     <div>
       <p>{welcomeMessage(account)}</p>
       <div>
-        {account && (
+        {account.isMentor && (
           <iframe
             style={{
               width: '640px',
