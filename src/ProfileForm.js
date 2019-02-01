@@ -1,12 +1,13 @@
+// @flow
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import AvatarEditor from '@razzi/react-avatar-editor'
 import Select from 'react-select'
-import CreatableSelect from 'react-select/lib/Creatable'
 import Dropzone from 'react-dropzone'
 
 import ProfileView from './ProfileView'
 import CreatableInputOnly from './CreatableInputOnly'
+import CreatableTagSelect from './CreatableTagSelect'
 
 import { uploadPicture } from './api'
 import {
@@ -27,7 +28,7 @@ function scaleCanvas(canvas) {
   return scaled
 }
 
-function displayError({ name, email }) {
+function displayError({ name, email }: { name: string, email: string }) {
   let missing
   if (name === '' && email === '') {
     missing = 'name and email'
@@ -41,37 +42,42 @@ function displayError({ name, email }) {
   return <p>Before previewing profile, please enter your {missing}.</p>
 }
 
-class CreatableTagSelect extends Component {
-  state = {
-    inputValue: '',
-  }
+type Props = { loadInitial: any => void }
+type State = {
+  position: { x: number, y: number },
+  scale: number,
+  rotate: number,
+  width: number,
+  height: number,
+  name: string,
+  contactEmail: string,
+  image: ?File,
+  imageUrl: ?string,
+  imageSuccess: boolean,
+  uploadingImage: boolean,
+  imageEdited: boolean,
 
-  handleInputChange = inputValue => {
-    this.setState({ inputValue: inputValue.slice(0, 50) })
-  }
+  affiliations: Array<string>,
+  clinicalSpecialties: Array<string>,
+  professionalInterests: Array<string>,
+  partsOfMe: Array<string>,
+  activities: Array<string>,
 
-  render() {
-    const { options, handleSelect, values } = this.props
-    return (
-      <CreatableSelect
-        styles={{
-          control: base => ({ ...base, backgroundColor: 'white' }),
-          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
-        }}
-        inputValue={this.state.inputValue}
-        value={values.map(value => ({ label: value, value }))}
-        onInputChange={this.handleInputChange}
-        className="column"
-        isMulti
-        options={options}
-        onChange={handleSelect}
-        placeholder="Select or type something and press enter..."
-      />
-    )
-  }
+  additionalInformation: string,
+
+  willingShadowing: boolean,
+  willingNetworking: boolean,
+  willingGoalSetting: boolean,
+  willingDiscussPersonal: boolean,
+  willingCareerGuidance: boolean,
+  willingStudentGroup: boolean,
+
+  cadence: 'monthly',
+  otherCadence: null,
+  preview: boolean,
 }
 
-export default class ProfileForm extends Component {
+export default class ProfileForm extends Component<Props, State> {
   state = {
     position: { x: 0.5, y: 0.5 },
     scale: 1,
@@ -107,25 +113,26 @@ export default class ProfileForm extends Component {
   }
 
   async componentDidMount() {
-    if (this.props.loadInitial) {
-      const data = await this.props.loadInitial()
+    const { loadInitial } = this.props
+    if (loadInitial) {
+      const data = await loadInitial()
       this.setState(data)
     }
   }
 
-  handleCreate = key => selected => {
-    const current = this.state[key]
+  handleCreate = (key: string) => (selected: string) => {
+    const { [key]: current } = this.state
 
     this.setState({
       [key]: [...current, selected],
     })
   }
 
-  handleChange = key => values => {
+  handleChange = (key: string) => values => {
     this.setState({ [key]: values.map(({ value }) => value) })
   }
 
-  handleSelect = key => options => {
+  handleSelect = (key: string) => options => {
     const values = options.map(({ value }) => value)
     this.setState({ [key]: values })
   }
@@ -195,7 +202,8 @@ export default class ProfileForm extends Component {
   }
 
   rotateRight = () => {
-    const rotation = (90 + this.state.rotate) % 360
+    const { rotate } = this.state
+    const rotation = (90 + rotate) % 360
     this.setState({ rotate: rotation, imageEdited: true })
   }
 
@@ -547,7 +555,7 @@ export default class ProfileForm extends Component {
           </button>
           {displayError({
             name: this.state.name,
-            email: this.statecontactEmail,
+            email: this.state.contactEmail,
           })}
         </div>
       </div>
