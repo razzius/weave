@@ -25,7 +25,14 @@ sentry_dsn = os.environ.get('PYTHON_SENTRY_DSN')
 
 sentry_sdk.init(dsn=sentry_dsn, integrations=[FlaskIntegration()])
 
-app = Flask(__name__, static_url_path='/static', static_folder='../build/static')
+class NoCacheIndexFlask(Flask):
+    def get_send_file_max_age(self, name):
+        if name.lower().endswith('index.html'):
+            return 0
+        return 31536000
+
+
+app = NoCacheIndexFlask(__name__, static_url_path='/static', static_folder='../build/static')
 app.secret_key = os.environ['SECRET_KEY']
 
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
