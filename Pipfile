@@ -21,6 +21,7 @@ marshmallow = "==3.0.0b13"
 sentry-sdk = {version = "*", extras = ["flask"]}
 "psycopg2" = "*"
 pip = "*"
+"flake8" = "*"
 
 [dev-packages]
 ipython = "*"
