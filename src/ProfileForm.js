@@ -5,7 +5,7 @@ import AvatarEditor from '@razzi/react-avatar-editor'
 import Select from 'react-select'
 import Dropzone from 'react-dropzone'
 
-import ProfileView from './ProfileView'
+import ProfileView, { type BaseProfileData } from './ProfileView'
 import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
 
@@ -15,6 +15,7 @@ import {
   professionalInterestOptions,
   activitiesIEnjoyOptions,
   hospitalOptions,
+  titleOptions,
 } from './options'
 import { when } from './utils'
 
@@ -62,6 +63,7 @@ type State = {
   professionalInterests: Array<string>,
   partsOfMe: Array<string>,
   activities: Array<string>,
+  titles: Array<string>,
 
   additionalInformation: string,
 
@@ -75,6 +77,7 @@ type State = {
   cadence: 'monthly',
   otherCadence: null,
   preview: boolean,
+  ...BaseProfileData,
 }
 
 export default class ProfileForm extends Component<Props, State> {
@@ -97,6 +100,7 @@ export default class ProfileForm extends Component<Props, State> {
     professionalInterests: [],
     partsOfMe: [],
     activities: [],
+    titles: [],
 
     additionalInformation: '',
 
@@ -374,7 +378,6 @@ export default class ProfileForm extends Component<Props, State> {
               value={this.state.name}
               onChange={this.update('name')}
             />
-
             <p>Preferred Contact Email</p>
             <input
               name="email"
@@ -383,7 +386,12 @@ export default class ProfileForm extends Component<Props, State> {
               value={this.state.contactEmail}
               onChange={this.update('contactEmail')}
             />
-
+            <p>Academic Degrees</p>
+            <CreatableTagSelect
+              values={this.state.titles}
+              options={titleOptions}
+              handleSelect={this.handleSelect('titles')}
+            />
             <p>Hospital Affiliations</p>
             <Select
               styles={{
@@ -402,27 +410,23 @@ export default class ProfileForm extends Component<Props, State> {
               }))}
               onChange={this.handleChange('affiliations')}
             />
-
             <div className="user-tip">
               In the following sections, in addition to choosing from the tags
               below, you may also create your own tags by typing them in and
               pressing enter. You may create as many tags as you would like.
             </div>
-
             <p>Clinical Interests</p>
             <CreatableTagSelect
               values={this.state.clinicalSpecialties}
               options={clinicalSpecialtyOptions}
               handleSelect={this.handleSelect('clinicalSpecialties')}
             />
-
             <p>Professional Interests</p>
             <CreatableTagSelect
               values={this.state.professionalInterests}
               options={professionalInterestOptions}
               handleSelect={this.handleSelect('professionalInterests')}
             />
-
             <div className="user-tip">
               <p>
                 Please use this section to share parts of your identity. This is
@@ -451,7 +455,6 @@ export default class ProfileForm extends Component<Props, State> {
                 handleSet={this.handleChange('partsOfMe')}
               />
             </div>
-
             <div data-tip="Please feel free to create your own tags with activities that you enjoy.">
               <p>Activities I Enjoy</p>
               <CreatableTagSelect
@@ -460,7 +463,6 @@ export default class ProfileForm extends Component<Props, State> {
                 handleSelect={this.handleSelect('activities')}
               />
             </div>
-
             <p>What else would you like to share with potential mentees?</p>
             <textarea
               onChange={this.update('additionalInformation')}

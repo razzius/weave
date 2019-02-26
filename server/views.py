@@ -13,6 +13,7 @@ from marshmallow import ValidationError
 from requests_toolbelt.utils import dump
 from sqlalchemy import func, or_
 from sqlalchemy.sql import exists
+from sqlalchemy.exc import IntegrityError
 
 from .emails import (
     send_faculty_login_email,
@@ -346,7 +347,10 @@ def update_profile(profile_id=None):
         else:
             setattr(profile, key, value)
 
-    save(profile)
+    try:
+        save(profile)
+    except IntegrityError:
+        return jsonify({'error': 'Account with this contact email already exists'}), 400
 
     # TODO rather than deleting all, delete only ones that haven't changed
     profile_relation_classes = {

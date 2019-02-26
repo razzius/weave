@@ -51,8 +51,7 @@ const ExpectationDisplay = ({
   )
 }
 
-type ProfileData = {|
-  id: string,
+export type BaseProfileData = {|
   name: string,
   contactEmail: string,
   imageUrl: ?string,
@@ -62,6 +61,7 @@ type ProfileData = {|
   professionalInterests: Array<string>,
   partsOfMe: Array<string>,
   activities: Array<string>,
+  titles: Array<string>,
 
   additionalInformation: string,
 
@@ -74,6 +74,11 @@ type ProfileData = {|
 
   cadence: string,
   otherCadence: ?string,
+|}
+
+type ProfileData = {|
+  id: string,
+  ...BaseProfileData,
 |}
 
 const Expectations = (data: ProfileData) => (
@@ -120,8 +125,15 @@ const Cadence = ({
 
 const HospitalAffiliations = ({ affiliations }: { affiliations: string }) => (
   <Fragment>
-    <h4 style={{ marginTop: '2em' }}>Hospital Affiliations</h4>
+    <h4>Hospital Affiliations</h4>
     <p style={{ paddingBottom: '1em' }}>{affiliations}</p>
+  </Fragment>
+)
+
+const AcademicDegrees = ({ titles }: { titles: string }) => (
+  <Fragment>
+    <h4 style={{ marginTop: '2em' }}>Academic Degrees</h4>
+    <p style={{ paddingBottom: '1em' }}>{titles}</p>
   </Fragment>
 )
 
@@ -134,6 +146,8 @@ const ClinicalInterests = ({ interests }: { interests: string }) => (
 
 const AboutInfo = data => (
   <Fragment>
+    <AcademicDegrees titles={data.titles.join(', ')} />
+
     <HospitalAffiliations affiliations={data.affiliations.join(', ')} />
 
     {data.clinicalSpecialties.length > 0 && (
