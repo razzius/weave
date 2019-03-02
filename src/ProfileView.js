@@ -61,7 +61,7 @@ export type BaseProfileData = {|
   professionalInterests: Array<string>,
   partsOfMe: Array<string>,
   activities: Array<string>,
-  titles: Array<string>,
+  degrees: Array<string>,
 
   additionalInformation: string,
 
@@ -130,10 +130,10 @@ const HospitalAffiliations = ({ affiliations }: { affiliations: string }) => (
   </Fragment>
 )
 
-const AcademicDegrees = ({ titles }: { titles: string }) => (
+const AcademicDegrees = ({ degrees }: { degrees: string }) => (
   <Fragment>
     <h4 style={{ marginTop: '2em' }}>Academic Degrees</h4>
-    <p style={{ paddingBottom: '1em' }}>{titles}</p>
+    <p style={{ paddingBottom: '1em' }}>{degrees}</p>
   </Fragment>
 )
 
@@ -144,43 +144,46 @@ const ClinicalInterests = ({ interests }: { interests: string }) => (
   </div>
 )
 
-const AboutInfo = data => (
+const AboutInfo = ({
+  degrees,
+  affiliations,
+  clinicalSpecialties,
+  professionalInterests,
+  partsOfMe,
+  additionalInformation,
+  activities,
+}: Object) => (
   <Fragment>
-    <AcademicDegrees titles={data.titles.join(', ')} />
+    <AcademicDegrees degrees={degrees.join(', ')} />
 
-    <HospitalAffiliations affiliations={data.affiliations.join(', ')} />
-
-    {data.clinicalSpecialties.length > 0 && (
-      <ClinicalInterests interests={data.clinicalSpecialties.join(', ')} />
+    <HospitalAffiliations affiliations={affiliations.join(', ')} />
+    {clinicalSpecialties.length > 0 && (
+      <ClinicalInterests interests={clinicalSpecialties.join(', ')} />
     )}
-
-    {data.professionalInterests.length > 0 && (
+    {professionalInterests.length > 0 && (
       <div>
         <h4>Professional Interests</h4>
         <p style={{ paddingBottom: '1em' }}>
-          {data.professionalInterests.join(', ')}
+          {professionalInterests.join(', ')}
         </p>
       </div>
     )}
-
-    {data.partsOfMe.length > 0 && (
+    {partsOfMe.length > 0 && (
       <div>
         <h4>Parts Of Me</h4>
-        <p style={{ paddingBottom: '1em' }}>{data.partsOfMe.join(', ')}</p>
+        <p style={{ paddingBottom: '1em' }}>{partsOfMe.join(', ')}</p>
       </div>
     )}
-
-    {data.activities.length > 0 && (
+    {activities.length > 0 && (
       <div>
         <h4>Activities I Enjoy</h4>
-        <p style={{ paddingBottom: '1em' }}>{data.activities.join(', ')}</p>
+        <p style={{ paddingBottom: '1em' }}>{activities.join(', ')}</p>
       </div>
     )}
-
-    {data.additionalInformation && (
+    {additionalInformation && (
       <div>
         <h4>Additional Information</h4>
-        <p>{data.additionalInformation}</p>
+        <p>{additionalInformation}</p>
       </div>
     )}
   </Fragment>

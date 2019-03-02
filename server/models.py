@@ -62,6 +62,10 @@ class ActivityOption(UserEditableTagMixin, db.Model):
     pass
 
 
+class DegreeOption(UserEditableTagMixin, db.Model):
+    pass
+
+
 class HospitalAffiliation(IDMixin, db.Model):
     tag_id = db.Column(
         db.Integer, db.ForeignKey(HospitalAffiliationOption.id), nullable=False
@@ -107,6 +111,15 @@ class ProfileActivity(IDMixin, db.Model):
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
+class ProfileDegree(IDMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(DegreeOption.id), nullable=False
+    )
+    tag = relationship(DegreeOption)
+
+    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+
+
 class Profile(db.Model):
     id = db.Column(db.String, primary_key=True, default=generate_uuid)
     name = db.Column(db.String(255), nullable=False)
@@ -123,6 +136,7 @@ class Profile(db.Model):
     professional_interests = relationship(ProfessionalInterest, cascade='all, delete')
     parts_of_me = relationship(PartsOfMe, cascade='all, delete')
     activities = relationship(ProfileActivity, cascade='all, delete')
+    degrees = relationship(ProfileDegree, cascade='all, delete')
 
     date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)

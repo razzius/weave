@@ -25,12 +25,14 @@ from .models import (
     ActivityOption,
     ClinicalSpecialty,
     ClinicalSpecialtyOption,
+    DegreeOption,
     HospitalAffiliation,
     HospitalAffiliationOption,
     PartsOfMe,
     PartsOfMeOption,
     ProfessionalInterest,
     ProfessionalInterestOption,
+    ProfileDegree,
     Profile,
     ProfileActivity,
     VerificationEmail,
@@ -265,6 +267,7 @@ def save_all_tags(profile, schema):
     )
     save_tags(profile, schema['parts_of_me'], PartsOfMeOption, PartsOfMe)
     save_tags(profile, schema['activities'], ActivityOption, ProfileActivity)
+    save_tags(profile, schema['degrees'], DegreeOption, ProfileDegree)
 
 
 def basic_profile_data(verification_token, schema):
@@ -278,6 +281,8 @@ def basic_profile_data(verification_token, schema):
             'professional_interests',
             'parts_of_me',
             'activities',
+            'degrees'
+            # TODO should be `in` rather than `not in`
         }
     }
 
@@ -359,6 +364,7 @@ def update_profile(profile_id=None):
         HospitalAffiliation,
         PartsOfMe,
         ClinicalSpecialty,
+        ProfileDegree
     }
     for profile_relation_class in profile_relation_classes:
         profile_relation_class.query.filter(
@@ -507,7 +513,12 @@ def _token_expired(verification_token):
 
     expired = datetime.datetime.utcnow() > expire_time
 
-    current_app.logger.info('current time %s versus expire time %s is expired? %s', current_time, expire_time, expired)
+    current_app.logger.info(
+        'current time %s versus expire time %s is expired? %s',
+        current_time,
+        expire_time,
+        expired
+    )
 
     return expired
 

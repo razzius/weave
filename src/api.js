@@ -88,6 +88,7 @@ const profilePayloadMapping = {
   professional_interests: 'professionalInterests',
   parts_of_me: 'partsOfMe',
   activities: 'activities',
+  degrees: 'degrees',
 
   additional_information: 'additionalInformation',
 

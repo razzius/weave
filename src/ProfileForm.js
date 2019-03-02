@@ -15,7 +15,7 @@ import {
   professionalInterestOptions,
   activitiesIEnjoyOptions,
   hospitalOptions,
-  titleOptions,
+  degreeOptions,
 } from './options'
 import { when } from './utils'
 
@@ -63,7 +63,7 @@ type State = {
   professionalInterests: Array<string>,
   partsOfMe: Array<string>,
   activities: Array<string>,
-  titles: Array<string>,
+  degrees: Array<string>,
 
   additionalInformation: string,
 
@@ -100,7 +100,7 @@ export default class ProfileForm extends Component<Props, State> {
     professionalInterests: [],
     partsOfMe: [],
     activities: [],
-    titles: [],
+    degrees: [],
 
     additionalInformation: '',
 
@@ -388,9 +388,9 @@ export default class ProfileForm extends Component<Props, State> {
             />
             <p>Academic Degrees</p>
             <CreatableTagSelect
-              values={this.state.titles}
-              options={titleOptions}
-              handleSelect={this.handleSelect('titles')}
+              values={this.state.degrees}
+              options={degreeOptions}
+              handleSelect={this.handleSelect('degrees')}
             />
             <p>Hospital Affiliations</p>
             <Select

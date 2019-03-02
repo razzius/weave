@@ -26,6 +26,7 @@ class ProfileSchema(Schema):
     professional_interests = nested_tag_list
     parts_of_me = nested_tag_list
     activities = nested_tag_list
+    degrees = nested_tag_list
 
     additional_information = fields.String()
 

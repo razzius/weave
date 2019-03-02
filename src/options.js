@@ -2,7 +2,7 @@ import professionalInterests from './professionalInterests'
 import hospitals from './hospitals'
 import clinicalSpecialties from './clinicalSpecialties'
 import activitiesIEnjoyTags from './activitiesIEnjoyTags'
-import titles from './titles'
+import degrees from './degrees'
 
 function makeOptions(list) {
   return list.map(item => ({
@@ -19,4 +19,4 @@ export const hospitalOptions = makeOptions(hospitals)
 
 export const activitiesIEnjoyOptions = makeOptions(activitiesIEnjoyTags)
 
-export const titleOptions = makeOptions(titles)
+export const degreeOptions = makeOptions(degrees)
