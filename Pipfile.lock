@@ -304,7 +304,6 @@
                 "sha256:ded1a85821d555dd68abdc0a8e7e4eee7b096f8a6d7a4821228b52a62a465f07"
             ],
             "index": "pypi",
-            "markers": null,
             "version": "==0.7.3"
         },
         "six": {
