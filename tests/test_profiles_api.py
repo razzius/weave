@@ -1,6 +1,6 @@
 import http
 
-from server.models import VerificationEmail, VerificationToken, db
+from server.models import VerificationEmail, VerificationToken, save
 
 
 def test_get_profiles_unauthorized(client):
@@ -22,20 +22,34 @@ def test_get_profiles_bogus_token(client):
 
 
 def test_get_profiles_empty(client):
-    token = '1234'
-
     verification_email = VerificationEmail(email='test@test.com')
+    save(verification_email)
 
-    db.session.add(verification_email)
-    db.session.commit()
+    verification_token = VerificationToken(token='1234', email_id=verification_email.id)
+    save(verification_token)
 
-    verification_token = VerificationToken(token=token, email_id=verification_email.id)
-
-    db.session.add(verification_token)
-    db.session.commit()
-
-    response = client.get('/api/profiles', headers={'Authorization': f'Token {token}'})
+    response = client.get(
+        '/api/profiles', headers={'Authorization': f'Token {verification_token.token}'}
+    )
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    assert response.json == []
+    assert response.json == {'profileCount': 0, 'profiles': []}
+
+
+def test_get_profiles_search_empty(client, postgresql):
+    verification_email = VerificationEmail(email='test@test.com')
+    save(verification_email)
+
+    verification_token = VerificationToken(token='1234', email_id=verification_email.id)
+    save(verification_token)
+
+    response = client.get(
+        '/api/profiles',
+        headers={'Authorization': f'Token {verification_token.token}'},
+        query_string={'query': 'abc'},
+    )
+
+    assert response.status_code == http.HTTPStatus.OK.value
+
+    assert response.json == {'profileCount': 0, 'profiles': []}

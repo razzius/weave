@@ -29,6 +29,7 @@ def test_verify_valid_token(client):
     assert response.json == {
         'available_for_mentoring': None,
         'email': 'test@test.com',
+        'is_admin': None,
         'profile_id': None,
         'is_mentor': True
     }

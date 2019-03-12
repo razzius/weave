@@ -25,7 +25,8 @@ def test_update_profile(client):
         'clinical_specialties': [],
         'professional_interests': [],
         'parts_of_me': [],
-        'activities': []
+        'activities': [],
+        'degrees': []
     }
 
     response = client.put(
@@ -49,6 +50,7 @@ def test_update_profile(client):
         'affiliations': [],
         'cadence': None,
         'clinical_specialties': [],
+        'degrees': [],
         'contact_email': 'new@test.com',
         'name': 'New User',
         'other_cadence': None,

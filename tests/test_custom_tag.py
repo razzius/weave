@@ -21,6 +21,7 @@ def test_create_profile_with_custom_tag(client):
     professional_interests = ['Advocacy']
     parts_of_me = ['African American']
     activities = ['Surfing the web']
+    degrees = ['MBA']
 
     profile = {
         'name': name,
@@ -29,7 +30,8 @@ def test_create_profile_with_custom_tag(client):
         'affiliations': affiliations,
         'professional_interests': professional_interests,
         'parts_of_me': parts_of_me,
-        'activities': activities
+        'activities': activities,
+        'degrees': degrees
     }
 
     response = client.post(
@@ -51,6 +53,7 @@ def test_create_profile_with_custom_tag(client):
         'cadence': None,
         'clinical_specialties': clinical_specialties,
         'contact_email': email,
+        'degrees': degrees,
         'name': name,
         'other_cadence': None,
         'parts_of_me': parts_of_me,

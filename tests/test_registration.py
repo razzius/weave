@@ -6,7 +6,7 @@ from server.models import VerificationEmail
 
 
 def test_faculty_registration_email(client, requests_mock):
-    email = 'test@harvard.edu'
+    email = 'test@hms.harvard.edu'
 
     requests_mock.post(
         f'https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages', {}, reason='OK'

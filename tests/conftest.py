@@ -6,7 +6,6 @@ from server.models import db
 
 @pytest.fixture
 def client():
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
     app.config['TESTING'] = True
 
     test_client = app.test_client()

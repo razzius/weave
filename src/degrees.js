@@ -1,4 +1,4 @@
-export default `\
+export default `
 DDS
 DMD
 DO
@@ -12,4 +12,6 @@ MPhil
 MPP
 MS
 PhD
-`.split('\n')
+`
+  .trim()
+  .split('\n')
