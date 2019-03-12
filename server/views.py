@@ -11,7 +11,7 @@ from cloudinary import uploader
 from sentry_sdk import capture_exception
 from marshmallow import ValidationError
 from requests_toolbelt.utils import dump
-from sqlalchemy import func, or_
+from sqlalchemy import func
 from sqlalchemy.sql import exists
 from sqlalchemy.exc import IntegrityError
 
@@ -42,49 +42,10 @@ from .models import (
     save,
 )
 from .schemas import profile_schema, profiles_schema, valid_email_schema
+from .queries import matching_profiles
 
 
 api = Blueprint('api', __name__)
-
-
-def matching_profiles(query):
-    if query is None or query == '':
-        return Profile.query.filter(Profile.available_for_mentoring)
-
-    words = ''.join(
-        character if character.isalnum() or character == ' ' else ' '
-        for character in query.lower()
-    ).split()
-
-    searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
-
-    tag_fields = [
-        (HospitalAffiliation, HospitalAffiliationOption),
-        (ClinicalSpecialty, ClinicalSpecialtyOption),
-        (ProfessionalInterest, ProfessionalInterestOption),
-        (PartsOfMe, PartsOfMeOption),
-        (ProfileActivity, ActivityOption),
-    ]
-
-    search_filters = [
-        or_(
-            *[func.lower(field).contains(word) for field in searchable_fields]
-            + [
-                func.lower(option_class.value).contains(word)
-                for _, option_class in tag_fields
-            ]
-        )
-        for word in words
-    ]
-
-    filters = [Profile.available_for_mentoring, *search_filters]
-
-    query = Profile.query
-
-    for relation, option_class in tag_fields:
-        query = query.outerjoin(relation).outerjoin(option_class)
-
-    return query.filter(*filters)
 
 
 def get_token(headers):
@@ -151,6 +112,7 @@ def get_profiles():
         return error
 
     query = request.args.get('query')
+    degrees = request.args.get('degrees')
 
     page = int(request.args.get('page', 1))
 
@@ -160,7 +122,7 @@ def get_profiles():
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    queryset = matching_profiles(query).order_by(
+    queryset = matching_profiles(query, degrees).order_by(
         # Is this the logged-in user's profile? If so, return it first (false)
         Profile.verification_email_id != verification_email_id,
         # Get the last word in the name.
