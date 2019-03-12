@@ -28,6 +28,8 @@ ipython = "*"
 ipdb = "*"
 pytest = "*"
 pdbpp = "*"
+pylint = "*"
+pytest-postgresql = "*"
 
 [requires]
 python_version = "3.6"
