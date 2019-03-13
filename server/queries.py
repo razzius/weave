@@ -5,6 +5,7 @@ from .models import (
     ActivityOption,
     ClinicalSpecialty,
     ClinicalSpecialtyOption,
+    DegreeOption,
     HospitalAffiliation,
     HospitalAffiliationOption,
     PartsOfMe,
@@ -12,15 +13,16 @@ from .models import (
     ProfessionalInterest,
     ProfessionalInterestOption,
     ProfileActivity,
+    ProfileDegree,
 )
 
 
 def matching_profiles(query, degrees):
-    if query is None or query == '':
+    if query is None or query == '' and not degrees:
         return Profile.query.filter(Profile.available_for_mentoring)
 
     words = ''.join(
-        character if character.isalnum() or character == ' ' else ' '
+        character if character.isalnum() else ' '
         for character in query.lower()
     ).split()
 
@@ -45,13 +47,18 @@ def matching_profiles(query, degrees):
         for word in words
     ]
 
-    filters = [Profile.available_for_mentoring, *search_filters]
-    if degrees:
-        filters.append(Profile.degrees)
+    filters = [
+        Profile.available_for_mentoring,
+        *search_filters,
+        *[func.lower(DegreeOption.value).contains(degree) for degree in degrees],
+    ]
 
     query = Profile.query
 
     for relation, option_class in tag_fields:
         query = query.outerjoin(relation).outerjoin(option_class)
+
+    if degrees:
+        query = query.outerjoin(ProfileDegree).outerjoin(DegreeOption)
 
     return query.filter(*filters)
