@@ -117,13 +117,15 @@ function payloadToProfile(payload) {
 export async function getProfiles({
   token,
   query = '',
+  degrees = [],
   page = 1,
 }: {
   token: string,
   query?: string,
+  degrees?: Array<string>,
   page: number,
 }) {
-  const params = { page, query }
+  const params = { page, query, degrees }
   const results = await get(token, 'profiles', params)
 
   return {

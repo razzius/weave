@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react'
 import ReactTooltip from 'react-tooltip'
 
@@ -14,9 +15,13 @@ function pluralizeResults(length) {
   return 'results'
 }
 
-export default class Browse extends Component {
+type Props = Object
+type State = Object
+
+export default class Browse extends Component<Props, State> {
   state = {
     loading: true,
+    degrees: [],
     searchTerms: [],
     search: '',
     results: null,
@@ -47,14 +52,14 @@ export default class Browse extends Component {
     this.setState({ loading: true })
 
     const { token } = this.props
-    const { searchTerms, search, page, results } = this.state
+    const { searchTerms, search, page, results, degrees } = this.state
     const searchArray = search === '' ? [] : [search]
     const query = searchTerms
       .concat(searchArray)
       .join(' ')
       .toLowerCase()
 
-    const newResults = await getProfiles({ token, query, page })
+    const newResults = await getProfiles({ token, query, page, degrees })
 
     if (page > 1) {
       const updatedProfiles = results.profiles.concat(newResults.profiles)
@@ -82,6 +87,17 @@ export default class Browse extends Component {
     )
   }
 
+  handleChangeDegrees = tags => {
+    this.setState(
+      {
+        queried: true,
+        degrees: tags.map(tag => tag.value),
+        page: 1,
+      },
+      this.handleSearch
+    )
+  }
+
   handleInputChange = (value, { action }) => {
     // Weird case. Deserves being written up. See
     // https://github.com/JedWatson/react-select/issues/1826#issuecomment-406020708
@@ -98,6 +114,7 @@ export default class Browse extends Component {
     this.setState(
       {
         searchTerms: [],
+        degrees: [],
         search: '',
         queried: false,
       },
@@ -113,6 +130,7 @@ export default class Browse extends Component {
       page,
       searchTerms,
       search,
+      degrees,
       queried,
     } = this.state
 
@@ -156,7 +174,9 @@ export default class Browse extends Component {
         <SearchInput
           value={searchTerms}
           inputValue={search}
+          degrees={degrees}
           onChange={this.handleChange}
+          onChangeDegrees={this.handleChangeDegrees}
           onInputChange={this.handleInputChange}
           onSubmit={() => {
             this.setState({ queried: true }, this.handleSearch)

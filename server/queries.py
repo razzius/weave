@@ -26,6 +26,8 @@ def matching_profiles(query, degrees):
         for character in query.lower()
     ).split()
 
+    degree_list = degrees.lower().split(',')
+
     searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
 
     tag_fields = [
@@ -50,7 +52,7 @@ def matching_profiles(query, degrees):
     filters = [
         Profile.available_for_mentoring,
         *search_filters,
-        *[func.lower(DegreeOption.value).contains(degree) for degree in degrees],
+        *[func.lower(DegreeOption.value).contains(degree) for degree in degree_list],
     ]
 
     query = Profile.query

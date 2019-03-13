@@ -1,17 +1,17 @@
 export default `
+DO
+MA
+MD
+MS
 DDS
 DMD
-DO
+MBA
+MPH
+MPP
+PhD
 FACC
 FACP
-MA
-MBA
-MD
-MPH
 MPhil
-MPP
-MS
-PhD
 `
   .trim()
   .split('\n')
