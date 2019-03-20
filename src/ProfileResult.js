@@ -6,6 +6,7 @@ import ReactTooltip from 'react-tooltip'
 
 import { capitalize } from './utils'
 import ProfileAvatar from './ProfileAvatar'
+import { withRouter } from 'react-router-dom'
 
 const CheckboxIndicator = ({
   title,
@@ -67,6 +68,8 @@ const ProfileResult = ({
   willingDiscussPersonal,
   willingCareerGuidance,
   willingStudentGroup,
+  results, // for history
+  history,
 }: {
   id: number,
   affiliations: Array<string>,
@@ -81,6 +84,8 @@ const ProfileResult = ({
   willingDiscussPersonal: boolean,
   willingCareerGuidance: boolean,
   willingStudentGroup: boolean,
+  results: Array<Object>,
+  history: History,
 }) => {
   const formattedAffiliations = (
     <p>
@@ -96,7 +101,15 @@ const ProfileResult = ({
   return (
     <div style={{ paddingBottom: '3em' }}>
       <div className="profile-result">
-        <Link to={`/profiles/${id}`} className="profile-result-link">
+        <a
+          className="profile-result-link"
+          onClick={() => {
+            history.push({
+              pathname: `/profiles/${id}`,
+              state: { results, scrollY: window.scrollY },
+            })
+          }}
+        >
           <ProfileAvatar imageUrl={imageUrl} name={name} size={160} />
           <div style={{ flexGrow: '0', flexShrink: '0', width: '400px' }}>
             <h2>{name}</h2>
@@ -151,10 +164,10 @@ const ProfileResult = ({
               checked={willingStudentGroup}
             />
           </div>
-        </Link>
+        </a>
       </div>
     </div>
   )
 }
 
-export default ProfileResult
+export default withRouter(ProfileResult)

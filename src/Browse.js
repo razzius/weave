@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import ReactTooltip from 'react-tooltip'
+import { withRouter } from 'react-router-dom'
 
 import ProfileResult from './ProfileResult'
 import SearchInput from './SearchInput'
@@ -18,7 +19,7 @@ function pluralizeResults(length) {
 type Props = Object
 type State = Object
 
-export default class Browse extends Component<Props, State> {
+class Browse extends Component<Props, State> {
   state = {
     loading: true,
     degrees: [],
@@ -31,13 +32,32 @@ export default class Browse extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    const { token } = this.props
+    const { token, location } = this.props
     const { page } = this.state
 
+    if (location.state) {
+      this.loadProfilesFromHistory(location.state)
+    } else {
+      this.loadProfilesFromServer({ token, page })
+    }
+  }
+
+  loadProfilesFromHistory = state => {
+    this.setState(
+      {
+        results: state.results,
+        loading: false,
+      },
+      () => {
+        window.scrollTo(0, state.scrollY)
+      }
+    )
+  }
+
+  loadProfilesFromServer = async ({ token, page }) => {
     try {
-      const results = await getProfiles({ token, page })
       this.setState({
-        results,
+        results: await getProfiles({ token, page }),
         loading: false,
       })
     } catch (err) {
@@ -165,7 +185,7 @@ export default class Browse extends Component<Props, State> {
     const profileElements =
       results !== null
         ? results.profiles.map(result => (
-            <ProfileResult key={result.id} {...result} />
+            <ProfileResult key={result.id} results={results} {...result} />
           ))
         : null
 
@@ -206,3 +226,4 @@ export default class Browse extends Component<Props, State> {
     )
   }
 }
+export default withRouter(Browse)

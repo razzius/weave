@@ -1,6 +1,7 @@
 // @flow
 import React, { Fragment } from 'react'
 import MediaQuery from 'react-responsive'
+import { withRouter, Link } from 'react-router-dom'
 
 import { capitalize } from './utils'
 import NextButton from './NextButton'
@@ -12,12 +13,14 @@ const Buttons = ({
   editing,
   profileId,
   isAdmin,
+  location,
 }: {
   ownProfile: boolean,
   firstTimePublish: boolean,
   editing: boolean,
   profileId: string,
   isAdmin: boolean,
+  location: Object,
 }) => (
   <Fragment>
     {ownProfile && <NextButton to="/edit-profile" text="Edit profile" />}
@@ -28,7 +31,14 @@ const Buttons = ({
       />
     )}
     {!firstTimePublish &&
-      !editing && <NextButton to="/browse" text="Back to list" />}
+      !editing && (
+        <Link
+          className="button next-button"
+          to={{ pathname: '/browse', state: location.state }}
+        >
+          Back 3 list
+        </Link>
+      )}
   </Fragment>
 )
 
@@ -205,17 +215,19 @@ const ProfileView = ({
   firstTimePublish,
   editing,
   isAdmin,
+  location,
 }: {
   data: ProfileData,
   ownProfile: boolean,
   firstTimePublish: boolean,
   editing: boolean,
   isAdmin: boolean,
+  location: Object,
 }) => {
   const buttons = (
     <Buttons
       profileId={data.id}
-      {...{ ownProfile, firstTimePublish, editing, isAdmin }}
+      {...{ ownProfile, firstTimePublish, editing, isAdmin, location }}
     />
   )
   return (
@@ -270,4 +282,4 @@ const ProfileView = ({
   )
 }
 
-export default ProfileView
+export default withRouter(ProfileView)
