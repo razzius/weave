@@ -49,11 +49,13 @@ class Browse extends Component<Props, State> {
   }
 
   loadProfilesFromServer = async ({ token, page }) => {
+    const { history } = this.props
     try {
       this.setState({
         results: await getProfiles({ token, page }),
         loading: false,
       })
+      history.replace('/browse', this.state)
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error(err)
@@ -162,15 +164,16 @@ class Browse extends Component<Props, State> {
         </Button>
       )
 
-    const scrollToTopButton = (
-      <Button
-        onClick={() => {
-          window.scrollTo(0, 0)
-        }}
-      >
-        Scroll to top
-      </Button>
-    )
+    const scrollToTopButton =
+      results != null && results.length > 0 ? (
+        <Button
+          onClick={() => {
+            window.scrollTo(0, 0)
+          }}
+        >
+          Scroll to top
+        </Button>
+      ) : null
 
     const navigationButtons = (
       <div style={{ textAlign: 'center' }}>
