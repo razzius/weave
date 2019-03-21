@@ -41,6 +41,7 @@ Geriatric Psychiatry
 Hand Surgery
 Hematology
 Hematology & Oncology
+Hospital Medicine
 Infectious Disease
 Internal Medicine
 Internal Medicine-Pediatrics
