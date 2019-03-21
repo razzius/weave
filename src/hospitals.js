@@ -2,7 +2,7 @@ export default `
 Beth Israel Deaconess Medical Center
 Brigham and Women’s Hospital
 Cambridge Health Alliance
-Children’s Hospital Boston
+Boston Children’s Hospital
 Dana-Farber Cancer Institute
 Forsyth Institute
 Harvard Pilgrim Health Care
