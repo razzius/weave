@@ -1,4 +1,4 @@
-export default `\
+export default `
 Beth Israel Deaconess Medical Center
 Brigham and Women’s Hospital
 Cambridge Health Alliance
@@ -16,4 +16,6 @@ Mount Auburn Hospital
 Schepens Eye Research Institute
 Spaulding Rehabilitation Hospital
 Veterans Affairs Boston Healthcare System
-`.split('\n')
+`
+  .trim()
+  .split('\n')
