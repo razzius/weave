@@ -43,15 +43,9 @@ class Browse extends Component<Props, State> {
   }
 
   loadProfilesFromHistory = state => {
-    this.setState(
-      {
-        results: state.results,
-        loading: false,
-      },
-      () => {
-        window.scrollTo(0, state.scrollY)
-      }
-    )
+    this.setState(state, () => {
+      window.scrollTo(0, state.scrollY)
+    })
   }
 
   loadProfilesFromServer = async ({ token, page }) => {
@@ -69,6 +63,7 @@ class Browse extends Component<Props, State> {
   }
 
   handleSearch = async () => {
+    const { history } = this.props
     this.setState({ loading: true })
 
     const { token } = this.props
@@ -94,6 +89,7 @@ class Browse extends Component<Props, State> {
     } else {
       this.setState({ results: newResults, loading: false })
     }
+    history.replace('/browse', this.state)
   }
 
   handleChange = tags => {
@@ -185,7 +181,11 @@ class Browse extends Component<Props, State> {
     const profileElements =
       results !== null
         ? results.profiles.map(result => (
-            <ProfileResult key={result.id} results={results} {...result} />
+            <ProfileResult
+              key={result.id}
+              browseState={this.state}
+              {...result}
+            />
           ))
         : null
 

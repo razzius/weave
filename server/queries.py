@@ -1,3 +1,6 @@
+import operator
+from functools import reduce
+
 from .models import Profile
 from sqlalchemy import func, or_
 
@@ -22,8 +25,7 @@ def matching_profiles(query, degrees):
         return Profile.query.filter(Profile.available_for_mentoring)
 
     words = ''.join(
-        character if character.isalnum() else ' '
-        for character in query.lower()
+        character if character.isalnum() else ' ' for character in query.lower()
     ).split()
 
     degree_list = degrees.lower().split(',')
@@ -49,11 +51,7 @@ def matching_profiles(query, degrees):
         for word in words
     ]
 
-    filters = [
-        Profile.available_for_mentoring,
-        *search_filters,
-        *[func.lower(DegreeOption.value).contains(degree) for degree in degree_list],
-    ]
+    filters = [Profile.available_for_mentoring, *search_filters]
 
     query = Profile.query
 
@@ -61,6 +59,18 @@ def matching_profiles(query, degrees):
         query = query.outerjoin(relation).outerjoin(option_class)
 
     if degrees:
-        query = query.outerjoin(ProfileDegree).outerjoin(DegreeOption)
+        degree_filters = reduce(
+            operator.and_,
+            [
+                func.bool_or(func.lower(DegreeOption.value) == degree)
+                for degree in degree_list
+            ],
+        )
+        query = (
+            query.outerjoin(ProfileDegree)
+            .outerjoin(DegreeOption)
+            .group_by(Profile.id)
+            .having(degree_filters)
+        )
 
     return query.filter(*filters)

@@ -68,7 +68,7 @@ const ProfileResult = ({
   willingDiscussPersonal,
   willingCareerGuidance,
   willingStudentGroup,
-  results, // for history
+  browseState, // for history
   history,
 }: {
   id: number,
@@ -84,7 +84,7 @@ const ProfileResult = ({
   willingDiscussPersonal: boolean,
   willingCareerGuidance: boolean,
   willingStudentGroup: boolean,
-  results: Array<Object>,
+  browseState: Object,
   history: History,
 }) => {
   const formattedAffiliations = (
@@ -106,7 +106,7 @@ const ProfileResult = ({
           onClick={() => {
             history.push({
               pathname: `/profiles/${id}`,
-              state: { results, scrollY: window.scrollY },
+              state: { ...browseState, scrollY: window.scrollY },
             })
           }}
         >

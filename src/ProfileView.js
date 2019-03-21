@@ -32,12 +32,11 @@ const Buttons = ({
     )}
     {!firstTimePublish &&
       !editing && (
-        <Link
+        <NextButton
           className="button next-button"
           to={{ pathname: '/browse', state: location.state }}
-        >
-          Back 3 list
-        </Link>
+          text="Back to list"
+        />
       )}
   </Fragment>
 )
