@@ -1,12 +1,15 @@
-from flask import Flask, send_from_directory
 import os
-from flask_cors import CORS
-from flask_basicauth import BasicAuth
+
+import sentry_sdk
+from flask import Flask, send_from_directory
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
+from flask_basicauth import BasicAuth
+from flask_cors import CORS
 from flask_sslify import SSLify
-import sentry_sdk
 from sentry_sdk.integrations.flask import FlaskIntegration
+
+import server.views
 
 from .models import (
     ActivityOption,
@@ -21,7 +24,6 @@ from .models import (
     db,
 )
 
-import server.views
 
 sentry_dsn = os.environ.get('PYTHON_SENTRY_DSN')
 
