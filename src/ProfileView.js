@@ -134,7 +134,7 @@ const Cadence = ({
 
 const HospitalAffiliations = ({ affiliations }: { affiliations: string }) => (
   <Fragment>
-    <h4>Hospital Affiliations</h4>
+    <h4>Institutional Affiliations</h4>
     <p style={{ paddingBottom: '1em' }}>{affiliations}</p>
   </Fragment>
 )
