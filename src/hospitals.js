@@ -5,7 +5,9 @@ Cambridge Health Alliance
 Boston Children’s Hospital
 Dana-Farber Cancer Institute
 Forsyth Institute
+Harvard Medical School Quad
 Harvard Pilgrim Health Care
+Harvard School of Dental Medicine
 Hebrew SeniorLife
 Joslin Diabetes Center
 Judge Baker Children’s Center
