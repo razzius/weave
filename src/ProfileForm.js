@@ -392,7 +392,7 @@ export default class ProfileForm extends Component<Props, State> {
               options={degreeOptions}
               handleSelect={this.handleSelect('degrees')}
             />
-            <p>Hospital Affiliations</p>
+            <p>Institutional Affiliations</p>
             <Select
               styles={{
                 control: base => ({ ...base, backgroundColor: 'white' }),
