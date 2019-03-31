@@ -3,6 +3,7 @@ DO
 MA
 MD
 MS
+MSc
 DDS
 DMD
 MBA
