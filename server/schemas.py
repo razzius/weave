@@ -50,7 +50,7 @@ class ValidEmailSchema(Schema):
 
     @validates_schema
     def validate_email(self, in_data):
-        email = in_data.get('email', '')
+        email = in_data.get('email', '').lower()
 
         if not any(email.endswith(domain) for domain in VALID_DOMAINS):
             raise ValidationError(
