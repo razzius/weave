@@ -23,11 +23,14 @@ Congenital Cardiac Surgery
 Craniofacial Surgery
 Critical Care Medicine
 Cytopathology
+Dental Anesthesiology
+Dental Public Health
 Dermatology
 Dermatopathology
 Developmental-Behavioral Pediatrics
 Emergency Medicine
 Endocrinology, Diabetes & Metabolism
+Endodontics
 Endovascular Surgical Neuroradiology
 Family Medicine
 Family Practice
@@ -66,6 +69,10 @@ Obstetrics & Gynecology
 Oncology
 Ophthalmic Plastic & Reconstructive Surgery
 Ophthalmology
+Oral and Maxillofacial Pathology
+Oral and Maxillofacial Radiology
+Oral and Maxillofacial Surgery
+Orthodontics and Dentofacial Orthopedics
 Orthopaedic Sports Medicine
 Orthopaedic Surgery
 Orthopaedic Surgery of the Spine
@@ -77,6 +84,7 @@ Pathology-Anatomic & Clinical
 Pediatric Anesthesiology
 Pediatric Cardiology
 Pediatric Critical Care Medicine
+Pediatric Dentistry
 Pediatric Emergency Medicine
 Pediatric Endocrinology
 Pediatric Gastroenterology
@@ -94,10 +102,12 @@ Pediatric Surgery
 Pediatric Transplant Hepatology
 Pediatric Urology
 Pediatrics
+Periodontics
 Physical Medicine & Rehabilitation
 Plastic Surgery
 Preventive Medicine
 Procedural Dermatology
+Prosthodontics
 Psychiatry
 Pulmonary Disease
 Pulmonary Disease & Critical Care Medicine
