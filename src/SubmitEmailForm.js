@@ -67,7 +67,7 @@ export default class SubmitEmailForm extends Component {
       const { email } = this.state
 
       const emailValid = any(
-        VALID_DOMAINS.map(domain => email.endsWith(domain))
+        VALID_DOMAINS.map(domain => email.toLowerCase().endsWith(domain))
       )
 
       return (
