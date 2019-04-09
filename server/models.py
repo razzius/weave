@@ -32,6 +32,9 @@ class VerificationEmail(IDMixin, db.Model):
     is_admin = db.Column(db.Boolean)
     is_mentor = db.Column(db.Boolean)
 
+    def __str__(self):
+        return f'<VerificationEmail {self.id}: {self.email}>'
+
 
 class PredefinedTagMixin(IDMixin):
     value = db.Column(db.String(50))
