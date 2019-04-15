@@ -198,15 +198,19 @@ const AboutInfo = ({
   </Fragment>
 )
 
-const ContactInformation = data => (
-  <Fragment>
-    <h4>Contact Information</h4>
+const ContactInformation = data => {
+  const [username, domain] = data.contactEmail.split('@')
+  return (
+    <Fragment>
+      <h4>Contact Information</h4>
 
-    <a className="contact-email" href={`mailto:${data.contactEmail}`}>
-      {data.contactEmail}
-    </a>
-  </Fragment>
-)
+      <a className="contact-email" href={`mailto:${data.contactEmail}`}>
+        {username}
+        <wbr />@{domain}
+      </a>
+    </Fragment>
+  )
+}
 
 const ProfileView = ({
   data,
