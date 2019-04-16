@@ -1,11 +1,13 @@
 [
-  "@broadinstitute.org",
   "@bidmc.harvard.edu",
+  "@broadinstitute.org",
   "@bwh.harvard.edu",
   "@challiance.org",
   "@childrens.harvard.edu",
   "@dfci.harvard.edu",
   "@forsyth.org",
+  "@forsyth.org",
+  "@gse.harvard.edu",
   "@hms.harvard.edu",
   "@hmsweave.com",
   "@hphc.org",
@@ -16,6 +18,8 @@
   "@meei.harvard.edu",
   "@mgh.harvard.edu",
   "@partners.org",
+  "@post.harvard.edu",
+  "@tch.harvard.edu",
   "@va.gov",
   "@wyss.harvard.edu"
 ]
