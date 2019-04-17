@@ -355,3 +355,7 @@ input::-webkit-contacts-auto-fill-button {
 input[disabled] {
   pointer-events:none;
 }
+
+.resultDegrees {
+    color: dimgrey;
+}

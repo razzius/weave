@@ -59,6 +59,7 @@ const ProfileResult = ({
   affiliations,
   imageUrl,
   name,
+  degrees,
   clinicalSpecialties,
   professionalInterests,
   cadence,
@@ -75,6 +76,7 @@ const ProfileResult = ({
   affiliations: Array<string>,
   imageUrl: string,
   name: string,
+  degrees: Array<string>,
   clinicalSpecialties: Array<string>,
   professionalInterests: Array<string>,
   cadence: string,
@@ -98,6 +100,10 @@ const ProfileResult = ({
     </p>
   )
 
+  const degreesView = degrees.length ? (
+    <span className="resultDegrees">{`, ${degrees.join(', ')}`}</span>
+  ) : null
+
   return (
     <div style={{ paddingBottom: '3em' }}>
       <div className="profile-result">
@@ -112,7 +118,10 @@ const ProfileResult = ({
         >
           <ProfileAvatar imageUrl={imageUrl} name={name} size={160} />
           <div style={{ flexGrow: '0', flexShrink: '0', width: '400px' }}>
-            <h2>{name}</h2>
+            <h2>
+              {name}
+              {degreesView}
+            </h2>
             {formattedAffiliations}
             <p className="clinical-interests">
               {clinicalSpecialties.map(interest => (
