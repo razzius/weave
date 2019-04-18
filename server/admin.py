@@ -52,16 +52,28 @@ class BasicAuthModelView(ModelView):
         return super().delete_view()
 
 
+class ModelViewSortedById(BasicAuthModelView):
+    column_default_sort = ('id', False)
+
+
+class ModelViewSortedByValue(BasicAuthModelView):
+    column_default_sort = ('value', False)
+
+
+class ModelViewSortedByDateCreated(BasicAuthModelView):
+    column_default_sort = ('date_created', False)
+
+
 admin = Admin(index_view=BasicAuthAdminView())
-admin.add_view(BasicAuthModelView(VerificationToken, db.session))
-admin.add_view(BasicAuthModelView(VerificationEmail, db.session))
-admin.add_view(BasicAuthModelView(Profile, db.session))
-admin.add_view(BasicAuthModelView(ClinicalSpecialtyOption, db.session))
-admin.add_view(BasicAuthModelView(ProfessionalInterestOption, db.session))
-admin.add_view(BasicAuthModelView(PartsOfMeOption, db.session))
-admin.add_view(BasicAuthModelView(ActivityOption, db.session))
-admin.add_view(BasicAuthModelView(HospitalAffiliationOption, db.session))
-admin.add_view(BasicAuthModelView(DegreeOption, db.session))
+admin.add_view(ModelViewSortedByDateCreated(VerificationToken, db.session))
+admin.add_view(ModelViewSortedById(VerificationEmail, db.session))
+admin.add_view(ModelViewSortedByDateCreated(Profile, db.session))
+admin.add_view(ModelViewSortedByValue(ClinicalSpecialtyOption, db.session))
+admin.add_view(ModelViewSortedByValue(ProfessionalInterestOption, db.session))
+admin.add_view(ModelViewSortedByValue(PartsOfMeOption, db.session))
+admin.add_view(ModelViewSortedByValue(ActivityOption, db.session))
+admin.add_view(ModelViewSortedByValue(HospitalAffiliationOption, db.session))
+admin.add_view(ModelViewSortedByValue(DegreeOption, db.session))
 
 
 def init_admin(app):
