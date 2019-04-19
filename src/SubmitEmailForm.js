@@ -98,6 +98,18 @@ export default class SubmitEmailForm extends Component {
               </button>
             </div>
           </form>
+          <div className="validDomains">
+            <p>
+              Read about how email address validation works on the{' '}
+              <a href="/help">help</a> page.
+            </p>
+            <p>The following are the allowed email domains:</p>
+            {VALID_DOMAINS.map(domain => <div>{domain.replace('@', '')}</div>)}
+            <p>
+              If you have any questions, email us at{' '}
+              <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>.
+            </p>
+          </div>
         </div>
       )
     }
