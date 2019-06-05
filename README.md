@@ -25,6 +25,9 @@ Note that this drops your local database to start from a clean state.
 # You can call your database however you'd like; I use hms
 $ createdb hms
 $ export DATABASE_URL='postgres:///hms'
+# It appears a PYTHONPATH is necessary to allow scripts like this to import.
+# Ideally this next step would not be necessary.
+$ export PYTHONPATH=.
 $ pipenv run python scripts/resetdb.py
 ```
 
