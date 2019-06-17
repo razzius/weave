@@ -25,7 +25,7 @@ def _send_email(to, subject, html):
         json={
             'personalizations': [
                 {'to': [{'email': to}]},
-            ]
+            ],
             'from': {'email': 'admin@hmsweave.com'},
             'subject': subject,
             'content': [{'type': 'text/html', 'value': html}],
