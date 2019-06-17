@@ -182,16 +182,40 @@ export async function updateProfile(
   return put(token, `profiles/${profileId}`, payload)
 }
 
-export async function sendFacultyVerificationEmail(email: string) {
-  return post(null, 'send-faculty-verification-email', { email })
+export async function sendFacultyVerificationEmail({
+  email,
+  isPersonalDevice,
+}: {|
+  +email: string,
+  +isPersonalDevice: boolean,
+|}) {
+  return post(null, 'send-faculty-verification-email', {
+    email,
+    is_personal_device: isPersonalDevice,
+  })
 }
 
-export async function sendStudentVerificationEmail(email: string) {
-  return post(null, 'send-student-verification-email', { email })
+export async function sendStudentVerificationEmail({
+  email,
+  isPersonalDevice,
+}: {|
+  +email: string,
+  +isPersonalDevice: boolean,
+|}) {
+  return post(null, 'send-student-verification-email', {
+    email,
+    is_personal_device: isPersonalDevice,
+  })
 }
 
-export async function sendLoginEmail(email: string) {
-  return post(null, 'login', { email })
+export async function sendLoginEmail({
+  email,
+  isPersonalDevice,
+}: {|
+  +email: string,
+  +isPersonalDevice: boolean,
+|}) {
+  return post(null, 'login', { email, is_personal_device: isPersonalDevice })
 }
 
 export type Account = {|

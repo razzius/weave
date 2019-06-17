@@ -31,7 +31,6 @@ class VerificationEmail(IDMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean)
     is_mentor = db.Column(db.Boolean)
-    is_personal_device = db.Column(db.Boolean)
 
     def __str__(self):
         return f'<VerificationEmail {self.id}: {self.email}>'
@@ -175,3 +174,5 @@ class VerificationToken(db.Model):
     expired = db.Column(db.Boolean, default=False)
 
     email_log = db.Column(db.Text)
+
+    is_personal_device = db.Column(db.Boolean)

@@ -386,7 +386,7 @@ def send_token(verification_email, email_function, is_personal_device):
 
     token = generate_token()
 
-    verification_token = save_verification_token(verification_email.id, token)
+    verification_token = save_verification_token(verification_email.id, token, is_personal_device)
 
     email_response = email_function(verification_email.email, token)
 

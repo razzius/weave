@@ -41,15 +41,22 @@ export default class SubmitEmailForm extends Component {
     super(props)
     this.state = {
       email: getParam('email') || '',
+      isPersonalDevice: false,
       success: false,
       error: null,
     }
   }
 
   submitEmail = e => {
+    const { email, isPersonalDevice } = this.state
+    const { sendEmail } = this.props
+
     e.preventDefault()
-    this.props
-      .sendEmail(this.state.email)
+
+    sendEmail({
+      email,
+      isPersonalDevice,
+    })
       .then(() => {
         this.setState({ success: true })
       })
@@ -87,6 +94,18 @@ export default class SubmitEmailForm extends Component {
               Please enter your Harvard or hospital-affiliated email
             </ReactTooltip>
             {displayError(this.state.error, this.state.email)}
+            <div>
+              <input
+                type="checkbox"
+                value={this.state.isPersonalDevice}
+                onClick={() =>
+                  this.setState({
+                    isPersonalDevice: !this.state.isPersonalDevice,
+                  })
+                }
+              />
+              This is a personal device (stay logged in for 2 weeks)
+            </div>
             <div
               id="toggle"
               data-tip
@@ -105,7 +124,9 @@ export default class SubmitEmailForm extends Component {
             </p>
             <p>The following are the allowed email domains:</p>
             {VALID_DOMAINS.filter(domain => domain !== '@hmsweave.com').map(
-              domain => <div>{domain.replace('@', '')}</div>
+              domain => (
+                <div>{domain.replace('@', '')}</div>
+              )
             )}
             <p>
               If you have any questions, please email us at{' '}
