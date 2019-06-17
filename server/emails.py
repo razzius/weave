@@ -4,21 +4,31 @@ from flask import current_app
 import requests
 
 
-MAILGUN_API_KEY = os.environ['MAILGUN_API_KEY']
-MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN', 'tests')
+# MAILGUN_API_KEY = os.environ['MAILGUN_API_KEY']
+# MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN', 'tests')
 SERVER_URL = os.environ['REACT_APP_SERVER_URL']
+SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
 
+# curl --request POST \
+#   --url https://api.sendgrid.com/v3/mail/send \
+#   --header "Authorization: Bearer $SENDGRID_API_KEY" \
+#   --header 'Content-Type: application/json' \
+#   --data '{"personalizations": [{"to": [{"email": "razzi53@gmail.com"}]}],"from": {"email": "admin@hmsweave.com"},"subject": "Sending with SendGrid is Fun","content": [{"type": "text/plain", "value": "and easy to do anywhere, even with cURL"}]}'
 def _send_email(to, subject, html):
 
     return requests.post(
-        f'https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages',
-        auth=('api', MAILGUN_API_KEY),
-        data={
+        'https://api.sendgrid.com/v3/mail/send',
+        headers={
+            'Authorization': f'Bearer {SENDGRID_API_KEY}'
+        },
+        json={
+            'personalizations': [
+                {'to': [{'email': to}]},
+            ]
+            'from': {'email': 'admin@hmsweave.com'},
             'subject': subject,
-            'to': [to],
-            'from': 'Weave <admin@hmsweave.com>',
-            'html': html,
+            'content': [{'type': 'text/html', 'value': html}],
         },
     )
 
