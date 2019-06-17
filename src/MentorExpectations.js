@@ -13,8 +13,8 @@ const MentorExpectations = () => (
       final but each member should have some sense of expectations about what
       the relationship will constitute in the dimensions of frequency meeting,
       method of correspondence, and content of what each party is hoping to
-      invest and receive from the relationship. Let HMS Weave serve as a
-      catalyst for this discussion.
+      invest and receive from the relationship. Let Weave serve as a catalyst
+      for this discussion.
     </p>
     <h3>Stay in touch</h3>
     <p>

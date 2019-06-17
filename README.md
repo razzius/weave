@@ -1,4 +1,4 @@
-# HMS Weave project (working title)
+# Weave
 
 ## Requirements
 

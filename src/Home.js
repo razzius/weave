@@ -64,16 +64,16 @@ const Home = ({ token, account }) => {
       <section id="about-weave">
         <h1>About</h1>
         <p>
-          Soon after entering medical school, students are faced with a new
-          learning and social environment and pressure to quickly determine
-          academic or clinical interests. Although resources for faculty contact
-          information exist, both students and faculty have found there to be
-          unclear expectations about what a mentorship relationship or
-          experience will constitute. Furthermore, for students with myriad
-          interests who are still in the process of discovering their desired
-          field of medicine, it is often challenging to know who to reach out to
-          when lists of faculty members are provided solely based on clinical
-          specialty.
+          Soon after entering medical school and dental school, students are
+          faced with a new learning and social environment and pressure to
+          quickly determine academic or clinical interests. Although resources
+          for faculty contact information exist, both students and faculty have
+          found there to be unclear expectations about what a mentorship
+          relationship or experience will constitute. Furthermore, for students
+          with myriad interests who are still in the process of discovering
+          their desired field of medicine, it is often challenging to know who
+          to reach out to when lists of faculty members are provided solely
+          based on clinical specialty.
         </p>
 
         <p>
@@ -108,9 +108,9 @@ const Home = ({ token, account }) => {
 
         <p>
           If you are passionate about improving mentoring at Harvard Medical
-          School or at similar institutions, we would love to hear from you!
-          Please reach out to us at:{' '}
-          <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>
+          School and Harvard School of Dental Medical or at similar
+          institutions, we would love to hear from you! Please reach out to us
+          at: <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>
         </p>
       </section>
     </div>

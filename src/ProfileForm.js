@@ -431,8 +431,8 @@ export default class ProfileForm extends Component<Props, State> {
               <p>
                 Please use this section to share parts of your identity. This is
                 where faculty may share optional demographic or personally
-                meaningful information that is viewable by HMS students and
-                faculty on Weave. Please{' '}
+                meaningful information that is viewable by students and faculty
+                on Weave. Please{' '}
                 <Link to="/help" target="_blank">
                   create your own tags
                 </Link>{' '}

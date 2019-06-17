@@ -132,39 +132,37 @@ class App extends Component<Props, State> {
           <header className="App-header">
             <div className="header-inner">
               <Link to="/" className="App-title left">
-                <h1>HMS Weave</h1>
+                <h1>Weave</h1>
               </Link>
 
               {loginAction}
 
-              {token &&
-                account &&
-                account.isMentor && (
-                  <div
-                    data-tip
-                    className="available-for-mentoring"
-                    data-for="toggleTooltip"
-                  >
-                    Available for mentoring:
-                    <ReactTooltip id="toggleTooltip" place="bottom">
-                      Controls whether your profile will be visible to mentees.
-                    </ReactTooltip>
-                    <Toggle
-                      on={account.availableForMentoring}
-                      onClick={() => {
-                        const newAvailable = !account.availableForMentoring
-                        const newAccount = {
-                          ...account,
-                          availableForMentoring: newAvailable,
-                        }
-                        this.setState({ account: newAccount })
-                        if (account.profileId !== null) {
-                          setAvailabilityForMentoring(token, newAvailable)
-                        }
-                      }}
-                    />
-                  </div>
-                )}
+              {token && account && account.isMentor && (
+                <div
+                  data-tip
+                  className="available-for-mentoring"
+                  data-for="toggleTooltip"
+                >
+                  Available for mentoring:
+                  <ReactTooltip id="toggleTooltip" place="bottom">
+                    Controls whether your profile will be visible to mentees.
+                  </ReactTooltip>
+                  <Toggle
+                    on={account.availableForMentoring}
+                    onClick={() => {
+                      const newAvailable = !account.availableForMentoring
+                      const newAccount = {
+                        ...account,
+                        availableForMentoring: newAvailable,
+                      }
+                      this.setState({ account: newAccount })
+                      if (account.profileId !== null) {
+                        setAvailabilityForMentoring(token, newAvailable)
+                      }
+                    }}
+                  />
+                </div>
+              )}
 
               <nav>
                 <a href="/#about-weave" className="App-title">

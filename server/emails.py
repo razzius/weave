@@ -17,7 +17,7 @@ def _send_email(to, subject, html):
         data={
             'subject': subject,
             'to': [to],
-            'from': 'HMS Weave <admin@hmsweave.com>',
+            'from': 'Weave <admin@hmsweave.com>',
             'html': html,
         },
     )
@@ -29,7 +29,7 @@ EMAIL_CLOSING = """
 </p>
 
 <p>
-    HMS Weave Team
+    Weave Team
 </p>
 """
 
@@ -66,7 +66,7 @@ def send_faculty_registration_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return _send_email(email, 'HMS Weave Mentor Registration', html)
+    return _send_email(email, 'Weave Mentor Registration', html)
 
 
 def send_student_registration_email(email, token):
@@ -92,7 +92,7 @@ def send_student_registration_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return _send_email(email, 'HMS Weave Mentee Registration', html)
+    return _send_email(email, 'Weave Mentee Registration', html)
 
 
 def send_faculty_login_email(email, token):
@@ -112,7 +112,7 @@ def send_faculty_login_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return _send_email(email, 'HMS Weave Mentor Login', html)
+    return _send_email(email, 'Weave Mentor Login', html)
 
 
 def send_student_login_email(email, token):
@@ -132,4 +132,4 @@ def send_student_login_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return _send_email(email, 'HMS Weave Mentee Login', html)
+    return _send_email(email, 'Weave Mentee Login', html)

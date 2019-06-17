@@ -11,7 +11,7 @@ export default class FacultyExpectationsSlider extends React.Component {
     this.state = {
       nextText: 'Next',
       nextHref: null,
-      lastSlide: false
+      lastSlide: false,
     }
   }
 
@@ -31,9 +31,9 @@ export default class FacultyExpectationsSlider extends React.Component {
         this.setState({
           nextText: lastSlide ? 'I agree' : 'Next',
           nextHref: lastSlide ? '/register-faculty-email' : null,
-          lastSlide
+          lastSlide,
         })
-      }
+      },
     }
 
     return (
@@ -53,7 +53,7 @@ export default class FacultyExpectationsSlider extends React.Component {
               expectations about what the relationship will constitute in the
               dimensions of frequency meeting, method of correspondence, and
               content of what each party is hoping to invest and receive from
-              the relationship. Let HMS Weave serve as a catalyst for this
+              the relationship. Let Weave serve as a catalyst for this
               discussion.
             </div>
           </div>
