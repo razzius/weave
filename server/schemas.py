@@ -48,6 +48,8 @@ VALID_DOMAINS = json.load(open(PROJECT_ROOT / 'src' / 'valid_domains.json'))
 class ValidEmailSchema(Schema):
     email = fields.String(required=True)
 
+    is_personal_device = fields.Boolean(default=False)
+
     @validates_schema
     def validate_email(self, in_data):
         email = in_data.get('email', '').lower()

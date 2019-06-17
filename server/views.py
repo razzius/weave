@@ -369,15 +369,15 @@ def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
     return verification_email, True
 
 
-def save_verification_token(email_id, token):
-    verification_token = VerificationToken(email_id=email_id, token=token)
+def save_verification_token(email_id, token, is_personal_device):
+    verification_token = VerificationToken(email_id=email_id, token=token, is_personal_device=is_personal_device)
 
     save(verification_token)
 
     return verification_token
 
 
-def send_token(verification_email, email_function):
+def send_token(verification_email, email_function, is_personal_device):
     current_app.logger.info('Invalidating token with id %s', verification_email.id)
 
     VerificationToken.query.filter(
@@ -412,6 +412,8 @@ def process_send_verification_email(is_mentor):
 
     email = schema['email'].lower()
 
+    is_personal_device = schema['is_personal_device']
+
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:
@@ -419,7 +421,7 @@ def process_send_verification_email(is_mentor):
 
     verification_email, _ = get_verification_email(email, is_mentor=is_mentor)
 
-    send_token(verification_email, email_function=email_function)
+    send_token(verification_email, email_function=email_function, is_personal_device=is_personal_device)
 
     return jsonify({'id': verification_email.id, 'email': email})
 
@@ -443,6 +445,8 @@ def login():
 
     email = schema['email'].lower()
 
+    is_personal_device = schema['is_personal_device']
+
     verification_email = VerificationEmail.query.filter(
         VerificationEmail.email == email
     ).one_or_none()
@@ -456,14 +460,16 @@ def login():
         else send_student_login_email
     )
 
-    send_token(verification_email, email_function=email_function)
+    send_token(verification_email, email_function=email_function, is_personal_device=is_personal_device)
 
     return jsonify({'email': email})
 
 
 def _token_expired(verification_token):
+    hours_until_expiry = 168 * 2 if verification_token.is_personal_device else TOKEN_EXPIRY_AGE_HOURS
+
     expire_time = verification_token.date_created + relativedelta(
-        hours=TOKEN_EXPIRY_AGE_HOURS
+        hours=hours_until_expiry
     )
 
     if verification_token.expired:
