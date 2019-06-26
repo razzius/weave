@@ -118,14 +118,16 @@ export async function getProfiles({
   token,
   query = '',
   degrees = [],
+  affiliations = [],
   page = 1,
 }: {
   token: string,
   query?: string,
   degrees?: Array<string>,
+  affiliations?: Array<string>,
   page: number,
 }) {
-  const params = { page, query, degrees }
+  const params = { page, query, degrees, affiliations }
   const results = await get(token, 'profiles', params)
 
   return {

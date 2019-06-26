@@ -20,8 +20,8 @@ from .models import (
 )
 
 
-def matching_profiles(query, degrees):
-    if query is None or query == '' and not degrees:
+def matching_profiles(query, degrees, affiliations):
+    if query is None or query == '' and not degrees and not affiliations:
         return Profile.query.filter(Profile.available_for_mentoring)
 
     words = ''.join(
@@ -29,11 +29,11 @@ def matching_profiles(query, degrees):
     ).split()
 
     degree_list = degrees.lower().split(',')
+    affiliation_list = affiliations.lower().split(',')
 
     searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
 
     tag_fields = [
-        (HospitalAffiliation, HospitalAffiliationOption),
         (ClinicalSpecialty, ClinicalSpecialtyOption),
         (ProfessionalInterest, ProfessionalInterestOption),
         (PartsOfMe, PartsOfMeOption),
@@ -71,6 +71,21 @@ def matching_profiles(query, degrees):
             .outerjoin(DegreeOption)
             .group_by(Profile.id)
             .having(degree_filters)
+        )
+
+    if affiliations:
+        affiliations_filters = reduce(
+            operator.and_,
+            [
+                func.bool_or(func.lower(HospitalAffiliationOption.value) == affilation)
+                for affilation in affiliation_list
+            ],
+        )
+        query = (
+            query.outerjoin(HospitalAffiliation, Profile.id == HospitalAffiliation.profile_id)
+            .outerjoin(HospitalAffiliationOption)
+            .group_by(Profile.id)
+            .having(affiliations_filters)
         )
 
     return query.filter(*filters)

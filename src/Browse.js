@@ -19,17 +19,20 @@ function pluralizeResults(length) {
 type Props = Object
 type State = Object
 
+const originalState = {
+  loading: true,
+  degrees: [],
+  affiliations: [],
+  searchTerms: [],
+  search: '',
+  results: null,
+  queried: false,
+  error: null,
+  page: 1,
+}
+
 class Browse extends Component<Props, State> {
-  state = {
-    loading: true,
-    degrees: [],
-    searchTerms: [],
-    search: '',
-    results: null,
-    queried: false,
-    error: null,
-    page: 1,
-  }
+  state = originalState
 
   async componentDidMount() {
     const { token, location } = this.props
@@ -65,18 +68,32 @@ class Browse extends Component<Props, State> {
   }
 
   handleSearch = async () => {
-    const { history } = this.props
+    const { history, token } = this.props
+
     this.setState({ loading: true })
 
-    const { token } = this.props
-    const { searchTerms, search, page, results, degrees } = this.state
+    const {
+      searchTerms,
+      search,
+      page,
+      results,
+      degrees,
+      affiliations,
+    } = this.state
+
     const searchArray = search === '' ? [] : [search]
     const query = searchTerms
       .concat(searchArray)
       .join(' ')
       .toLowerCase()
 
-    const newResults = await getProfiles({ token, query, page, degrees })
+    const newResults = await getProfiles({
+      token,
+      query,
+      page,
+      degrees,
+      affiliations,
+    })
 
     if (page > 1) {
       const updatedProfiles = results.profiles.concat(newResults.profiles)
@@ -116,6 +133,17 @@ class Browse extends Component<Props, State> {
     )
   }
 
+  handleChangeAffiliations = tags => {
+    this.setState(
+      {
+        queried: true,
+        affiliations: tags.map(tag => tag.value),
+        page: 1,
+      },
+      this.handleSearch
+    )
+  }
+
   handleInputChange = (value, { action }) => {
     // Weird case. Deserves being written up. See
     // https://github.com/JedWatson/react-select/issues/1826#issuecomment-406020708
@@ -129,15 +157,7 @@ class Browse extends Component<Props, State> {
   }
 
   resetSearch = () => {
-    this.setState(
-      {
-        searchTerms: [],
-        degrees: [],
-        search: '',
-        queried: false,
-      },
-      this.handleSearch
-    )
+    this.setState(originalState, this.handleSearch)
   }
 
   render() {
@@ -150,6 +170,7 @@ class Browse extends Component<Props, State> {
       search,
       degrees,
       queried,
+      affiliations,
     } = this.state
 
     const nextButton = results !== null &&
@@ -198,8 +219,10 @@ class Browse extends Component<Props, State> {
           value={searchTerms}
           inputValue={search}
           degrees={degrees}
+          affiliations={affiliations}
           onChange={this.handleChange}
           onChangeDegrees={this.handleChangeDegrees}
+          onChangeAffiliations={this.handleChangeAffiliations}
           onInputChange={this.handleInputChange}
           onSubmit={() => {
             this.setState({ queried: true }, this.handleSearch)

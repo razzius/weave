@@ -113,6 +113,7 @@ def get_profiles():
 
     query = request.args.get('query')
     degrees = request.args.get('degrees')
+    affiliations = request.args.get('affiliations')
 
     page = int(request.args.get('page', 1))
 
@@ -122,7 +123,7 @@ def get_profiles():
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    queryset = matching_profiles(query, degrees).order_by(
+    queryset = matching_profiles(query, degrees, affiliations).order_by(
         # Is this the logged-in user's profile? If so, return it first (false)
         Profile.verification_email_id != verification_email_id,
         # Get the last word in the name.
