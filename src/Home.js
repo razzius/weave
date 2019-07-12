@@ -8,7 +8,7 @@ function getFacultyLink(token, profileId) {
 }
 
 function getFacultyText(token, profileId) {
-  if (token === null) return 'Register as a mentor'
+  if (token === null) return 'Register as a faculty member'
   if (profileId === null) return 'Create profile'
   return 'View my profile'
 }
@@ -43,7 +43,7 @@ const Home = ({ token, account }) => {
                 className="button"
                 to={token ? '/browse' : '/student-expectations'}
               >
-                Find a mentor
+                Register as a student
               </Link>
             </div>
           )}
