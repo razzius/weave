@@ -30,14 +30,13 @@ const Buttons = ({
         text="Edit profile as admin"
       />
     )}
-    {!firstTimePublish &&
-      !editing && (
-        <NextButton
-          className="button next-button"
-          to={{ pathname: '/browse', state: location.state }}
-          text="Back to list"
-        />
-      )}
+    {!firstTimePublish && !editing && (
+      <NextButton
+        className="button next-button"
+        to={{ pathname: '/browse', state: location.state }}
+        text="Back to list"
+      />
+    )}
   </Fragment>
 )
 
@@ -163,7 +162,7 @@ const AboutInfo = ({
   activities,
 }: Object) => (
   <Fragment>
-    <AcademicDegrees degrees={degrees.join(', ')} />
+    {degrees.length > 0 && <AcademicDegrees degrees={degrees.join(', ')} />}
 
     <HospitalAffiliations affiliations={affiliations.join(', ')} />
     {clinicalSpecialties.length > 0 && (

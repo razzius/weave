@@ -10,12 +10,7 @@
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
 
     <script>
-      let enableFullstory = true
-      try {
-	// In legacy IE, this will error, and we want fullstory in IE
-        enableFullstory = !window.location.host.startsWith('localhost')
-      } catch (e) {
-      }
+      var enableFullstory = window.location.host.slice(0, 9) !== 'localhost'
       if (enableFullstory) {
         window['_fs_debug'] = false;
         window['_fs_host'] = 'fullstory.com';
