@@ -1,3 +1,5 @@
+import 'core-js/es/map'
+import 'core-js/es/set'
 import 'react-app-polyfill/ie9'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -9,7 +11,7 @@ import App from './App'
 
 if (window.location.hostname !== 'localhost') {
   init({
-    dsn: process.env.JAVASCRIPT_SENTRY_DSN
+    dsn: process.env.JAVASCRIPT_SENTRY_DSN,
   })
 }
 
