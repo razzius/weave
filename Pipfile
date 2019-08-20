@@ -37,7 +37,7 @@ python_version = "3.6"
 
 [scripts]
 start = "flask run"
-shell = "ipython -i serveri/scripts/shell.py"
+shell = "ipython -i server/scripts/shell.py"
 test = "py.test"
 
 [pipenv]
