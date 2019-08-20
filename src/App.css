@@ -359,3 +359,11 @@ input[disabled] {
 .resultDegrees {
     color: dimgrey;
 }
+
+.resources img {
+    max-width: 100%;
+}
+
+.resources h2, h3 {
+    margin-top: 2em;
+}

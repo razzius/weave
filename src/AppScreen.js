@@ -3,6 +3,8 @@ import React, { type ChildrenArray, type Element } from 'react'
 
 export default ({
   children,
+  className = '',
 }: {
   children: ChildrenArray<Element<any> | null>,
-}) => <div className="App-body">{children}</div>
+  className: string,
+}) => <div className={`App-body ${className}`}>{children}</div>
