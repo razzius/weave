@@ -130,7 +130,7 @@ const Help = () => (
     </p>
 
     <img
-      src="/activities_scuba_example.png"
+      src="/assets/activities_scuba_example.png"
       width="500px"
       alt="Adding a new property Scuba Diving in Parts of Me"
     />
@@ -192,7 +192,7 @@ const Help = () => (
     </h3>
 
     <img
-      src="available_for_mentoring.png"
+      src="/assets/available_for_mentoring.png"
       alt="Available for mentoring toggle element"
     />
 

@@ -28,4 +28,9 @@ def index(path=None):
     return send_from_directory('../build', 'index.html')
 
 
+@app.route('/assets/<path:path>')
+def send_static(path):
+    return send_from_directory('../build/assets', path)
+
+
 app.register_blueprint(server.views.api)
