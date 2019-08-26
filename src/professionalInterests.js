@@ -5,6 +5,7 @@ Basic Science Research
 Business
 Clinical Research
 Criminal Justice Reform
+Diversity and Inclusion
 Ethics
 Global Health
 Government
@@ -22,5 +23,6 @@ Social Justice
 Start-ups
 Translational Research
 Wellness
+Women in Medicine in Science
 Writing
 `.split('\n')

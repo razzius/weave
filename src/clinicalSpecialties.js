@@ -106,6 +106,7 @@ Periodontics
 Physical Medicine & Rehabilitation
 Plastic Surgery
 Preventive Medicine
+Primary Care
 Procedural Dermatology
 Prosthodontics
 Psychiatry
@@ -124,4 +125,5 @@ Transplant Hepatology
 Urology
 Vascular & Interventional Radiology
 Vascular Surgery
+Women’s Health
 `.split('\n')
