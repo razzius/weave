@@ -11,6 +11,15 @@ function makeOptions(list) {
   }))
 }
 
+const displayDegrees = degrees.filter(
+  degree => ![
+    'DMD', 'DDS', 'MD', 'DO',
+  ].includes(degree)
+).concat(
+  'DMD / DDS',
+  'MD / DO',
+).sort()
+
 export const clinicalSpecialtyOptions = makeOptions(clinicalSpecialties)
 
 export const professionalInterestOptions = makeOptions(professionalInterests)
@@ -20,3 +29,5 @@ export const hospitalOptions = makeOptions(hospitals)
 export const activitiesIEnjoyOptions = makeOptions(activitiesIEnjoyTags)
 
 export const degreeOptions = makeOptions(degrees)
+
+export const displayDegreeOptions = makeOptions(displayDegrees)

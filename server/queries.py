@@ -58,19 +58,41 @@ def matching_profiles(query, degrees, affiliations):
     for relation, option_class in tag_fields:
         query = query.outerjoin(relation).outerjoin(option_class)
 
-    if degrees:
-        degree_filters = reduce(
-            operator.and_,
+    if degree_list:
+        regular_degree_filters = [
+            degree
+            for degree in degree_list
+            if degree not in ['dmd / dds', 'md / do']
+        ]
+
+        md_do_filter = (
             [
-                func.bool_or(func.lower(DegreeOption.value) == degree)
-                for degree in degree_list
-            ],
+                func.bool_or(func.lower(DegreeOption.value) == 'md')
+                | func.bool_or(func.lower(DegreeOption.value) == 'do')
+            ] if 'md / do' in degree_list else []
+        )
+
+        dmd_dds_filter = (
+            [
+                func.bool_or(func.lower(DegreeOption.value) == 'dmd')
+                | func.bool_or(func.lower(DegreeOption.value) == 'dds')
+            ] if 'dmd / dds' in degree_list else []
+        )
+
+        degree_filters = [
+            func.bool_or(func.lower(DegreeOption.value) == degree)
+            for degree in regular_degree_filters
+        ] + md_do_filter + dmd_dds_filter
+
+        degree_filter = reduce(
+            operator.and_,
+            degree_filters
         )
         query = (
             query.outerjoin(ProfileDegree)
             .outerjoin(DegreeOption)
             .group_by(Profile.id)
-            .having(degree_filters)
+            .having(degree_filter)
         )
 
     if affiliations:

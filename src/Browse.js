@@ -81,6 +81,7 @@ class Browse extends Component<Props, State> {
       affiliations,
     } = this.state
 
+
     const searchArray = search === '' ? [] : [search]
     const query = searchTerms
       .concat(searchArray)

@@ -5,7 +5,7 @@ import {
   clinicalSpecialtyOptions,
   professionalInterestOptions,
   hospitalOptions,
-  degreeOptions,
+  displayDegreeOptions,
   activitiesIEnjoyOptions,
 } from './options'
 
@@ -94,7 +94,7 @@ export default class SearchInput extends Component<State, Props> {
             value={labelValues(degrees)}
             isMulti
             noOptionsMessage={() => null}
-            options={degreeOptions}
+            options={displayDegreeOptions}
             placeholder="Filter by degree"
           />
         </div>
