@@ -1,4 +1,4 @@
-from flask import current_app
+from flask import current_app, make_response
 from http import HTTPStatus
 import datetime
 import os
@@ -158,9 +158,15 @@ def get_profile(profile_id=None):
     if profile is None:
         return error_response({'profile_id': ['Not found']}, 404)
 
-    return jsonify(
+    response = make_response(jsonify(
         profile_schema.dump(Profile.query.filter(Profile.id == profile_id).one())
-    )
+    ))
+
+    response.headers['Cache-Control'] = 'public, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+
+    return response
 
 
 def error_response(reason, status_code=HTTPStatus.BAD_REQUEST.value):
