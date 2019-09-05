@@ -5,6 +5,7 @@
   "dependencies": {
     "@razzi/react-avatar-editor": "^11.0.4-patched",
     "@sentry/browser": "^4.5.3",
+    "blueimp-canvas-to-blob": "^3.16.0",
     "core-js": "^3.1.4",
     "date-fns": "^1.29.0",
     "eslint-config-airbnb": "^17.1.0",
