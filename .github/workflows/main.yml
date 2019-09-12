@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-18.04
 
     container:
-      image: python:3
+      image: python:3.6-slim
 
     services:
       postgres:
