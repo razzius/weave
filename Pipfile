@@ -30,7 +30,6 @@ ipdb = "*"
 pytest = "*"
 pdbpp = "*"
 pylint = "*"
-pytest-postgresql = "*"
 "flake8" = "*"
 requests-mock = "*"
 

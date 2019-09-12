@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "fe71784f51ea6a5c0e1f0894c6c1f10849c6333be6a5d895230aa14c380e6f77"
+            "sha256": "2df0a972d526ffa417f326cafab249f4dfb15f36d24fd51b4a69812a264a536d"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -461,13 +461,6 @@
             ],
             "version": "==0.6.1"
         },
-        "mirakuru": {
-            "hashes": [
-                "sha256:03b58edac226abdda2e3f92137cd098a9e078304bfaa5add197edb1fbe2eb5c3",
-                "sha256:a0fdce7d4575deb4b18a6003d65a22b5b7358a71424f773686e42963442eb663"
-            ],
-            "version": "==2.1.0"
-        },
         "more-itertools": {
             "hashes": [
                 "sha256:409cd48d4db7052af495b09dec721011634af3753ae1ef92d2b32f73a745f832",
@@ -518,13 +511,6 @@
             ],
             "version": "==0.13.0"
         },
-        "port-for": {
-            "hashes": [
-                "sha256:247b4db1901aa3d9906258308e40dfbadf65275b27ca77faa0b9a876b7284970",
-                "sha256:47b5cb48f8e036497cd73b96de305cecb4070e9ecbc908724afcbd2224edccde"
-            ],
-            "version": "==0.4"
-        },
         "prompt-toolkit": {
             "hashes": [
                 "sha256:11adf3389a996a6d45cc277580d0d53e8a5afd281d0c9ec71b28e6f121463780",
@@ -532,21 +518,6 @@
                 "sha256:977c6583ae813a37dc1c2e1b715892461fcbdaa57f6fc62f33a528c4886c8f55"
             ],
             "version": "==2.0.9"
-        },
-        "psutil": {
-            "hashes": [
-                "sha256:028a1ec3c6197eadd11e7b46e8cc2f0720dc18ac6d7aabdb8e8c0d6c9704f000",
-                "sha256:503e4b20fa9d3342bcf58191bbc20a4a5ef79ca7df8972e6197cc14c5513e73d",
-                "sha256:863a85c1c0a5103a12c05a35e59d336e1d665747e531256e061213e2e90f63f3",
-                "sha256:954f782608bfef9ae9f78e660e065bd8ffcfaea780f9f2c8a133bb7cb9e826d7",
-                "sha256:b6e08f965a305cd84c2d07409bc16fbef4417d67b70c53b299116c5b895e3f45",
-                "sha256:bc96d437dfbb8865fc8828cf363450001cb04056bbdcdd6fc152c436c8a74c61",
-                "sha256:cf49178021075d47c61c03c0229ac0c60d5e2830f8cab19e2d88e579b18cdb76",
-                "sha256:d5350cb66690915d60f8b233180f1e49938756fb2d501c93c44f8fb5b970cc63",
-                "sha256:eba238cf1989dfff7d483c029acb0ac4fcbfc15de295d682901f0e2497e6781a"
-            ],
-            "markers": "sys_platform != 'cygwin'",
-            "version": "==5.6.3"
         },
         "ptyprocess": {
             "hashes": [
@@ -605,13 +576,6 @@
             ],
             "index": "pypi",
             "version": "==5.1.2"
-        },
-        "pytest-postgresql": {
-            "hashes": [
-                "sha256:59802da70581d091f32ed542d77c76a2f29181d70f64dd4782fab4caceba1107"
-            ],
-            "index": "pypi",
-            "version": "==2.1.0"
         },
         "requests": {
             "hashes": [
