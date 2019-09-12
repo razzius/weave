@@ -22,6 +22,7 @@ jobs:
         uses: harmon758/postgresql-action@v1
         with:
           postgresql version: '11'  # See https://hub.docker.com/_/postgres for available versions
+          postgresql db: 'hms-test'
 
       - name: Install dependencies
         run: |
@@ -35,3 +36,5 @@ jobs:
       - name: Test with pytest
         run: |
           pipenv run test tests
+        env:
+          DATABASE_URL: postgresql://hms-test

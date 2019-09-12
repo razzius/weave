@@ -19,11 +19,11 @@ python-dateutil = "*"
 flask-sslify = "*"
 marshmallow = "==3.0.0b13"
 sentry-sdk = {extras = ["flask"],version = "==0.7.4"}
-"psycopg2" = "*"
 pip = "*"
 "flake8" = "*"
 jinja2 = "*"
 python-dotenv = "*"
+psycopg2-binary = "*"
 
 [dev-packages]
 ipython = "*"
