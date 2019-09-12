@@ -16,6 +16,7 @@ def test_update_profile(client):
         name='Test User',
         verification_email_id=verification_email.id,
         contact_email='test@test.com',
+        cadence='monthly',
     ))
 
     new_profile = {
@@ -48,7 +49,7 @@ def test_update_profile(client):
         'additional_information': '',
         'professional_interests': [],
         'affiliations': [],
-        'cadence': None,
+        'cadence': 'monthly',
         'clinical_specialties': [],
         'degrees': [],
         'contact_email': 'new@test.com',

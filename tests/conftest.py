@@ -7,6 +7,7 @@ from server.models import db
 @pytest.fixture
 def client():
     app.config['TESTING'] = True
+    app.config['DATABASE_URL'] = 'postgresql:///hms-test'
 
     test_client = app.test_client()
 

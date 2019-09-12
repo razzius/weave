@@ -31,7 +31,8 @@ def test_create_profile_with_custom_tag(client):
         'professional_interests': professional_interests,
         'parts_of_me': parts_of_me,
         'activities': activities,
-        'degrees': degrees
+        'degrees': degrees,
+        'cadence': 'monthly',
     }
 
     response = client.post(
@@ -50,7 +51,7 @@ def test_create_profile_with_custom_tag(client):
         'additional_information': '',
         'professional_interests': professional_interests,
         'affiliations': affiliations,
-        'cadence': None,
+        'cadence': 'monthly',
         'clinical_specialties': clinical_specialties,
         'contact_email': email,
         'degrees': degrees,

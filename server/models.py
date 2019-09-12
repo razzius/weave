@@ -154,7 +154,7 @@ class Profile(db.Model):
     willing_career_guidance = db.Column(db.Boolean, default=False)
     willing_student_group = db.Column(db.Boolean, default=False)
 
-    cadence = db.Column(db.String(255))
+    cadence = db.Column(db.String(255), nullable=False)
     other_cadence = db.Column(db.String(255), nullable=True)
 
     available_for_mentoring = db.Column(db.Boolean, default=True)

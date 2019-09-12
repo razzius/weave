@@ -48,7 +48,10 @@ def test_set_unavailable_to_mentor(client):
         db.session.add(VerificationToken(token=token, email_id=verification_email.id))
 
         profile = Profile(
-            name='Test', contact_email=email, verification_email_id=verification_email.id
+            name='Test',
+            contact_email=email,
+            verification_email_id=verification_email.id,
+            cadence='monthly',
         )
         db.session.add(profile)
         db.session.commit()
