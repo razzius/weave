@@ -10,9 +10,6 @@ jobs:
   build:
     runs-on: ubuntu-18.04
 
-    container:
-      image: ubuntu:18.04
-
     services:
       postgres:
         image: postgres:10.10
@@ -48,7 +45,7 @@ jobs:
         run: |
           pipenv run test tests
         env:
-          DATABASE_URL: postgresql:///postgres:postgres@postgres:${{ job.services.postgres.ports[5432] }}/postgres
+          DATABASE_URL: postgresql:///postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/postgres
           REACT_APP_SERVER_URL: http://localhost:5000
           SENDGRID_API_KEY: test
           SECRET_KEY: test
