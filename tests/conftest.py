@@ -6,8 +6,9 @@ from server.models import db
 
 @pytest.fixture
 def client():
+    postgres_port = os.environ['POSTGRES_PORT']
     app.config['TESTING'] = True
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///postgres'
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://localhost:' + postgres_port + '/postgres'
 
     test_client = app.test_client()
 
