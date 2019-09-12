@@ -1,12 +1,11 @@
 // @flow
 import React, { Fragment } from 'react'
 import MediaQuery from 'react-responsive'
-import { Link } from 'react-router-dom'
 import ReactTooltip from 'react-tooltip'
+import { withRouter } from 'react-router-dom'
 
 import { capitalize } from './utils'
 import ProfileAvatar from './ProfileAvatar'
-import { withRouter } from 'react-router-dom'
 
 const CheckboxIndicator = ({
   title,
