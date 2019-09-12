@@ -77,5 +77,9 @@ admin.add_view(ModelViewSortedByValue(DegreeOption, db.session))
 
 
 def init_admin(app):
-    basic_auth.init_app(app)
-    admin.init_app(app)
+    if app.config.get('BASIC_AUTH_USERNAME') is not None and app.config.get('BASIC_AUTH_PASSWORD') is not None:
+        basic_auth.init_app(app)
+        admin.init_app(app)
+    else:
+        app.logger.warn('Not configuring admin because BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD are not set.')
+
