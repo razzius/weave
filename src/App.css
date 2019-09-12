@@ -88,6 +88,12 @@ section {
   width: 100%;
 }
 
+.App-title img {
+  height: 60px;
+  vertical-align: middle;
+  padding: 5px;
+}
+
 .App-title {
   color: white;
   text-decoration: none;
