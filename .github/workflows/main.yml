@@ -37,7 +37,7 @@ jobs:
         run: |
           pipenv run test tests
         env:
-          DATABASE_URL: postgresql://hms-test
+          DATABASE_URL: postgresql:///hms-test
           REACT_APP_SERVER_URL: http://localhost:5000
           SENDGRID_API_KEY: test
           SECRET_KEY: test
