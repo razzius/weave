@@ -32,6 +32,7 @@ pdbpp = "*"
 pylint = "*"
 pytest-postgresql = "*"
 "flake8" = "*"
+requests-mock = "*"
 
 [requires]
 python_version = "3.6"
