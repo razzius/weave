@@ -37,7 +37,7 @@ def test_get_profiles_empty(client):
     assert response.json == {'profileCount': 0, 'profiles': []}
 
 
-def test_get_profiles_search_empty(client, postgresql):
+def test_get_profiles_search_empty(client):
     verification_email = VerificationEmail(email='test@test.com')
     save(verification_email)
 
