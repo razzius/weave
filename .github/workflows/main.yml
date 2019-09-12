@@ -14,6 +14,8 @@ jobs:
       postgres:
         image: postgres:10.10
         env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           POSTGRES_DB: postgres
         ports:
         - 5432/tcp
@@ -45,6 +47,8 @@ jobs:
         env:
           DATABASE_URL: ''
           POSTGRES_PORT: ${{ job.services.postgres.ports[5432] }}
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
           REACT_APP_SERVER_URL: http://localhost:5000
           SENDGRID_API_KEY: test
           SECRET_KEY: test
