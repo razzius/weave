@@ -13,6 +13,7 @@ jobs:
     services:
       postgres:
         image: postgres:10.10
+        env:
           POSTGRES_DB: postgres
         ports:
         - 5432:5432
