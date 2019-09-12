@@ -10,15 +10,18 @@ jobs:
   build:
     runs-on: ubuntu-18.04
 
+    container:
+      image:  node:10.16-jessie
+
     services:
       postgres:
         image: postgres:10.10
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: hms-test
+          POSTGRES_DB: postgres
         ports:
-        - 5432/tcp
+        - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
 
     steps:
@@ -45,7 +48,7 @@ jobs:
         run: |
           pipenv run test tests
         env:
-          DATABASE_URL: postgresql:///postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/hms-test
+          DATABASE_URL: postgresql:///postgres:postgres@postgres:${{ job.services.postgres.ports[5432] }}/postgres
           REACT_APP_SERVER_URL: http://localhost:5000
           SENDGRID_API_KEY: test
           SECRET_KEY: test
