@@ -28,8 +28,8 @@ def matching_profiles(query, degrees, affiliations):
         character if character.isalnum() else ' ' for character in query.lower()
     ).split()
 
-    degree_list = degrees.lower().split(',')
-    affiliation_list = affiliations.lower().split(',')
+    degree_list = degrees.lower().split(',') if degrees else []
+    affiliation_list = affiliations.lower().split(',') if affiliations else []
 
     searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
 

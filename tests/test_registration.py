@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
 from server import app
-from server.emails import MAILGUN_DOMAIN
 from server.models import VerificationEmail
 
 
@@ -9,7 +8,7 @@ def test_faculty_registration_email(client, requests_mock):
     email = 'test@hms.harvard.edu'
 
     requests_mock.post(
-        f'https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages', {}, reason='OK'
+        f'https://api.sendgrid.com/v3/mail/send', {}, reason='OK'
     )
 
     response = client.post(
@@ -28,7 +27,7 @@ def test_faculty_registration_email(client, requests_mock):
 
 def test_faculty_registration_invalid_email(client, requests_mock):
     requests_mock.post(
-        f'https://api.mailgun.net/v3/{MAILGUN_DOMAIN}/messages', {}, reason='OK'
+        f'https://api.sendgrid.com/v3/mail/send', {}, reason='OK'
     )
 
     response = client.post(

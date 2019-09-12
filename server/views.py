@@ -112,8 +112,8 @@ def get_profiles():
         return error
 
     query = request.args.get('query')
-    degrees = request.args.get('degrees')
-    affiliations = request.args.get('affiliations')
+    degrees = request.args.get('degrees', '')
+    affiliations = request.args.get('affiliations', '')
 
     page = int(request.args.get('page', 1))
 

@@ -24,7 +24,7 @@ Note that this drops your local database to start from a clean state.
 ```sh
 # You can call your database however you'd like; I use hms
 $ createdb hms
-$ export DATABASE_URL='postgres:///hms'
+$ export DATABASE_URL='postgresql:///hms'
 $ pipenv run python -m server.scripts.resetdb
 ```
 
