@@ -4,17 +4,10 @@ from flask import current_app
 import requests
 
 
-# MAILGUN_API_KEY = os.environ['MAILGUN_API_KEY']
-# MAILGUN_DOMAIN = os.environ.get('MAILGUN_DOMAIN', 'tests')
 SERVER_URL = os.environ['REACT_APP_SERVER_URL']
 SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
 
-# curl --request POST \
-#   --url https://api.sendgrid.com/v3/mail/send \
-#   --header "Authorization: Bearer $SENDGRID_API_KEY" \
-#   --header 'Content-Type: application/json' \
-#   --data '{"personalizations": [{"to": [{"email": "razzi53@gmail.com"}]}],"from": {"email": "admin@hmsweave.com"},"subject": "Sending with SendGrid is Fun","content": [{"type": "text/plain", "value": "and easy to do anywhere, even with cURL"}]}'
 def _send_email(to, subject, html):
 
     return requests.post(
