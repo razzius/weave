@@ -1,34 +1,56 @@
-from ubuntu:18.04
+FROM ubuntu:18.04
 
-run apt-get update -y && \
+RUN apt-get update -y && \
   apt-get install -y python3.6 python-pip python3-dev python3-distutils libpq-dev
 
-copy Pipfile.lock /app/Pipfile.lock
-copy Pipfile /app/Pipfile
+COPY Pipfile Pipfile.lock /app/
 
-workdir /app
+WORKDIR /app
 
-run pip install pipenv
+RUN pip install pipenv
 
-run pipenv run python3 --version
+RUN pipenv run python3 --version
 
-run pipenv install --ignore-pipfile --deploy
+RUN pipenv install --ignore-pipfile --deploy
 
-# This is due to the fact that outside of docker, the valid_domains.json is in ../src
 COPY server /app/server
-COPY src/valid_domains.json /app/src/valid_domains.json
+COPY src /app/src
+COPY public /app/public
+COPY package.json yarn.lock /app/
+
+## Build the frontend
+RUN apt-get install -y curl
+
+RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
+RUN apt-get install -y nodejs
+
+RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
+RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+RUN apt-get update
+RUN apt-get install -y yarn
+
+WORKDIR /app/src
+
+RUN yarn install --frozen-lockfile
+RUN yarn build
 
 ENV LANG 'C.UTF-8'
 ENV LC_ALL C.UTF-8
 
-ENV FLASK_APP 'server'
+ENV FLASK_DEBUG '1'
 ENV REACT_APP_SERVER_URL 'http://localhost:5000'
 ENV SENDGRID_API_KEY ''
 ENV SECRET_KEY ''
 ENV DATABASE_URL ''
-ENV BASIC_AUTH_USERNAME ''
-ENV BASIC_AUTH_PASSWORD ''
 
-entrypoint ["pipenv"]
+# Basic auth username and password are required to enable the admin
+# ENV BASIC_AUTH_USERNAME ''
+# ENV BASIC_AUTH_PASSWORD ''
 
-cmd ["run", "gunicorn", "server:app", "-b", "0.0.0.0:5000"]
+WORKDIR /app
+
+EXPOSE 5000
+
+ENTRYPOINT ["pipenv"]
+
+CMD ["run", "gunicorn", "server:app", "-b", "0.0.0.0:5000"]
