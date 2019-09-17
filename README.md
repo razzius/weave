@@ -46,6 +46,19 @@ $ open http://localhost:3000
 $ open http://localhost:5000/admin
 ```
 
+## Building the frontend for production
+
+```sh
+$ yarn build
+```
+
+Now the frontend can be served as a static file from `build/index.html`.
+
+Though inefficient, the backend will serve this html file when the index is requested.
+
+A more efficient setup would be to serve the index.html from a cdn when any path
+is requested on your domain.
+
 ## Running in `docker`
 
 Docker as of now is only supported in development.
@@ -77,9 +90,6 @@ At this point you can load the homepage, but the database is not connected.
 To connect the database, you'll have to pass in a DATABASE url. Here's a working example
 that connects to a postgresql database running on a MacOS localhost.
 
-After starting docker, open http://localhost:5000/admin/verificationtoken/ and enter `local`
-as the username and password, and you should see an empty list of verification tokens.
-
 ```sh
 $ docker run -it -p 5000:5000 \
   -e DATABASE_URL=postgresql://$USER@host.docker.internal:5432/hms \
@@ -88,7 +98,11 @@ $ docker run -it -p 5000:5000 \
     (docker build -q .)
 ```
 
-To build and debug a docker image:
+After starting docker, open http://localhost:5000/admin/verificationtoken/ and enter `local`
+as the username and password, and you should see an empty list of verification tokens.
+
+
+As a useful snippet, here's how to build and debug a docker image:
 
 ```sh
 $ docker run -it --entrypoint /bin/bash $(docker build -q .)
