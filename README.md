@@ -56,7 +56,7 @@ Now the frontend can be served as a static file from `build/index.html`.
 
 Though inefficient, the backend will serve this html file when the index is requested.
 
-A more efficient setup would be to serve the index.html from a cdn when any path
+A more efficient setup would be to serve the index.html from a CDN when any path
 is requested on your domain.
 
 ## Running in `docker`
@@ -64,10 +64,8 @@ is requested on your domain.
 Docker as of now is only supported in development.
 The only current production deployment of Weave which is at HMS runs on Heroku.
 
-With that being said, a `Dockerfile` exists, but it only supports debug mode (FLASK_DEBUG set to 1).
+With that being said, a `Dockerfile` exists, but it only supports debug mode (`FLASK_DEBUG` set to 1).
 As such, it is **not suitable** for production deployments as-is.
-
-Furthermore, the database
 
 ```sh
 # Build the image
@@ -77,7 +75,7 @@ Step 1/28 : FROM ubuntu:18.04
 ...
 Successfully built 2c6aa87fb1cf
 # Run the image (replace with image id from above)
-# docker run -it -p 5000:5000 2c6aa87fb1c
+$ docker run -it -p 5000:5000 2c6aa87fb1c
 [2019-09-17 10:28:35 +0000] [1] [INFO] Starting gunicorn 19.9.0
 [2019-09-17 10:28:35 +0000] [1] [INFO] Listening at: http://0.0.0.0:5000 (1)
 [2019-09-17 10:28:35 +0000] [1] [INFO] Using worker: sync
