@@ -7,10 +7,10 @@ COPY Pipfile Pipfile.lock /app/
 
 WORKDIR /app
 
+## Install the backend
+
 RUN pip install pipenv
-
 RUN pipenv run python3 --version
-
 RUN pipenv install --ignore-pipfile --deploy
 
 COPY server /app/server
@@ -19,10 +19,11 @@ COPY public /app/public
 COPY package.json yarn.lock /app/
 
 ## Build the frontend
+
 RUN apt-get install -y curl
 
-RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
-RUN apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/node_12.x/pool/main/n/nodejs/nodejs_12.10.0-1nodesource1_amd64.deb -o node.deb
+RUN dpkg -i node.deb
 
 RUN curl -sL https://github.com/yarnpkg/yarn/releases/download/v1.17.3/yarn_1.17.3_all.deb -o yarn.deb
 RUN dpkg -i yarn.deb
