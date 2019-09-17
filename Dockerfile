@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 RUN apt-get update -y && \
-  apt-get install -y python3.6 python-pip python3-dev python3-distutils libpq-dev
+  apt-get install -y python3.6 python-pip python3-dev python3-distutils
 
 COPY Pipfile Pipfile.lock /app/
 
