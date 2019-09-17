@@ -12,12 +12,14 @@ def test_update_profile(client):
 
     save(VerificationToken(token=token, email_id=verification_email.id))
 
-    profile = save(Profile(
-        name='Test User',
-        verification_email_id=verification_email.id,
-        contact_email='test@test.com',
-        cadence='monthly',
-    ))
+    profile = save(
+        Profile(
+            name='Test User',
+            verification_email_id=verification_email.id,
+            contact_email='test@test.com',
+            cadence='monthly',
+        )
+    )
 
     new_profile = {
         'name': 'New User',
@@ -27,22 +29,18 @@ def test_update_profile(client):
         'professional_interests': [],
         'parts_of_me': [],
         'activities': [],
-        'degrees': []
+        'degrees': [],
     }
 
     response = client.put(
         f'/api/profiles/{profile.id}',
         json=new_profile,
-        headers={'Authorization': f'Token {token}'}
+        headers={'Authorization': f'Token {token}'},
     )
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    check_json = {
-        key: value
-        for key, value in response.json.items()
-        if key != 'id'
-    }
+    check_json = {key: value for key, value in response.json.items() if key != 'id'}
 
     assert check_json == {
         'activities': [],
@@ -62,5 +60,5 @@ def test_update_profile(client):
         'willing_networking': False,
         'willing_career_guidance': False,
         'willing_student_group': False,
-        'willing_shadowing': False
+        'willing_shadowing': False,
     }

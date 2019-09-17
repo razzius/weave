@@ -36,9 +36,7 @@ def test_create_profile_with_custom_tag(client):
     }
 
     response = client.post(
-        f'/api/profile',
-        json=profile,
-        headers={'Authorization': f'Token {token}'}
+        f'/api/profile', json=profile, headers={'Authorization': f'Token {token}'}
     )
 
     assert response.status_code == http.HTTPStatus.CREATED.value
@@ -64,7 +62,7 @@ def test_create_profile_with_custom_tag(client):
         'willing_networking': False,
         'willing_career_guidance': False,
         'willing_student_group': False,
-        'willing_shadowing': False
+        'willing_shadowing': False,
     }
 
     assert ActivityOption.query.filter(ActivityOption.value == activities[0]).one()

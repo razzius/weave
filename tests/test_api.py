@@ -31,7 +31,7 @@ def test_verify_valid_token(client):
         'email': 'test@test.com',
         'is_admin': None,
         'profile_id': None,
-        'is_mentor': True
+        'is_mentor': True,
     }
 
 
@@ -58,7 +58,9 @@ def test_set_unavailable_to_mentor(client):
 
     data = {'available': False}
 
-    response = client.post('/api/availability', json=data, headers={'Authorization': f'Token {token}'})
+    response = client.post(
+        '/api/availability', json=data, headers={'Authorization': f'Token {token}'}
+    )
 
     assert response.status_code == HTTPStatus.OK.value
     assert response.json['available'] is False

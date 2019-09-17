@@ -26,7 +26,8 @@ profiles = [
         affiliations='Dana-Farber Cancer Institute',
         activities=[],
         additional_information=(
-            'I am excited to take students under my wing and share my love of diabetes outcomes research!'
+            'I am excited to take students under my wing and'
+            ' share my love of diabetes outcomes research!'
         ),
         willing_shadowing=True,
         willing_networking=True,
@@ -61,7 +62,9 @@ profiles = [
         clinical_specialties='Dermatology,Procedural Dermatology'.split(','),
         affiliations='Brigham and Women’s Hospital',
         activities=[],
-        additional_information="I'm interested in meeting with students who are passionate about the skin!",
+        additional_information=(
+            "I'm interested in meeting with students who are passionate about the skin!"
+        ),
         willing_shadowing=True,
         willing_networking=False,
         willing_goal_setting=True,
@@ -76,7 +79,9 @@ profiles = [
         clinical_specialties=['Addiction Psychiatry', 'Child & Adolescent Psychiatry'],
         affiliations='McLean Hospital',
         activities=[],
-        additional_information='Looking forward to discussing all aspects of life and medicine with students.',
+        additional_information=(
+            'Looking forward to discussing all aspects of life and medicine with students.'
+        ),
         willing_shadowing=True,
         willing_networking=True,
         willing_goal_setting=True,
