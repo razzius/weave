@@ -1,3 +1,5 @@
 from server import app
 
-app.app_context().push()
+
+def context():
+    app.app_context().push()
