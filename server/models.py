@@ -23,7 +23,7 @@ def generate_uuid():
     return str(uuid.uuid4())
 
 
-class IDMixin():
+class IDMixin:
     id = db.Column(db.Integer, primary_key=True)
 
 
@@ -88,9 +88,7 @@ class ClinicalSpecialty(IDMixin, db.Model):
 
 
 class PartsOfMe(IDMixin, db.Model):
-    tag_id = db.Column(
-        db.Integer, db.ForeignKey(PartsOfMeOption.id), nullable=False
-    )
+    tag_id = db.Column(db.Integer, db.ForeignKey(PartsOfMeOption.id), nullable=False)
     tag = relationship(PartsOfMeOption)
 
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
@@ -106,18 +104,14 @@ class ProfessionalInterest(IDMixin, db.Model):
 
 
 class ProfileActivity(IDMixin, db.Model):
-    tag_id = db.Column(
-        db.Integer, db.ForeignKey(ActivityOption.id), nullable=False
-    )
+    tag_id = db.Column(db.Integer, db.ForeignKey(ActivityOption.id), nullable=False)
     tag = relationship(ActivityOption)
 
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
 class ProfileDegree(IDMixin, db.Model):
-    tag_id = db.Column(
-        db.Integer, db.ForeignKey(DegreeOption.id), nullable=False
-    )
+    tag_id = db.Column(db.Integer, db.ForeignKey(DegreeOption.id), nullable=False)
     tag = relationship(DegreeOption)
 
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)

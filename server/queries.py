@@ -60,34 +60,37 @@ def matching_profiles(query, degrees, affiliations):
 
     if degree_list:
         regular_degree_filters = [
-            degree
-            for degree in degree_list
-            if degree not in ['dmd / dds', 'md / do']
+            degree for degree in degree_list if degree not in ['dmd / dds', 'md / do']
         ]
 
         md_do_filter = (
             [
                 func.bool_or(func.lower(DegreeOption.value) == 'md')
                 | func.bool_or(func.lower(DegreeOption.value) == 'do')
-            ] if 'md / do' in degree_list else []
+            ]
+            if 'md / do' in degree_list
+            else []
         )
 
         dmd_dds_filter = (
             [
                 func.bool_or(func.lower(DegreeOption.value) == 'dmd')
                 | func.bool_or(func.lower(DegreeOption.value) == 'dds')
-            ] if 'dmd / dds' in degree_list else []
+            ]
+            if 'dmd / dds' in degree_list
+            else []
         )
 
-        degree_filters = [
-            func.bool_or(func.lower(DegreeOption.value) == degree)
-            for degree in regular_degree_filters
-        ] + md_do_filter + dmd_dds_filter
-
-        degree_filter = reduce(
-            operator.and_,
-            degree_filters
+        degree_filters = (
+            [
+                func.bool_or(func.lower(DegreeOption.value) == degree)
+                for degree in regular_degree_filters
+            ]
+            + md_do_filter
+            + dmd_dds_filter
         )
+
+        degree_filter = reduce(operator.and_, degree_filters)
         query = (
             query.outerjoin(ProfileDegree)
             .outerjoin(DegreeOption)
@@ -104,7 +107,9 @@ def matching_profiles(query, degrees, affiliations):
             ],
         )
         query = (
-            query.outerjoin(HospitalAffiliation, Profile.id == HospitalAffiliation.profile_id)
+            query.outerjoin(
+                HospitalAffiliation, Profile.id == HospitalAffiliation.profile_id
+            )
             .outerjoin(HospitalAffiliationOption)
             .group_by(Profile.id)
             .having(affiliations_filters)

@@ -12,13 +12,9 @@ def _send_email(to, subject, html):
 
     return requests.post(
         'https://api.sendgrid.com/v3/mail/send',
-        headers={
-            'Authorization': f'Bearer {SENDGRID_API_KEY}'
-        },
+        headers={'Authorization': f'Bearer {SENDGRID_API_KEY}'},
         json={
-            'personalizations': [
-                {'to': [{'email': to}]},
-            ],
+            'personalizations': [{'to': [{'email': to}]}],
             'from': {'email': 'admin@hmsweave.com'},
             'subject': subject,
             'content': [{'type': 'text/html', 'value': html}],

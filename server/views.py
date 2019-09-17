@@ -123,25 +123,29 @@ def get_profiles():
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    queryset = matching_profiles(query, degrees, affiliations).order_by(
-        # Is this the logged-in user's profile? If so, return it first (false)
-        Profile.verification_email_id != verification_email_id,
-        # Get the last word in the name.
-        # Won't work with suffixes.
-        func.split_part(
-            Profile.name,
-            ' ',
-            func.array_length(
-                func.string_to_array(
-                    func.regexp_replace(
-                        Profile.name, '(,|MD).*', ''
-                    ),  # Remove suffixes after comma and MD
-                    ' ',
+    queryset = (
+        matching_profiles(query, degrees, affiliations)
+        .order_by(
+            # Is this the logged-in user's profile? If so, return it first (false)
+            Profile.verification_email_id != verification_email_id,
+            # Get the last word in the name.
+            # Won't work with suffixes.
+            func.split_part(
+                Profile.name,
+                ' ',
+                func.array_length(
+                    func.string_to_array(
+                        func.regexp_replace(
+                            Profile.name, '(,|MD).*', ''
+                        ),  # Remove suffixes after comma and MD
+                        ' ',
+                    ),
+                    1,  # How many words in the name
                 ),
-                1,  # How many words in the name
             ),
-        ),
-    ).group_by(Profile.id)
+        )
+        .group_by(Profile.id)
+    )
 
     return jsonify(
         {
@@ -158,9 +162,11 @@ def get_profile(profile_id=None):
     if profile is None:
         return error_response({'profile_id': ['Not found']}, 404)
 
-    response = make_response(jsonify(
-        profile_schema.dump(Profile.query.filter(Profile.id == profile_id).one())
-    ))
+    response = make_response(
+        jsonify(
+            profile_schema.dump(Profile.query.filter(Profile.id == profile_id).one())
+        )
+    )
 
     response.headers['Cache-Control'] = 'public, max-age=0'
     response.headers['Pragma'] = 'no-cache'
@@ -276,7 +282,7 @@ def create_profile():
 
     profile_data = {
         'verification_email_id': verification_token.email_id,
-        **basic_profile_data(verification_token, schema)
+        **basic_profile_data(verification_token, schema),
     }
 
     profile = Profile(**profile_data)
@@ -333,7 +339,7 @@ def update_profile(profile_id=None):
         HospitalAffiliation,
         PartsOfMe,
         ClinicalSpecialty,
-        ProfileDegree
+        ProfileDegree,
     }
     for profile_relation_class in profile_relation_classes:
         profile_relation_class.query.filter(
@@ -377,7 +383,9 @@ def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
 
 
 def save_verification_token(email_id, token, is_personal_device):
-    verification_token = VerificationToken(email_id=email_id, token=token, is_personal_device=is_personal_device)
+    verification_token = VerificationToken(
+        email_id=email_id, token=token, is_personal_device=is_personal_device
+    )
 
     save(verification_token)
 
@@ -393,7 +401,9 @@ def send_token(verification_email, email_function, is_personal_device):
 
     token = generate_token()
 
-    verification_token = save_verification_token(verification_email.id, token, is_personal_device)
+    verification_token = save_verification_token(
+        verification_email.id, token, is_personal_device
+    )
 
     email_response = email_function(verification_email.email, token)
 
@@ -428,7 +438,11 @@ def process_send_verification_email(is_mentor):
 
     verification_email, _ = get_verification_email(email, is_mentor=is_mentor)
 
-    send_token(verification_email, email_function=email_function, is_personal_device=is_personal_device)
+    send_token(
+        verification_email,
+        email_function=email_function,
+        is_personal_device=is_personal_device,
+    )
 
     return jsonify({'id': verification_email.id, 'email': email})
 
@@ -467,13 +481,19 @@ def login():
         else send_student_login_email
     )
 
-    send_token(verification_email, email_function=email_function, is_personal_device=is_personal_device)
+    send_token(
+        verification_email,
+        email_function=email_function,
+        is_personal_device=is_personal_device,
+    )
 
     return jsonify({'email': email})
 
 
 def _token_expired(verification_token):
-    hours_until_expiry = 168 * 2 if verification_token.is_personal_device else TOKEN_EXPIRY_AGE_HOURS
+    hours_until_expiry = (
+        168 * 2 if verification_token.is_personal_device else TOKEN_EXPIRY_AGE_HOURS
+    )
 
     expire_time = verification_token.date_created + relativedelta(
         hours=hours_until_expiry
@@ -492,7 +512,7 @@ def _token_expired(verification_token):
         'current time %s versus expire time %s is expired? %s',
         current_time,
         expire_time,
-        expired
+        expired,
     )
 
     return expired
