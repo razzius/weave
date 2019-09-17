@@ -9,6 +9,7 @@
     "core-js": "^3.1.4",
     "date-fns": "^1.29.0",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-utils": "1.4.1",
     "polyfill-array-includes": "^2.0.0",
     "promise-polyfill": "^8.1.0",
     "react": "^16.3.2",
