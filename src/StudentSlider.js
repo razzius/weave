@@ -16,12 +16,14 @@ export default class StudentExpectationsSlider extends React.Component {
   }
 
   next = () => {
-    if (!this.state.lastSlide) {
+    const { lastSlide } = this.state
+    if (!lastSlide) {
       this.slider.slickNext()
     }
   }
 
   render() {
+    const { nextHref, nextText } = this.state
     const settings = {
       dots: true,
       speed: 500,
@@ -113,12 +115,12 @@ export default class StudentExpectationsSlider extends React.Component {
         </Slider>
         <div style={{ textAlign: 'center' }}>
           <NextButton
-            to={this.state.nextHref}
+            to={nextHref}
             style={{ float: 'right' }}
             onClick={this.next}
-            text={this.state.nextText}
+            text={nextText}
           />
-          {this.state.nextText === 'I agree' && (
+          {nextText === 'I agree' && (
             <div style={{ marginTop: '1em' }}>
               <Link target="_blank" to="/mentee-expectations">
                 Read more about expectations.

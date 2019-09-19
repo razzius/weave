@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 
 export function capitalize(text) {
@@ -24,6 +25,6 @@ export function availableForMentoringFromVerifyTokenResponse(response) {
   return response.profile_id === null ? true : response.available_for_mentoring
 }
 
-export function LiteralLink({href}) {
+export function LiteralLink({href}: {href: string}) {
   return <a href={href}>{href}</a>
 }

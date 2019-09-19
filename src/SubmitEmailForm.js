@@ -70,8 +70,10 @@ export default class SubmitEmailForm extends Component {
   }
 
   render() {
-    if (!this.state.success) {
-      const { email } = this.state
+    const { header, instructions, successMessage } = this.props
+    const { success, email, } = this.state
+    if (!success) {
+      const { error, isPersonalDevice } = this.state
 
       const emailValid = any(
         VALID_DOMAINS.map(domain => email.toLowerCase().endsWith(domain))
@@ -79,28 +81,28 @@ export default class SubmitEmailForm extends Component {
 
       return (
         <div>
-          <h1>{this.props.header}</h1>
-          <div>{this.props.instructions}</div>
+          <h1>{header}</h1>
+          <div>{instructions}</div>
           <form onSubmit={this.submitEmail}>
             <p>
               <input
                 name="email"
                 type="email"
                 onChange={this.updateEmail}
-                value={this.state.email}
+                value={email}
               />
             </p>
             <ReactTooltip place="bottom" id="emailTooltip">
               Please enter your Harvard or hospital-affiliated email
             </ReactTooltip>
-            {displayError(this.state.error, this.state.email)}
+            {displayError(error, email)}
             <div>
               <input
                 type="checkbox"
-                value={this.state.isPersonalDevice}
+                value={isPersonalDevice}
                 onClick={() =>
                   this.setState({
-                    isPersonalDevice: !this.state.isPersonalDevice,
+                    isPersonalDevice: !isPersonalDevice,
                   })
                 }
               />
@@ -112,7 +114,7 @@ export default class SubmitEmailForm extends Component {
               data-for="emailTooltip"
               data-tip-disable={email === '' || emailValid}
             >
-              <button disabled={!emailValid} className="button">
+              <button type="button" disabled={!emailValid} className="button">
                 Send verification email
               </button>
             </div>
@@ -139,8 +141,8 @@ export default class SubmitEmailForm extends Component {
 
     return (
       <div>
-        <h1>Verification email sent to {this.state.email}</h1>
-        <p>{this.props.successMessage}</p>
+        <h1>Verification email sent to {email}</h1>
+        <p>{successMessage}</p>
       </div>
     )
   }
