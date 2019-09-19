@@ -23,6 +23,6 @@ Social Justice
 Start-ups
 Translational Research
 Wellness
-Women in Medicine in Science
+Women in Medicine and Science
 Writing
 `.split('\n')
