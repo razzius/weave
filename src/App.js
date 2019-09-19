@@ -12,20 +12,21 @@ import 'react-toggle-switch/dist/css/switch.min.css'
 import 'blueimp-canvas-to-blob'
 
 import './App.css'
-import NotLoggedIn from './NotLoggedIn'
-import Home from './Home'
 import Browse from './Browse'
-import Login from './Login'
-import Help from './Help'
-import Expectations from './Expectations'
-import MentorExpectations from './MentorExpectations'
-import MenteeExpectations from './MenteeExpectations'
-import Resources from './Resources'
-import FacultyExpectations from './FacultyExpectations'
-import StudentExpectations from './StudentExpectations'
-import EditProfile from './EditProfile'
 import CreateProfile from './CreateProfile'
+import EditProfile from './EditProfile'
+import Expectations from './Expectations'
+import FacultyExpectations from './FacultyExpectations'
+import Help from './Help'
+import Home from './Home'
+import Login from './Login'
+import MenteeExpectations from './MenteeExpectations'
+import MentorExpectations from './MentorExpectations'
+import NotLoggedIn from './NotLoggedIn'
+import OurTeam from './OurTeam'
 import Profile from './Profile'
+import Resources from './Resources'
+import StudentExpectations from './StudentExpectations'
 
 import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
@@ -183,6 +184,10 @@ class App extends Component<Props, State> {
                 <Link to="/help" className="App-title">
                   Help
                 </Link>
+
+                <Link to="/our-team" className="App-title">
+                  Our Team
+                </Link>
               </nav>
             </div>
           </header>
@@ -283,6 +288,7 @@ class App extends Component<Props, State> {
             <Route path="/mentee-expectations" component={MenteeExpectations} />
             <Route path="/resources" component={Resources} />
             <Route path="/help" component={Help} />
+            <Route path="/our-team" component={OurTeam} />
 
             <Route
               path="/profiles/:id"

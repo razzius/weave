@@ -1,7 +1,7 @@
 // @flow
 import React, { Fragment } from 'react'
 import MediaQuery from 'react-responsive'
-import { withRouter, Link } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import { capitalize } from './utils'
 import NextButton from './NextButton'
