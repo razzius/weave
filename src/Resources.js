@@ -119,7 +119,8 @@ const Resources = () => (
       and clinical trial collaboration, guidance on regulatory issues, and pilot 
       funding for novel, high-impact projects – all freely available to trainees, 
       fellows, and faculty.
-
+    </p>
+    <p>
       Harvard Catalyst provides searchable profiles for all faculty members, that 
       highlight their scholarly work and publications. The Catalyst search feature 
       is available here: {' '}
