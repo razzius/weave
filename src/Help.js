@@ -13,10 +13,12 @@ const Help = () => (
     <h3>How does the email authentication work?</h3>
     <p>
       For your security and to protect your account information, we have
-      generated email-authenticated tokens that expire after 1 hour. After you
-      enter your Harvard or hospital-affiliated email address to login, please
-      visit your email account to verify access. If you visit the website more
-      than 1 hour after your earlier visit, you will have to authenticate again.
+      generated email-authenticated tokens that expire after either 1 hour or 2
+      weeks if you indicate that this is a personal device and you wish to stay
+      logged in. After you enter your Harvard or hospital-affiliated email
+      address to login, please visit your email account and click on the
+      provided token to verify access. If you visit the website after your token
+      has expired, you will have to authenticate again.
     </p>
 
     <p>
@@ -38,6 +40,17 @@ const Help = () => (
       Login is restricted to a Harvard or hospital-affiliated account. Please
       try logging in with an email address that ends in one of the options
       above.
+    </p>
+
+    <h3>
+      I am having technical difficulties making a faculty profile on Weave.
+      Which web browsers are supported with Weave?
+    </h3>
+    <p>
+      Weave is compatible with Chrome, Safari, Mozilla Firefox, and Internet
+      Explorer 10. We recommend using Chrome, Safari, or Mozilla Firefox web
+      browsers, to create or view profiles with the optimized interface
+      experience.
     </p>
 
     <h3>
@@ -178,19 +191,6 @@ const Help = () => (
       searchable by mentees. Please feel empowered to use this toggle to best
       allocate your attention and energies between mentoring and your other
       clinical and non-clinical interests.
-    </p>
-
-    <h3>
-      I am having technical difficulties making a faculty profile on Weave.
-      Which web browsers are supported with Weave?
-    </h3>
-    <p>
-      Weave is supported on Chrome, Safari, and Mozilla Firefox. At the moment,
-      the faculty interface is not supported on Internet Explorer. Please create
-      a faculty profile using a computer or mobile device on Chrome, Safari, or
-      Mozilla Firefox. Please contact us at {emailLink}
-      if you experience technical difficulties using one of the supported web
-      browsers.
     </p>
   </AppScreen>
 )
