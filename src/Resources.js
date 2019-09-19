@@ -124,6 +124,7 @@ const Resources = () => (
       highlight their scholarly work and publications. The Catalyst search feature 
       is available here: {' '}
       <LiteralLink href="https://connects.catalyst.harvard.edu/profiles/search/people" />.{' '}
+    </p>
 
     <h3>
       <a href="https://ctmd.catalyst.harvard.edu/">
@@ -137,6 +138,7 @@ const Resources = () => (
       Search for projects with available faculty members to mentor medical students here: {' '}
       <LiteralLink href=" https://ctmd.catalyst.harvard.edu/" />.{' '}
       Access to the Harvard Catalyst database requires HarvardKey authentication.
+    </p>
 
     <h3>
       <a href="https://hms.harvard.edu/departments/ombuds-office">
