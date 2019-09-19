@@ -69,7 +69,7 @@ As such, it is **not suitable** for production deployments as-is.
 
 ```sh
 # Build the image
-$ docker build . --tag hms-weave-$(git rev-parse @)
+$ docker build .
 Sending build context to Docker daemon  21.03MB
 Step 1/28 : FROM ubuntu:18.04
 ...
