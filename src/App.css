@@ -125,6 +125,20 @@ section {
   color: black;
 }
 
+button.profile-result-link {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+}
+
+/* button.link-button:hover, */
+/* .link-button:focus { */
+/*     text-decoration: none; */
+/* } */
+
+
 input[type='text'],
 input[type='email'] {
   box-sizing: border-box;
@@ -340,9 +354,10 @@ input::-webkit-contacts-auto-fill-button {
     text-align: right;
     padding: 10px;
   }
-  .profile-result-link:hover {
+  .profile-result-link:hover, .profile-result-link:focus {
     box-shadow: 0 0 2px rgba(35, 173, 255, 1);
   }
+
   .profile-result-link {
     transition: all 0.4s;
     flex-shrink: 0;

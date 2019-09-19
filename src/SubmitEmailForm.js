@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import ReactTooltip from 'react-tooltip'
@@ -36,15 +37,19 @@ function displayError(error, email) {
   return <p>{error.email[0]}</p>
 }
 
-export default class SubmitEmailForm extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      email: getParam('email') || '',
-      isPersonalDevice: false,
-      success: false,
-      error: null,
-    }
+type Props = {
+  sendEmail: ({+email: string, +isPersonalDevice: boolean}) => Any,
+  header: string,
+  instructions: string,
+  successMessage: string,
+}
+
+export default class SubmitEmailForm extends Component<Props, State> {
+  state = {
+    email: getParam('email') || '',
+    isPersonalDevice: false,
+    success: false,
+    error: null,
   }
 
   submitEmail = e => {
