@@ -1,10 +1,6 @@
 name: Python test
 
-on:
-  push:
-    branches:
-    - master
-    - staging
+on: push
 
 jobs:
   build:
