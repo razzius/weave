@@ -40,33 +40,6 @@ const Help = () => (
       above.
     </p>
 
-    <h3>How was Weave developed?</h3>
-    <p>
-      Weave was created with input from both students and faculty, all seeking
-      more invested mentoring relationships at HMS. In working towards this
-      goal, Weave allows students to search for mentors in dimensions that are
-      not strictly academic or scholastic. Does a faculty member like to cook,
-      play guitar, were they also a first generation student, or do they share
-      the same faith tradition as you? In addition to allowing students and
-      faculty to connect in this way, Weave allows faculty to clearly
-      communicate their capacity for mentorship at a given point in time;
-      faculty may indicate their preferred meeting cadence, method of contact,
-      and any additional opportunities offered so that students can enter with
-      realistic expectations for each relationship. To read more, please visit:{' '}
-      <LiteralLink href="https://hwpi.harvard.edu/jhsma/learners-review" />,{' '}
-      <LiteralLink href="https://hms.harvard.edu/news/value-mentorship" />.
-    </p>
-
-    <h3>Who are the Weave team members?</h3>
-    <p>
-      Weave was co-founded by Jie Jane Chen and Jonathan Kusner during their
-      first year of medical school at Harvard Medical School and built by Razzi
-      Abuissa. Jane, Jon, and Razzi are actively developing Weave to expand its
-      offerings to students, residents, and faculty. Dr. Jennifer Potter
-      (Advisory Dean for the William Bosworth Castle Society) and Dr. Fidencio
-      Saldana (Dean of Students) are advisors for this mentorship initiative.
-    </p>
-
     <h3>
       I have a question that was not answered here. How do I contact the Weave
       team?
