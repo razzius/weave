@@ -7,21 +7,6 @@ const Resources = () => (
     <h1>Resources</h1>
 
     <h3>
-      <a href="https://medstudenthandbook.hms.harvard.edu/1019-thrive-mobile-app">
-        Thrive Mobile App
-      </a>
-    </h3>
-
-    <p>
-      The Thrive Mobile App is Harvard University’s mobile application for
-      health and wellness. Features include quick access to emergency contact
-      information, Vanderbilt exercise schedules, dining services menus,
-      Countway Library hours, and shuttle schedules, as well as a campus map and
-      directory. The app allows students to access these University resources
-      and more in an easy-to-use platform for any mobile device.
-    </p>
-
-    <h3>
       <a href="https://collaborate.hms.harvard.edu/display/hmsadvising/Personal+Advising">
         Personal Advising
       </a>
@@ -118,6 +103,41 @@ const Resources = () => (
       <LiteralLink href="http://ecommons.med.harvard.edu/smo_postf.asp" />.{' '}
       Weave does not provide listings of faculty research opportunities.
     </p>
+
+    <h3>
+      <a href="https://connects.catalyst.harvard.edu/profiles/search/people">
+        Harvard Catalyst Profiles
+     </a>
+    </h3>
+
+    <p>
+      Harvard Catalyst is devoted to advancing human health by supporting and 
+      innovating clinical and translational science, and training the next 
+      generation of researchers. The Harvard University’s Clinical and 
+      Translational Science Center serves the research community by offering 
+      courses and educational programs, research consulting, tools for study design 
+      and clinical trial collaboration, guidance on regulatory issues, and pilot 
+      funding for novel, high-impact projects – all freely available to trainees, 
+      fellows, and faculty.
+
+      Harvard Catalyst provides searchable profiles for all faculty members, that 
+      highlight their scholarly work and publications. The Catalyst search feature 
+      is available here: {' '}
+      <LiteralLink href="https://connects.catalyst.harvard.edu/profiles/search/people" />.{' '}
+
+    <h3>
+      <a href="https://ctmd.catalyst.harvard.edu/">
+        Harvard Catalyst Mentor Database for Clinical and Translational Research
+     </a>
+    </h3>
+
+    <p>
+      Harvard Catalyst has created a new searchable database for students to find 
+      HMS faculty mentors in the area of Clinical and Translational research. 
+      Search for projects with available faculty members to mentor medical students here: {' '}
+      <LiteralLink href=" https://ctmd.catalyst.harvard.edu/" />.{' '}
+      Access to the Harvard Catalyst database requires HarvardKey authentication.
+
     <h3>
       <a href="https://hms.harvard.edu/departments/ombuds-office">
         Ombuds Office
@@ -157,7 +177,7 @@ const Resources = () => (
 
     <h3>
       <a href="https://hms.harvard.edu/departments/ombuds-office/policies-guidelines">
-        Gender-based and sexual harassment
+        Gender-based and Sexual Harassment
       </a>
     </h3>
     <p>
