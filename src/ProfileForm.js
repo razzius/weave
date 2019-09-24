@@ -5,9 +5,9 @@ import AvatarEditor from '@razzi/react-avatar-editor'
 import Select from 'react-select'
 import Dropzone from 'react-dropzone'
 
-import ProfileView, { type BaseProfileData } from './ProfileView'
 import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
+import PreviewProfile from './PreviewProfile'
 
 import { uploadPicture } from './api'
 import {
@@ -241,30 +241,24 @@ export default class ProfileForm extends Component<Props, State> {
       imageUrl,
       image,
       scale,
+      partsOfMe,
       willingShadowing,
       willingNetworking,
       willingGoalSetting,
       willingDiscussPersonal,
+      willingCareerGuidance,
+      willingStudentGroup,
     } = this.state
+
     const { firstTimePublish } = this.props
 
     if (preview) {
       return (
-        <div>
-          <ProfileView
-            data={this.state}
-            editing
-            firstTimePublish={firstTimePublish}
-          />
-          <div>
-            <button type="button" className="button" onClick={this.unsetPreview}>
-              Edit
-            </button>
-            <button type="submit" className="button" onClick={this.submit}>
-              {firstTimePublish ? 'Publish' : 'Save'} profile
-            </button>
-          </div>
-        </div>
+        <PreviewProfile
+          data={this.state}
+          firstTimePublish={firstTimePublish}
+          onEdit={this.unsetPreview}
+          onPublish={this.submit}/>
       )
     }
 
@@ -369,10 +363,11 @@ export default class ProfileForm extends Component<Props, State> {
               </div>
 
               <div className="expectation">
-                <label>
+                <label htmlFor="willing-career-guidance">
                   <input
+                    id="willing-career-guidance"
                     type="checkbox"
-                    checked={this.state.willingCareerGuidance}
+                    checked={willingCareerGuidance}
                     onChange={this.updateBoolean('willingCareerGuidance')}
                   />
                   Career guidance
@@ -380,10 +375,11 @@ export default class ProfileForm extends Component<Props, State> {
               </div>
 
               <div className="expectation">
-                <label>
+                <label htmlFor="willing-student-group">
                   <input
+                    id="willing-student-group"
                     type="checkbox"
-                    checked={this.state.willingStudentGroup}
+                    checked={willingStudentGroup}
                     onChange={this.updateBoolean('willingStudentGroup')}
                   />
                   Student interest group support or speaking at student events
@@ -471,12 +467,9 @@ export default class ProfileForm extends Component<Props, State> {
             <div data-tip="Please feel free to create your own tags with identities or locations that are important to you.">
               <p>Parts Of Me</p>
               <CreatableInputOnly
-                value={this.state.partsOfMe.map(value => ({
-                  label: value,
-                  value,
-                }))}
+                values={partsOfMe}
                 handleAdd={this.handleCreate('partsOfMe')}
-                handleSet={this.handleChange('partsOfMe')}
+                handleChange={this.handleChange('partsOfMe')}
               />
             </div>
             <div data-tip="Please feel free to create your own tags with activities that you enjoy.">
