@@ -1,10 +1,18 @@
+// @flow
 import React, { Component } from 'react'
 import CreatableSelect from 'react-select/lib/Creatable'
 
-export default class CreatableTagSelect extends Component<
-  { options: Array<string>, values: Array<string>, handleSelect: any => void },
-  { inputValue: string }
-> {
+type Props = {
+  options: Array<string>,
+  values: Array<string>,
+  handleChange: any => void
+}
+
+type State = {
+  inputValue: string
+}
+
+export default class CreatableTagSelect extends Component<Props, State> {
   state = {
     inputValue: '',
   }
@@ -14,7 +22,7 @@ export default class CreatableTagSelect extends Component<
   }
 
   render() {
-    const { options, handleSelect, values } = this.props
+    const { options, handleChange, values } = this.props
     const { inputValue } = this.state
     return (
       <CreatableSelect
@@ -28,7 +36,7 @@ export default class CreatableTagSelect extends Component<
         className="column"
         isMulti
         options={options}
-        onChange={handleSelect}
+        onChange={handleChange}
         placeholder="Select or type something and press enter..."
       />
     )

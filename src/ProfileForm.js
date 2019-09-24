@@ -43,7 +43,16 @@ function displayError({ name, email }: { name: string, email: string }) {
   return <p>Before previewing profile, please enter your {missing}.</p>
 }
 
-type Props = { loadInitial: any => void }
+type Props = {
+  loadInitial: any => void,
+  saveProfile: any => void,
+  token: string,
+  profileId: string,
+  setProfileId: ?Function,
+  history: History,
+  firstTimePublish: boolean,
+}
+
 type State = {
   position: { x: number, y: number },
   scale: number,
@@ -127,16 +136,16 @@ export default class ProfileForm extends Component<Props, State> {
   handleCreate = (key: string) => (selected: string) => {
     const { [key]: current } = this.state
 
+    if (current.includes(selected)) {
+      return
+    }
+
     this.setState({
       [key]: [...current, selected],
     })
   }
 
-  handleChange = (key: string) => values => {
-    this.setState({ [key]: values.map(({ value }) => value) })
-  }
-
-  handleSelect = (key: string) => options => {
+  handleChange = (key: string) => (options: Array) => {
     const values = options.map(({ value }) => value)
     this.setState({ [key]: values })
   }
@@ -150,16 +159,17 @@ export default class ProfileForm extends Component<Props, State> {
   }
 
   submit = async () => {
-    const profile = await this.props.saveProfile(
-      this.props.token,
+    const { saveProfile, token, profileId, setProfileId, history } = this.props
+    const profile = await saveProfile(
+      token,
       this.state,
-      this.props.profileId
+      profileId,
     )
 
-    if (this.props.setProfileId) {
-      this.props.setProfileId(profile.id)
+    if (setProfileId) {
+      setProfileId(profile.id)
     }
-    this.props.history.push(`/profiles/${profile.id}`)
+    history.push(`/profiles/${profile.id}`)
   }
 
   handleDrop = acceptedFiles => {
@@ -226,9 +236,19 @@ export default class ProfileForm extends Component<Props, State> {
   }
 
   render() {
+    const {
+      preview,
+      imageUrl,
+      image,
+      scale,
+      willingShadowing,
+      willingNetworking,
+      willingGoalSetting,
+      willingDiscussPersonal,
+    } = this.state
     const { firstTimePublish } = this.props
 
-    if (this.state.preview) {
+    if (preview) {
       return (
         <div>
           <ProfileView
@@ -237,10 +257,10 @@ export default class ProfileForm extends Component<Props, State> {
             firstTimePublish={firstTimePublish}
           />
           <div>
-            <button className="button" onClick={this.unsetPreview}>
+            <button type="button" className="button" onClick={this.unsetPreview}>
               Edit
             </button>
-            <button className="button" onClick={this.submit}>
+            <button type="submit" className="button" onClick={this.submit}>
               {firstTimePublish ? 'Publish' : 'Save'} profile
             </button>
           </div>
@@ -248,7 +268,7 @@ export default class ProfileForm extends Component<Props, State> {
       )
     }
 
-    const hasImage = this.state.imageUrl || this.state.image
+    const hasImage = imageUrl || image
 
     return (
       <div>
@@ -263,9 +283,9 @@ export default class ProfileForm extends Component<Props, State> {
               <AvatarEditor
                 ref={this.setEditorRef}
                 borderRadius={100}
-                image={this.state.image || this.state.imageUrl}
+                image={image || imageUrl}
                 crossOrigin="anonymous"
-                scale={parseFloat(this.state.scale)}
+                scale={parseFloat(scale)}
                 width={180}
                 height={180}
                 rotate={this.state.rotate}
@@ -289,11 +309,11 @@ export default class ProfileForm extends Component<Props, State> {
                 disabled={!hasImage}
                 defaultValue="1"
               />
-              <button disabled={!hasImage} onClick={this.rotateRight}>
+              <button type="button" disabled={!hasImage} onClick={this.rotateRight}>
                 Rotate
               </button>
               {hasImage && (
-                <button onClick={this.removeProfileImage}>Remove image</button>
+                <button type="button" onClick={this.removeProfileImage}>Remove image</button>
               )}
             </div>
 
@@ -301,10 +321,11 @@ export default class ProfileForm extends Component<Props, State> {
               <h3>I am available to mentor in the following ways:</h3>
 
               <div className="expectation">
-                <label>
+                <label htmlFor="willing-shadowing">
                   <input
+                    id="willing-shadowing"
                     type="checkbox"
-                    checked={this.state.willingShadowing}
+                    checked={willingShadowing}
                     onChange={this.updateBoolean('willingShadowing')}
                   />
                   Clinical shadowing opportunities
@@ -312,10 +333,11 @@ export default class ProfileForm extends Component<Props, State> {
               </div>
 
               <div className="expectation">
-                <label>
+                <label htmlFor="willing-networking">
                   <input
+                    id="willing-networking"
                     type="checkbox"
-                    checked={this.state.willingNetworking}
+                    checked={willingNetworking}
                     onChange={this.updateBoolean('willingNetworking')}
                   />
                   Networking
@@ -323,10 +345,11 @@ export default class ProfileForm extends Component<Props, State> {
               </div>
 
               <div className="expectation">
-                <label>
+                <label htmlFor="willing-goal-setting">
                   <input
+                    id="willing-goal-setting"
                     type="checkbox"
-                    checked={this.state.willingGoalSetting}
+                    checked={willingGoalSetting}
                     onChange={this.updateBoolean('willingGoalSetting')}
                   />
                   Goal setting
@@ -334,10 +357,11 @@ export default class ProfileForm extends Component<Props, State> {
               </div>
 
               <div className="expectation">
-                <label>
+                <label htmlFor="willing-discuss-personal">
                   <input
+                    id="willing-discuss-personal"
                     type="checkbox"
-                    checked={this.state.willingDiscussPersonal}
+                    checked={willingDiscussPersonal}
                     onChange={this.updateBoolean('willingDiscussPersonal')}
                   />
                   Discussing personal as well as professional life
@@ -390,7 +414,7 @@ export default class ProfileForm extends Component<Props, State> {
             <CreatableTagSelect
               values={this.state.degrees}
               options={degreeOptions}
-              handleSelect={this.handleSelect('degrees')}
+              handleChange={this.handleChange('degrees')}
             />
             <p>Institutional Affiliations</p>
             <Select
@@ -419,13 +443,13 @@ export default class ProfileForm extends Component<Props, State> {
             <CreatableTagSelect
               values={this.state.clinicalSpecialties}
               options={clinicalSpecialtyOptions}
-              handleSelect={this.handleSelect('clinicalSpecialties')}
+              handleChange={this.handleChange('clinicalSpecialties')}
             />
             <p>Professional Interests</p>
             <CreatableTagSelect
               values={this.state.professionalInterests}
               options={professionalInterestOptions}
-              handleSelect={this.handleSelect('professionalInterests')}
+              handleChange={this.handleChange('professionalInterests')}
             />
             <div className="user-tip">
               <p>
@@ -451,7 +475,7 @@ export default class ProfileForm extends Component<Props, State> {
                   label: value,
                   value,
                 }))}
-                handleChange={this.handleCreate('partsOfMe')}
+                handleAdd={this.handleCreate('partsOfMe')}
                 handleSet={this.handleChange('partsOfMe')}
               />
             </div>
@@ -460,7 +484,7 @@ export default class ProfileForm extends Component<Props, State> {
               <CreatableTagSelect
                 values={this.state.activities}
                 options={activitiesIEnjoyOptions}
-                handleSelect={this.handleSelect('activities')}
+                handleChange={this.handleChange('activities')}
               />
             </div>
             <p>What else would you like to share with potential mentees?</p>
@@ -535,6 +559,7 @@ export default class ProfileForm extends Component<Props, State> {
           </div>
 
           <button
+            type="submit"
             className="button"
             disabled={
               this.state.uploadingImage ||

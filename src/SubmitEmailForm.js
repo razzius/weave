@@ -119,7 +119,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
               data-for="emailTooltip"
               data-tip-disable={email === '' || emailValid}
             >
-              <button type="button" disabled={!emailValid} className="button">
+              <button type="submit" disabled={!emailValid} className="button">
                 Send verification email
               </button>
             </div>

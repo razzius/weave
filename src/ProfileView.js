@@ -226,8 +226,6 @@ const ProfileView = ({
   isAdmin: boolean,
   location: Object,
 }) => {
-  console.log(location.state)
-
   const buttons = (
     <Buttons
       profileId={data.id}

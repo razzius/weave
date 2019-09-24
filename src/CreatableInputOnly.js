@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react'
 
 import CreatableSelect from 'react-select/lib/Creatable'
@@ -8,13 +9,29 @@ const components = {
   DropdownIndicator: null
 }
 
-export default class CreatableInputOnly extends Component {
+type Props = {
+  handleAdd: string => void,
+  handleSet: Array<string> => void,
+  value: string,
+}
+
+type State = {
+  inputValue: string
+}
+
+export default class CreatableInputOnly extends Component<Props, State> {
   state = {
     inputValue: ''
   }
 
-  handleChange = value => {
-    this.props.handleSet(value)
+  handleAdd = value => {
+    const { handleAdd } = this.props
+    handleAdd(value)
+  }
+
+  handleSet = (values) => {
+    const { handleSet } = this.props
+    handleSet(values)
   }
 
   handleInputChange = inputValue => {
@@ -24,17 +41,27 @@ export default class CreatableInputOnly extends Component {
   handleKeyDown = event => {
     const { inputValue } = this.state
     if (!inputValue) return
-    if (['Enter', 'Tab'].includes(event.key)) {
+    if (['Enter', 'Tab', ',', ';', '.'].includes(event.key)) {
       this.setState({
         inputValue: ''
       })
-      this.props.handleChange(capitalize(inputValue))
+      this.handleAdd(capitalize(inputValue))
       event.preventDefault()
+    }
+  }
+
+  handleOnBlur = () => {
+    const { inputValue } = this.state
+
+    if (inputValue !== '') {
+      this.handleAdd(capitalize(inputValue))
     }
   }
 
   render() {
     const { inputValue } = this.state
+    const { value } = this.props
+
     return (
       <CreatableSelect
         styles={{
@@ -45,12 +72,13 @@ export default class CreatableInputOnly extends Component {
         inputValue={inputValue}
         isClearable
         isMulti
+        onBlur={this.handleOnBlur}
         menuIsOpen={false}
-        onChange={this.handleChange}
+        onChange={this.handleSet}
         onInputChange={this.handleInputChange}
         onKeyDown={this.handleKeyDown}
         placeholder="Type something and press enter..."
-        value={this.props.value}
+        value={value}
       />
     )
   }
