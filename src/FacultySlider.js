@@ -2,7 +2,7 @@ import React from 'react'
 import Slider from 'react-slick'
 import { Link } from 'react-router-dom'
 
-import NextButton from './NextButton'
+import Button from './Button'
 
 export default class FacultyExpectationsSlider extends React.Component {
   constructor(props) {
@@ -16,12 +16,14 @@ export default class FacultyExpectationsSlider extends React.Component {
   }
 
   next = () => {
-    if (!this.state.lastSlide) {
+    const { lastSlide } = this.state
+    if (!lastSlide) {
       this.slider.slickNext()
     }
   }
 
   render() {
+    const { nextText, nextHref } = this.state
     const settings = {
       dots: true,
       speed: 500,
@@ -117,13 +119,13 @@ export default class FacultyExpectationsSlider extends React.Component {
           </div>
         </Slider>
         <div style={{ textAlign: 'center' }}>
-          <NextButton
-            to={this.state.nextHref}
+          <Button
+            to={nextHref}
             style={{ float: 'right' }}
             onClick={this.next}
-            text={this.state.nextText}
+            text={nextText}
           />
-          {this.state.nextText === 'I agree' && (
+          {nextText === 'I agree' && (
             <div style={{ marginTop: '1em' }}>
               <Link target="_blank" to="/mentor-expectations">
                 Read more about expectations.

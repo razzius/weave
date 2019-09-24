@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 
-import NextButton from './NextButton'
+import Button from './Button'
 
 import { type Account } from './api'
 
@@ -62,7 +62,7 @@ const VerifiedView = (props: Props) => {
           />
         )}
       </div>
-      <NextButton to={linkUrl} text={buttonText} />
+      <Button to={linkUrl} text={buttonText} />
     </div>
   )
 }

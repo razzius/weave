@@ -1,16 +1,19 @@
+// @flow
 import React from 'react'
 
 import AppScreen from './AppScreen'
 import { createProfile } from './api'
 import ProfileForm from './ProfileForm'
 
-const CreateProfile = props => (
+type Props = any
+
+const CreateProfile = ({setAvailableForMentoring, ...props}: Props) => (
   <AppScreen>
     <ProfileForm
       loadInitial={false}
       firstTimePublish={false}
       saveProfile={createProfile}
-      setAvailableForMentoring={props.setAvailableForMentoring}
+      setAvailableForMentoring={setAvailableForMentoring}
       {...props}
     />
   </AppScreen>

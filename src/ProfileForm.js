@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import AvatarEditor from '@razzi/react-avatar-editor'
 import Select from 'react-select'
 import Dropzone from 'react-dropzone'
+import Promise from 'promise-polyfill'
 
 import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
@@ -237,17 +238,29 @@ export default class ProfileForm extends Component<Props, State> {
 
   render() {
     const {
-      preview,
-      imageUrl,
+      activities,
+      affiliations,
+      clinicalSpecialties,
+      contactEmail,
+      degrees,
       image,
-      scale,
+      imageUrl,
+      name,
       partsOfMe,
-      willingShadowing,
-      willingNetworking,
-      willingGoalSetting,
-      willingDiscussPersonal,
+      preview,
+      professionalInterests,
+      rotate,
+      scale,
       willingCareerGuidance,
+      willingDiscussPersonal,
+      willingGoalSetting,
+      willingNetworking,
+      willingShadowing,
       willingStudentGroup,
+      additionalInformation,
+      uploadingImage,
+      imageSuccess,
+      imageEdited
     } = this.state
 
     const { firstTimePublish } = this.props
@@ -282,7 +295,7 @@ export default class ProfileForm extends Component<Props, State> {
                 scale={parseFloat(scale)}
                 width={180}
                 height={180}
-                rotate={this.state.rotate}
+                rotate={rotate}
               />
             </Dropzone>
             <div>
@@ -297,7 +310,7 @@ export default class ProfileForm extends Component<Props, State> {
                 name="scale"
                 type="range"
                 onChange={this.handleScale}
-                min={this.state.allowZoomOut ? '0.1' : '1'}
+                min="1"
                 max="2"
                 step="0.01"
                 disabled={!hasImage}
@@ -395,7 +408,7 @@ export default class ProfileForm extends Component<Props, State> {
               name="name"
               autoComplete="off"
               className="fullWidth"
-              value={this.state.name}
+              value={name}
               onChange={this.update('name')}
             />
             <p>Preferred Contact Email</p>
@@ -403,14 +416,15 @@ export default class ProfileForm extends Component<Props, State> {
               name="email"
               type="email"
               className="fullWidth"
-              value={this.state.contactEmail}
+              value={contactEmail}
               onChange={this.update('contactEmail')}
             />
             <p>Academic Degrees</p>
             <CreatableTagSelect
-              values={this.state.degrees}
+              values={degrees}
               options={degreeOptions}
               handleChange={this.handleChange('degrees')}
+              handleAdd={this.handleCreate('degrees')}
             />
             <p>Institutional Affiliations</p>
             <Select
@@ -424,7 +438,7 @@ export default class ProfileForm extends Component<Props, State> {
               className="column"
               isMulti
               options={hospitalOptions}
-              value={this.state.affiliations.map(value => ({
+              value={affiliations.map(value => ({
                 label: value,
                 value,
               }))}
@@ -437,15 +451,17 @@ export default class ProfileForm extends Component<Props, State> {
             </div>
             <p>Clinical Interests</p>
             <CreatableTagSelect
-              values={this.state.clinicalSpecialties}
+              values={clinicalSpecialties}
               options={clinicalSpecialtyOptions}
               handleChange={this.handleChange('clinicalSpecialties')}
+              handleAdd={this.handleCreate('clinicalSpecialties')}
             />
             <p>Professional Interests</p>
             <CreatableTagSelect
-              values={this.state.professionalInterests}
+              values={professionalInterests}
               options={professionalInterestOptions}
               handleChange={this.handleChange('professionalInterests')}
+              handleAdd={this.handleCreate('professionalInterests')}
             />
             <div className="user-tip">
               <p>
@@ -475,15 +491,16 @@ export default class ProfileForm extends Component<Props, State> {
             <div data-tip="Please feel free to create your own tags with activities that you enjoy.">
               <p>Activities I Enjoy</p>
               <CreatableTagSelect
-                values={this.state.activities}
+                values={activities}
                 options={activitiesIEnjoyOptions}
                 handleChange={this.handleChange('activities')}
+                handleAdd={this.handleCreate('activities')}
               />
             </div>
             <p>What else would you like to share with potential mentees?</p>
             <textarea
               onChange={this.update('additionalInformation')}
-              value={this.state.additionalInformation}
+              value={additionalInformation}
               maxLength={500}
               style={{
                 width: '100%',
@@ -497,8 +514,9 @@ export default class ProfileForm extends Component<Props, State> {
         <div>
           <div className="cadence">
             <h3>Meeting Cadence</h3>
-            <label>
+            <label htmlFor="biweekly-cadence">
               <input
+                id="biweekly-cadence"
                 onChange={this.update('cadence')}
                 name="cadence"
                 type="radio"
@@ -507,8 +525,9 @@ export default class ProfileForm extends Component<Props, State> {
               Every 2 weeks
             </label>
 
-            <label>
+            <label htmlFor="monthly-cadence">
               <input
+                id="monthly-cadence"
                 defaultChecked
                 onChange={this.update('cadence')}
                 name="cadence"
@@ -518,8 +537,9 @@ export default class ProfileForm extends Component<Props, State> {
               Monthly
             </label>
 
-            <label>
+            <label htmlFor="cadence">
               <input
+                id="cadence"
                 onChange={this.update('cadence')}
                 name="cadence"
                 type="radio"
@@ -528,8 +548,9 @@ export default class ProfileForm extends Component<Props, State> {
               2-3 conversations/year
             </label>
 
-            <label>
+            <label htmlFor="other-cadence">
               <input
+                id="other-cadence"
                 onChange={this.update('cadence')}
                 name="cadence"
                 type="radio"
@@ -555,27 +576,27 @@ export default class ProfileForm extends Component<Props, State> {
             type="submit"
             className="button"
             disabled={
-              this.state.uploadingImage ||
-              this.state.name === '' ||
-              this.state.contactEmail === ''
+              uploadingImage ||
+              name === '' ||
+              contactEmail === ''
             }
             onClick={async () => {
               const unsavedImage =
-                this.state.imageEdited ||
-                (!this.state.imageSuccess && this.state.image !== null)
+                imageEdited ||
+                (!imageSuccess && image !== null)
 
               await when(unsavedImage, this.saveImage)
 
               this.setPreview()
             }}
           >
-            {this.state.uploadingImage
+            {uploadingImage
               ? 'Loading preview...'
               : 'Preview profile'}
           </button>
           {displayError({
-            name: this.state.name,
-            email: this.state.contactEmail,
+            name,
+            email: contactEmail,
           })}
         </div>
       </div>

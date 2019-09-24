@@ -2,7 +2,7 @@ import React from 'react'
 import Slider from 'react-slick'
 import { Link } from 'react-router-dom'
 
-import NextButton from './NextButton'
+import Button from './Button'
 
 export default class StudentExpectationsSlider extends React.Component {
   constructor(props) {
@@ -114,7 +114,7 @@ export default class StudentExpectationsSlider extends React.Component {
           </div>
         </Slider>
         <div style={{ textAlign: 'center' }}>
-          <NextButton
+          <Button
             to={nextHref}
             style={{ float: 'right' }}
             onClick={this.next}

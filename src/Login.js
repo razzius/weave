@@ -1,3 +1,4 @@
+// @flow
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -19,11 +20,11 @@ const instructions = (
   </div>
 )
 
-const Login = props => (
+const Login = ({ history }: { history: History}) => (
   <AppScreen>
     <SubmitEmailForm
       header="Login"
-      history={props.history}
+      history={history}
       instructions={instructions}
       successMessage="Please check your email and follow the link from there to log in."
       sendEmail={sendLoginEmail}

@@ -1,3 +1,4 @@
+// @flow
 import React, { Component } from 'react'
 
 import AppScreen from './AppScreen'
@@ -12,7 +13,20 @@ function errorView(error) {
   return String(error)
 }
 
-export default class Profile extends Component {
+type State = {}
+
+type Props = {
+  profileId: string,
+  isAdmin: string,
+  token: string,
+  match: {
+    params: {
+      id: string
+    }
+  },
+}
+
+export default class Profile extends Component<Props, State> {
   state = {
     data: null,
     error: null,

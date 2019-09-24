@@ -7,7 +7,6 @@ import ReactTooltip from 'react-tooltip'
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import 'promise-polyfill/src/polyfill'
 import 'react-toggle-switch/dist/css/switch.min.css'
 import 'blueimp-canvas-to-blob'
 

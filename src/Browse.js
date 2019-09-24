@@ -38,9 +38,6 @@ class Browse extends Component<Props, State> {
     const { token, location } = this.props
     const { page } = this.state
 
-    console.log('dim')
-
-    console.log(location.state)
     if (location.state) {
       this.loadProfilesFromHistory(location.state)
     } else {

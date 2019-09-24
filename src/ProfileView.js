@@ -4,7 +4,7 @@ import MediaQuery from 'react-responsive'
 import { withRouter } from 'react-router-dom'
 
 import { capitalize } from './utils'
-import NextButton from './NextButton'
+import Button from './Button'
 import ProfileAvatar from './ProfileAvatar'
 
 const Buttons = ({
@@ -23,15 +23,15 @@ const Buttons = ({
   location: Object,
 }) => (
   <Fragment>
-    {ownProfile && <NextButton to="/edit-profile" text="Edit profile" />}
+    {ownProfile && <Button to="/edit-profile" text="Edit profile" />}
     {isAdmin && (
-      <NextButton
+      <Button
         to={`/admin-edit-profile/${profileId}`}
         text="Edit profile as admin"
       />
     )}
     {!firstTimePublish && !editing && (
-      <NextButton
+      <Button
         className="button next-button"
         to={{ pathname: '/browse', state: location.state }}
         text="Back to list"
