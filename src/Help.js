@@ -47,8 +47,8 @@ const Help = () => (
       Which web browsers are supported with Weave?
     </h3>
     <p>
-      Weave is compatible with Chrome, Safari, Mozilla Firefox, and Internet
-      Explorer 10. We recommend using Chrome, Safari, or Mozilla Firefox web
+      Weave is compatible with Chrome, Safari, Edge, Mozilla Firefox, and Internet
+      Explorer 10. We recommend using Chrome, Safari, Edge, or Mozilla Firefox web
       browsers, to create or view profiles with the optimized interface
       experience.
     </p>
