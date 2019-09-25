@@ -107,7 +107,6 @@ def main():
 
         print(profile.id)
 
-
     save(VerificationToken(token=str(uuid.uuid4()), email_id=email.id))
 
 
