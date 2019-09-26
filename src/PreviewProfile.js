@@ -10,28 +10,21 @@ type Props = {
 }
 
 const PreviewProfile = (props: Props) => {
-  const {
-    data,
-    firstTimePublish,
-    onEdit,
-    onPublish,
-  } = props
+  const { data, firstTimePublish, onEdit, onPublish } = props
 
-  return <div>
-    <ProfileView
-      data={data}
-      editing
-      firstTimePublish={firstTimePublish}
-    />
+  return (
     <div>
-      <button type="button" className="button" onClick={onEdit}>
-        Edit
-      </button>
-      <button type="submit" className="button" onClick={onPublish}>
-        {firstTimePublish ? 'Publish' : 'Save'} profile
-      </button>
+      <ProfileView data={data} editing firstTimePublish={firstTimePublish} />
+      <div>
+        <button type="button" className="button" onClick={onEdit}>
+          Edit
+        </button>
+        <button type="submit" className="button" onClick={onPublish}>
+          {firstTimePublish ? 'Publish' : 'Save'} profile
+        </button>
+      </div>
     </div>
-  </div>
+  )
 }
 
 export default PreviewProfile

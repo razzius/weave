@@ -4,7 +4,7 @@ import AppScreen from './AppScreen'
 import SubmitEmailForm from './SubmitEmailForm'
 import { sendStudentVerificationEmail } from './api'
 
-const RegisterStudentEmail = ({ history }: {history: ReactRouterHistory}) => (
+const RegisterStudentEmail = ({ history }: { history: ReactRouterHistory }) => (
   <AppScreen>
     <SubmitEmailForm
       header="Register Email"

@@ -5,7 +5,7 @@ import Avatar from 'react-avatar'
 type Props = {
   imageUrl: string,
   name: string,
-  size: number
+  size: number,
 }
 
 const ProfileAvatar = ({ imageUrl, name, size }: Props) =>

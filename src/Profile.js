@@ -21,8 +21,8 @@ type Props = {
   token: string,
   match: {
     params: {
-      id: string
-    }
+      id: string,
+    },
   },
 }
 

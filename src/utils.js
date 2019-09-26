@@ -26,6 +26,6 @@ export function availableForMentoringFromVerifyTokenResponse(response) {
   return response.profile_id === null ? true : response.available_for_mentoring
 }
 
-export function LiteralLink({href}: {href: string}) {
+export function LiteralLink({ href }: { href: string }) {
   return <a href={href}>{href}</a>
 }

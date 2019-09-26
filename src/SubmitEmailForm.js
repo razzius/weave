@@ -38,7 +38,7 @@ function displayError(error, email) {
 }
 
 type Props = {
-  sendEmail: ({+email: string, +isPersonalDevice: boolean}) => Any,
+  sendEmail: ({ +email: string, +isPersonalDevice: boolean }) => Any,
   header: string,
   instructions: string,
   successMessage: string,
@@ -76,7 +76,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
 
   render() {
     const { header, instructions, successMessage } = this.props
-    const { success, email, } = this.state
+    const { success, email } = this.state
     if (!success) {
       const { error, isPersonalDevice } = this.state
 

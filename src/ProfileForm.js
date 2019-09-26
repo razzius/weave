@@ -161,11 +161,7 @@ export default class ProfileForm extends Component<Props, State> {
 
   submit = async () => {
     const { saveProfile, token, profileId, setProfileId, history } = this.props
-    const profile = await saveProfile(
-      token,
-      this.state,
-      profileId,
-    )
+    const profile = await saveProfile(token, this.state, profileId)
 
     if (setProfileId) {
       setProfileId(profile.id)
@@ -260,7 +256,7 @@ export default class ProfileForm extends Component<Props, State> {
       additionalInformation,
       uploadingImage,
       imageSuccess,
-      imageEdited
+      imageEdited,
     } = this.state
 
     const { firstTimePublish } = this.props
@@ -271,7 +267,8 @@ export default class ProfileForm extends Component<Props, State> {
           data={this.state}
           firstTimePublish={firstTimePublish}
           onEdit={this.unsetPreview}
-          onPublish={this.submit}/>
+          onPublish={this.submit}
+        />
       )
     }
 
@@ -316,11 +313,17 @@ export default class ProfileForm extends Component<Props, State> {
                 disabled={!hasImage}
                 defaultValue="1"
               />
-              <button type="button" disabled={!hasImage} onClick={this.rotateRight}>
+              <button
+                type="button"
+                disabled={!hasImage}
+                onClick={this.rotateRight}
+              >
                 Rotate
               </button>
               {hasImage && (
-                <button type="button" onClick={this.removeProfileImage}>Remove image</button>
+                <button type="button" onClick={this.removeProfileImage}>
+                  Remove image
+                </button>
               )}
             </div>
 
@@ -575,24 +578,17 @@ export default class ProfileForm extends Component<Props, State> {
           <button
             type="submit"
             className="button"
-            disabled={
-              uploadingImage ||
-              name === '' ||
-              contactEmail === ''
-            }
+            disabled={uploadingImage || name === '' || contactEmail === ''}
             onClick={async () => {
               const unsavedImage =
-                imageEdited ||
-                (!imageSuccess && image !== null)
+                imageEdited || (!imageSuccess && image !== null)
 
               await when(unsavedImage, this.saveImage)
 
               this.setPreview()
             }}
           >
-            {uploadingImage
-              ? 'Loading preview...'
-              : 'Preview profile'}
+            {uploadingImage ? 'Loading preview...' : 'Preview profile'}
           </button>
           {displayError({
             name,

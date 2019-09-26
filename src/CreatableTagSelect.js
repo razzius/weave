@@ -13,12 +13,12 @@ type Props = {
 }
 
 type State = {
-  inputValue: string
+  inputValue: string,
 }
 
 export default class CreatableTagSelect extends Component<Props, State> {
   static defaultProps = {
-    placeholder: "Select or type something and press enter..."
+    placeholder: 'Select or type something and press enter...',
   }
 
   state = {
@@ -42,7 +42,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
     if (!inputValue) return
     if (['Enter', 'Tab', ',', ';', '.'].includes(event.key)) {
       this.setState({
-        inputValue: ''
+        inputValue: '',
       })
       this.handleAdd(capitalize(inputValue))
       event.preventDefault()

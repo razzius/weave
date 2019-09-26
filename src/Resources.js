@@ -107,38 +107,40 @@ const Resources = () => (
     <h3>
       <a href="https://connects.catalyst.harvard.edu/profiles/search/people">
         Harvard Catalyst Profiles
-     </a>
+      </a>
     </h3>
 
     <p>
-      Harvard Catalyst is devoted to advancing human health by supporting and 
-      innovating clinical and translational science, and training the next 
-      generation of researchers. The Harvard University’s Clinical and 
-      Translational Science Center serves the research community by offering 
-      courses and educational programs, research consulting, tools for study design 
-      and clinical trial collaboration, guidance on regulatory issues, and pilot 
-      funding for novel, high-impact projects – all freely available to trainees, 
-      fellows, and faculty.
+      Harvard Catalyst is devoted to advancing human health by supporting and
+      innovating clinical and translational science, and training the next
+      generation of researchers. The Harvard University’s Clinical and
+      Translational Science Center serves the research community by offering
+      courses and educational programs, research consulting, tools for study
+      design and clinical trial collaboration, guidance on regulatory issues,
+      and pilot funding for novel, high-impact projects – all freely available
+      to trainees, fellows, and faculty.
     </p>
     <p>
-      Harvard Catalyst provides searchable profiles for all faculty members, that 
-      highlight their scholarly work and publications. The Catalyst search feature 
-      is available here: {' '}
-      <LiteralLink href="https://connects.catalyst.harvard.edu/profiles/search/people" />.{' '}
+      Harvard Catalyst provides searchable profiles for all faculty members,
+      that highlight their scholarly work and publications. The Catalyst search
+      feature is available here:{' '}
+      <LiteralLink href="https://connects.catalyst.harvard.edu/profiles/search/people" />
+      .{' '}
     </p>
 
     <h3>
       <a href="https://ctmd.catalyst.harvard.edu/">
         Harvard Catalyst Mentor Database for Clinical and Translational Research
-     </a>
+      </a>
     </h3>
 
     <p>
-      Harvard Catalyst has created a new searchable database for students to find 
-      HMS faculty mentors in the area of Clinical and Translational research. 
-      Search for projects with available faculty members to mentor medical students here: {' '}
-      <LiteralLink href=" https://ctmd.catalyst.harvard.edu/" />.{' '}
-      Access to the Harvard Catalyst database requires HarvardKey authentication.
+      Harvard Catalyst has created a new searchable database for students to
+      find HMS faculty mentors in the area of Clinical and Translational
+      research. Search for projects with available faculty members to mentor
+      medical students here:{' '}
+      <LiteralLink href=" https://ctmd.catalyst.harvard.edu/" />. Access to the
+      Harvard Catalyst database requires HarvardKey authentication.
     </p>
 
     <h3>
@@ -246,7 +248,8 @@ const Resources = () => (
       complaint, please visit the webpage for the{' '}
       <a href="https://titleix.harvard.edu/office-sexual-and-gender-based-dispute-resolution-odr">
         Office for Dispute Resolution
-      </a>.
+      </a>
+      .
     </p>
 
     <h3>
@@ -309,8 +312,9 @@ const Resources = () => (
       The{' '}
       <a href="https://meded.hms.harvard.edu/office-recruitment-multicultural-affairs">
         Office of Recruitment and Multicultural Affairs
-      </a>, as well as Academic Society advisors and program coordinators, are
-      also skilled in dealing with issues of discrimination and mistreatment at
+      </a>
+      , as well as Academic Society advisors and program coordinators, are also
+      skilled in dealing with issues of discrimination and mistreatment at
       Harvard Medical School.
     </p>
     <p>

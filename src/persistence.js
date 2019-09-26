@@ -8,7 +8,9 @@ function pluralizeHour() {
 export function loggedOutNotification() {
   // eslint-disable-next-line no-alert
   alert(
-    `For your security, you have been logged out due to reaching a maximum time of ${settings.maxTokenAgeHours} ${pluralizeHour()} since initial log in. You may log in again.`
+    `For your security, you have been logged out due to reaching a maximum time of ${
+      settings.maxTokenAgeHours
+    } ${pluralizeHour()} since initial log in. You may log in again.`
   )
 }
 

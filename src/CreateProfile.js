@@ -7,7 +7,7 @@ import ProfileForm from './ProfileForm'
 
 type Props = any
 
-const CreateProfile = ({setAvailableForMentoring, ...props}: Props) => (
+const CreateProfile = ({ setAvailableForMentoring, ...props }: Props) => (
   <AppScreen>
     <ProfileForm
       loadInitial={false}

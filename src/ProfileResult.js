@@ -73,7 +73,7 @@ type Props = {
 
 class ProfileResult extends Component<State, Props> {
   state = {
-    scrollY: 0
+    scrollY: 0,
   }
 
   render() {
@@ -121,8 +121,12 @@ class ProfileResult extends Component<State, Props> {
               pathname: `/profiles/${id}`,
               state: { ...browseState, scrollY },
             }}
-            onMouseOver={() => {this.setState({scrollY: window.scrollY})}}
-            onFocus={() => {this.setState({scrollY: window.scrollY})}}
+            onMouseOver={() => {
+              this.setState({ scrollY: window.scrollY })
+            }}
+            onFocus={() => {
+              this.setState({ scrollY: window.scrollY })
+            }}
           >
             <ProfileAvatar imageUrl={imageUrl} name={name} size={160} />
             <div style={{ flexGrow: '0', flexShrink: '0', width: '400px' }}>
@@ -163,7 +167,10 @@ class ProfileResult extends Component<State, Props> {
               </div>
 
               <CheckboxIndicator title="Shadowing" checked={willingShadowing} />
-              <CheckboxIndicator title="Networking" checked={willingNetworking} />
+              <CheckboxIndicator
+                title="Networking"
+                checked={willingNetworking}
+              />
               <CheckboxIndicator
                 title="Goal setting"
                 checked={willingGoalSetting}

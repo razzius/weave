@@ -20,7 +20,7 @@ const instructions = (
   </div>
 )
 
-const Login = ({ history }: { history: History}) => (
+const Login = ({ history }: { history: History }) => (
   <AppScreen>
     <SubmitEmailForm
       header="Login"
