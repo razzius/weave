@@ -5,6 +5,7 @@ import requests
 
 
 SERVER_URL = os.environ['REACT_APP_SERVER_URL']
+CLIENT_URL = os.environ.get('WEAVE_CLIENT_URL', SERVER_URL)
 SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
 
@@ -34,7 +35,7 @@ EMAIL_CLOSING = """
 
 
 def get_verification_url(token):
-    return f'{SERVER_URL}/verify?token={token}'
+    return f'{CLIENT_URL}/verify?token={token}'
 
 
 def self_link(href):
@@ -55,7 +56,7 @@ def send_faculty_registration_email(email, token):
         faculty mentor profile. The following link will direct you to create
         your profile page: {verify_link}. You may return to edit your profile
         or change your availability settings anytime by returning to
-        {SERVER_URL} and clicking “Login” in the top right-hand corner.
+        {CLIENT_URL} and clicking “Login” in the top right-hand corner.
     </p>
 
     <p>
@@ -81,7 +82,7 @@ def send_student_registration_email(email, token):
         at Harvard Medical School. You have successfully registered for a
         student mentee profile. The following link will direct you to view the
         database of faculty mentors: {verify_link}. You may access this
-        database of mentors anytime by returning to {SERVER_URL} and clicking
+        database of mentors anytime by returning to {CLIENT_URL} and clicking
         “Login” in the top right-hand corner.
     </p>
 
