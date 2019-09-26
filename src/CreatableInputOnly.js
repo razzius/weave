@@ -6,10 +6,10 @@ import CreatableTagSelect from './CreatableTagSelect'
 type Props = {
   handleAdd: string => void,
   handleChange: Array => void,
-  value: string,
+  values: Array<string>,
 }
 
-const CreatableInputOnly = ({ handleAdd, handleChange, value }: Props) => (
+const CreatableInputOnly = ({ handleAdd, handleChange, values }: Props) => (
   <CreatableTagSelect
     components={{ DropdownIndicator: null }}
     isClearable
@@ -17,7 +17,9 @@ const CreatableInputOnly = ({ handleAdd, handleChange, value }: Props) => (
     placeholder="Type something and press enter..."
     handleAdd={handleAdd}
     handleChange={handleChange}
-    value={value}
+    values={values}
+    noOptionsMessage={() => null}
+    splitOnPunctuation
   />
 )
 

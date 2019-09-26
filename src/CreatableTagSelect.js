@@ -10,6 +10,8 @@ type Props = {
   handleChange: any => void,
   placeholder?: string,
   handleAdd: any => void,
+  splitOnPunctuation?: boolean,
+  noOptionsMessage?: string => string | null,
 }
 
 type State = {
@@ -19,6 +21,8 @@ type State = {
 export default class CreatableTagSelect extends Component<Props, State> {
   static defaultProps = {
     placeholder: 'Select or type something and press enter...',
+    splitOnPunctuation: false,
+    noOptionsMessage: null,
   }
 
   state = {
@@ -38,12 +42,18 @@ export default class CreatableTagSelect extends Component<Props, State> {
   }
 
   handleKeyDown = event => {
-    const { inputValue } = this.state
-    if (!inputValue) return
-    if (['Enter', 'Tab', ',', ';', '.'].includes(event.key)) {
+    if ([',', ';'].includes(event.key)) {
+      const { inputValue } = this.state
+
+      if (inputValue === '') {
+        event.preventDefault()
+        return
+      }
+
       this.setState({
         inputValue: '',
       })
+
       this.handleAdd(capitalize(inputValue))
       event.preventDefault()
     }
@@ -55,7 +65,15 @@ export default class CreatableTagSelect extends Component<Props, State> {
   }
 
   render() {
-    const { handleChange, values, options, placeholder, handleAdd } = this.props
+    const {
+      handleChange,
+      values,
+      options,
+      placeholder,
+      handleAdd,
+      splitOnPunctuation,
+      noOptionsMessage,
+    } = this.props
     const { inputValue } = this.state
     return (
       <CreatableSelect
@@ -69,13 +87,13 @@ export default class CreatableTagSelect extends Component<Props, State> {
         className="column"
         isMulti
         onChange={handleChange}
-        onKeyDown={this.handleKeyDown}
+        onKeyDown={splitOnPunctuation ? this.handleKeyDown : null}
         onBlur={this.handleOnBlur}
         options={options}
-        values={values}
         handleChange={handleChange}
         placeholder={placeholder}
         handleAdd={handleAdd}
+        noOptionsMessage={noOptionsMessage}
       />
     )
   }
