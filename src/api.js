@@ -31,7 +31,7 @@ async function http(token, url, options = {}) {
 
   const response = await fetch(url, optionsWithAuth)
 
-  if (response.status === 401) {
+  if (response.status === 440) {
     clearToken()
     loggedOutNotification()
     window.location.pathname = '/login'

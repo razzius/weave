@@ -85,10 +85,10 @@ def get_token(headers):
         )
 
     if _token_expired(verification_token):
+        login_timeout_status = 440
+
         return (
-            error_response(
-                {'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value
-            ),
+            error_response({'token': ['expired']}, status_code=login_timeout_status),
             None,
         )
 
