@@ -1,20 +1,18 @@
-from flask import current_app, make_response
-from http import HTTPStatus
 import datetime
 import os
 import uuid
-
-from dateutil.relativedelta import relativedelta
-from flask import Blueprint, jsonify, request
+from http import HTTPStatus
 from typing import Tuple
 
 from cloudinary import uploader
-from sentry_sdk import capture_exception
+from dateutil.relativedelta import relativedelta
+from flask import Blueprint, current_app, jsonify, make_response, request
 from marshmallow import ValidationError
 from requests_toolbelt.utils import dump
+from sentry_sdk import capture_exception
 from sqlalchemy import func
-from sqlalchemy.sql import exists
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.sql import exists
 
 from .emails import (
     send_faculty_login_email,
@@ -33,17 +31,17 @@ from .models import (
     PartsOfMeOption,
     ProfessionalInterest,
     ProfessionalInterestOption,
-    ProfileDegree,
     Profile,
     ProfileActivity,
+    ProfileDegree,
     VerificationEmail,
     VerificationToken,
     db,
     get_verification_email_by_email,
     save,
 )
-from .schemas import profile_schema, profiles_schema, valid_email_schema
 from .queries import matching_profiles
+from .schemas import profile_schema, profiles_schema, valid_email_schema
 
 
 api = Blueprint('api', __name__)
