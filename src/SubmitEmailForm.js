@@ -132,7 +132,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
             <p>The following are the allowed email domains:</p>
             {VALID_DOMAINS.filter(domain => domain !== '@hmsweave.com').map(
               domain => (
-                <div>{domain.replace('@', '')}</div>
+                <div key={domain}>{domain.replace('@', '')}</div>
               )
             )}
             <p>
