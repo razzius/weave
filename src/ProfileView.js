@@ -23,19 +23,19 @@ const Buttons = ({
   location: Object,
 }) => (
   <Fragment>
-    {ownProfile && <Button to="/edit-profile" text="Edit profile" />}
+    {ownProfile && <Button to="/edit-profile">Edit Profile</Button>}
     {isAdmin && (
-      <Button
-        to={`/admin-edit-profile/${profileId}`}
-        text="Edit profile as admin"
-      />
+      <Button to={`/admin-edit-profile/${profileId}`}>
+        Edit profile as admin
+      </Button>
     )}
     {!firstTimePublish && !editing && (
       <Button
         className="button next-button"
         to={{ pathname: '/browse', state: location.state }}
-        text="Back to list"
-      />
+      >
+        Back to list
+      </Button>
     )}
   </Fragment>
 )
@@ -89,31 +89,42 @@ type ProfileData = {|
   ...BaseProfileData,
 |}
 
-const Expectations = (data: ProfileData) => (
+const Expectations = ({
+  willingShadowing,
+  willingNetworking,
+  willingGoalSetting,
+  willingDiscussPersonal,
+  willingCareerGuidance,
+  willingStudentGroup,
+}: {
+  willingShadowing: boolean,
+  willingNetworking: boolean,
+  willingGoalSetting: boolean,
+  willingDiscussPersonal: boolean,
+  willingCareerGuidance: boolean,
+  willingStudentGroup: boolean,
+}) => (
   <Fragment>
     <h4>I am available to help in the following ways:</h4>
 
     <ExpectationDisplay
       name="Clinical shadowing opportunities"
-      value={data.willingShadowing}
+      value={willingShadowing}
     />
 
-    <ExpectationDisplay name="Networking" value={data.willingNetworking} />
+    <ExpectationDisplay name="Networking" value={willingNetworking} />
 
-    <ExpectationDisplay name="Goal setting" value={data.willingGoalSetting} />
+    <ExpectationDisplay name="Goal setting" value={willingGoalSetting} />
 
     <ExpectationDisplay
       name="Discussing personal as well as professional life"
-      value={data.willingDiscussPersonal}
+      value={willingDiscussPersonal}
     />
 
-    <ExpectationDisplay
-      name="Career guidance"
-      value={data.willingCareerGuidance}
-    />
+    <ExpectationDisplay name="Career guidance" value={willingCareerGuidance} />
     <ExpectationDisplay
       name="Student interest group support or speaking at student events"
-      value={data.willingStudentGroup}
+      value={willingStudentGroup}
     />
   </Fragment>
 )
@@ -197,13 +208,13 @@ const AboutInfo = ({
   </Fragment>
 )
 
-const ContactInformation = data => {
-  const [username, domain] = data.contactEmail.split('@')
+const ContactInformation = ({ contactEmail }: { contactEmail: string }) => {
+  const [username, domain] = contactEmail.split('@')
   return (
     <Fragment>
       <h4>Contact Information</h4>
 
-      <a className="contact-email" href={`mailto:${data.contactEmail}`}>
+      <a className="contact-email" href={`mailto:${contactEmail}`}>
         {username}
         <wbr />@{domain}
       </a>
@@ -229,7 +240,11 @@ const ProfileView = ({
   const buttons = (
     <Buttons
       profileId={data.id}
-      {...{ ownProfile, firstTimePublish, editing, isAdmin, location }}
+      ownProfile={ownProfile}
+      firstTimePublish={firstTimePublish}
+      editing={editing}
+      isAdmin={isAdmin}
+      location={location}
     />
   )
   return (
@@ -242,12 +257,27 @@ const ProfileView = ({
 
           <h1>{data.name}</h1>
 
-          <ContactInformation {...data} />
+          <ContactInformation contactEmail={data.contactEmail} />
 
           <Cadence cadence={data.cadence} otherCadence={data.otherCadence} />
 
-          <Expectations {...data} />
-          <AboutInfo {...data} />
+          <Expectations
+            willingShadowing={data.willingShadowing}
+            willingNetworking={data.willingNetworking}
+            willingGoalSetting={data.willingGoalSetting}
+            willingDiscussPersonal={data.willingDiscussPersonal}
+            willingCareerGuidance={data.willingCareerGuidance}
+            willingStudentGroup={data.willingStudentGroup}
+          />
+          <AboutInfo
+            degrees={data.degrees}
+            affiliations={data.affiliations}
+            clinicalSpecialties={data.clinicalSpecialties}
+            professionalInterests={data.professionalInterests}
+            partsOfMe={data.partsOfMe}
+            additionalInformation={data.additionalInformation}
+            activities={data.activities}
+          />
         </div>
       </MediaQuery>
 
@@ -261,21 +291,36 @@ const ProfileView = ({
                 size={200}
               />
 
-              <ContactInformation {...data} />
+              <ContactInformation contactEmail={data.contactEmail} />
 
               <Cadence
                 cadence={data.cadence}
                 otherCadence={data.otherCadence}
               />
 
-              <Expectations {...data} />
+              <Expectations
+                willingShadowing={data.willingShadowing}
+                willingNetworking={data.willingNetworking}
+                willingGoalSetting={data.willingGoalSetting}
+                willingDiscussPersonal={data.willingDiscussPersonal}
+                willingCareerGuidance={data.willingCareerGuidance}
+                willingStudentGroup={data.willingStudentGroup}
+              />
             </div>
             <div className="about">
               {buttons}
 
               <h1>{data.name}</h1>
 
-              <AboutInfo {...data} />
+              <AboutInfo
+                degrees={data.degrees}
+                affiliations={data.affiliations}
+                clinicalSpecialties={data.clinicalSpecialties}
+                professionalInterests={data.professionalInterests}
+                partsOfMe={data.partsOfMe}
+                additionalInformation={data.additionalInformation}
+                activities={data.activities}
+              />
             </div>
           </div>
         </div>

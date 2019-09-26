@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom'
 
 type Props = any
 
-const Button = ({ to, onClick, children, ...props }: Props) => {
+const Button = ({ to, onClick, children, style, disabled }: Props) => {
   if (to) {
     return (
       <Link className="button next-button" to={to}>
-        {props.text}
+        {children}
       </Link>
     )
   }
@@ -17,7 +17,8 @@ const Button = ({ to, onClick, children, ...props }: Props) => {
       type="button"
       onClick={onClick}
       className="button next-button"
-      {...props}
+      style={style}
+      disabled={disabled}
     >
       {children}
     </button>

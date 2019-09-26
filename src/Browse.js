@@ -208,7 +208,7 @@ class Browse extends Component<Props, State> {
             <ProfileResult
               key={result.id}
               browseState={this.state}
-              {...result}
+              result={result}
             />
           ))
         : null

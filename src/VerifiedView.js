@@ -62,7 +62,7 @@ const VerifiedView = (props: Props) => {
           />
         )}
       </div>
-      <Button to={linkUrl} text={buttonText} />
+      <Button to={linkUrl}>{buttonText}</Button>
     </div>
   )
 }

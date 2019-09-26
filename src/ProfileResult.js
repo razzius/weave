@@ -78,20 +78,22 @@ class ProfileResult extends Component<State, Props> {
 
   render() {
     const {
-      id,
-      affiliations,
-      imageUrl,
-      name,
-      degrees,
-      clinicalSpecialties,
-      professionalInterests,
-      cadence,
-      willingShadowing,
-      willingNetworking,
-      willingGoalSetting,
-      willingDiscussPersonal,
-      willingCareerGuidance,
-      willingStudentGroup,
+      result: {
+        id,
+        affiliations,
+        imageUrl,
+        name,
+        degrees,
+        clinicalSpecialties,
+        professionalInterests,
+        cadence,
+        willingShadowing,
+        willingNetworking,
+        willingGoalSetting,
+        willingDiscussPersonal,
+        willingCareerGuidance,
+        willingStudentGroup,
+      },
       browseState, // for history
     } = this.props
 

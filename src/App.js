@@ -291,13 +291,13 @@ class App extends Component<Props, State> {
 
             <Route
               path="/profiles/:id"
-              render={props =>
+              render={({ match }) =>
                 account && (
                   <Profile
                     profileId={account.profileId}
                     token={token}
                     isAdmin={account.isAdmin}
-                    {...props}
+                    match={match}
                   />
                 )
               }

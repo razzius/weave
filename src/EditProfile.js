@@ -10,15 +10,26 @@ type Props = {
   profileId: string,
   isAdmin: ?boolean,
   setProfileId: ?Function,
+  history: History,
 }
 
-const EditProfile = (props: Props) => (
+
+const EditProfile = ({
+  token,
+  history,
+  setProfileId,
+  profileId,
+  isAdmin,
+}: Props) => (
   <AppScreen>
     <ProfileForm
-      loadInitial={() => getProfile(props.token, props.profileId)}
+      loadInitial={() => getProfile(token, profileId)}
       firstTimePublish={false}
       saveProfile={updateProfile}
-      {...props}
+      history={history}
+      setProfileId={setProfileId}
+      profileId={profileId}
+      isAdmin={isAdmin}
     />
   </AppScreen>
 )

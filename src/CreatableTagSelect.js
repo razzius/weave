@@ -55,7 +55,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
   }
 
   render() {
-    const { handleChange, values } = this.props
+    const { handleChange, values, options, placeholder, handleAdd } = this.props
     const { inputValue } = this.state
     return (
       <CreatableSelect
@@ -71,7 +71,11 @@ export default class CreatableTagSelect extends Component<Props, State> {
         onChange={handleChange}
         onKeyDown={this.handleKeyDown}
         onBlur={this.handleOnBlur}
-        {...this.props}
+        options={options}
+        values={values}
+        handleChange={handleChange}
+        placeholder={placeholder}
+        handleAdd={handleAdd}
       />
     )
   }

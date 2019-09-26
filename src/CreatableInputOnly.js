@@ -9,13 +9,15 @@ type Props = {
   value: string,
 }
 
-const CreatableInputOnly = (props: Props) => (
+const CreatableInputOnly = ({ handleAdd, handleChange, value }: Props) => (
   <CreatableTagSelect
     components={{ DropdownIndicator: null }}
     isClearable
     menuIsOpen={false}
     placeholder="Type something and press enter..."
-    {...props}
+    handleAdd={handleAdd}
+    handleChange={handleChange}
+    value={value}
   />
 )
 
