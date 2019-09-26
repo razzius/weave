@@ -1,5 +1,6 @@
 // @flow
 import React from 'react'
+import { useBeforeunload } from 'react-beforeunload';
 
 import AppScreen from './AppScreen'
 import { getProfile, updateProfile } from './api'
@@ -20,8 +21,10 @@ const EditProfile = ({
   setProfileId,
   profileId,
   isAdmin,
-}: Props) => (
-  <AppScreen>
+}: Props) => {
+  useBeforeunload(() => "Your changes to your profile have not been saved.")
+
+  return <AppScreen>
     <ProfileForm
       loadInitial={() => getProfile(token, profileId)}
       firstTimePublish={false}
@@ -30,8 +33,9 @@ const EditProfile = ({
       setProfileId={setProfileId}
       profileId={profileId}
       isAdmin={isAdmin}
+      token={token}
     />
   </AppScreen>
-)
+}
 
 export default EditProfile
