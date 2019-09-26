@@ -1,4 +1,4 @@
-import { subHours } from 'date-fns'
+import { addHours, isAfter } from 'date-fns'
 import settings from './settings'
 
 function pluralizeHour() {
@@ -30,11 +30,12 @@ export function loadToken() {
     return null
   }
 
-  const oneHourAgo = subHours(new Date(), settings.maxTokenAgeHours)
+  const whenTokenExpires = addHours(new Date(tokenTimestamp), settings.maxTokenAgeHours)
 
-  if (new Date(tokenTimestamp) < oneHourAgo) {
+  if (isAfter(new Date(), whenTokenExpires)) {
     clearToken()
     return null
   }
+
   return window.localStorage.getItem('token')
 }
