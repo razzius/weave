@@ -6,6 +6,7 @@ import uuid
 
 from dateutil.relativedelta import relativedelta
 from flask import Blueprint, jsonify, request
+from typing import Tuple
 
 from cloudinary import uploader
 from sentry_sdk import capture_exception
@@ -369,7 +370,9 @@ def upload_image():
     return jsonify({'image_url': response['eager'][0]['secure_url']})
 
 
-def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
+def get_verification_email(
+    email: str, is_mentor: bool
+) -> Tuple[VerificationEmail, bool]:
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:
