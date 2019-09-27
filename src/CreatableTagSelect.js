@@ -11,7 +11,7 @@ type Props = {
   placeholder?: string,
   handleAdd: any => void,
   splitOnPunctuation?: boolean,
-  noOptionsMessage?: string => string | null,
+  noOptionsMessage?: (string => string) | null,
 }
 
 type State = {

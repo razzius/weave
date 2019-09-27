@@ -3,7 +3,7 @@ import React from 'react'
 import Avatar from 'react-avatar'
 
 type Props = {
-  imageUrl: string,
+  imageUrl: ?string,
   name: string,
   size: number,
 }

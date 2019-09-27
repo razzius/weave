@@ -54,24 +54,30 @@ const CheckboxIndicator = ({
 }
 
 type Props = {
-  id: number,
-  affiliations: Array<string>,
-  imageUrl: string,
-  name: string,
-  degrees: Array<string>,
-  clinicalSpecialties: Array<string>,
-  professionalInterests: Array<string>,
-  cadence: string,
-  willingShadowing: boolean,
-  willingNetworking: boolean,
-  willingGoalSetting: boolean,
-  willingDiscussPersonal: boolean,
-  willingCareerGuidance: boolean,
-  willingStudentGroup: boolean,
+  result: {
+    id: number,
+    affiliations: Array<string>,
+    imageUrl: string,
+    name: string,
+    degrees: Array<string>,
+    clinicalSpecialties: Array<string>,
+    professionalInterests: Array<string>,
+    cadence: string,
+    willingShadowing: boolean,
+    willingNetworking: boolean,
+    willingGoalSetting: boolean,
+    willingDiscussPersonal: boolean,
+    willingCareerGuidance: boolean,
+    willingStudentGroup: boolean,
+  },
   browseState: Object,
 }
 
-class ProfileResult extends Component<State, Props> {
+type State = {
+  scrollY: number,
+}
+
+class ProfileResult extends Component<Props, State> {
   state = {
     scrollY: 0,
   }

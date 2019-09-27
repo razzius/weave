@@ -84,8 +84,8 @@ type State = {
   willingCareerGuidance: boolean,
   willingStudentGroup: boolean,
 
-  cadence: 'monthly',
-  otherCadence: null,
+  cadence: string,
+  otherCadence: string | null,
   preview: boolean,
 }
 
@@ -96,6 +96,8 @@ type Options = Array<{
 
 export default class ProfileForm extends Component<Props, State> {
   otherCadenceInput: ?HTMLInputElement = null
+
+  editor: any = null
 
   state = {
     position: { x: 0.5, y: 0.5 },
@@ -198,7 +200,7 @@ export default class ProfileForm extends Component<Props, State> {
     const scaled = scaleCanvas(canvas)
 
     return new Promise(resolve => {
-      scaled.toBlob(async blob => {
+      scaled.toBlob(((async blob => {
         const response = await uploadPicture(token, blob)
 
         this.setState(
@@ -210,7 +212,7 @@ export default class ProfileForm extends Component<Props, State> {
           },
           () => resolve(response)
         )
-      })
+      }): any)) // The callback returns a Promise but toBlob expects it to return undefined
     })
   }
 
@@ -242,12 +244,14 @@ export default class ProfileForm extends Component<Props, State> {
     const {
       activities,
       affiliations,
+      cadence,
       clinicalSpecialties,
       contactEmail,
       degrees,
       image,
       imageUrl,
       name,
+      otherCadence,
       partsOfMe,
       preview,
       professionalInterests,
@@ -270,7 +274,26 @@ export default class ProfileForm extends Component<Props, State> {
     if (preview) {
       return (
         <PreviewProfile
-          data={this.state}
+          data={{
+            activities,
+            affiliations,
+            cadence,
+            clinicalSpecialties,
+            contactEmail,
+            degrees,
+            imageUrl,
+            name,
+            otherCadence,
+            partsOfMe,
+            professionalInterests,
+            willingCareerGuidance,
+            willingDiscussPersonal,
+            willingGoalSetting,
+            willingNetworking,
+            willingShadowing,
+            willingStudentGroup,
+            additionalInformation,
+          }}
           firstTimePublish={firstTimePublish}
           onEdit={this.unsetPreview}
           onPublish={this.submit}
@@ -575,7 +598,7 @@ export default class ProfileForm extends Component<Props, State> {
                 style={{ marginLeft: '4px' }}
                 onFocus={() => {
                   this.setState({ cadence: 'other' })
-                  if (this.otherCadenceInput !== null) {
+                  if (this.otherCadenceInput) {
                     this.otherCadenceInput.checked = true
                   }
                 }}

@@ -228,7 +228,7 @@ export type Account = {|
   +availableForMentoring: boolean,
 |}
 
-export async function verifyToken(token: string): Promise<Account> {
+export async function verifyToken(token: ?string): Promise<Account> {
   const response = await post(null, 'verify-token', { token })
 
   return {

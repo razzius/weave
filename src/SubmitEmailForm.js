@@ -38,11 +38,20 @@ function displayError(error, email) {
 }
 
 type Props = {
-  sendEmail: ({ +email: string, +isPersonalDevice: boolean }) => Any,
+  sendEmail: ({| +email: string, +isPersonalDevice: boolean |}) => Object,
   header: string,
   instructions: string,
   successMessage: string,
 }
+
+type State = {
+  email: string,
+  isPersonalDevice: boolean,
+  success: boolean,
+  error: Object | null,
+}
+
+type ReactEvent = SyntheticInputEvent<HTMLInputElement>
 
 export default class SubmitEmailForm extends Component<Props, State> {
   state = {
@@ -52,7 +61,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
     error: null,
   }
 
-  submitEmail = e => {
+  submitEmail = (e: Event) => {
     const { email, isPersonalDevice } = this.state
     const { sendEmail } = this.props
 
@@ -70,7 +79,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
       })
   }
 
-  updateEmail = e => {
+  updateEmail = (e: ReactEvent) => {
     this.setState({ email: e.target.value })
   }
 
@@ -130,6 +139,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
               <a href="/help">Help</a> page.
             </p>
             <p>The following are the allowed email domains:</p>
+
             {VALID_DOMAINS.filter(domain => domain !== '@hmsweave.com').map(
               domain => (
                 <div key={domain}>{domain.replace('@', '')}</div>

@@ -1,5 +1,7 @@
 // @flow
 import React from 'react'
+import { type ReactRouterHistory } from 'react-router-dom'
+
 import AppScreen from './AppScreen'
 import SubmitEmailForm from './SubmitEmailForm'
 import { sendStudentVerificationEmail } from './api'
