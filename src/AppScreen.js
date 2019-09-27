@@ -6,5 +6,5 @@ export default ({
   className = '',
 }: {
   children: ChildrenArray<Element<any> | null>,
-  className: string,
+  className?: string,
 }) => <div className={`App-body ${className}`}>{children}</div>

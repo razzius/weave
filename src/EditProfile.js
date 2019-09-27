@@ -20,7 +20,7 @@ const EditProfile = ({
   history,
   setProfileId,
   profileId,
-  isAdmin,
+  isAdmin = false,
 }: Props) => {
   useBeforeunload(() => "Your changes to your profile have not been saved.")
 

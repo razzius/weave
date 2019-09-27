@@ -133,8 +133,8 @@ class App extends Component<Props, State> {
           <header className="App-header">
             <div className="header-inner">
               <Link to="/" className="App-title left">
-                <img src="assets/hms-crest.svg" alt="HMS crest" />
-                <img src="assets/hsdm-crest.svg" alt="HSDM crest" />
+                <img src="/assets/hms-crest.svg" alt="HMS crest" />
+                <img src="/assets/hsdm-crest.svg" alt="HSDM crest" />
                 <h1>Weave</h1>
               </Link>
 

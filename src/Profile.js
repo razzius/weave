@@ -3,9 +3,13 @@ import React, { Component } from 'react'
 
 import AppScreen from './AppScreen'
 import { getProfile } from './api'
-import ProfileView from './ProfileView'
+import ProfileView, { type ProfileData } from './ProfileView'
 
-function errorView(error) {
+type ClientError = {
+  profile_id: Array<string>
+}
+
+function errorView(error: ClientError) {
   if (error.profile_id[0] === 'Not found') {
     return 'Profile not found'
   }
@@ -13,7 +17,10 @@ function errorView(error) {
   return String(error)
 }
 
-type State = {}
+type State = {
+  data: ProfileData | null,
+  error: ClientError | null,
+}
 
 type Props = {
   profileId: string,
@@ -32,7 +39,7 @@ export default class Profile extends Component<Props, State> {
     error: null,
   }
 
-  componentDidMount = () => {
+  async componentDidMount() {
     const {
       token,
       match: {
@@ -40,9 +47,12 @@ export default class Profile extends Component<Props, State> {
       },
     } = this.props
 
-    getProfile(token, id)
-      .then(data => this.setState({ data }))
-      .catch(error => this.setState({ error }))
+    try {
+      const data = await getProfile(token, id)
+      this.setState({ data })
+    } catch (error) {
+      this.setState({ error })
+    }
   }
 
   render() {

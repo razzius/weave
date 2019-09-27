@@ -84,7 +84,7 @@ export type BaseProfileData = {|
   otherCadence: ?string,
 |}
 
-type ProfileData = {|
+export type ProfileData = {|
   id: string,
   ...BaseProfileData,
 |}

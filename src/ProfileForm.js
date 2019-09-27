@@ -46,7 +46,7 @@ function displayError({ name, email }: { name: string, email: string }) {
 
 type Props = {
   loadInitial: any => void,
-  saveProfile: any => void,
+  saveProfile: (string, Object, string) => Object,
   token: string,
   profileId: string,
   setProfileId: ?Function,
@@ -87,10 +87,16 @@ type State = {
   cadence: 'monthly',
   otherCadence: null,
   preview: boolean,
-  ...BaseProfileData,
 }
 
+type Options = Array<{
+  value: string,
+  label: string,
+}>
+
 export default class ProfileForm extends Component<Props, State> {
+  otherCadenceInput: ?HTMLInputElement = null
+
   state = {
     position: { x: 0.5, y: 0.5 },
     scale: 1,
@@ -146,7 +152,7 @@ export default class ProfileForm extends Component<Props, State> {
     })
   }
 
-  handleChange = (key: string) => (options: Array) => {
+  handleChange = (key: string) => (options: Options) => {
     const values = options.map(({ value }) => value)
     this.setState({ [key]: values })
   }
@@ -173,11 +179,11 @@ export default class ProfileForm extends Component<Props, State> {
     this.setState({ image: acceptedFiles[0], imageEdited: true })
   }
 
-  handleNewImage = e => {
+  handleNewImage = (e: { target: { files: Array<File> } }) => {
     this.setState({ image: e.target.files[0], imageEdited: true })
   }
 
-  handleScale = e => {
+  handleScale = (e: { target: { value: string } }) => {
     const scale = parseFloat(e.target.value)
     this.setState({ scale, imageEdited: true })
   }
@@ -569,7 +575,9 @@ export default class ProfileForm extends Component<Props, State> {
                 style={{ marginLeft: '4px' }}
                 onFocus={() => {
                   this.setState({ cadence: 'other' })
-                  this.otherCadenceInput.checked = true
+                  if (this.otherCadenceInput !== null) {
+                    this.otherCadenceInput.checked = true
+                  }
                 }}
                 onChange={this.update('otherCadence')}
               />

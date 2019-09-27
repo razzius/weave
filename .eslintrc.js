@@ -14,6 +14,9 @@ module.exports = {
     'react/jsx-curly-newline': 0,
     'react/jsx-fragments': 0,
     'react/static-property-placement': 0,
+
+    // Default ES function props are not considered so we disable the rule
+    'react/require-default-props': 0,
   },
   env: { browser: true },
 }
