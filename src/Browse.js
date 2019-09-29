@@ -1,20 +1,11 @@
 // @flow
 import React, { Component } from 'react'
-import ReactTooltip from 'react-tooltip'
 import { withRouter } from 'react-router-dom'
 
-import ProfileResult from './ProfileResult'
-import SearchInput from './SearchInput'
 import { getProfiles } from './api'
-import Button from './Button'
 import AppScreen from './AppScreen'
-
-function pluralizeResults(length) {
-  if (length === 1) {
-    return 'result'
-  }
-  return 'results'
-}
+import SearchInput from './SearchInput'
+import ResultsView from './ResultsView'
 
 type Props = Object
 type State = Object
@@ -95,7 +86,7 @@ class Browse extends Component<Props, State> {
       affiliations,
     })
 
-    if (page > 1) {
+    if (results !== null && page > 1) {
       const updatedProfiles = results.profiles.concat(newResults.profiles)
 
       this.setState({
@@ -160,58 +151,22 @@ class Browse extends Component<Props, State> {
     this.setState(originalState, this.handleSearch)
   }
 
+  nextPage = () => {
+    const { page } = this.state
+    this.setState({ page: page + 1 }, this.handleSearch)
+  }
+
   render() {
     const {
       error,
       loading,
       results,
-      page,
       searchTerms,
       search,
       degrees,
       queried,
       affiliations,
     } = this.state
-
-    const nextButton = results !== null &&
-      results.profiles.length < results.profileCount && (
-        <Button
-          disabled={loading}
-          onClick={() => {
-            this.setState({ page: page + 1 }, this.handleSearch)
-          }}
-        >
-          Load 20 more
-        </Button>
-      )
-
-    const scrollToTopButton =
-      results != null && results.length > 0 ? (
-        <Button
-          onClick={() => {
-            window.scrollTo(0, 0)
-          }}
-        >
-          Scroll to top
-        </Button>
-      ) : null
-
-    const navigationButtons = (
-      <div style={{ textAlign: 'center' }}>
-        {nextButton} {scrollToTopButton}
-      </div>
-    )
-
-    const profileElements =
-      results !== null
-        ? results.profiles.map(result => (
-            <ProfileResult
-              key={result.id}
-              browseState={this.state}
-              result={result}
-            />
-          ))
-        : null
 
     return (
       <AppScreen>
@@ -229,24 +184,15 @@ class Browse extends Component<Props, State> {
           }}
         />
         <div style={{ padding: '1em 0' }}>
-          {(error !== null && error) ||
-            (results === null && <p>Loading...</p>) || (
-              <div>
-                <p>
-                  Showing {results.profiles.length}{' '}
-                  {pluralizeResults(results.profiles.length)} of{' '}
-                  {results.profileCount}. {loading && <span>Loading...</span>}
-                  {queried && (
-                    <button type="button" onClick={this.resetSearch}>
-                      Clear search
-                    </button>
-                  )}
-                </p>
-                <ReactTooltip id="indicator" place="bottom" />
-                <div>{profileElements}</div>
-                {navigationButtons}
-              </div>
-            )}
+          <ResultsView
+            queried={queried}
+            resetSearch={this.resetSearch}
+            loading={loading}
+            results={results}
+            error={error}
+            nextPage={this.nextPage}
+            savedState={this.state}
+          />
         </div>
       </AppScreen>
     )
