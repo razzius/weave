@@ -22,11 +22,11 @@ const EditProfile = ({
   profileId,
   isAdmin = false,
 }: Props) => {
+  useBeforeunload(() => "Your changes to your profile have not been saved.")
+
   if (token === null) {
     return 'You are not logged in. Please log in.'
   }
-
-  useBeforeunload(() => "Your changes to your profile have not been saved.")
 
   return <AppScreen>
     <ProfileForm
