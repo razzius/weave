@@ -18,8 +18,6 @@ function labelValues(values) {
   return values.map(value => ({ label: value, value }))
 }
 
-type State = {}
-
 type Props = {
   onChange: Function,
   onInputChange: Function,
@@ -34,7 +32,7 @@ type Props = {
 
 type KeyboardEvent = SyntheticKeyboardEvent<HTMLElement>
 
-export default class SearchInput extends Component<Props, State> {
+export default class SearchInput extends Component<Props> {
   handleSubmit = (e: KeyboardEvent) => {
     const { onSubmit } = this.props
 

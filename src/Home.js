@@ -6,7 +6,7 @@ import { type Account } from './api'
 
 function getFacultyLink(token, profileId) {
   if (token === null) return '/faculty-expectations'
-  if (profileId === null) return '/create-profile'
+  if (profileId == null) return '/create-profile'
   return `/profiles/${profileId}`
 }
 
@@ -21,8 +21,8 @@ const FacultyLanding = ({
   token,
   isMentor,
 }: {
-  profileId: string,
-  token: string,
+  profileId: ?string,
+  token: string | null,
   isMentor: boolean,
 }) => {
   if (token && !isMentor) {
@@ -39,7 +39,7 @@ const FacultyLanding = ({
   )
 }
 
-const Home = ({ token, account }: { token: ?string, account: ?Account }) => {
+const Home = ({ token, account }: { token: string | null, account: ?Account }) => {
   const isMentor = account && account.isMentor
   const profileId = account && account.profileId
 
@@ -60,7 +60,7 @@ const Home = ({ token, account }: { token: ?string, account: ?Account }) => {
           )}
           <FacultyLanding
             token={token}
-            isMentor={isMentor}
+            isMentor={Boolean(isMentor)}
             profileId={profileId}
           />
           {isMentor && (

@@ -5,7 +5,7 @@ import CreatableTagSelect from './CreatableTagSelect'
 
 type Props = {
   handleAdd: string => void,
-  handleChange: Array => void,
+  handleChange: Array<string> => void,
   values: Array<string>,
 }
 
@@ -18,7 +18,7 @@ const CreatableInputOnly = ({ handleAdd, handleChange, values }: Props) => (
     handleAdd={handleAdd}
     handleChange={handleChange}
     values={values}
-    noOptionsMessage={() => null}
+    noOptionsMessage={null}
     splitOnPunctuation
   />
 )

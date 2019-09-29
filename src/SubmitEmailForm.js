@@ -1,5 +1,5 @@
 // @flow
-import React, { Component } from 'react'
+import React, { Component, type Node } from 'react'
 import { Link } from 'react-router-dom'
 import ReactTooltip from 'react-tooltip'
 
@@ -40,7 +40,7 @@ function displayError(error, email) {
 type Props = {
   sendEmail: ({| +email: string, +isPersonalDevice: boolean |}) => Object,
   header: string,
-  instructions: string,
+  instructions: Node,
   successMessage: string,
 }
 

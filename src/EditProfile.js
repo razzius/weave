@@ -7,7 +7,7 @@ import { getProfile, updateProfile } from './api'
 import ProfileForm from './ProfileForm'
 
 type Props = {
-  token: string,
+  token: string | null,
   profileId: string,
   isAdmin: ?boolean,
   setProfileId: ?Function,
@@ -22,6 +22,10 @@ const EditProfile = ({
   profileId,
   isAdmin = false,
 }: Props) => {
+  if (token === null) {
+    return 'You are not logged in. Please log in.'
+  }
+
   useBeforeunload(() => "Your changes to your profile have not been saved.")
 
   return <AppScreen>

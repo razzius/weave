@@ -5,8 +5,8 @@ import ProfileView, { type BaseProfileData } from './ProfileView'
 type Props = {
   data: BaseProfileData,
   firstTimePublish: boolean,
-  onEdit: any => null,
-  onPublish: any => null,
+  onEdit: any => void,
+  onPublish: any => any,
 }
 
 const PreviewProfile = (props: Props) => {

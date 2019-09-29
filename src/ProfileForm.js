@@ -1,8 +1,9 @@
 // @flow
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, type ReactRouterHistory } from 'react-router-dom'
 import AvatarEditor from '@razzi/react-avatar-editor'
 import Select from 'react-select'
+import { type OptionType } from 'react-select/lib/types'
 import Dropzone from 'react-dropzone'
 import Promise from 'promise-polyfill'
 
@@ -10,7 +11,7 @@ import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
 import PreviewProfile from './PreviewProfile'
 
-import { uploadPicture } from './api'
+import { uploadPicture, type Profile } from './api'
 import {
   clinicalSpecialtyOptions,
   professionalInterestOptions,
@@ -45,12 +46,13 @@ function displayError({ name, email }: { name: string, email: string }) {
 }
 
 type Props = {
-  loadInitial: any => void,
-  saveProfile: (string, Object, string) => Object,
+  loadInitial?: any => void,
+  // TODO profileId is passed in updateProfile but not in createProfile. Can't seem to get types to support this without `any`
+  saveProfile: (token: string, profile: Profile, profileId: any) => Object,
   token: string,
-  profileId: string,
+  profileId: string | null,
   setProfileId: ?Function,
-  history: History,
+  history: ReactRouterHistory,
   firstTimePublish: boolean,
 }
 
@@ -88,11 +90,6 @@ type State = {
   otherCadence: string | null,
   preview: boolean,
 }
-
-type Options = Array<{
-  value: string,
-  label: string,
-}>
 
 export default class ProfileForm extends Component<Props, State> {
   otherCadenceInput: ?HTMLInputElement = null
@@ -154,16 +151,16 @@ export default class ProfileForm extends Component<Props, State> {
     })
   }
 
-  handleChange = (key: string) => (options: Options) => {
+  handleChange = (key: string) => (options: OptionType) => {
     const values = options.map(({ value }) => value)
     this.setState({ [key]: values })
   }
 
-  update = field => ({ target }) => {
+  update = (field: string) => ({ target }: { target: HTMLInputElement }) => {
     this.setState({ [field]: target.value })
   }
 
-  updateBoolean = field => ({ target }) => {
+  updateBoolean = (field: string) => ({ target }: { target: HTMLInputElement }) => {
     this.setState({ [field]: target.checked })
   }
 
@@ -177,7 +174,7 @@ export default class ProfileForm extends Component<Props, State> {
     history.push(`/profiles/${profile.id}`)
   }
 
-  handleDrop = acceptedFiles => {
+  handleDrop = (acceptedFiles: any) => {
     this.setState({ image: acceptedFiles[0], imageEdited: true })
   }
 
@@ -200,23 +197,25 @@ export default class ProfileForm extends Component<Props, State> {
     const scaled = scaleCanvas(canvas)
 
     return new Promise(resolve => {
-      scaled.toBlob(((async blob => {
-        const response = await uploadPicture(token, blob)
+      scaled.toBlob(
+        (async blob => {
+          const response = await uploadPicture(token, blob)
 
-        this.setState(
-          {
-            imageUrl: response.image_url,
-            imageSuccess: true,
-            uploadingImage: false,
-            imageEdited: false,
-          },
-          () => resolve(response)
-        )
-      }): any)) // The callback returns a Promise but toBlob expects it to return undefined
+          this.setState(
+            {
+              imageUrl: response.image_url,
+              imageSuccess: true,
+              uploadingImage: false,
+              imageEdited: false,
+            },
+            () => resolve(response)
+          )
+        }: any)
+      ) // The callback returns a Promise but toBlob expects it to return undefined
     })
   }
 
-  setEditorRef = editor => {
+  setEditorRef = (editor: HTMLElement | null) => {
     this.editor = editor
   }
 

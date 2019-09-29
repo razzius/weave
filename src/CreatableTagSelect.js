@@ -5,7 +5,7 @@ import CreatableSelect from 'react-select/lib/Creatable'
 import { capitalize } from './utils'
 
 type Props = {
-  options: Array<string>,
+  options?: Array<string>,
   values: Array<string>,
   handleChange: any => void,
   placeholder?: string,
@@ -29,7 +29,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
     inputValue: '',
   }
 
-  handleInputChange = inputValue => {
+  handleInputChange = (inputValue: string) => {
     this.setState({ inputValue: inputValue.slice(0, 50) })
   }
 
@@ -41,7 +41,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
     }
   }
 
-  handleKeyDown = event => {
+  handleKeyDown = (event: KeyboardEvent) => {
     if ([',', ';'].includes(event.key)) {
       const { inputValue } = this.state
 
@@ -59,7 +59,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
     }
   }
 
-  handleAdd(selected) {
+  handleAdd(selected: string) {
     const { handleAdd } = this.props
     handleAdd(selected)
   }

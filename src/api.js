@@ -136,7 +136,7 @@ export async function getProfiles({
   }
 }
 
-type Profile = Object
+export type Profile = Object
 
 export async function getProfile(token: string, id: string): Profile {
   const profile = await get(token, `profiles/${id}`)
@@ -228,7 +228,7 @@ export type Account = {|
   +availableForMentoring: boolean,
 |}
 
-export async function verifyToken(token: ?string): Promise<Account> {
+export async function verifyToken(token: string | null): Promise<Account> {
   const response = await post(null, 'verify-token', { token })
 
   return {

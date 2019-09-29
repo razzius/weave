@@ -16,7 +16,6 @@ const CreateProfile = ({
 }: Props) => (
   <AppScreen>
     <ProfileForm
-      loadInitial={false}
       firstTimePublish={false}
       saveProfile={createProfile}
       setAvailableForMentoring={setAvailableForMentoring}

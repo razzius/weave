@@ -6,7 +6,7 @@ export function capitalize(text: string) {
   return text[0].toUpperCase() + text.slice(1)
 }
 
-export function getParam(param: string): ?string {
+export function getParam(param: string): string | null {
   const url = new URL(window.location.href)
   return url.searchParams.get(param)
 }

@@ -1,3 +1,4 @@
+// @flow
 import { addHours, isAfter } from 'date-fns'
 import settings from './settings'
 
@@ -14,7 +15,7 @@ export function loggedOutNotification() {
   )
 }
 
-export function saveToken(token) {
+export function saveToken(token: string) {
   window.localStorage.setItem('tokenTimestamp', new Date().toISOString())
   window.localStorage.setItem('token', token)
 }
@@ -24,7 +25,7 @@ export function clearToken() {
   window.localStorage.removeItem('token')
 }
 
-export function loadToken() {
+export function loadToken(): string | null {
   const tokenTimestamp = window.localStorage.getItem('tokenTimestamp')
   if (tokenTimestamp == null) {
     return null
