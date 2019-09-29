@@ -93,7 +93,7 @@ $ docker run -it -p 5000:5000 \
   -e DATABASE_URL=postgresql://$USER@host.docker.internal:5432/hms \
   -e BASIC_AUTH_USERNAME=local \
   -e BASIC_AUTH_PASSWORD=local \
-    (docker build -q .)
+    $(docker build -q .)
 ```
 
 After starting docker, open http://localhost:5000/admin/verificationtoken/ and enter `local`
