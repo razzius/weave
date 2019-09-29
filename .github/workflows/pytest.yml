@@ -32,14 +32,9 @@ jobs:
         env:
           CI: 1
 
-      - name: Lint with flake8
-        run: |
-          # stop the build if there are Python syntax errors or undefined names
-          # TODO could do more useful stuff
-          pipenv run flake8 server tests --count --show-source --statistics
       - name: Test with pytest
         run: |
-          pipenv run test tests
+          pipenv run test
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:${{ job.services.postgres.ports[5432] }}/postgres
           REACT_APP_SERVER_URL: http://localhost:5000
