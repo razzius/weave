@@ -1,5 +1,5 @@
 // @flow
-import React, { Fragment } from 'react'
+import React, { Fragment, type Node } from 'react'
 import MediaQuery from 'react-responsive'
 import { withRouter } from 'react-router-dom'
 
@@ -11,24 +11,18 @@ const Buttons = ({
   ownProfile,
   firstTimePublish,
   editing,
-  profileId,
-  isAdmin,
   location,
+  adminButton,
 }: {
   ownProfile: boolean,
   firstTimePublish: boolean,
   editing: boolean,
-  profileId: string,
-  isAdmin: boolean,
   location: Object,
+  adminButton: Node | null
 }) => (
   <Fragment>
     {ownProfile && <Button to="/edit-profile">Edit Profile</Button>}
-    {isAdmin && (
-      <Button to={`/admin-edit-profile/${profileId}`}>
-        Edit profile as admin
-      </Button>
-    )}
+    {adminButton}
     {!firstTimePublish && !editing && (
       <Button
         className="button next-button"
@@ -224,27 +218,35 @@ const ContactInformation = ({ contactEmail }: { contactEmail: string }) => {
 
 const ProfileView = ({
   data,
-  ownProfile,
-  firstTimePublish,
-  editing,
+  ownProfile = false,
+  firstTimePublish = false,
+  editing = false,
   isAdmin,
   location,
+  profileId,
 }: {
-  data: ProfileData,
-  ownProfile: boolean,
-  firstTimePublish: boolean,
-  editing: boolean,
-  isAdmin: boolean,
+  data: BaseProfileData,
+  ownProfile?: boolean,
+  firstTimePublish?: boolean,
+  editing?: boolean,
+  isAdmin?: boolean,
   location: Object,
+  profileId?: ?string,
 }) => {
+
+  const adminButton = (isAdmin && profileId)
+    ? <Button to={`/admin-edit-profile/${profileId}`}>
+        Edit profile as admin
+      </Button>
+    : null
+
   const buttons = (
     <Buttons
-      profileId={data.id}
       ownProfile={ownProfile}
       firstTimePublish={firstTimePublish}
       editing={editing}
-      isAdmin={isAdmin}
       location={location}
+      adminButton={adminButton}
     />
   )
   return (

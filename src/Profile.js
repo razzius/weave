@@ -32,7 +32,7 @@ type Props = {
   token: string | null,
   match: {
     params: {
-      id: string,
+      [key: string]: ?string
     },
   },
 }
@@ -53,6 +53,11 @@ export default class Profile extends Component<Props, State> {
 
     if (token === null) {
       this.setState({ error: 'You are not logged in. Please log in.'})
+      return
+    }
+
+    if (id == null) {
+      this.setState({ error: 'There is no profile id in the URL. Navigate to a profile.'})
       return
     }
 
@@ -78,9 +83,14 @@ export default class Profile extends Component<Props, State> {
       return <h4>error: {errorView(error)}</h4>
     }
 
+    const {
+      id,
+      ...baseProfileData
+    } = data
+
     return (
       <AppScreen>
-        <ProfileView isAdmin={isAdmin} ownProfile={ownProfile} data={data} />
+        <ProfileView isAdmin={isAdmin} ownProfile={ownProfile} data={baseProfileData} profileId={id} />
       </AppScreen>
     )
   }

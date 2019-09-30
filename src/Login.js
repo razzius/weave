@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
 import SubmitEmailForm from './SubmitEmailForm'
@@ -20,7 +20,7 @@ const instructions = (
   </div>
 )
 
-const Login = ({ history }: { history: History }) => (
+const Login = ({ history }: { history: RouterHistory }) => (
   <AppScreen>
     <SubmitEmailForm
       header="Login"

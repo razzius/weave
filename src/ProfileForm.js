@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { Link, type ReactRouterHistory } from 'react-router-dom'
+import { Link, type RouterHistory } from 'react-router-dom'
 import AvatarEditor from '@razzi/react-avatar-editor'
 import Select from 'react-select'
 import { type OptionType } from 'react-select/lib/types'
@@ -50,9 +50,9 @@ type Props = {
   // TODO profileId is passed in updateProfile but not in createProfile. Can't seem to get types to support this without `any`
   saveProfile: (token: string, profile: Profile, profileId: any) => Object,
   token: string,
-  profileId: string | null,
+  profileId?: string,
   setProfileId: ?Function,
-  history: ReactRouterHistory,
+  history: RouterHistory,
   firstTimePublish: boolean,
 }
 
