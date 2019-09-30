@@ -1,17 +1,18 @@
 // @flow
 import React, { Component } from 'react'
-import CreatableSelect from 'react-select/lib/Creatable'
+import CreatableSelect from 'react-select/creatable'
+import { type OptionsType } from 'react-select/src/types'
 
 import { capitalize } from './utils'
 
 type Props = {
-  options?: Array<string>,
+  options?: OptionsType,
   values: Array<string>,
   handleChange: any => void,
   placeholder?: string,
   handleAdd: any => void,
   splitOnPunctuation?: boolean,
-  noOptionsMessage?: (string => string) | null,
+  noOptionsMessage?: ({ inputValue: string }) => string | null,
 }
 
 type State = {
@@ -22,7 +23,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
   static defaultProps = {
     placeholder: 'Select or type something and press enter...',
     splitOnPunctuation: false,
-    noOptionsMessage: null,
+    noOptionsMessage: () => null,
   }
 
   state = {
@@ -41,7 +42,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
     }
   }
 
-  handleKeyDown = (event: KeyboardEvent) => {
+  handleKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
     if ([',', ';'].includes(event.key)) {
       const { inputValue } = this.state
 
@@ -70,29 +71,25 @@ export default class CreatableTagSelect extends Component<Props, State> {
       values,
       options,
       placeholder,
-      handleAdd,
       splitOnPunctuation,
       noOptionsMessage,
     } = this.props
-    const { inputValue } = this.state
     return (
+      // $FlowFixMe CreatableSelect props are not typechecking as expected
       <CreatableSelect
         styles={{
           control: base => ({ ...base, backgroundColor: 'white' }),
           multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
         }}
-        inputValue={inputValue}
         value={values.map(value => ({ label: value, value }))}
         onInputChange={this.handleInputChange}
         className="column"
         isMulti
         onChange={handleChange}
-        onKeyDown={splitOnPunctuation ? this.handleKeyDown : null}
+        onKeyDown={splitOnPunctuation ? this.handleKeyDown : () => {}}
         onBlur={this.handleOnBlur}
         options={options}
-        handleChange={handleChange}
         placeholder={placeholder}
-        handleAdd={handleAdd}
         noOptionsMessage={noOptionsMessage}
       />
     )

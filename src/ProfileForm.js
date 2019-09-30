@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { Link, type RouterHistory } from 'react-router-dom'
 import AvatarEditor from '@razzi/react-avatar-editor'
 import Select from 'react-select'
-import { type OptionType } from 'react-select/lib/types'
+import { type ValueType } from 'react-select/src/types'
 import Dropzone from 'react-dropzone'
 import Promise from 'promise-polyfill'
 
@@ -151,8 +151,12 @@ export default class ProfileForm extends Component<Props, State> {
     })
   }
 
-  handleChange = (key: string) => (options: OptionType) => {
-    const values = options.map(({ value }) => value)
+  handleChange = (key: string) => (selected: ValueType) => {
+    if (selected == null ) {
+      this.setState({ [key]: []})
+      return
+    }
+    const values = selected.map(({ value }) => value)
     this.setState({ [key]: values })
   }
 

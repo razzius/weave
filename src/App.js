@@ -208,10 +208,6 @@ class App extends Component<Props, State> {
               path="/create-profile"
               render={({ history }) => (
                 <CreateProfile
-                  availableForMentoring={
-                    account && account.availableForMentoring
-                  }
-                  setAvailableForMentoring={this.setAvailableForMentoring}
                   setProfileId={this.setProfileId}
                   token={token}
                   history={history}
