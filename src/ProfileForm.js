@@ -10,6 +10,7 @@ import Promise from 'promise-polyfill'
 import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
 import PreviewProfile from './PreviewProfile'
+import CadenceOption from './CadenceOption'
 
 import { uploadPicture, type Profile } from './api'
 import {
@@ -87,7 +88,7 @@ type State = {
   willingStudentGroup: boolean,
 
   cadence: string,
-  otherCadence: string | null,
+  otherCadence: string,
   preview: boolean,
 }
 
@@ -127,7 +128,7 @@ export default class ProfileForm extends Component<Props, State> {
     willingStudentGroup: false,
 
     cadence: 'monthly',
-    otherCadence: null,
+    otherCadence: '',
     preview: false,
   }
 
@@ -152,8 +153,8 @@ export default class ProfileForm extends Component<Props, State> {
   }
 
   handleChange = (key: string) => (selected: ValueType) => {
-    if (selected == null ) {
-      this.setState({ [key]: []})
+    if (selected == null) {
+      this.setState({ [key]: [] })
       return
     }
     const values = selected.map(({ value }) => value)
@@ -164,17 +165,37 @@ export default class ProfileForm extends Component<Props, State> {
     this.setState({ [field]: target.value })
   }
 
-  updateBoolean = (field: string) => ({ target }: { target: HTMLInputElement }) => {
+  updateBoolean = (field: string) => ({
+    target,
+  }: {
+    target: HTMLInputElement,
+  }) => {
     this.setState({ [field]: target.checked })
   }
 
   submit = async () => {
     const { saveProfile, token, profileId, setProfileId, history } = this.props
+    const { cadence } = this.state
+
+    await when(
+      cadence !== 'other',
+      () =>
+        new Promise(resolve => {
+          this.setState(
+            {
+              otherCadence: '',
+            },
+            resolve
+          )
+        })
+    )
+
     const profile = await saveProfile(token, this.state, profileId)
 
     if (setProfileId) {
       setProfileId(profile.id)
     }
+
     history.push(`/profiles/${profile.id}`)
   }
 
@@ -550,45 +571,30 @@ export default class ProfileForm extends Component<Props, State> {
         <div>
           <div className="cadence">
             <h3>Meeting Cadence</h3>
-            <label htmlFor="biweekly-cadence">
-              <input
-                id="biweekly-cadence"
-                onChange={this.update('cadence')}
-                name="cadence"
-                type="radio"
-                value="biweekly"
-              />
-              Every 2 weeks
-            </label>
+            <CadenceOption
+              value="biweekly"
+              selectedCadence={cadence}
+              onChange={this.update('cadence')}
+            />
 
-            <label htmlFor="monthly-cadence">
-              <input
-                id="monthly-cadence"
-                defaultChecked
-                onChange={this.update('cadence')}
-                name="cadence"
-                type="radio"
-                value="monthly"
-              />
-              Monthly
-            </label>
+            <CadenceOption
+              value="monthly"
+              selectedCadence={cadence}
+              onChange={this.update('cadence')}
+            />
 
-            <label htmlFor="cadence">
-              <input
-                id="cadence"
-                onChange={this.update('cadence')}
-                name="cadence"
-                type="radio"
-                value="2-3 conversations/year"
-              />
-              2-3 conversations/year
-            </label>
+            <CadenceOption
+              value="2-3 conversations/year"
+              selectedCadence={cadence}
+              onChange={this.update('cadence')}
+            />
 
             <label htmlFor="other-cadence">
               <input
                 id="other-cadence"
                 onChange={this.update('cadence')}
                 name="cadence"
+                checked={cadence === 'other'}
                 type="radio"
                 value="other"
                 ref={el => {
@@ -599,6 +605,7 @@ export default class ProfileForm extends Component<Props, State> {
               <input
                 type="text"
                 style={{ marginLeft: '4px' }}
+                value={otherCadence}
                 onFocus={() => {
                   this.setState({ cadence: 'other' })
                   if (this.otherCadenceInput) {

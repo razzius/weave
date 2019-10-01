@@ -3,9 +3,9 @@ import React, { Fragment, type Node } from 'react'
 import MediaQuery from 'react-responsive'
 import { withRouter } from 'react-router-dom'
 
-import { capitalize } from './utils'
 import Button from './Button'
 import ProfileAvatar from './ProfileAvatar'
+import { CADENCE_LABELS } from './CadenceOption'
 
 const Buttons = ({
   ownProfile,
@@ -18,7 +18,7 @@ const Buttons = ({
   firstTimePublish: boolean,
   editing: boolean,
   location: Object,
-  adminButton: Node | null
+  adminButton: Node | null,
 }) => (
   <Fragment>
     {ownProfile && <Button to="/edit-profile">Edit Profile</Button>}
@@ -123,6 +123,14 @@ const Expectations = ({
   </Fragment>
 )
 
+function displayCadence(cadence: string, otherCadence: ?string) {
+  if (cadence === 'other') {
+    return otherCadence
+  }
+
+  return CADENCE_LABELS[cadence]
+}
+
 const Cadence = ({
   cadence,
   otherCadence,
@@ -132,7 +140,7 @@ const Cadence = ({
 }) => (
   <div style={{ marginTop: '1.2em' }}>
     <h4>Meeting Cadence</h4>
-    {cadence === 'other' ? otherCadence : capitalize(cadence)}
+    {displayCadence(cadence, otherCadence)}
   </div>
 )
 
@@ -233,12 +241,12 @@ const ProfileView = ({
   location: Object,
   profileId?: ?string,
 }) => {
-
-  const adminButton = (isAdmin && profileId)
-    ? <Button to={`/admin-edit-profile/${profileId}`}>
+  const adminButton =
+    isAdmin && profileId ? (
+      <Button to={`/admin-edit-profile/${profileId}`}>
         Edit profile as admin
       </Button>
-    : null
+    ) : null
 
   const buttons = (
     <Buttons
