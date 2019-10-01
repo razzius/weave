@@ -82,7 +82,7 @@ export default class SearchInput extends Component<Props> {
             Submit
           </button>
         </div>
-        <div style={{ display: 'inline-block', marginTop: '4px' }}>
+        <div style={{ display: 'inline-block', marginTop: '6px' }}>
           <Select
             styles={{
               control: base => ({
