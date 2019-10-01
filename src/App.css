@@ -367,6 +367,9 @@ input::-webkit-contacts-auto-fill-button {
   }
 }
 
+nav {
+  line-height: 2em;
+}
 @media screen and (min-width: 920px) {
   nav {
     display: inline;
