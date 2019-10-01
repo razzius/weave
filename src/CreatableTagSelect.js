@@ -44,10 +44,11 @@ export default class CreatableTagSelect extends Component<Props, State> {
 
   handleKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
     if ([',', ';'].includes(event.key)) {
+      event.preventDefault()
+
       const { inputValue } = this.state
 
       if (inputValue === '') {
-        event.preventDefault()
         return
       }
 
@@ -56,7 +57,6 @@ export default class CreatableTagSelect extends Component<Props, State> {
       })
 
       this.handleAdd(capitalize(inputValue))
-      event.preventDefault()
     }
   }
 
@@ -66,6 +66,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
   }
 
   render() {
+    const { inputValue } = this.state
     const {
       handleChange,
       values,
@@ -83,6 +84,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
         }}
         value={values.map(value => ({ label: value, value }))}
         onInputChange={this.handleInputChange}
+        inputValue={inputValue}
         className="column"
         isMulti
         onChange={handleChange}
