@@ -103,10 +103,12 @@ class Browse extends Component<Props, State> {
   }
 
   handleChange = tags => {
+    const searchTerms = tags !== null ? tags.map(tag => tag.value) : []
+
     this.setState(
       {
         queried: true,
-        searchTerms: tags.map(tag => tag.value),
+        searchTerms,
         page: 1,
       },
       this.handleSearch

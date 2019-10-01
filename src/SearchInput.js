@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 import {
   clinicalSpecialtyOptions,
   professionalInterestOptions,
@@ -40,12 +41,6 @@ export default class SearchInput extends Component<Props> {
     onSubmit()
   }
 
-  handleInputKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      this.handleSubmit(e)
-    }
-  }
-
   render() {
     const {
       onChange,
@@ -59,13 +54,10 @@ export default class SearchInput extends Component<Props> {
     } = this.props
 
     return (
-      <form
-        /* style={{ display: 'flex', maxWidth: '700px' }} */
-        className="search"
-        onSubmit={this.handleSubmit}
-      >
+      <form className="search" onSubmit={this.handleSubmit}>
         <div style={{ display: 'flex', maxWidth: '700px' }}>
-          <Select
+          {/* $FlowFixMe CreatableSelect props are not typechecking as expected */}
+          <CreatableSelect
             className="fullWidth"
             styles={{
               control: base => ({
@@ -81,9 +73,10 @@ export default class SearchInput extends Component<Props> {
             noOptionsMessage={() => null}
             onChange={onChange}
             onInputChange={onInputChange}
-            value={labelValues(value)}
+            values={value}
             inputValue={inputValue}
-            onKeyDown={this.handleInputKeyDown}
+            createOptionPosition="first"
+            formatCreateLabel={text => `Search "${text}"`}
           />
           <button className="search-submit" type="submit">
             Submit
