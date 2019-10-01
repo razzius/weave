@@ -1,10 +1,10 @@
 // @flow
-import React, { type ChildrenArray, type Element } from 'react'
+import React, { type Node } from 'react'
 
 export default ({
   children,
   className = '',
 }: {
-  children: ChildrenArray<Element<any> | null>,
+  children: Node,
   className?: string,
 }) => <div className={`App-body ${className}`}>{children}</div>

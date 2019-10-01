@@ -87,7 +87,7 @@ export default class SearchInput extends Component<Props> {
             styles={{
               control: base => ({
                 ...base,
-                width: '200px',
+                width: '250px',
                 backgroundColor: 'white',
               }),
               multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
@@ -105,7 +105,7 @@ export default class SearchInput extends Component<Props> {
             styles={{
               control: base => ({
                 ...base,
-                width: '200px',
+                width: '250px',
                 backgroundColor: 'white',
               }),
               multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),

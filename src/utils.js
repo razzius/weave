@@ -1,5 +1,5 @@
 // @flow
-import React from 'react'
+import React, { type Node } from 'react'
 import Promise from 'promise-polyfill'
 
 export function capitalize(text: string) {
@@ -26,6 +26,18 @@ export function availableForMentoringFromVerifyTokenResponse(response: Object) {
   return response.profile_id === null ? true : response.available_for_mentoring
 }
 
+export const ExternalLink = ({
+  href,
+  children,
+}: {
+  href: string,
+  children: Node,
+}) => (
+  <a href={href} target="_blank" rel="noopener noreferrer">
+    {children}
+  </a>
+)
+
 export function LiteralLink({ href }: { href: string }) {
-  return <a href={href}>{href}</a>
+  return <ExternalLink href={href}>{href}</ExternalLink>
 }
