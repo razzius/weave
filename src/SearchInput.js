@@ -82,7 +82,7 @@ export default class SearchInput extends Component<Props> {
             Submit
           </button>
         </div>
-        <div style={{ display: 'inline-block' }}>
+        <div style={{ display: 'inline-block', marginTop: '4px' }}>
           <Select
             styles={{
               control: base => ({
@@ -100,7 +100,7 @@ export default class SearchInput extends Component<Props> {
             placeholder="Filter by degree"
           />
         </div>
-        <div style={{ display: 'inline-block' }}>
+        <div style={{ display: 'inline-block', marginLeft: '6px' }}>
           <Select
             styles={{
               control: base => ({
