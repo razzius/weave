@@ -254,7 +254,7 @@ const Resources = () => (
       To request information or advice, including whether certain conduct may
       violate Title IX Policy, seek informal resolution, or file a formal
       complaint, please visit the webpage for the{' '}
-      <ExternalLink href="https://titleix.harvard.edu/office-sexual-and-gender-based-dispute-resolution-odr">
+      <ExternalLink href="https://titleix.harvard.edu/links/office-dispute-resolution-odr">
         Office for Dispute Resolution
       </ExternalLink>
       .
