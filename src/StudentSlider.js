@@ -2,7 +2,7 @@ import React from 'react'
 import Slider from 'react-slick'
 import { Link } from 'react-router-dom'
 
-import NextButton from './NextButton'
+import Button from './Button'
 
 export default class StudentExpectationsSlider extends React.Component {
   constructor(props) {
@@ -16,24 +16,14 @@ export default class StudentExpectationsSlider extends React.Component {
   }
 
   next = () => {
-    if (!this.state.lastSlide) {
+    const { lastSlide } = this.state
+    if (!lastSlide) {
       this.slider.slickNext()
     }
   }
 
   render() {
-    const settings = {
-      dots: true,
-      speed: 500,
-      beforeChange: (_, nextIndex) => {
-        const lastSlide = nextIndex === this.slider.props.children.length - 1
-        this.setState({
-          nextText: lastSlide ? 'I agree' : 'Next',
-          nextHref: lastSlide ? '/register-student-email' : null,
-          lastSlide,
-        })
-      },
-    }
+    const { nextHref, nextText } = this.state
 
     return (
       <div>
@@ -41,7 +31,17 @@ export default class StudentExpectationsSlider extends React.Component {
           ref={c => {
             this.slider = c
           }}
-          {...settings}
+          dots
+          speed={500}
+          beforeChange={(_, nextIndex) => {
+            const lastSlide =
+              nextIndex === this.slider.props.children.length - 1
+            this.setState({
+              nextText: lastSlide ? 'I agree' : 'Next',
+              nextHref: lastSlide ? '/register-student-email' : null,
+              lastSlide,
+            })
+          }}
         >
           <div className="expectation">
             <h2 style={{ textAlign: 'center' }}>Get in touch</h2>
@@ -112,13 +112,10 @@ export default class StudentExpectationsSlider extends React.Component {
           </div>
         </Slider>
         <div style={{ textAlign: 'center' }}>
-          <NextButton
-            to={this.state.nextHref}
-            style={{ float: 'right' }}
-            onClick={this.next}
-            text={this.state.nextText}
-          />
-          {this.state.nextText === 'I agree' && (
+          <Button to={nextHref} style={{ float: 'right' }} onClick={this.next}>
+            {nextText}
+          </Button>
+          {nextText === 'I agree' && (
             <div style={{ marginTop: '1em' }}>
               <Link target="_blank" to="/mentee-expectations">
                 Read more about expectations.

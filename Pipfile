@@ -32,14 +32,15 @@ pdbpp = "*"
 pylint = "*"
 "flake8" = "*"
 requests-mock = "*"
+mypy = "*"
 
 [requires]
-python_version = "3.6"
+python_version = "3.7"
 
 [scripts]
 start = "flask run"
 shell = "ipython -i server/scripts/shell.py"
-test = "py.test"
+test = "py.test tests"
 
 [pipenv]
 allow_prereleases = true

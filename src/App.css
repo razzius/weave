@@ -47,8 +47,6 @@ section {
   font-size: 16px;
   padding: 15px 32px;
   margin: 5px;
-  margin-left: 0px;
-  margin-right: 1em;
   background: white;
   cursor: pointer;
 }
@@ -125,6 +123,19 @@ section {
   color: black;
 }
 
+button.profile-result-link {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+/* button.link-button:hover, */
+/* .link-button:focus { */
+/*     text-decoration: none; */
+/* } */
+
 input[type='text'],
 input[type='email'] {
   box-sizing: border-box;
@@ -194,7 +205,7 @@ input[type='email'].fullWidth {
   color: black;
   display: inline-block;
   font-size: 16px;
-  padding: 10px 32px;
+  padding: 9px 32px;
   background: white;
   cursor: pointer;
 }
@@ -309,7 +320,8 @@ input::-webkit-contacts-auto-fill-button {
     float: right;
   }
 
-  .profile-result, .profile-result-link {
+  .profile-result,
+  .profile-result-link {
     display: flex;
   }
 }
@@ -340,18 +352,22 @@ input::-webkit-contacts-auto-fill-button {
     text-align: right;
     padding: 10px;
   }
-  .profile-result-link:hover {
+  .profile-result-link:hover,
+  .profile-result-link:focus {
     box-shadow: 0 0 2px rgba(35, 173, 255, 1);
   }
+
   .profile-result-link {
     transition: all 0.4s;
     flex-shrink: 0;
     flex-grow: 0;
     width: 850px;
   }
-
 }
 
+nav {
+  line-height: 2em;
+}
 @media screen and (min-width: 920px) {
   nav {
     display: inline;
@@ -359,17 +375,18 @@ input::-webkit-contacts-auto-fill-button {
 }
 
 input[disabled] {
-  pointer-events:none;
+  pointer-events: none;
 }
 
 .resultDegrees {
-    color: dimgrey;
+  color: dimgrey;
 }
 
 .resources img {
-    max-width: 100%;
+  max-width: 100%;
 }
 
-.resources h2, h3 {
-    margin-top: 2em;
+.resources h2,
+h3 {
+  margin-top: 2em;
 }

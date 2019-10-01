@@ -1,7 +1,11 @@
 FROM ubuntu:18.04
 
-RUN apt-get update -y
-RUN apt-get install -y python-minimal python3.6 python3-distutils python-pip curl
+RUN apt-get update -y && apt-get install -y \
+  curl \
+  python-minimal \
+  python-pip \
+  python3-distutils \
+  python3.6
 
 RUN curl -sL https://deb.nodesource.com/node_12.x/pool/main/n/nodejs/nodejs_12.10.0-1nodesource1_amd64.deb -o node.deb
 RUN dpkg -i node.deb

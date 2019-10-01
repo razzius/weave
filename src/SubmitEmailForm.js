@@ -1,4 +1,5 @@
-import React, { Component } from 'react'
+// @flow
+import React, { Component, type Node } from 'react'
 import { Link } from 'react-router-dom'
 import ReactTooltip from 'react-tooltip'
 
@@ -36,18 +37,31 @@ function displayError(error, email) {
   return <p>{error.email[0]}</p>
 }
 
-export default class SubmitEmailForm extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      email: getParam('email') || '',
-      isPersonalDevice: false,
-      success: false,
-      error: null,
-    }
+type Props = {
+  sendEmail: ({| +email: string, +isPersonalDevice: boolean |}) => Object,
+  header: string,
+  instructions: Node,
+  successMessage: string,
+}
+
+type State = {
+  email: string,
+  isPersonalDevice: boolean,
+  success: boolean,
+  error: Object | null,
+}
+
+type ReactEvent = SyntheticInputEvent<HTMLInputElement>
+
+export default class SubmitEmailForm extends Component<Props, State> {
+  state = {
+    email: getParam('email') || '',
+    isPersonalDevice: false,
+    success: false,
+    error: null,
   }
 
-  submitEmail = e => {
+  submitEmail = (e: Event) => {
     const { email, isPersonalDevice } = this.state
     const { sendEmail } = this.props
 
@@ -65,13 +79,15 @@ export default class SubmitEmailForm extends Component {
       })
   }
 
-  updateEmail = e => {
+  updateEmail = (e: ReactEvent) => {
     this.setState({ email: e.target.value })
   }
 
   render() {
-    if (!this.state.success) {
-      const { email } = this.state
+    const { header, instructions, successMessage } = this.props
+    const { success, email } = this.state
+    if (!success) {
+      const { error, isPersonalDevice } = this.state
 
       const emailValid = any(
         VALID_DOMAINS.map(domain => email.toLowerCase().endsWith(domain))
@@ -79,28 +95,28 @@ export default class SubmitEmailForm extends Component {
 
       return (
         <div>
-          <h1>{this.props.header}</h1>
-          <div>{this.props.instructions}</div>
+          <h1>{header}</h1>
+          <div>{instructions}</div>
           <form onSubmit={this.submitEmail}>
             <p>
               <input
                 name="email"
                 type="email"
                 onChange={this.updateEmail}
-                value={this.state.email}
+                value={email}
               />
             </p>
             <ReactTooltip place="bottom" id="emailTooltip">
               Please enter your Harvard or hospital-affiliated email
             </ReactTooltip>
-            {displayError(this.state.error, this.state.email)}
+            {displayError(error, email)}
             <div>
               <input
                 type="checkbox"
-                value={this.state.isPersonalDevice}
+                value={isPersonalDevice}
                 onClick={() =>
                   this.setState({
-                    isPersonalDevice: !this.state.isPersonalDevice,
+                    isPersonalDevice: !isPersonalDevice,
                   })
                 }
               />
@@ -112,7 +128,7 @@ export default class SubmitEmailForm extends Component {
               data-for="emailTooltip"
               data-tip-disable={email === '' || emailValid}
             >
-              <button disabled={!emailValid} className="button">
+              <button type="submit" disabled={!emailValid} className="button">
                 Send verification email
               </button>
             </div>
@@ -123,9 +139,10 @@ export default class SubmitEmailForm extends Component {
               <a href="/help">Help</a> page.
             </p>
             <p>The following are the allowed email domains:</p>
+
             {VALID_DOMAINS.filter(domain => domain !== '@hmsweave.com').map(
               domain => (
-                <div>{domain.replace('@', '')}</div>
+                <div key={domain}>{domain.replace('@', '')}</div>
               )
             )}
             <p>
@@ -139,8 +156,8 @@ export default class SubmitEmailForm extends Component {
 
     return (
       <div>
-        <h1>Verification email sent to {this.state.email}</h1>
-        <p>{this.props.successMessage}</p>
+        <h1>Verification email sent to {email}</h1>
+        <p>{successMessage}</p>
       </div>
     )
   }

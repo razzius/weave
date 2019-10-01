@@ -1,6 +1,5 @@
 import React from 'react'
 import AppScreen from './AppScreen'
-import { LiteralLink } from './utils'
 
 const emailLink = (
   <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>

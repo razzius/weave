@@ -7,7 +7,6 @@ import ReactTooltip from 'react-tooltip'
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-import 'promise-polyfill/src/polyfill'
 import 'react-toggle-switch/dist/css/switch.min.css'
 import 'blueimp-canvas-to-blob'
 
@@ -134,8 +133,8 @@ class App extends Component<Props, State> {
           <header className="App-header">
             <div className="header-inner">
               <Link to="/" className="App-title left">
-                <img src="assets/hms-crest.svg" />
-                <img src="assets/hsdm-crest.svg" />
+                <img src="/assets/hms-crest.svg" alt="HMS crest" />
+                <img src="/assets/hsdm-crest.svg" alt="HSDM crest" />
                 <h1>Weave</h1>
               </Link>
 
@@ -186,7 +185,7 @@ class App extends Component<Props, State> {
                 </Link>
 
                 <Link to="/our-team" className="App-title">
-                  Our Team
+                  Our&nbsp;Team
                 </Link>
               </nav>
             </div>
@@ -209,10 +208,6 @@ class App extends Component<Props, State> {
               path="/create-profile"
               render={({ history }) => (
                 <CreateProfile
-                  availableForMentoring={
-                    account && account.availableForMentoring
-                  }
-                  setAvailableForMentoring={this.setAvailableForMentoring}
                   setProfileId={this.setProfileId}
                   token={token}
                   history={history}
@@ -292,13 +287,13 @@ class App extends Component<Props, State> {
 
             <Route
               path="/profiles/:id"
-              render={props =>
+              render={({ match }) =>
                 account && (
                   <Profile
                     profileId={account.profileId}
                     token={token}
                     isAdmin={account.isAdmin}
-                    {...props}
+                    match={match}
                   />
                 )
               }

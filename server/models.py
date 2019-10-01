@@ -1,11 +1,12 @@
 import uuid
 from datetime import datetime
+from typing import Any
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 
 
-db = SQLAlchemy()
+db: Any = SQLAlchemy()
 
 
 def save(instance):

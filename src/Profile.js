@@ -1,24 +1,49 @@
+// @flow
 import React, { Component } from 'react'
 
 import AppScreen from './AppScreen'
 import { getProfile } from './api'
-import ProfileView from './ProfileView'
+import ProfileView, { type ProfileData } from './ProfileView'
 
-function errorView(error) {
+type ClientError = {
+  profile_id: Array<string>
+}
+
+function errorView(error: string | ClientError) {
+  if (typeof error === 'string') {
+    return error
+  }
   if (error.profile_id[0] === 'Not found') {
     return 'Profile not found'
   }
 
+  // According to types, this case does not exist. TODO Revisit
   return String(error)
 }
 
-export default class Profile extends Component {
+type State = {
+  data: ProfileData | null,
+  error: string | ClientError | null,
+}
+
+type Props = {
+  profileId: string,
+  isAdmin: boolean,
+  token: string | null,
+  match: {
+    params: {
+      [key: string]: ?string
+    },
+  },
+}
+
+export default class Profile extends Component<Props, State> {
   state = {
     data: null,
     error: null,
   }
 
-  componentDidMount = () => {
+  async componentDidMount() {
     const {
       token,
       match: {
@@ -26,9 +51,22 @@ export default class Profile extends Component {
       },
     } = this.props
 
-    getProfile(token, id)
-      .then(data => this.setState({ data }))
-      .catch(error => this.setState({ error }))
+    if (token === null) {
+      this.setState({ error: 'You are not logged in. Please log in.'})
+      return
+    }
+
+    if (id == null) {
+      this.setState({ error: 'There is no profile id in the URL. Navigate to a profile.'})
+      return
+    }
+
+    try {
+      const data = await getProfile(token, id)
+      this.setState({ data })
+    } catch (error) {
+      this.setState({ error })
+    }
   }
 
   render() {
@@ -45,9 +83,14 @@ export default class Profile extends Component {
       return <h4>error: {errorView(error)}</h4>
     }
 
+    const {
+      id,
+      ...baseProfileData
+    } = data
+
     return (
       <AppScreen>
-        <ProfileView isAdmin={isAdmin} ownProfile={ownProfile} data={data} />
+        <ProfileView isAdmin={isAdmin} ownProfile={ownProfile} data={baseProfileData} profileId={id} />
       </AppScreen>
     )
   }

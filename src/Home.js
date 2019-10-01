@@ -1,9 +1,12 @@
+// @flow
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import { type Account } from './api'
+
 function getFacultyLink(token, profileId) {
   if (token === null) return '/faculty-expectations'
-  if (profileId === null) return '/create-profile'
+  if (profileId == null) return '/create-profile'
   return `/profiles/${profileId}`
 }
 
@@ -13,7 +16,15 @@ function getFacultyText(token, profileId) {
   return 'View my profile'
 }
 
-const FacultyLanding = ({ profileId, token, isMentor }) => {
+const FacultyLanding = ({
+  profileId,
+  token,
+  isMentor,
+}: {
+  profileId: ?string,
+  token: string | null,
+  isMentor: boolean,
+}) => {
   if (token && !isMentor) {
     return null
   }
@@ -28,7 +39,7 @@ const FacultyLanding = ({ profileId, token, isMentor }) => {
   )
 }
 
-const Home = ({ token, account }) => {
+const Home = ({ token, account }: { token: string | null, account: ?Account }) => {
   const isMentor = account && account.isMentor
   const profileId = account && account.profileId
 
@@ -49,7 +60,7 @@ const Home = ({ token, account }) => {
           )}
           <FacultyLanding
             token={token}
-            isMentor={isMentor}
+            isMentor={Boolean(isMentor)}
             profileId={profileId}
           />
           {isMentor && (

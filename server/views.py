@@ -1,19 +1,18 @@
-from flask import current_app, make_response
-from http import HTTPStatus
 import datetime
 import os
 import uuid
-
-from dateutil.relativedelta import relativedelta
-from flask import Blueprint, jsonify, request
+from http import HTTPStatus
+from typing import Tuple
 
 from cloudinary import uploader
-from sentry_sdk import capture_exception
+from dateutil.relativedelta import relativedelta
+from flask import Blueprint, current_app, jsonify, make_response, request
 from marshmallow import ValidationError
 from requests_toolbelt.utils import dump
+from sentry_sdk import capture_exception
 from sqlalchemy import func
-from sqlalchemy.sql import exists
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy.sql import exists
 
 from .emails import (
     send_faculty_login_email,
@@ -32,17 +31,17 @@ from .models import (
     PartsOfMeOption,
     ProfessionalInterest,
     ProfessionalInterestOption,
-    ProfileDegree,
     Profile,
     ProfileActivity,
+    ProfileDegree,
     VerificationEmail,
     VerificationToken,
     db,
     get_verification_email_by_email,
     save,
 )
-from .schemas import profile_schema, profiles_schema, valid_email_schema
 from .queries import matching_profiles
+from .schemas import profile_schema, profiles_schema, valid_email_schema
 
 
 api = Blueprint('api', __name__)
@@ -84,10 +83,10 @@ def get_token(headers):
         )
 
     if _token_expired(verification_token):
+        login_timeout_status = 440
+
         return (
-            error_response(
-                {'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value
-            ),
+            error_response({'token': ['expired']}, status_code=login_timeout_status),
             None,
         )
 
@@ -369,7 +368,9 @@ def upload_image():
     return jsonify({'image_url': response['eager'][0]['secure_url']})
 
 
-def get_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
+def get_verification_email(
+    email: str, is_mentor: bool
+) -> Tuple[VerificationEmail, bool]:
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:

@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import Select from 'react-select'
+import CreatableSelect from 'react-select/creatable'
 import {
   clinicalSpecialtyOptions,
   professionalInterestOptions,
@@ -18,23 +19,26 @@ function labelValues(values) {
   return values.map(value => ({ label: value, value }))
 }
 
-type State = Object
-type Props = {|
+type Props = {
+  onChange: Function,
+  onInputChange: Function,
   onSubmit: Function,
   onChangeDegrees: Function,
-|}
+  onChangeAffiliations: Function,
+  value: Array<string>,
+  inputValue: string,
+  degrees: Array<string>,
+  affiliations: Array<string>,
+}
 
-export default class SearchInput extends Component<State, Props> {
-  handleSubmit = (e: Event) => {
+type KeyboardEvent = SyntheticKeyboardEvent<HTMLElement>
+
+export default class SearchInput extends Component<Props> {
+  handleSubmit = (e: KeyboardEvent) => {
     const { onSubmit } = this.props
+
     e.preventDefault()
     onSubmit()
-  }
-
-  handleInputKeyDown = (e: KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      this.handleSubmit(e)
-    }
   }
 
   render() {
@@ -50,13 +54,10 @@ export default class SearchInput extends Component<State, Props> {
     } = this.props
 
     return (
-      <form
-        /* style={{ display: 'flex', maxWidth: '700px' }} */
-        className="search"
-        onSubmit={this.handleSubmit}
-      >
+      <form className="search" onSubmit={this.handleSubmit}>
         <div style={{ display: 'flex', maxWidth: '700px' }}>
-          <Select
+          {/* $FlowFixMe CreatableSelect props are not typechecking as expected */}
+          <CreatableSelect
             className="fullWidth"
             styles={{
               control: base => ({
@@ -72,20 +73,21 @@ export default class SearchInput extends Component<State, Props> {
             noOptionsMessage={() => null}
             onChange={onChange}
             onInputChange={onInputChange}
-            value={labelValues(value)}
+            values={value}
             inputValue={inputValue}
-            onKeyDown={this.handleInputKeyDown}
+            createOptionPosition="first"
+            formatCreateLabel={text => `Search "${text}"`}
           />
           <button className="search-submit" type="submit">
             Submit
           </button>
         </div>
-        <div style={{ display: 'inline-block' }}>
+        <div style={{ display: 'inline-block', marginTop: '6px' }}>
           <Select
             styles={{
               control: base => ({
                 ...base,
-                width: '200px',
+                width: '250px',
                 backgroundColor: 'white',
               }),
               multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
@@ -98,12 +100,12 @@ export default class SearchInput extends Component<State, Props> {
             placeholder="Filter by degree"
           />
         </div>
-        <div style={{ display: 'inline-block' }}>
+        <div style={{ display: 'inline-block', marginLeft: '6px' }}>
           <Select
             styles={{
               control: base => ({
                 ...base,
-                width: '200px',
+                width: '250px',
                 backgroundColor: 'white',
               }),
               multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),

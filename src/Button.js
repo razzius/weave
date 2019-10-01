@@ -1,18 +1,26 @@
+// @flow
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-// todo deprecate NextButton
-const Button = props => {
-  if (props.to) {
+type Props = any
+
+const Button = ({ to, onClick, children, style, disabled }: Props) => {
+  if (to) {
     return (
-      <Link className="button next-button" to={props.to}>
-        {props.text}
+      <Link className="button next-button" to={to}>
+        {children}
       </Link>
     )
   }
   return (
-    <button onClick={props.onClick} className="button next-button" {...props}>
-      {props.children}
+    <button
+      type="button"
+      onClick={onClick}
+      className="button next-button"
+      style={style}
+      disabled={disabled}
+    >
+      {children}
     </button>
   )
 }

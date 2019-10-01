@@ -1,57 +1,26 @@
-import React, { Component } from 'react'
+// @flow
+import React from 'react'
+import { type OptionType } from 'react-select/src/types'
 
-import CreatableSelect from 'react-select/lib/Creatable'
+import CreatableTagSelect from './CreatableTagSelect'
 
-import { capitalize } from './utils'
-
-const components = {
-  DropdownIndicator: null
+type Props = {
+  handleAdd: string => void,
+  handleChange: OptionType => void,
+  values: Array<string>,
 }
 
-export default class CreatableInputOnly extends Component {
-  state = {
-    inputValue: ''
-  }
+const CreatableInputOnly = ({ handleAdd, handleChange, values }: Props) => (
+  <CreatableTagSelect
+    components={{ DropdownIndicator: null }}
+    isClearable
+    menuIsOpen={false}
+    placeholder="Type something and press enter..."
+    handleAdd={handleAdd}
+    handleChange={handleChange}
+    values={values}
+    splitOnPunctuation
+  />
+)
 
-  handleChange = value => {
-    this.props.handleSet(value)
-  }
-
-  handleInputChange = inputValue => {
-    this.setState({ inputValue: inputValue.slice(0, 50) })
-  }
-
-  handleKeyDown = event => {
-    const { inputValue } = this.state
-    if (!inputValue) return
-    if (['Enter', 'Tab'].includes(event.key)) {
-      this.setState({
-        inputValue: ''
-      })
-      this.props.handleChange(capitalize(inputValue))
-      event.preventDefault()
-    }
-  }
-
-  render() {
-    const { inputValue } = this.state
-    return (
-      <CreatableSelect
-        styles={{
-          control: base => ({ ...base, backgroundColor: 'white' }),
-          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' })
-        }}
-        components={components}
-        inputValue={inputValue}
-        isClearable
-        isMulti
-        menuIsOpen={false}
-        onChange={this.handleChange}
-        onInputChange={this.handleInputChange}
-        onKeyDown={this.handleKeyDown}
-        placeholder="Type something and press enter..."
-        value={this.props.value}
-      />
-    )
-  }
-}
+export default CreatableInputOnly

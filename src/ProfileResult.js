@@ -1,8 +1,8 @@
 // @flow
-import React, { Fragment } from 'react'
+import React, { Component, Fragment } from 'react'
 import MediaQuery from 'react-responsive'
 import ReactTooltip from 'react-tooltip'
-import { withRouter } from 'react-router-dom'
+import { withRouter, Link } from 'react-router-dom'
 
 import { capitalize } from './utils'
 import ProfileAvatar from './ProfileAvatar'
@@ -53,129 +53,154 @@ const CheckboxIndicator = ({
   )
 }
 
-const ProfileResult = ({
-  id,
-  affiliations,
-  imageUrl,
-  name,
-  degrees,
-  clinicalSpecialties,
-  professionalInterests,
-  cadence,
-  willingShadowing,
-  willingNetworking,
-  willingGoalSetting,
-  willingDiscussPersonal,
-  willingCareerGuidance,
-  willingStudentGroup,
-  browseState, // for history
-  history,
-}: {
-  id: number,
-  affiliations: Array<string>,
-  imageUrl: string,
-  name: string,
-  degrees: Array<string>,
-  clinicalSpecialties: Array<string>,
-  professionalInterests: Array<string>,
-  cadence: string,
-  willingShadowing: boolean,
-  willingNetworking: boolean,
-  willingGoalSetting: boolean,
-  willingDiscussPersonal: boolean,
-  willingCareerGuidance: boolean,
-  willingStudentGroup: boolean,
+type Props = {
+  result: {
+    id: number,
+    affiliations: Array<string>,
+    imageUrl: string,
+    name: string,
+    degrees: Array<string>,
+    clinicalSpecialties: Array<string>,
+    professionalInterests: Array<string>,
+    cadence: string,
+    willingShadowing: boolean,
+    willingNetworking: boolean,
+    willingGoalSetting: boolean,
+    willingDiscussPersonal: boolean,
+    willingCareerGuidance: boolean,
+    willingStudentGroup: boolean,
+  },
   browseState: Object,
-  history: History,
-}) => {
-  const formattedAffiliations = (
-    <p>
-      {affiliations.map((affiliation, index) => (
-        <span key={affiliation} className="affiliation">
-          {index === 0 ? ' ' : ', '}
-          {affiliation}
-        </span>
-      ))}
-    </p>
-  )
+}
 
-  const degreesView = degrees.length ? (
-    <span className="resultDegrees">{`, ${degrees.join(', ')}`}</span>
-  ) : null
+type State = {
+  scrollY: number,
+}
 
-  return (
-    <div style={{ paddingBottom: '3em' }}>
-      <div className="profile-result">
-        <a
-          className="profile-result-link"
-          onClick={() => {
-            history.push({
+class ProfileResult extends Component<Props, State> {
+  state = {
+    scrollY: 0,
+  }
+
+  render() {
+    const {
+      result: {
+        id,
+        affiliations,
+        imageUrl,
+        name,
+        degrees,
+        clinicalSpecialties,
+        professionalInterests,
+        cadence,
+        willingShadowing,
+        willingNetworking,
+        willingGoalSetting,
+        willingDiscussPersonal,
+        willingCareerGuidance,
+        willingStudentGroup,
+      },
+      browseState, // for history
+    } = this.props
+
+    const { scrollY } = this.state
+
+    const formattedAffiliations = (
+      <p>
+        {affiliations.map((affiliation, index) => (
+          <span key={affiliation} className="affiliation">
+            {index === 0 ? ' ' : ', '}
+            {affiliation}
+          </span>
+        ))}
+      </p>
+    )
+
+    const degreesView = degrees.length ? (
+      <span className="resultDegrees">{`, ${degrees.join(', ')}`}</span>
+    ) : null
+
+    return (
+      <div style={{ paddingBottom: '3em' }}>
+        <div className="profile-result">
+          <Link
+            className="profile-result-link"
+            to={{
               pathname: `/profiles/${id}`,
-              state: { ...browseState, scrollY: window.scrollY },
-            })
-          }}
-        >
-          <ProfileAvatar imageUrl={imageUrl} name={name} size={160} />
-          <div style={{ flexGrow: '0', flexShrink: '0', width: '400px' }}>
-            <h2>
-              {name}
-              {degreesView}
-            </h2>
-            {formattedAffiliations}
-            <p className="clinical-interests">
-              {clinicalSpecialties.map(interest => (
-                <span key={interest} className="clinical interest">
-                  {' '}
-                  {interest}{' '}
-                </span>
-              ))}
-            </p>
-            <p>
-              {professionalInterests.map(interest => (
-                <span key={interest} className="professional interest">
-                  {' '}
-                  {interest}{' '}
-                </span>
-              ))}
-            </p>
-          </div>
-
-          <div
-            className="profile-result-right"
-            style={{
-              flexBasis: '200px',
-              flexGrow: '0',
-              flexShrink: '0',
-              textAlign: 'left',
+              state: { ...browseState, scrollY },
+            }}
+            onMouseOver={() => {
+              this.setState({ scrollY: window.scrollY })
+            }}
+            onFocus={() => {
+              this.setState({ scrollY: window.scrollY })
             }}
           >
-            <div>
-              <p>Cadence: {capitalize(cadence)}</p>
+            <ProfileAvatar imageUrl={imageUrl} name={name} size={160} />
+            <div style={{ flexGrow: '0', flexShrink: '0', width: '400px' }}>
+              <h2>
+                {name}
+                {degreesView}
+              </h2>
+              {formattedAffiliations}
+              <p className="clinical-interests">
+                {clinicalSpecialties.map(interest => (
+                  <span key={interest} className="clinical interest">
+                    {' '}
+                    {interest}{' '}
+                  </span>
+                ))}
+              </p>
+              <p>
+                {professionalInterests.map(interest => (
+                  <span key={interest} className="professional interest">
+                    {' '}
+                    {interest}{' '}
+                  </span>
+                ))}
+              </p>
             </div>
 
-            <CheckboxIndicator title="Shadowing" checked={willingShadowing} />
-            <CheckboxIndicator title="Networking" checked={willingNetworking} />
-            <CheckboxIndicator
-              title="Goal setting"
-              checked={willingGoalSetting}
-            />
-            <CheckboxIndicator
-              title="Discuss personal life"
-              checked={willingDiscussPersonal}
-            />
-            <CheckboxIndicator
-              title="Career guidance"
-              checked={willingCareerGuidance}
-            />
-            <CheckboxIndicator
-              title="Student group support"
-              checked={willingStudentGroup}
-            />
-          </div>
-        </a>
+            <div
+              className="profile-result-right"
+              style={{
+                flexBasis: '200px',
+                flexGrow: '0',
+                flexShrink: '0',
+                textAlign: 'left',
+              }}
+            >
+              <div>
+                <p>Cadence: {capitalize(cadence)}</p>
+              </div>
+
+              <CheckboxIndicator title="Shadowing" checked={willingShadowing} />
+              <CheckboxIndicator
+                title="Networking"
+                checked={willingNetworking}
+              />
+              <CheckboxIndicator
+                title="Goal setting"
+                checked={willingGoalSetting}
+              />
+              <CheckboxIndicator
+                title="Discuss personal life"
+                checked={willingDiscussPersonal}
+              />
+              <CheckboxIndicator
+                title="Career guidance"
+                checked={willingCareerGuidance}
+              />
+              <CheckboxIndicator
+                title="Student group support"
+                checked={willingStudentGroup}
+              />
+            </div>
+          </Link>
+        </div>
       </div>
-    </div>
-  )
+    )
+  }
 }
 
 export default withRouter(ProfileResult)
