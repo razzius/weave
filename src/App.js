@@ -75,7 +75,7 @@ class App extends Component<Props, State> {
   logout = (e: Event) => {
     e.preventDefault()
     clearToken()
-    this.setState({ token: null })
+    this.setState({ token: null, account: null })
     // todo logout on server as well
   }
 
