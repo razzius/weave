@@ -185,7 +185,7 @@ class App extends Component<Props, State> {
                 </Link>
 
                 <Link to="/our-team" className="App-title">
-                  Our Team
+                  Our&nbsp;Team
                 </Link>
               </nav>
             </div>
