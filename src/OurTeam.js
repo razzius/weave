@@ -19,7 +19,7 @@ const OurTeam = () => (
       initiative, which is endorsed by the Office of Student Affairs at Harvard
       Medical School. In recognition of fostering innovation and sustainability 
       in mentoring while building a culture of excellence in mentoring, Weave was 
-      awarded the 2019 Program Award for a Culture of Excellence in Mentoring (PACEM)
+      awarded the 2019 Program Award for Culture of Excellence in Mentoring (PACEM)
       at Harvard Medical School:{' '}
       <LiteralLink href="https://mfdp.med.harvard.edu/awards/program-award-culture-excellence-mentoring" />.
     </p>
