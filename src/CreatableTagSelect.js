@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import CreatableSelect from 'react-select/creatable'
 import { type OptionsType } from 'react-select/src/types'
 
-import { capitalize } from './utils'
+import { capitalize, caseInsensitiveFind } from './utils'
 
 type Props = {
   options?: OptionsType,
@@ -11,7 +11,6 @@ type Props = {
   handleChange: any => void,
   placeholder?: string,
   handleAdd: any => void,
-  splitOnPunctuation?: boolean,
   noOptionsMessage?: ({ inputValue: string }) => string | null,
 }
 
@@ -21,8 +20,8 @@ type State = {
 
 export default class CreatableTagSelect extends Component<Props, State> {
   static defaultProps = {
+    options: [],
     placeholder: 'Select or type something and press enter...',
-    splitOnPunctuation: false,
     noOptionsMessage: () => null,
   }
 
@@ -47,6 +46,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
       event.preventDefault()
 
       const { inputValue } = this.state
+      const { options } = this.props
 
       if (inputValue === '') {
         return
@@ -56,11 +56,21 @@ export default class CreatableTagSelect extends Component<Props, State> {
         inputValue: '',
       })
 
-      this.handleAdd(capitalize(inputValue))
+      // $FlowFixMe unresolved issue; defaultProps should always make values defined
+      const values = options.map(({ value }) => value)
+      const caseInsensitiveMatch = caseInsensitiveFind(inputValue, values)
+
+      let valueToAdd
+      if (caseInsensitiveMatch) {
+        valueToAdd = caseInsensitiveMatch
+      } else {
+        valueToAdd = capitalize(inputValue)
+      }
+      this.handleAdd(valueToAdd)
     }
   }
 
-  handleAdd(selected: string) {
+  handleAdd = (selected: string) => {
     const { handleAdd } = this.props
     handleAdd(selected)
   }
@@ -72,7 +82,6 @@ export default class CreatableTagSelect extends Component<Props, State> {
       values,
       options,
       placeholder,
-      splitOnPunctuation,
       noOptionsMessage,
     } = this.props
     return (
@@ -88,7 +97,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
         className="column"
         isMulti
         onChange={handleChange}
-        onKeyDown={splitOnPunctuation ? this.handleKeyDown : () => {}}
+        onKeyDown={this.handleKeyDown}
         onBlur={this.handleOnBlur}
         options={options}
         placeholder={placeholder}

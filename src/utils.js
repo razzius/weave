@@ -18,8 +18,16 @@ export function when(condition: boolean, promiseCallable: () => Promise) {
   return Promise.resolve(true)
 }
 
-export function any(values: Array<mixed>) {
-  return values.reduce((acc, value) => acc || value, false)
+export function any(values: Array<mixed>): boolean {
+  return values.reduce((acc, value) => Boolean(acc || value), false)
+}
+
+export function caseInsensitiveFind(
+  search: string,
+  values: Array<string>
+): ?string {
+  const lowercaseSearch = search.toLowerCase()
+  return values.find(value => value.toLowerCase() === lowercaseSearch)
 }
 
 export function availableForMentoringFromVerifyTokenResponse(response: Object) {

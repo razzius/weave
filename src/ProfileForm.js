@@ -551,7 +551,6 @@ export default class ProfileForm extends Component<Props, State> {
                 options={activitiesIEnjoyOptions}
                 handleChange={this.handleChange('activities')}
                 handleAdd={this.handleCreate('activities')}
-                splitOnPunctuation
               />
             </div>
             <p>What else would you like to share with potential mentees?</p>

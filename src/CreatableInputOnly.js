@@ -19,7 +19,6 @@ const CreatableInputOnly = ({ handleAdd, handleChange, values }: Props) => (
     handleAdd={handleAdd}
     handleChange={handleChange}
     values={values}
-    splitOnPunctuation
   />
 )
 
