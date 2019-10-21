@@ -3,7 +3,6 @@
   "version": "0.4.0",
   "private": true,
   "dependencies": {
-    "@razzi/react-avatar-editor": "^11.0.4-patched",
     "@sentry/browser": "^4.5.3",
     "blueimp-canvas-to-blob": "^3.16.0",
     "core-js": "^3.1.4",
@@ -13,6 +12,7 @@
     "react": "^16.9.0",
     "react-app-polyfill": "^1.0.1",
     "react-avatar": "^3.4.4",
+    "react-avatar-editor": "^11.0.7",
     "react-beforeunload": "^2.1.0",
     "react-dev-utils": "^7.0.0",
     "react-dom": "^16.3.2",

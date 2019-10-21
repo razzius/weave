@@ -1,7 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { Link, type RouterHistory } from 'react-router-dom'
-import AvatarEditor from '@razzi/react-avatar-editor'
+import AvatarEditor from 'react-avatar-editor'
 import Select from 'react-select'
 import { type ValueType } from 'react-select/src/types'
 import Dropzone from 'react-dropzone'
