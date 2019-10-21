@@ -1,10 +1,17 @@
+import datetime
 import http
+
+from freezegun import freeze_time
 
 from server.models import Profile, VerificationEmail, VerificationToken
 
 from .utils import save
 
 
+MOCK_DATE = datetime.datetime(2019, 10, 21)
+
+
+@freeze_time(MOCK_DATE)
 def test_update_profile(client):
     token = '1234'
 
@@ -62,3 +69,7 @@ def test_update_profile(client):
         'willing_student_group': False,
         'willing_shadowing': False,
     }
+
+    profile = Profile.query.first()
+
+    assert profile.date_updated == MOCK_DATE

@@ -326,6 +326,8 @@ def update_profile(profile_id=None):
         else:
             setattr(profile, key, value)
 
+    profile.date_updated = datetime.datetime.utcnow()
+
     try:
         save(profile)
     except IntegrityError:
