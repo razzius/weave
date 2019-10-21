@@ -23,9 +23,10 @@ type Props = {
   onChange: Function,
   onInputChange: Function,
   onSubmit: Function,
+  onKeyDown: Function,
   onChangeDegrees: Function,
   onChangeAffiliations: Function,
-  value: Array<string>,
+  values: Array<string>,
   inputValue: string,
   degrees: Array<string>,
   affiliations: Array<string>,
@@ -45,8 +46,9 @@ export default class SearchInput extends Component<Props> {
     const {
       onChange,
       onInputChange,
-      value,
+      values,
       inputValue,
+      onKeyDown,
       onChangeDegrees,
       degrees,
       onChangeAffiliations,
@@ -73,7 +75,8 @@ export default class SearchInput extends Component<Props> {
             noOptionsMessage={() => null}
             onChange={onChange}
             onInputChange={onInputChange}
-            values={value}
+            onKeyDown={onKeyDown}
+            value={labelValues(values)}
             inputValue={inputValue}
             createOptionPosition="first"
             formatCreateLabel={text => `Search "${text}"`}

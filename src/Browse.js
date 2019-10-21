@@ -149,6 +149,31 @@ class Browse extends Component<Props, State> {
     this.setState({ search: value, page: 1 })
   }
 
+  handleKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>) => {
+    if ([',', ';'].includes(e.key)) {
+      e.preventDefault()
+
+      const { search, searchTerms } = this.state
+
+      if (search === '') {
+        return
+      }
+
+      if (searchTerms.includes(search)) {
+        this.setState({ search: '' })
+        return
+      }
+
+      this.setState(
+        {
+          search: '',
+          searchTerms: [...searchTerms, search],
+        },
+        this.handleSearch
+      )
+    }
+  }
+
   resetSearch = () => {
     this.setState(originalState, this.handleSearch)
   }
@@ -173,14 +198,16 @@ class Browse extends Component<Props, State> {
     return (
       <AppScreen>
         <SearchInput
-          value={searchTerms}
-          inputValue={search}
+          values={searchTerms}
+          search={search}
           degrees={degrees}
           affiliations={affiliations}
+          inputValue={search}
           onChange={this.handleChange}
           onChangeDegrees={this.handleChangeDegrees}
           onChangeAffiliations={this.handleChangeAffiliations}
           onInputChange={this.handleInputChange}
+          onKeyDown={this.handleKeyDown}
           onSubmit={() => {
             this.setState({ queried: true }, this.handleSearch)
           }}
