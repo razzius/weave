@@ -2,6 +2,7 @@ export default `\
 Advocacy
 Artificial Intelligence
 Basic Science Research
+Boston Healthcare Fellowship
 Business
 Clinical Research
 Criminal Justice Reform
