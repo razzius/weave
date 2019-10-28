@@ -33,4 +33,9 @@ def send_static(path):
     return send_from_directory('../build/assets', path)
 
 
+@app.route('/debug-sentry')
+def trigger_error():
+    division_by_zero = 1 / 0
+
+
 app.register_blueprint(server.views.api)
