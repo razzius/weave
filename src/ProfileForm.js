@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { Link, type RouterHistory } from 'react-router-dom'
+import { Link, Prompt, type RouterHistory } from 'react-router-dom'
 import AvatarEditor from 'react-avatar-editor'
 import Select from 'react-select'
 import { type ValueType } from 'react-select/src/types'
@@ -92,7 +92,7 @@ type State = {
   preview: boolean,
 }
 
-export default class ProfileForm extends Component<Props, State> {
+class ProfileForm extends Component<Props, State> {
   otherCadenceInput: ?HTMLInputElement = null
 
   editor: any = null
@@ -640,3 +640,14 @@ export default class ProfileForm extends Component<Props, State> {
     )
   }
 }
+
+function withUnsavedChangesWarning(WrappedComponent) {
+  return (props: Props) => (
+    <div>
+      <Prompt message="Your changes to your profile have not been saved. Navigate anyways?" />
+      <WrappedComponent {...props} />
+    </div>
+  )
+}
+
+export default withUnsavedChangesWarning(ProfileForm)

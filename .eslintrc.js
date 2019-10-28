@@ -15,6 +15,9 @@ module.exports = {
     'react/jsx-fragments': 0,
     'react/static-property-placement': 0,
 
+    // Want to be able to spread props in HOCs
+    'react/jsx-props-no-spreading': 0,
+
     // Default ES function props are not considered so we disable the rule
     'react/require-default-props': 0,
   },

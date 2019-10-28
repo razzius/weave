@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { useBeforeunload } from 'react-beforeunload';
+import { useBeforeunload } from 'react-beforeunload'
 import { type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
@@ -11,7 +11,7 @@ type Props = {
   token: string | null,
   profileId?: ?string,
   isAdmin?: boolean,
-  setProfileId?: ((string) => void),
+  setProfileId?: string => void,
   history: RouterHistory,
 }
 
@@ -22,7 +22,8 @@ const EditProfile = ({
   profileId,
   isAdmin = false,
 }: Props) => {
-  useBeforeunload(() => "Your changes to your profile have not been saved.")
+  const unchangedWarning = 'Your changes to your profile have not been saved.'
+  useBeforeunload(() => unchangedWarning)
 
   if (token === null) {
     return 'You are not logged in. Please log in.'
@@ -32,18 +33,20 @@ const EditProfile = ({
     return 'You are attempting to edit an invalid profile. Check your URL.'
   }
 
-  return <AppScreen>
-    <ProfileForm
-      loadInitial={() => getProfile(token, profileId)}
-      firstTimePublish={false}
-      saveProfile={updateProfile}
-      history={history}
-      setProfileId={setProfileId}
-      profileId={profileId}
-      isAdmin={isAdmin}
-      token={token}
-    />
-  </AppScreen>
+  return (
+    <AppScreen>
+      <ProfileForm
+        loadInitial={() => getProfile(token, profileId)}
+        firstTimePublish={false}
+        saveProfile={updateProfile}
+        history={history}
+        setProfileId={setProfileId}
+        profileId={profileId}
+        isAdmin={isAdmin}
+        token={token}
+      />
+    </AppScreen>
+  )
 }
 
 export default EditProfile
