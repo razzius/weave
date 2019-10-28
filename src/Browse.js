@@ -20,6 +20,7 @@ const originalState = {
   queried: false,
   error: null,
   page: 1,
+  menuOpen: false,
 }
 
 class Browse extends Component<Props, State> {
@@ -107,6 +108,7 @@ class Browse extends Component<Props, State> {
 
     this.setState(
       {
+        menuOpen: false,
         queried: true,
         searchTerms,
         page: 1,
@@ -160,18 +162,21 @@ class Browse extends Component<Props, State> {
       }
 
       if (searchTerms.includes(search)) {
-        this.setState({ search: '' })
+        this.setState({ search: '', menuOpen: false })
         return
       }
 
       this.setState(
         {
+          menuOpen: false,
           search: '',
           searchTerms: [...searchTerms, search],
         },
         this.handleSearch
       )
+      return
     }
+    this.setState({ menuOpen: true })
   }
 
   resetSearch = () => {
@@ -193,6 +198,7 @@ class Browse extends Component<Props, State> {
       degrees,
       queried,
       affiliations,
+      menuOpen,
     } = this.state
 
     return (
@@ -203,6 +209,9 @@ class Browse extends Component<Props, State> {
           degrees={degrees}
           affiliations={affiliations}
           inputValue={search}
+          menuOpen={menuOpen}
+          onBlur={() => this.setState({ menuOpen: false })}
+          onFocus={() => this.setState({ menuOpen: true })}
           onChange={this.handleChange}
           onChangeDegrees={this.handleChangeDegrees}
           onChangeAffiliations={this.handleChangeAffiliations}

@@ -30,6 +30,9 @@ type Props = {
   inputValue: string,
   degrees: Array<string>,
   affiliations: Array<string>,
+  menuOpen: boolean,
+  onFocus: Function,
+  onBlur: Function,
 }
 
 type KeyboardEvent = SyntheticKeyboardEvent<HTMLElement>
@@ -53,6 +56,9 @@ export default class SearchInput extends Component<Props> {
       degrees,
       onChangeAffiliations,
       affiliations,
+      menuOpen,
+      onFocus,
+      onBlur,
     } = this.props
 
     return (
@@ -70,12 +76,17 @@ export default class SearchInput extends Component<Props> {
               multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
             }}
             isMulti
+            menuIsOpen={menuOpen}
             options={options}
             placeholder="Search"
             noOptionsMessage={() => null}
+            onFocus={onFocus}
+            onBlur={onBlur}
             onChange={onChange}
             onInputChange={onInputChange}
-            onKeyDown={onKeyDown}
+            onKeyDown={e => {
+              onKeyDown(e)
+            }}
             value={labelValues(values)}
             inputValue={inputValue}
             createOptionPosition="first"
