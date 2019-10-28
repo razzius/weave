@@ -39,6 +39,7 @@ mypy = "*"
 python_version = "3.7"
 
 [scripts]
+flake8 = "flake8 server tests"
 start = "flask run"
 shell = "ipython -i server/scripts/shell.py"
 test = "py.test tests"
