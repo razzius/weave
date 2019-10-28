@@ -8,7 +8,7 @@ import { capitalize, caseInsensitiveFind } from './utils'
 type Props = {
   options?: OptionsType,
   values: Array<string>,
-  handleChange: any => void,
+  handleChange: (any, Object) => void,
   placeholder?: string,
   handleAdd: any => void,
   noOptionsMessage?: ({ inputValue: string }) => string | null,
@@ -16,6 +16,7 @@ type Props = {
 
 type State = {
   inputValue: string,
+  menuOpen: boolean,
 }
 
 export default class CreatableTagSelect extends Component<Props, State> {
@@ -27,10 +28,13 @@ export default class CreatableTagSelect extends Component<Props, State> {
 
   state = {
     inputValue: '',
+    menuOpen: false,
   }
 
   handleInputChange = (inputValue: string) => {
-    this.setState({ inputValue: inputValue.slice(0, 50) })
+    this.setState({
+      inputValue: inputValue.slice(0, 50),
+    })
   }
 
   handleOnBlur = () => {
@@ -39,6 +43,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
     if (inputValue !== '') {
       this.handleAdd(capitalize(inputValue))
     }
+    this.setState({ menuOpen: false })
   }
 
   handleKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
@@ -67,7 +72,10 @@ export default class CreatableTagSelect extends Component<Props, State> {
         valueToAdd = capitalize(inputValue)
       }
       this.handleAdd(valueToAdd)
+      this.setState({ menuOpen: false })
+      return
     }
+    this.setState({ menuOpen: true })
   }
 
   handleAdd = (selected: string) => {
@@ -76,7 +84,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
   }
 
   render() {
-    const { inputValue } = this.state
+    const { inputValue, menuOpen } = this.state
     const {
       handleChange,
       values,
@@ -93,11 +101,18 @@ export default class CreatableTagSelect extends Component<Props, State> {
         }}
         value={values.map(value => ({ label: value, value }))}
         onInputChange={this.handleInputChange}
+        menuIsOpen={menuOpen}
         inputValue={inputValue}
         className="column"
         isMulti
-        onChange={handleChange}
+        onChange={(newValues, meta) => {
+          this.setState({ menuOpen: true })
+          handleChange(newValues, meta)
+        }}
         onKeyDown={this.handleKeyDown}
+        onFocus={() => {
+          this.setState({ menuOpen: true })
+        }}
         onBlur={this.handleOnBlur}
         options={options}
         placeholder={placeholder}
