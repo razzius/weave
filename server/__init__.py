@@ -35,7 +35,7 @@ def send_static(path):
 
 @app.route('/debug-sentry')
 def trigger_error():
-    division_by_zero = 1 / 0
+    raise Exception('Test error')
 
 
 app.register_blueprint(server.views.api)
