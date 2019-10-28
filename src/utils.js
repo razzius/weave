@@ -49,3 +49,7 @@ export const ExternalLink = ({
 export function LiteralLink({ href }: { href: string }) {
   return <ExternalLink href={href}>{href}</ExternalLink>
 }
+
+export function last<T>(values: Array<T>): ?T {
+  return values[values.length - 1]
+}

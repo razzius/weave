@@ -20,7 +20,7 @@ import {
   hospitalOptions,
   degreeOptions,
 } from './options'
-import { when } from './utils'
+import { when, capitalize, last } from './utils'
 
 function scaleCanvas(canvas) {
   const scaled = document.createElement('canvas')
@@ -143,21 +143,34 @@ class ProfileForm extends Component<Props, State> {
   handleCreate = (key: string) => (selected: string) => {
     const { [key]: current } = this.state
 
-    if (current.includes(selected)) {
+    if (
+      current.map(value => value.toLowerCase()).includes(selected.toLowerCase())
+    ) {
       return
     }
 
     this.setState({
-      [key]: [...current, selected],
+      [key]: [...current, capitalize(selected)],
     })
   }
 
-  handleChange = (key: string) => (selected: ValueType) => {
+  handleChange = (key: string) => (selected: ValueType, meta: Object) => {
     if (selected == null) {
       this.setState({ [key]: [] })
       return
     }
+
     const values = selected.map(({ value }) => value)
+
+    if (meta.action === 'create-option') {
+      const newValue = ((last(values): any): string)
+      const otherValues = values.slice(0, -1)
+
+      const capitalized = capitalize(newValue)
+
+      this.setState({ [key]: [...otherValues, capitalized] })
+      return
+    }
     this.setState({ [key]: values })
   }
 
