@@ -19,6 +19,7 @@ import FacultyExpectations from './FacultyExpectations'
 import Help from './Help'
 import Home from './Home'
 import Login from './Login'
+import Logout from './Logout'
 import MenteeExpectations from './MenteeExpectations'
 import MentorExpectations from './MentorExpectations'
 import NotLoggedIn from './NotLoggedIn'
@@ -72,8 +73,7 @@ class App extends Component<Props, State> {
     this.setState({ account: newAccount })
   }
 
-  logout = (e: Event) => {
-    e.preventDefault()
+  logout = () => {
     clearToken()
     this.setState({ token: null, account: null })
     // todo logout on server as well
@@ -110,9 +110,8 @@ class App extends Component<Props, State> {
     )
 
     const logoutButton = (
-      <a
-        href="/"
-        onClick={this.logout}
+      <Link
+        to="/logout"
         className="App-title"
         style={{
           paddingTop: '1.4em',
@@ -122,7 +121,7 @@ class App extends Component<Props, State> {
         }}
       >
         Logout
-      </a>
+      </Link>
     )
 
     const loginAction = loggedOut ? loginButton : logoutButton
@@ -276,6 +275,11 @@ class App extends Component<Props, State> {
             <Route
               path="/login"
               render={({ history }) => <Login history={history} />}
+            />
+
+            <Route
+              path="/logout"
+              render={() => <Logout logout={this.logout} />}
             />
 
             <Route path="/expectations" component={Expectations} />

@@ -90,9 +90,10 @@ type State = {
   cadence: string,
   otherCadence: string,
   preview: boolean,
+  saved: boolean,
 }
 
-class ProfileForm extends Component<Props, State> {
+export default class ProfileForm extends Component<Props, State> {
   otherCadenceInput: ?HTMLInputElement = null
 
   editor: any = null
@@ -130,6 +131,7 @@ class ProfileForm extends Component<Props, State> {
     cadence: 'monthly',
     otherCadence: '',
     preview: false,
+    saved: false,
   }
 
   async componentDidMount() {
@@ -209,7 +211,9 @@ class ProfileForm extends Component<Props, State> {
       setProfileId(profile.id)
     }
 
-    history.push(`/profiles/${profile.id}`)
+    this.setState({ saved: true }, () => {
+      history.push(`/profiles/${profile.id}`)
+    })
   }
 
   handleDrop = (acceptedFiles: any) => {
@@ -277,7 +281,7 @@ class ProfileForm extends Component<Props, State> {
     )
   }
 
-  render() {
+  renderForm() {
     const {
       activities,
       affiliations,
@@ -652,15 +656,18 @@ class ProfileForm extends Component<Props, State> {
       </div>
     )
   }
-}
 
-function withUnsavedChangesWarning(WrappedComponent) {
-  return (props: Props) => (
-    <div>
-      <Prompt message="Your changes to your profile have not been saved. Navigate anyways?" />
-      <WrappedComponent {...props} />
-    </div>
-  )
-}
+  render() {
+    const { saved } = this.state
 
-export default withUnsavedChangesWarning(ProfileForm)
+    return (
+      <>
+        <Prompt
+          when={!saved}
+          message="Your changes to your profile have not been saved. Navigate anyways?"
+        />
+        {this.renderForm()}
+      </>
+    )
+  }
+}
