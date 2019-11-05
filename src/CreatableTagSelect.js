@@ -75,7 +75,9 @@ export default class CreatableTagSelect extends Component<Props, State> {
       this.setState({ menuOpen: false })
       return
     }
-    this.setState({ menuOpen: true })
+    if (!event.key.startsWith('Arrow')) {
+      this.setState({ menuOpen: true })
+    }
   }
 
   handleAdd = (selected: string) => {
@@ -106,7 +108,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
         className="column"
         isMulti
         onChange={(newValues, meta) => {
-          this.setState({ menuOpen: true })
+          this.setState({ menuOpen: false })
           handleChange(newValues, meta)
         }}
         onKeyDown={this.handleKeyDown}
