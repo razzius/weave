@@ -24,6 +24,7 @@ jinja2 = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
 freezegun = "*"
+requests-mock = "*"
 
 [dev-packages]
 ipython = "*"
