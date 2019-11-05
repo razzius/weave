@@ -7,3 +7,9 @@ repos:
     language: system
     entry: pipenv run flake8
     types: [python]
+  - id: pytest
+    name: pytest
+    stages: [commit]
+    language: system
+    entry: pipenv run rest
+    types: [python]
