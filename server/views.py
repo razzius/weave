@@ -116,20 +116,18 @@ def get_profiles():
 
     page = int(request.args.get('page', 1))
 
+    sorting = request.args.get('sort', 'last_name')
     start, end = pagination(page)
 
     verification_email_id = VerificationToken.query.filter(
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    queryset = (
-        matching_profiles(query, degrees, affiliations)
-        .order_by(
-            # Is this the logged-in user's profile? If so, return it first (false)
-            Profile.verification_email_id != verification_email_id,
-            # Get the last word in the name.
-            # Won't work with suffixes.
-            func.split_part(
+    profiles_queryset = matching_profiles(query, degrees, affiliations)
+
+    def get_ordering(sorting):
+        if sorting == 'last_name':
+            return func.split_part(
                 Profile.name,
                 ' ',
                 func.array_length(
@@ -141,15 +139,27 @@ def get_profiles():
                     ),
                     1,  # How many words in the name
                 ),
-            ),
-        )
-        .group_by(Profile.id)
-    )
+            )
+        elif sorting == 'date_updated':
+            return Profile.date_updated.desc()
+        else:
+            raise ValueError(f'Unknown sorting {sorting}')
+
+    ordering = [
+        # Is this the logged-in user's profile? If so, return it first (false)
+        Profile.verification_email_id != verification_email_id,
+
+        get_ordering(sorting)
+    ]
+
+    sorted_queryset = profiles_queryset.order_by(
+        *ordering
+    ).group_by(Profile.id)
 
     return jsonify(
         {
-            'profileCount': queryset.count(),
-            'profiles': profiles_schema.dump(queryset[start:end]),
+            'profileCount': profiles_queryset.count(),
+            'profiles': profiles_schema.dump(sorted_queryset[start:end]),
         }
     )
 
@@ -193,7 +203,7 @@ def save_tags(profile, tag_values, option_class, profile_relation_class):
         option_class.value.in_(activity_values)
     )
 
-    existing_activity_values = flat_values(existing_activity_options.values('value'))
+    existing_activity_values = flat_values(existing_activity_options.values(option_class.value))
 
     new_activity_values = [
         value for value in activity_values if value not in existing_activity_values
@@ -207,10 +217,10 @@ def save_tags(profile, tag_values, option_class, profile_relation_class):
     existing_profile_relation_tag_ids = flat_values(
         profile_relation_class.query.filter(
             profile_relation_class.tag_id.in_(
-                flat_values(existing_activity_options.values('id'))
+                flat_values(existing_activity_options.values(profile_relation_class.id))
             ),
             profile_relation_class.profile_id == profile.id,
-        ).values('tag_id')
+        ).values(profile_relation_class.tag_id)
     )
 
     profile_relations = [
