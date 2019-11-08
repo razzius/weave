@@ -120,14 +120,25 @@ export async function getProfiles({
   degrees = [],
   affiliations = [],
   page = 1,
+  sorting = 'last_name',
+  sortAscending = false,
 }: {
   token: string,
   query?: string,
   degrees?: Array<string>,
   affiliations?: Array<string>,
   page: number,
+  sorting?: string,
+  sortAscending?: boolean,
 }) {
-  const params = { page, query, degrees, affiliations }
+  const params = {
+    page,
+    query,
+    degrees,
+    affiliations,
+    sorting,
+    sort_ascending: sortAscending,
+  }
   const results = await get(token, 'profiles', params)
 
   return {

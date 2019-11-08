@@ -10,7 +10,7 @@ from flask import Blueprint, current_app, jsonify, make_response, request
 from marshmallow import ValidationError
 from requests_toolbelt.utils import dump
 from sentry_sdk import capture_exception
-from sqlalchemy import func
+from sqlalchemy import asc, desc, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import exists
 
@@ -116,7 +116,9 @@ def get_profiles():
 
     page = int(request.args.get('page', 1))
 
-    sorting = request.args.get('sort', 'last_name')
+    sorting = request.args.get('sorting', 'last_name')
+    sort_ascending = request.args.get('sort_ascending', False) == 'true'
+
     start, end = pagination(page)
 
     verification_email_id = VerificationToken.query.filter(
@@ -125,7 +127,12 @@ def get_profiles():
 
     profiles_queryset = matching_profiles(query, degrees, affiliations)
 
-    def get_ordering(sorting):
+    def get_ordering(sort_ascending):
+        if sort_ascending:
+            return asc
+        return desc
+
+    def get_sorting(sorting):
         if sorting == 'last_name':
             return func.split_part(
                 Profile.name,
@@ -141,15 +148,17 @@ def get_profiles():
                 ),
             )
         elif sorting == 'date_updated':
-            return Profile.date_updated.desc()
+            return Profile.date_updated
         else:
             raise ValueError(f'Unknown sorting {sorting}')
+
+    asc_or_desc = get_ordering(sort_ascending)
 
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
         Profile.verification_email_id != verification_email_id,
 
-        get_ordering(sorting)
+        asc_or_desc(get_sorting(sorting))
     ]
 
     sorted_queryset = profiles_queryset.order_by(

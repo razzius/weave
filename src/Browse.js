@@ -11,16 +11,18 @@ type Props = Object
 type State = Object
 
 const originalState = {
-  loading: true,
-  degrees: [],
   affiliations: [],
-  searchTerms: [],
-  search: '',
-  results: null,
-  queried: false,
+  degrees: [],
   error: null,
-  page: 1,
+  loading: true,
   menuOpen: false,
+  page: 1,
+  queried: false,
+  results: null,
+  search: '',
+  searchTerms: [],
+  sortAscending: false,
+  sorting: 'date_updated',
 }
 
 class Browse extends Component<Props, State> {
@@ -71,6 +73,8 @@ class Browse extends Component<Props, State> {
       results,
       degrees,
       affiliations,
+      sorting,
+      sortAscending,
     } = this.state
 
     const searchArray = search === '' ? [] : [search]
@@ -85,6 +89,8 @@ class Browse extends Component<Props, State> {
       page,
       degrees,
       affiliations,
+      sorting,
+      sortAscending,
     })
 
     if (results !== null && page > 1) {
@@ -133,6 +139,19 @@ class Browse extends Component<Props, State> {
       {
         queried: true,
         affiliations: tags.map(tag => tag.value),
+        page: 1,
+      },
+      this.handleSearch
+    )
+  }
+
+  handleChangeSorting = option => {
+    const { sorting, ascending } = option.value
+
+    this.setState(
+      {
+        sorting,
+        sortAscending: ascending,
         page: 1,
       },
       this.handleSearch
@@ -215,6 +234,7 @@ class Browse extends Component<Props, State> {
           onChange={this.handleChange}
           onChangeDegrees={this.handleChangeDegrees}
           onChangeAffiliations={this.handleChangeAffiliations}
+          onChangeSorting={this.handleChangeSorting}
           onInputChange={this.handleInputChange}
           onKeyDown={this.handleKeyDown}
           onSubmit={() => {

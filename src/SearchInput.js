@@ -26,6 +26,7 @@ type Props = {
   onKeyDown: Function,
   onChangeDegrees: Function,
   onChangeAffiliations: Function,
+  onChangeSorting: Function,
   values: Array<string>,
   inputValue: string,
   degrees: Array<string>,
@@ -55,6 +56,7 @@ export default class SearchInput extends Component<Props> {
       onChangeDegrees,
       degrees,
       onChangeAffiliations,
+      onChangeSorting,
       affiliations,
       menuOpen,
       onFocus,
@@ -130,6 +132,33 @@ export default class SearchInput extends Component<Props> {
             noOptionsMessage={() => null}
             options={hospitalOptions}
             placeholder="Filter by institution"
+          />
+        </div>
+        <div style={{ display: 'inline-block', marginLeft: '6px' }}>
+          <Select
+            styles={{
+              control: base => ({
+                ...base,
+                width: '250px',
+                backgroundColor: 'white',
+              }),
+            }}
+            options={[
+              {
+                label: 'Most Recently Updated',
+                value: { sorting: 'date_updated', ascending: false },
+              },
+              {
+                label: 'Alphabetical',
+                value: { sorting: 'last_name', ascending: true },
+              },
+              {
+                label: 'Reverse Alphabetical',
+                value: { sorting: 'last_name', ascending: false },
+              },
+            ]}
+            onChange={onChangeSorting}
+            placeholder="Sort order"
           />
         </div>
       </form>
