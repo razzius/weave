@@ -20,6 +20,9 @@ module.exports = {
 
     // Default ES function props are not considered so we disable the rule
     'react/require-default-props': 0,
+
+    // Log messages are useful
+    'no-console': 0,
   },
   env: { browser: true },
 }

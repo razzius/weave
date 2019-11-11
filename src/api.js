@@ -2,6 +2,9 @@
 import { clearToken, loggedOutNotification } from './persistence'
 import { availableForMentoringFromVerifyTokenResponse } from './utils'
 import settings from './settings'
+import logging from './logging'
+
+const logger = logging()
 
 // -_-
 function addQueryString(url, params) {
@@ -32,6 +35,7 @@ async function http(token, url, options = {}) {
   const response = await fetch(url, optionsWithAuth)
 
   if (response.status === 440) {
+    logger.log('Server response 440: token has expired')
     clearToken()
     loggedOutNotification()
     window.location.pathname = '/login'

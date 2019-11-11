@@ -6,6 +6,7 @@ import { getProfiles } from './api'
 import AppScreen from './AppScreen'
 import SearchInput from './SearchInput'
 import ResultsView from './ResultsView'
+import LoggerContext from './logger-context'
 
 type Props = Object
 type State = Object
@@ -31,11 +32,18 @@ class Browse extends Component<Props, State> {
   async componentDidMount() {
     const { token, location } = this.props
     const { page } = this.state
+    const { context } = this
+    const logger = context.logger.child({ token })
+    logger.log('Browse component mounted')
 
     if (location.state) {
+      logger.log('Load profiles from history')
       this.loadProfilesFromHistory(location.state)
     } else {
-      this.loadProfilesFromServer({ token, page })
+      logger.log('Load profiles from server')
+      await this.loadProfilesFromServer({ token, page })
+      const { results } = this.state
+      logger.child({ results }).log('Loaded profiles from server')
     }
   }
 
@@ -206,6 +214,8 @@ class Browse extends Component<Props, State> {
     const { page } = this.state
     this.setState({ page: page + 1 }, this.handleSearch)
   }
+
+  static contextType = LoggerContext
 
   render() {
     const {
