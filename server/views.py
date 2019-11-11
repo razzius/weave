@@ -139,12 +139,10 @@ def get_profiles():
                 ' ',
                 func.array_length(
                     func.string_to_array(
-                        func.regexp_replace(
-                            Profile.name, '(,|MD).*', ''
-                        ),  # Remove suffixes after comma and MD
+                        Profile.name,
                         ' ',
                     ),
-                    1,  # How many words in the name
+                    1,  # Length in the 1st dimension
                 ),
             )
         elif sorting == 'date_updated':
