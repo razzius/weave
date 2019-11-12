@@ -83,12 +83,15 @@ class Browse extends Component<Props, State> {
       .join(' ')
       .toLowerCase()
 
+    const searchDegrees = degrees === null ? [] : degrees
+    const searchAffiliations = affiliations === null ? [] : affiliations
+
     const newResults = await getProfiles({
       token,
       query,
       page,
-      degrees,
-      affiliations,
+      degrees: searchDegrees,
+      affiliations: searchAffiliations,
       sorting,
       sortAscending,
     })
@@ -124,10 +127,11 @@ class Browse extends Component<Props, State> {
   }
 
   handleChangeDegrees = tags => {
+    const degrees = tags === null ? null : tags.map(tag => tag.value)
     this.setState(
       {
         queried: true,
-        degrees: tags.map(tag => tag.value),
+        degrees,
         page: 1,
       },
       this.handleSearch
@@ -135,10 +139,11 @@ class Browse extends Component<Props, State> {
   }
 
   handleChangeAffiliations = tags => {
+    const affiliations = tags === null ? null : tags.map(tag => tag.value)
     this.setState(
       {
         queried: true,
-        affiliations: tags.map(tag => tag.value),
+        affiliations,
         page: 1,
       },
       this.handleSearch

@@ -16,6 +16,9 @@ const options = clinicalSpecialtyOptions.concat(
 )
 
 function labelValues(values) {
+  if (values === null) {
+    return null
+  }
   return values.map(value => ({ label: value, value }))
 }
 
