@@ -13,7 +13,7 @@ import App from './App'
 
 if (window.location.hostname !== 'localhost') {
   init({
-    dsn: process.env.JAVASCRIPT_SENTRY_DSN,
+    dsn: process.env.REACT_APP_JAVASCRIPT_SENTRY_DSN,
   })
 }
 
