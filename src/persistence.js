@@ -27,16 +27,30 @@ export function clearToken() {
 
 export function loadToken(): string | null {
   const tokenTimestamp = window.localStorage.getItem('tokenTimestamp')
+  console.log('loadToken', { tokenTimestamp })
+
   if (tokenTimestamp == null) {
     return null
   }
 
-  const whenTokenExpires = addHours(new Date(tokenTimestamp), settings.maxTokenAgeHours)
+  const whenTokenExpires = addHours(
+    new Date(tokenTimestamp),
+    settings.maxTokenAgeHours
+  )
+  console.log('loadToken', { whenTokenExpires })
 
-  if (isAfter(new Date(), whenTokenExpires)) {
+  const now = new Date()
+  console.log('loadToken', { now })
+
+  if (isAfter(now, whenTokenExpires)) {
+    console.log('loadToken: clearing expired token')
+
     clearToken()
     return null
   }
 
-  return window.localStorage.getItem('token')
+  const token = window.localStorage.getItem('token')
+  console.log('loadToken: got token', { token })
+
+  return token
 }
