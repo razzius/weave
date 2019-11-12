@@ -107,7 +107,14 @@ class Browse extends Component<Props, State> {
         loading: false,
       })
     } else {
-      this.setState({ results: newResults, loading: false })
+      const queried = (
+        query !== ''
+        || searchAffiliations.length
+        || searchDegrees.length
+        || page !== 1
+        || sorting !== originalState.sorting
+      )
+      this.setState({ results: newResults, loading: false, queried })
     }
     history.replace('/browse', this.state)
   }
