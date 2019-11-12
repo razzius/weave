@@ -120,7 +120,7 @@ export async function getProfiles({
   degrees = [],
   affiliations = [],
   page = 1,
-  sorting = 'last_name',
+  sorting = 'date_updated',
   sortAscending = false,
 }: {
   token: string,
