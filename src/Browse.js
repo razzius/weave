@@ -195,7 +195,9 @@ class Browse extends Component<Props, State> {
       )
       return
     }
-    this.setState({ menuOpen: true })
+    if (!e.key.startsWith('Arrow')) {
+      this.setState({ menuOpen: true })
+    }
   }
 
   resetSearch = () => {
