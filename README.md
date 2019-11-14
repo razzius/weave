@@ -2,7 +2,7 @@
 
 ## Requirements
 
-- Python 3.6.5
+- Python 3.7.3
 - Node 12.10.0
 - Postgresql 11.1
 - [pipenv](https://github.com/pypa/pipenv#installation) 2018.11.26
