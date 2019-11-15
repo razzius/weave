@@ -4,7 +4,7 @@ from flask import current_app
 import requests
 
 
-SERVER_URL = os.environ['REACT_APP_SERVER_URL']
+SERVER_URL = os.environ.get('REACT_APP_SERVER_URL', 'localhost:5000')
 CLIENT_URL = os.environ.get('WEAVE_CLIENT_URL', SERVER_URL)
 SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
 
