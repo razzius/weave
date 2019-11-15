@@ -6,7 +6,14 @@ import requests
 
 SERVER_URL = os.environ.get('REACT_APP_SERVER_URL', 'localhost:5000')
 CLIENT_URL = os.environ.get('WEAVE_CLIENT_URL', SERVER_URL)
-SENDGRID_API_KEY = os.environ['SENDGRID_API_KEY']
+SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+
+
+class EmailMisconfiguredError(Exception):
+    message = 'Email not configured. Set the SENDGRID_API_KEY environment variable to send email.'
+
+    def __str__(self):
+        return self.message
 
 
 class EmailMisconfiguredError(Exception):
