@@ -279,7 +279,9 @@ class App extends Component<Props, State> {
 
             <Route
               path="/logout"
-              render={() => <Logout logout={this.logout} />}
+              render={() => (
+                <Logout logout={this.logout} loggedIn={!loggedOut} />
+              )}
             />
 
             <Route path="/expectations" component={Expectations} />
