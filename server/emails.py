@@ -16,13 +16,6 @@ class EmailMisconfiguredError(Exception):
         return self.message
 
 
-class EmailMisconfiguredError(Exception):
-    message = 'Email not configured. Set the SENDGRID_API_KEY environment variable to send email.'
-
-    def __str__(self):
-        return self.message
-
-
 def _send_email(to, subject, html):
     if SENDGRID_API_KEY is None:
         raise EmailMisconfiguredError
