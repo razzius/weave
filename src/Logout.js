@@ -12,7 +12,6 @@ const Logout = ({
   loggedIn: boolean,
 }) => {
   useEffect(() => {
-    console.log({ loggedIn })
     if (loggedIn) {
       logout()
     }
