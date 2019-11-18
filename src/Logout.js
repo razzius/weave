@@ -4,18 +4,10 @@ import Button from './Button'
 
 import AppScreen from './AppScreen'
 
-const Logout = ({
-  logout,
-  loggedIn,
-}: {
-  logout: Function,
-  loggedIn: boolean,
-}) => {
+const Logout = ({ logout }: { logout: Function }) => {
   useEffect(() => {
-    if (loggedIn) {
-      logout()
-    }
-  })
+    logout()
+  }, [])
 
   return (
     <AppScreen>
