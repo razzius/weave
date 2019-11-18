@@ -607,6 +607,7 @@ def availability():
     profile = get_profile_by_token(verification_token.token)
 
     profile.available_for_mentoring = available
+    profile.date_updated = datetime.datetime.utcnow()
 
     save(profile)
 
