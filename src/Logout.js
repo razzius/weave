@@ -7,7 +7,7 @@ import AppScreen from './AppScreen'
 const Logout = ({ logout }: { logout: Function }) => {
   useEffect(() => {
     logout()
-  }, [])
+  }, [logout])
 
   return (
     <AppScreen>
