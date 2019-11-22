@@ -35,6 +35,7 @@ pylint = "*"
 "flake8" = "*"
 requests-mock = "*"
 mypy = "*"
+colorama = {version = "*", sys_platform= "== 'win32'"}
 
 [requires]
 python_version = "3.7"
