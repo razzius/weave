@@ -39,7 +39,13 @@ const FacultyLanding = ({
   )
 }
 
-const Home = ({ token, account }: { token: string | null, account: ?Account }) => {
+const Home = ({
+  token,
+  account,
+}: {
+  token: string | null,
+  account: ?Account,
+}) => {
   const isMentor = account && account.isMentor
   const profileId = account && account.profileId
 
@@ -54,7 +60,9 @@ const Home = ({ token, account }: { token: string | null, account: ?Account }) =
                 className="button"
                 to={token ? '/browse' : '/student-expectations'}
               >
-                Register as a student
+                {token
+                  ? 'Browse all faculty profiles'
+                  : 'Register as a student'}
               </Link>
             </div>
           )}
