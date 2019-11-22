@@ -33,13 +33,14 @@
   "scripts": {
     "start": "react-scripts start",
     "deploy": "gh-pages -d build",
-    "build": "REACT_APP_GIT_SHA=$SOURCE_VERSION react-scripts build",
+    "build": "cross-env REACT_APP_GIT_SHA=$SOURCE_VERSION react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "heroku-postbuild": "yarn build"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.3",
+    "cross-env": "^6.0.3",
     "eslint": "^6.4.0",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^2.9.0",
