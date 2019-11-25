@@ -61,22 +61,21 @@ export default class SubmitEmailForm extends Component<Props, State> {
     error: null,
   }
 
-  submitEmail = (e: Event) => {
+  submitEmail = async (e: Event) => {
+    e.preventDefault()
+
     const { email, isPersonalDevice } = this.state
     const { sendEmail } = this.props
 
-    e.preventDefault()
-
-    sendEmail({
-      email,
-      isPersonalDevice,
-    })
-      .then(() => {
-        this.setState({ success: true })
+    try {
+      await sendEmail({
+        email,
+        isPersonalDevice,
       })
-      .catch(error => {
-        this.setState({ error })
-      })
+      this.setState({ success: true })
+    } catch (error) {
+      this.setState({ error })
+    }
   }
 
   updateEmail = (e: ReactEvent) => {
