@@ -113,13 +113,7 @@ def _filter_query(
     ]
 
     tag_filters = [
-        or_(
-            *[func.lower(field) == tag for field in searchable_fields]
-            + [
-                func.lower(option_class.value) == tag
-                for _, option_class in tag_fields
-            ]
-        )
+        or_(func.lower(option_class.value) == tag for _, option_class in tag_fields)
         for tag in tags
     ]
 
@@ -155,4 +149,6 @@ def matching_profiles(
     degree_list = degrees.lower().split(',') if degrees else []
     affiliation_list = affiliations.lower().split(',') if affiliations else []
 
-    return _filter_query(available_profiles, words, tag_list, degree_list, affiliation_list)
+    return _filter_query(
+        available_profiles, words, tag_list, degree_list, affiliation_list
+    )
