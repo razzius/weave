@@ -126,7 +126,7 @@ def get_profiles():
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    profiles_queryset = matching_profiles(query, tags, degrees, affiliations)
+    profiles_queryset = matching_profiles(query, tags, degrees, affiliations).group_by(Profile.id)
 
     def get_ordering(sort_ascending):
         if sort_ascending:
@@ -160,9 +160,7 @@ def get_profiles():
         asc_or_desc(get_sorting(sorting))
     ]
 
-    sorted_queryset = profiles_queryset.order_by(
-        *ordering
-    ).group_by(Profile.id)
+    sorted_queryset = profiles_queryset.order_by(*ordering)
 
     return jsonify(
         {
