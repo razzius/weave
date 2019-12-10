@@ -144,7 +144,7 @@ def matching_profiles(
 ) -> List[tuple]:
     available_profiles = Profile.query.filter(Profile.available_for_mentoring)
 
-    if query is None or query == '' and not degrees and not affiliations:
+    if not any([query, tags, degrees, affiliations]):
         return available_profiles
 
     words = ''.join(
