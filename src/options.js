@@ -27,3 +27,9 @@ export const activitiesIEnjoyOptions = makeOptions(activitiesIEnjoyTags)
 export const degreeOptions = makeOptions(degrees)
 
 export const displayDegreeOptions = makeOptions(displayDegrees)
+
+export const searchableOptions = [
+  ...clinicalSpecialtyOptions,
+  ...professionalInterestOptions,
+  ...activitiesIEnjoyOptions,
+]

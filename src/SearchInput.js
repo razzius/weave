@@ -3,17 +3,10 @@ import React, { Component } from 'react'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
 import {
-  clinicalSpecialtyOptions,
-  professionalInterestOptions,
   hospitalOptions,
   displayDegreeOptions,
-  activitiesIEnjoyOptions,
+  searchableOptions,
 } from './options'
-
-const options = clinicalSpecialtyOptions.concat(
-  professionalInterestOptions,
-  activitiesIEnjoyOptions
-)
 
 function labelValues(values) {
   if (values === null) {
@@ -82,7 +75,7 @@ export default class SearchInput extends Component<Props> {
             }}
             isMulti
             menuIsOpen={menuOpen}
-            options={options}
+            options={searchableOptions}
             placeholder="Search"
             noOptionsMessage={() => null}
             onFocus={onFocus}

@@ -2,10 +2,12 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 
-import { getProfiles } from './api'
 import AppScreen from './AppScreen'
-import SearchInput from './SearchInput'
 import ResultsView from './ResultsView'
+import SearchInput from './SearchInput'
+import { getProfiles } from './api'
+import { searchableOptions } from './options'
+import { partition } from './utils'
 
 type Props = Object
 type State = Object
@@ -24,6 +26,8 @@ const originalState = {
   sortAscending: false,
   sorting: 'date_updated',
 }
+
+const predefinedTags = new Set(searchableOptions.map(option => option.value))
 
 class Browse extends Component<Props, State> {
   state = originalState
@@ -77,8 +81,12 @@ class Browse extends Component<Props, State> {
       sortAscending,
     } = this.state
 
+    const [knownTags, userTags] = partition(
+      tag => predefinedTags.has(tag),
+      searchTerms
+    )
     const searchArray = search === '' ? [] : [search]
-    const query = searchTerms
+    const query = userTags
       .concat(searchArray)
       .join(' ')
       .toLowerCase()
@@ -89,6 +97,7 @@ class Browse extends Component<Props, State> {
     const newResults = await getProfiles({
       token,
       query,
+      tags: knownTags,
       page,
       degrees: searchDegrees,
       affiliations: searchAffiliations,
@@ -107,13 +116,12 @@ class Browse extends Component<Props, State> {
         loading: false,
       })
     } else {
-      const queried = (
-        query !== ''
-        || searchAffiliations.length
-        || searchDegrees.length
-        || page !== 1
-        || sorting !== originalState.sorting
-      )
+      const queried =
+        query !== '' ||
+        searchAffiliations.length ||
+        searchDegrees.length ||
+        page !== 1 ||
+        sorting !== originalState.sorting
       this.setState({ results: newResults, loading: false, queried })
     }
     history.replace('/browse', this.state)

@@ -53,3 +53,20 @@ export function LiteralLink({ href }: { href: string }) {
 export function last<T>(values: Array<T>): ?T {
   return values[values.length - 1]
 }
+
+export function partition<T>(
+  predicate: Function,
+  values: Array<T>
+): Array<Array<T>> {
+  const satisfies = []
+  const fails = []
+  values.forEach(value => {
+    if (predicate(value)) {
+      satisfies.push(value)
+    } else {
+      fails.push(value)
+    }
+  })
+
+  return [satisfies, fails]
+}

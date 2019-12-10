@@ -111,6 +111,7 @@ def get_profiles():
         return error
 
     query = request.args.get('query')
+    tags = request.args.get('tags', '')
     degrees = request.args.get('degrees', '')
     affiliations = request.args.get('affiliations', '')
 
@@ -125,7 +126,7 @@ def get_profiles():
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    profiles_queryset = matching_profiles(query, degrees, affiliations)
+    profiles_queryset = matching_profiles(query, tags, degrees, affiliations)
 
     def get_ordering(sort_ascending):
         if sort_ascending:

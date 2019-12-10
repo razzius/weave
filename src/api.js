@@ -117,6 +117,7 @@ function payloadToProfile(payload) {
 export async function getProfiles({
   token,
   query = '',
+  tags = [],
   degrees = [],
   affiliations = [],
   page = 1,
@@ -125,6 +126,7 @@ export async function getProfiles({
 }: {
   token: string,
   query?: string,
+  tags?: Array<string>,
   degrees?: Array<string>,
   affiliations?: Array<string>,
   page: number,
@@ -134,6 +136,7 @@ export async function getProfiles({
   const params = {
     page,
     query,
+    tags,
     degrees,
     affiliations,
     sorting,

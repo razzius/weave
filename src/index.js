@@ -1,3 +1,4 @@
+// TODO use core-js ponyfill style instead
 import 'core-js/es/map'
 import 'core-js/es/set'
 import 'react-app-polyfill/ie9'

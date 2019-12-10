@@ -1,7 +1,8 @@
 import operator
 from functools import reduce
+from typing import List
 
-from .models import Profile
+from flask_sqlalchemy import BaseQuery
 from sqlalchemy import func, or_
 
 from .models import (
@@ -15,22 +16,82 @@ from .models import (
     PartsOfMeOption,
     ProfessionalInterest,
     ProfessionalInterestOption,
+    Profile,
     ProfileActivity,
     ProfileDegree,
 )
 
 
-def matching_profiles(query, degrees, affiliations):
-    if query is None or query == '' and not degrees and not affiliations:
-        return Profile.query.filter(Profile.available_for_mentoring)
+def _filter_query_on_degrees(degree_list: List[str], query: BaseQuery) -> BaseQuery:
+    regular_degree_filters = [
+        degree for degree in degree_list if degree not in ['dmd / dds', 'md / do']
+    ]
 
-    words = ''.join(
-        character if character.isalnum() else ' ' for character in query.lower()
-    ).split()
+    # TODO replace this with alias tags
+    md_do_filter = (
+        [
+            func.bool_or(func.lower(DegreeOption.value) == 'md')
+            | func.bool_or(func.lower(DegreeOption.value) == 'do')
+        ]
+        if 'md / do' in degree_list
+        else []
+    )
 
-    degree_list = degrees.lower().split(',') if degrees else []
-    affiliation_list = affiliations.lower().split(',') if affiliations else []
+    dmd_dds_filter = (
+        [
+            func.bool_or(func.lower(DegreeOption.value) == 'dmd')
+            | func.bool_or(func.lower(DegreeOption.value) == 'dds')
+        ]
+        if 'dmd / dds' in degree_list
+        else []
+    )
 
+    degree_filters = (
+        [
+            func.bool_or(func.lower(DegreeOption.value) == degree)
+            for degree in regular_degree_filters
+        ]
+        + md_do_filter
+        + dmd_dds_filter
+    )
+
+    degree_filter = reduce(operator.and_, degree_filters)
+    return (
+        query.outerjoin(ProfileDegree)
+        .outerjoin(DegreeOption)
+        .group_by(Profile.id)
+        .having(degree_filter)
+    )
+
+
+def _filter_query_on_affiliations(
+    affiliation_list: List[str], query: BaseQuery
+) -> BaseQuery:
+    affiliations_filters = reduce(
+        operator.and_,
+        [
+            func.bool_or(func.lower(HospitalAffiliationOption.value) == affilation)
+            for affilation in affiliation_list
+        ],
+    )
+
+    return (
+        query.outerjoin(
+            HospitalAffiliation, Profile.id == HospitalAffiliation.profile_id
+        )
+        .outerjoin(HospitalAffiliationOption)
+        .group_by(Profile.id)
+        .having(affiliations_filters)
+    )
+
+
+def _filter_query(
+    available_profiles: BaseQuery,
+    words: List[str],
+    tags: List[str],
+    degree_list: List[str],
+    affiliation_list: List[str],
+) -> BaseQuery:
     searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
 
     tag_fields = [
@@ -51,68 +112,47 @@ def matching_profiles(query, degrees, affiliations):
         for word in words
     ]
 
-    filters = [Profile.available_for_mentoring, *search_filters]
+    tag_filters = [
+        or_(
+            *[func.lower(field) == tag for field in searchable_fields]
+            + [
+                func.lower(option_class.value) == tag
+                for _, option_class in tag_fields
+            ]
+        )
+        for tag in tags
+    ]
 
-    query = Profile.query
+    query = available_profiles
 
     for relation, option_class in tag_fields:
         query = query.outerjoin(relation).outerjoin(option_class)
 
+    query = query.filter(*search_filters, *tag_filters)
+
     if degree_list:
-        regular_degree_filters = [
-            degree for degree in degree_list if degree not in ['dmd / dds', 'md / do']
-        ]
+        query = _filter_query_on_degrees(degree_list, query)
 
-        md_do_filter = (
-            [
-                func.bool_or(func.lower(DegreeOption.value) == 'md')
-                | func.bool_or(func.lower(DegreeOption.value) == 'do')
-            ]
-            if 'md / do' in degree_list
-            else []
-        )
+    if affiliation_list:
+        query = _filter_query_on_affiliations(affiliation_list, query)
 
-        dmd_dds_filter = (
-            [
-                func.bool_or(func.lower(DegreeOption.value) == 'dmd')
-                | func.bool_or(func.lower(DegreeOption.value) == 'dds')
-            ]
-            if 'dmd / dds' in degree_list
-            else []
-        )
+    return query
 
-        degree_filters = (
-            [
-                func.bool_or(func.lower(DegreeOption.value) == degree)
-                for degree in regular_degree_filters
-            ]
-            + md_do_filter
-            + dmd_dds_filter
-        )
 
-        degree_filter = reduce(operator.and_, degree_filters)
-        query = (
-            query.outerjoin(ProfileDegree)
-            .outerjoin(DegreeOption)
-            .group_by(Profile.id)
-            .having(degree_filter)
-        )
+def matching_profiles(
+    query: str, tags: str, degrees: str, affiliations: str
+) -> List[tuple]:
+    available_profiles = Profile.query.filter(Profile.available_for_mentoring)
 
-    if affiliations:
-        affiliations_filters = reduce(
-            operator.and_,
-            [
-                func.bool_or(func.lower(HospitalAffiliationOption.value) == affilation)
-                for affilation in affiliation_list
-            ],
-        )
-        query = (
-            query.outerjoin(
-                HospitalAffiliation, Profile.id == HospitalAffiliation.profile_id
-            )
-            .outerjoin(HospitalAffiliationOption)
-            .group_by(Profile.id)
-            .having(affiliations_filters)
-        )
+    if query is None or query == '' and not degrees and not affiliations:
+        return available_profiles
 
-    return query.filter(*filters)
+    words = ''.join(
+        character if character.isalnum() else ' ' for character in query.lower()
+    ).split()
+
+    tag_list = tags.lower().split(',') if tags else []
+    degree_list = degrees.lower().split(',') if degrees else []
+    affiliation_list = affiliations.lower().split(',') if affiliations else []
+
+    return _filter_query(available_profiles, words, tag_list, degree_list, affiliation_list)
