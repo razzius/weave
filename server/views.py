@@ -303,6 +303,7 @@ def create_profile():
     profile = Profile(**profile_data)
 
     db.session.add(profile)
+    db.session.commit()
 
     save_all_tags(profile, schema)
 

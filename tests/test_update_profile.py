@@ -47,7 +47,11 @@ def test_update_profile(client):
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    check_json = {key: value for key, value in response.json.items() if key != 'id'}
+    check_json = {
+        key: value
+        for key, value in response.json.items()
+        if key not in {'id', 'date_updated'}
+    }
 
     assert check_json == {
         'activities': [],

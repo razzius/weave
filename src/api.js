@@ -20,10 +20,10 @@ function buildURL(path, params = null) {
 
 async function http(token, url, options = {}) {
   const existingHeaders = options.headers || {}
-  const authHeaders = {
-    ...(token ? { Authorization: `Token ${token}` } : {}),
-    ...existingHeaders,
-  }
+  const authHeaders = token
+    ? { Authorization: `Token ${token}`, ...existingHeaders }
+    : existingHeaders
+
   const optionsWithAuth = {
     ...options,
     headers: authHeaders,
@@ -70,48 +70,37 @@ async function put(token, path, payload) {
   })
 }
 
-function reverseObject(obj) {
-  return Object.keys(obj).reduce(
-    (result, key) => ({ [obj[key]]: key, ...result }),
-    {}
-  )
-}
+export type Profile = Object
+type ProfilePayload = Object
 
-const profilePayloadMapping = {
-  id: 'id',
-  name: 'name',
-  contact_email: 'contactEmail',
-  profile_image_url: 'imageUrl',
+function payloadToProfile(payload: ProfilePayload): Profile {
+  return {
+    id: payload.id,
+    dateUpdated: payload.date_updated,
 
-  affiliations: 'affiliations',
-  clinical_specialties: 'clinicalSpecialties',
-  professional_interests: 'professionalInterests',
-  parts_of_me: 'partsOfMe',
-  activities: 'activities',
-  degrees: 'degrees',
+    name: payload.name,
+    contact_email: payload.contactEmail,
+    imageUrl: payload.profile_image_url,
 
-  additional_information: 'additionalInformation',
+    affiliations: payload.affiliations,
+    clinicalSpecialties: payload.clinical_specialties,
+    professionalInterests: payload.professional_interests,
+    partsOfMe: payload.parts_of_me,
+    activities: payload.activities,
+    degrees: payload.degrees,
 
-  willing_shadowing: 'willingShadowing',
-  willing_networking: 'willingNetworking',
-  willing_goal_setting: 'willingGoalSetting',
-  willing_discuss_personal: 'willingDiscussPersonal',
-  willing_career_guidance: 'willingCareerGuidance',
-  willing_student_group: 'willingStudentGroup',
+    additionalInformation: payload.additional_information,
 
-  cadence: 'cadence',
-  other_cadence: 'otherCadence',
-}
+    willingShadowing: payload.willing_shadowing,
+    willingNetworking: payload.willing_networking,
+    willingGoalSetting: payload.willing_goal_setting,
+    willingDiscussPersonal: payload.willing_discuss_personal,
+    willingCareerGuidance: payload.willing_career_guidance,
+    willingStudentGroup: payload.willing_student_group,
 
-function payloadToProfile(payload) {
-  const mapping = reverseObject(profilePayloadMapping)
-  return Object.keys(mapping).reduce(
-    (profile, key) => ({
-      ...profile,
-      [key]: payload[mapping[key]],
-    }),
-    {}
-  )
+    cadence: payload.cadence,
+    otherCadence: payload.other_cadence,
+  }
 }
 
 export async function getProfiles({
@@ -150,36 +139,36 @@ export async function getProfiles({
   }
 }
 
-export type Profile = Object
-
 export async function getProfile(token: string, id: string): Profile {
   const profile = await get(token, `profiles/${id}`)
   return payloadToProfile(profile)
 }
 
-type ProfilePayload = Object
-
 export function profileToPayload(profile: Profile): ProfilePayload {
-  const profilePayload = Object.keys(profilePayloadMapping)
-    .filter(key => key !== 'id')
-    .reduce(
-      (payload, key) => ({
-        ...payload,
-        [key]: profile[profilePayloadMapping[key]],
-      }),
-      {}
-    )
+  return {
+    name: profile.name,
+    contact_email: profile.contactEmail,
+    profile_image_url: profile.imageUrl,
 
-  // TODO why would this happen?
-  // Answer: somehow null got in to the database. Field is currently nullable
-  if (profilePayload.additional_information === null) {
-    return {
-      ...profilePayload,
-      additional_information: '',
-    }
+    affiliations: profile.affiliations,
+    clinical_specialties: profile.clinicalSpecialties,
+    professional_interests: profile.professionalInterests,
+    parts_of_me: profile.partsOfMe,
+    activities: profile.activities,
+    degrees: profile.degrees,
+
+    additional_information: profile.additionalInformation,
+
+    willing_shadowing: profile.willingShadowing,
+    willing_networking: profile.willingNetworking,
+    willing_goal_setting: profile.willingGoalSetting,
+    willing_discuss_personal: profile.willingDiscussPersonal,
+    willing_career_guidance: profile.willingCareerGuidance,
+    willing_student_group: profile.willingStudentGroup,
+
+    cadence: profile.cadence,
+    other_cadence: profile.otherCadence,
   }
-
-  return profilePayload
 }
 
 export async function createProfile(token: string, profile: Profile) {

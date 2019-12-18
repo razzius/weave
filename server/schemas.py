@@ -20,6 +20,7 @@ class ProfileSchema(Schema):
     name = fields.String()
     contact_email = fields.String()
     profile_image_url = fields.String(allow_none=True)
+    date_updated = fields.DateTime(dump_only=True)
 
     affiliations = nested_tag_list
     clinical_specialties = nested_tag_list

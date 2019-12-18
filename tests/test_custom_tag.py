@@ -1,3 +1,5 @@
+from freezegun import freeze_time
+import datetime
 import http
 
 from server.models import VerificationEmail, VerificationToken, ActivityOption, Profile
@@ -5,6 +7,10 @@ from server.models import VerificationEmail, VerificationToken, ActivityOption, 
 from .utils import save
 
 
+MOCK_DATE = datetime.datetime(2019, 12, 18)
+
+
+@freeze_time(MOCK_DATE)
 def test_create_profile_with_custom_tag(client):
     token = '1234'
 
@@ -45,6 +51,7 @@ def test_create_profile_with_custom_tag(client):
 
     assert response.json == {
         'id': profile_id,
+        'date_updated': '2019-12-18T00:00:00+00:00',
         'activities': activities,
         'additional_information': '',
         'professional_interests': professional_interests,

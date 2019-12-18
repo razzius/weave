@@ -127,6 +127,7 @@ def _filter_query(
     if degree_list:
         query = _filter_query_on_degrees(degree_list, query)
 
+    # TODO affiliation_list can be a single value
     if affiliation_list:
         query = _filter_query_on_affiliations(affiliation_list, query)
 

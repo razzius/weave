@@ -56,6 +56,7 @@ class App extends Component<Props, State> {
         const account = await verifyToken(token)
         this.setState({ account })
       } catch (e) {
+        console.error('App componentDidMount: error causing token to clear', e)
         clearToken()
         this.setState({ token: null })
       }
@@ -291,16 +292,9 @@ class App extends Component<Props, State> {
 
             <Route
               path="/profiles/:id"
-              render={({ match }) =>
-                account && (
-                  <Profile
-                    profileId={account.profileId}
-                    token={token}
-                    isAdmin={account.isAdmin}
-                    match={match}
-                  />
-                )
-              }
+              render={({ match }) => (
+                <Profile account={account} token={token} match={match} />
+              )}
             />
             <Route component={() => <p>404 Not found</p>} />
           </Switch>

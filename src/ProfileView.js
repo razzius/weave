@@ -78,11 +78,6 @@ export type BaseProfileData = {|
   otherCadence: ?string,
 |}
 
-export type ProfileData = {|
-  id: string,
-  ...BaseProfileData,
-|}
-
 const Expectations = ({
   willingShadowing,
   willingNetworking,
@@ -232,6 +227,7 @@ const ProfileView = ({
   isAdmin,
   location,
   profileId,
+  dateUpdated,
 }: {
   data: BaseProfileData,
   ownProfile?: boolean,
@@ -240,6 +236,7 @@ const ProfileView = ({
   isAdmin?: boolean,
   location: Object,
   profileId?: ?string,
+  dateUpdated?: Date,
 }) => {
   const adminButton =
     isAdmin && profileId ? (
@@ -257,13 +254,22 @@ const ProfileView = ({
       adminButton={adminButton}
     />
   )
+  const avatar = (
+    <ProfileAvatar imageUrl={data.imageUrl} name={data.name} size={200} />
+  )
+
+  const lastUpdated =
+    dateUpdated == null ? null : (
+      <small>Profile last updated {dateUpdated.toLocaleDateString()}</small>
+    )
+
   return (
     <Fragment>
       <MediaQuery query="(max-device-width: 750px)">
         <div className="profile-contact">
           {buttons}
 
-          <ProfileAvatar imageUrl={data.imageUrl} name={data.name} size={200} />
+          {avatar}
 
           <h1>{data.name}</h1>
 
@@ -288,6 +294,7 @@ const ProfileView = ({
             additionalInformation={data.additionalInformation}
             activities={data.activities}
           />
+          {lastUpdated}
         </div>
       </MediaQuery>
 
@@ -295,11 +302,7 @@ const ProfileView = ({
         <div className="profile-contact">
           <div className="columns">
             <div className="column contact">
-              <ProfileAvatar
-                imageUrl={data.imageUrl}
-                name={data.name}
-                size={200}
-              />
+              {avatar}
 
               <ContactInformation contactEmail={data.contactEmail} />
 
@@ -331,6 +334,7 @@ const ProfileView = ({
                 additionalInformation={data.additionalInformation}
                 activities={data.activities}
               />
+              {lastUpdated}
             </div>
           </div>
         </div>

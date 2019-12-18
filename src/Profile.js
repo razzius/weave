@@ -2,11 +2,17 @@
 import React, { Component } from 'react'
 
 import AppScreen from './AppScreen'
-import { getProfile } from './api'
-import ProfileView, { type ProfileData } from './ProfileView'
+import { getProfile, type Account } from './api'
+import ProfileView, { type BaseProfileData } from './ProfileView'
+
+type ProfileData = {|
+  id: string,
+  dateUpdated: Date,
+  ...BaseProfileData,
+|}
 
 type ClientError = {
-  profile_id: Array<string>
+  profile_id: Array<string>,
 }
 
 function errorView(error: string | ClientError) {
@@ -22,24 +28,23 @@ function errorView(error: string | ClientError) {
 }
 
 type State = {
-  data: ProfileData | null,
+  profile: ProfileData | null,
   error: string | ClientError | null,
 }
 
 type Props = {
-  profileId: string,
-  isAdmin: boolean,
+  account: Account | null,
   token: string | null,
   match: {
     params: {
-      [key: string]: ?string
+      [key: string]: ?string,
     },
   },
 }
 
 export default class Profile extends Component<Props, State> {
   state = {
-    data: null,
+    profile: null,
     error: null,
   }
 
@@ -52,45 +57,62 @@ export default class Profile extends Component<Props, State> {
     } = this.props
 
     if (token === null) {
-      this.setState({ error: 'You are not logged in. Please log in.'})
+      this.setState({ error: 'You are not logged in. Please log in.' })
       return
     }
 
     if (id == null) {
-      this.setState({ error: 'There is no profile id in the URL. Navigate to a profile.'})
+      this.setState({
+        error: 'There is no profile id in the URL. Navigate to a profile.',
+      })
       return
     }
 
     try {
       const data = await getProfile(token, id)
-      this.setState({ data })
+
+      const profile = {
+        ...data,
+        dateUpdated: new Date(data.dateUpdated),
+      }
+      this.setState({ profile })
     } catch (error) {
       this.setState({ error })
     }
   }
 
   render() {
-    const { data, error } = this.state
-    const { profileId, isAdmin } = this.props
+    const { profile, error } = this.state
 
-    if (data === null) {
+    if (error !== null) {
+      return errorView(error)
+    }
+
+    const { account } = this.props
+
+    if (account === null) {
+      return errorView('You are not logged in. Please log in.')
+    }
+
+    const { profileId, isAdmin } = account
+
+    if (profile === null) {
       return null
     }
 
-    const ownProfile = profileId === data.id
+    const ownProfile = profileId === profile.id
 
-    if (error !== null) {
-      return <h4>error: {errorView(error)}</h4>
-    }
-
-    const {
-      id,
-      ...baseProfileData
-    } = data
+    const { id, dateUpdated, ...baseProfileData } = profile
 
     return (
       <AppScreen>
-        <ProfileView isAdmin={isAdmin} ownProfile={ownProfile} data={baseProfileData} profileId={id} />
+        <ProfileView
+          isAdmin={isAdmin}
+          ownProfile={ownProfile}
+          data={baseProfileData}
+          profileId={id}
+          dateUpdated={dateUpdated}
+        />
       </AppScreen>
     )
   }

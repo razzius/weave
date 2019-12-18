@@ -20,6 +20,16 @@ def get_verification_email_by_email(email):
     ).one_or_none()
 
 
+def default_now():
+    """
+    Bind a reference to datetime.utcnow() so that freezegun can patch it.
+
+    If datetime.utcnow is passed to `default`, it will be bound at module
+    evaluation time and freezegun will have no effect.
+    """
+    return datetime.utcnow()
+
+
 def generate_uuid():
     return str(uuid.uuid4())
 
@@ -136,8 +146,8 @@ class Profile(db.Model):
     activities = relationship(ProfileActivity, cascade='all, delete')
     degrees = relationship(ProfileDegree, cascade='all, delete')
 
-    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
-    date_updated = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_created = db.Column(db.DateTime, nullable=False, default=default_now)
+    date_updated = db.Column(db.DateTime, nullable=False, default=default_now)
 
     # TODO make not nullable and remove additional_information === null workarounds
     additional_information = db.Column(db.String(500), default='')
@@ -162,7 +172,7 @@ class VerificationToken(db.Model):
     token = db.Column(db.String(36), primary_key=True)
     email_id = db.Column(db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False)
     email = relationship(VerificationEmail, backref='verification_tokens')
-    date_created = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     verified = db.Column(db.Boolean, default=False)
 
     expired = db.Column(db.Boolean, default=False)
