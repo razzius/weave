@@ -153,12 +153,11 @@ class Browse extends Component<Props, State> {
     )
   }
 
-  handleChangeAffiliations = tags => {
-    const affiliations = tags === null ? null : tags.map(tag => tag.value)
+  handleChangeAffiliations = tag => {
     this.setState(
       {
         queried: true,
-        affiliations,
+        affiliations: [tag.value],
         page: 1,
       },
       this.handleSearch

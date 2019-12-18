@@ -124,7 +124,6 @@ export default class SearchInput extends Component<Props> {
             }}
             onChange={onChangeAffiliations}
             value={labelValues(affiliations)}
-            isMulti
             noOptionsMessage={() => null}
             options={hospitalOptions}
             placeholder="Filter by institution"
