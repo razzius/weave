@@ -79,7 +79,7 @@ function payloadToProfile(payload: ProfilePayload): Profile {
     dateUpdated: payload.date_updated,
 
     name: payload.name,
-    contact_email: payload.contactEmail,
+    contactEmail: payload.contact_email,
     imageUrl: payload.profile_image_url,
 
     affiliations: payload.affiliations,
