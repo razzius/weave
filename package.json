@@ -3,7 +3,7 @@
   "version": "0.4.0",
   "private": true,
   "dependencies": {
-    "@sentry/browser": "^4.5.3",
+    "@sentry/browser": "5.10.2",
     "blueimp-canvas-to-blob": "^3.16.0",
     "core-js": "^3.1.4",
     "date-fns": "^1.29.0",
