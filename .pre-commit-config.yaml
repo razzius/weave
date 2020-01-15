@@ -9,7 +9,7 @@ repos:
     types: [python]
   - id: pytest
     name: pytest
-    stages: [commit]
+    stages: [manual]
     language: system
     entry: pipenv run test
     types: [python]
