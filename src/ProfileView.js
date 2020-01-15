@@ -239,7 +239,7 @@ const ProfileView = ({
   dateUpdated?: Date,
 }) => {
   const adminButton =
-    isAdmin && profileId ? (
+    isAdmin && !ownProfile && profileId ? (
       <Button to={`/admin-edit-profile/${profileId}`}>
         Edit profile as admin
       </Button>
