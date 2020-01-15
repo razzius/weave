@@ -343,7 +343,10 @@ def update_profile(profile_id=None):
         else:
             setattr(profile, key, value)
 
-    profile.date_updated = datetime.datetime.utcnow()
+    editing_as_adming = is_admin and profile.verification_email_id != verification_token.email_id
+
+    if not editing_as_adming:
+        profile.date_updated = datetime.datetime.utcnow()
 
     try:
         save(profile)

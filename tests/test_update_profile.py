@@ -11,11 +11,8 @@ from .utils import save
 MOCK_DATE = datetime.datetime(2019, 10, 21)
 
 
-@freeze_time(MOCK_DATE)
-def test_update_profile(client):
-    token = '1234'
-
-    verification_email = save(VerificationEmail(email='test@test.com'))
+def create_test_profile(token, email='test@test.com', is_admin=False):
+    verification_email = save(VerificationEmail(email=email, is_admin=is_admin))
 
     save(VerificationToken(token=token, email_id=verification_email.id))
 
@@ -23,10 +20,19 @@ def test_update_profile(client):
         Profile(
             name='Test User',
             verification_email_id=verification_email.id,
-            contact_email='test@test.com',
+            contact_email=email,
             cadence='monthly',
         )
     )
+
+    return profile
+
+
+@freeze_time(MOCK_DATE)
+def test_update_profile(client):
+    token = '1234'
+
+    profile = create_test_profile(token)
 
     new_profile = {
         'name': 'New User',
@@ -77,3 +83,33 @@ def test_update_profile(client):
     profile = Profile.query.first()
 
     assert profile.date_updated == MOCK_DATE
+
+
+def test_admin_update_does_not_update_date(client):
+    admin_token = 'admin'
+    create_test_profile(admin_token, email='admin@test.com', is_admin=True)
+
+    profile = create_test_profile('abcd')
+
+    original_profile_date_updated = profile.date_updated
+
+    new_profile = {
+        'name': 'New User',
+        'contact_email': 'new@test.com',
+        'affiliations': [],
+        'clinical_specialties': [],
+        'professional_interests': [],
+        'parts_of_me': [],
+        'activities': [],
+        'degrees': [],
+    }
+
+    response = client.put(
+        f'/api/profiles/{profile.id}',
+        json=new_profile,
+        headers={'Authorization': f'Token {admin_token}'},
+    )
+
+    assert response.status_code == http.HTTPStatus.OK.value
+
+    assert profile.date_updated == original_profile_date_updated
