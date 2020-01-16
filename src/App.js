@@ -97,30 +97,13 @@ class App extends Component<Props, State> {
     const loggedOut = token === null
 
     const loginButton = (
-      <Link
-        to="/login"
-        className="App-title"
-        style={{
-          paddingTop: '1.4em',
-          float: 'right',
-          paddingRight: '2em',
-        }}
-      >
+      <Link to="/login" className="App-title auth-button">
         Login
       </Link>
     )
 
     const logoutButton = (
-      <Link
-        to="/logout"
-        className="App-title"
-        style={{
-          paddingTop: '1.4em',
-          float: 'right',
-          paddingRight: '2em',
-          cursor: 'pointer',
-        }}
-      >
+      <Link to="/logout" className="App-title auth-button">
         Logout
       </Link>
     )

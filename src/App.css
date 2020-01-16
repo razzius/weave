@@ -87,18 +87,23 @@ section {
 }
 
 .App-title img {
+  min-width: 60px;
   height: 60px;
   vertical-align: middle;
-  padding: 5px;
 }
 
 .App-title {
   color: white;
   text-decoration: none;
-  margin: 10px;
+  padding: 10px;
 }
 .App-title:hover {
-  color: white;
+  color: lightgray;
+}
+
+.App-title.auth-button {
+  float: right;
+  padding-right: 2em;
 }
 
 .App-title h1 {
@@ -363,10 +368,15 @@ input::-webkit-contacts-auto-fill-button {
     flex-grow: 0;
     width: 850px;
   }
+
+  .App-title {
+    padding-top: 30px;
+    padding-bottom: 30px;
+  }
 }
 
 nav {
-  line-height: 2em;
+  line-height: 3em;
 }
 @media screen and (min-width: 920px) {
   nav {
