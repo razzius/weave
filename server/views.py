@@ -126,7 +126,9 @@ def get_profiles():
         VerificationToken.token == verification_token.token
     ).value(VerificationToken.email_id)
 
-    profiles_queryset = matching_profiles(query, tags, degrees, affiliations).group_by(Profile.id)
+    profiles_queryset = matching_profiles(query, tags, degrees, affiliations).group_by(
+        Profile.id
+    )
 
     def get_ordering(sort_ascending):
         if sort_ascending:
@@ -139,10 +141,7 @@ def get_profiles():
                 Profile.name,
                 ' ',
                 func.array_length(
-                    func.string_to_array(
-                        Profile.name,
-                        ' ',
-                    ),
+                    func.string_to_array(Profile.name, ' '),
                     1,  # Length in the 1st dimension
                 ),
             )
@@ -156,8 +155,7 @@ def get_profiles():
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
         Profile.verification_email_id != verification_email_id,
-
-        asc_or_desc(get_sorting(sorting))
+        asc_or_desc(get_sorting(sorting)),
     ]
 
     sorted_queryset = profiles_queryset.order_by(*ordering)
@@ -203,13 +201,15 @@ def flat_values(values):
 
 
 def save_tags(profile, tag_values, option_class, profile_relation_class):
-    activity_values = [value['tag']['value'] for value in tag_values]
+    activity_values = [value['tag']['value'].strip() for value in tag_values]
 
     existing_activity_options = option_class.query.filter(
         option_class.value.in_(activity_values)
     )
 
-    existing_activity_values = flat_values(existing_activity_options.values(option_class.value))
+    existing_activity_values = flat_values(
+        existing_activity_options.values(option_class.value)
+    )
 
     new_activity_values = [
         value for value in activity_values if value not in existing_activity_values
@@ -343,7 +343,9 @@ def update_profile(profile_id=None):
         else:
             setattr(profile, key, value)
 
-    editing_as_adming = is_admin and profile.verification_email_id != verification_token.email_id
+    editing_as_adming = (
+        is_admin and profile.verification_email_id != verification_token.email_id
+    )
 
     if not editing_as_adming:
         profile.date_updated = datetime.datetime.utcnow()

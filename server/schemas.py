@@ -12,13 +12,13 @@ class CustomTagList(Schema):
     tag = fields.Nested(CustomTagSchema, only='value')
 
 
-nested_tag_list = fields.Nested(CustomTagList, only='tag', many=True)
+nested_tag_list = fields.Nested(CustomTagList, only='tag', many=True, required=True)
 
 
 class ProfileSchema(Schema):
     id = fields.String(dump_only=True)
-    name = fields.String()
-    contact_email = fields.String()
+    name = fields.String(required=True)
+    contact_email = fields.String(required=True)
     profile_image_url = fields.String(allow_none=True)
     date_updated = fields.DateTime(dump_only=True)
 

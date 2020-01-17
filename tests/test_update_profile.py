@@ -10,6 +10,17 @@ from .utils import save
 
 MOCK_DATE = datetime.datetime(2019, 10, 21)
 
+PROFILE_UPDATE = {
+    'name': 'New User',
+    'contact_email': 'new@test.com',
+    'affiliations': [],
+    'clinical_specialties': [],
+    'professional_interests': [],
+    'parts_of_me': [],
+    'activities': [],
+    'degrees': [],
+}
+
 
 def create_test_profile(token, email='test@test.com', is_admin=False):
     verification_email = save(VerificationEmail(email=email, is_admin=is_admin))
@@ -34,20 +45,9 @@ def test_update_profile(client):
 
     profile = create_test_profile(token)
 
-    new_profile = {
-        'name': 'New User',
-        'contact_email': 'new@test.com',
-        'affiliations': [],
-        'clinical_specialties': [],
-        'professional_interests': [],
-        'parts_of_me': [],
-        'activities': [],
-        'degrees': [],
-    }
-
     response = client.put(
         f'/api/profiles/{profile.id}',
-        json=new_profile,
+        json=PROFILE_UPDATE,
         headers={'Authorization': f'Token {token}'},
     )
 
@@ -93,23 +93,33 @@ def test_admin_update_does_not_update_date(client):
 
     original_profile_date_updated = profile.date_updated
 
-    new_profile = {
-        'name': 'New User',
-        'contact_email': 'new@test.com',
-        'affiliations': [],
-        'clinical_specialties': [],
-        'professional_interests': [],
-        'parts_of_me': [],
-        'activities': [],
-        'degrees': [],
-    }
-
     response = client.put(
         f'/api/profiles/{profile.id}',
-        json=new_profile,
+        json=PROFILE_UPDATE,
         headers={'Authorization': f'Token {admin_token}'},
     )
 
     assert response.status_code == http.HTTPStatus.OK.value
 
     assert profile.date_updated == original_profile_date_updated
+
+
+def test_tags_cannot_have_trailing_spaces(client):
+    token = 'abcd'
+
+    update = {
+        **PROFILE_UPDATE,
+        'clinical_specialties': ['Test '],
+    }
+
+    profile = create_test_profile(token)
+
+    response = client.put(
+        f'/api/profiles/{profile.id}',
+        json=update,
+        headers={'Authorization': f'Token {token}'},
+    )
+
+    assert response.status_code == http.HTTPStatus.OK.value
+
+    assert profile.clinical_specialties[0].tag.value == 'Test'
