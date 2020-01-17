@@ -70,3 +70,10 @@ export function partition<T>(
 
   return [satisfies, fails]
 }
+
+export function arrayCaseInsensitiveContains(
+  array: Array<string>,
+  value: string
+) {
+  return array.map(item => item.toLowerCase()).includes(value.toLowerCase())
+}

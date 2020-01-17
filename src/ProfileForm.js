@@ -20,7 +20,7 @@ import {
   hospitalOptions,
   degreeOptions,
 } from './options'
-import { when, capitalize, last } from './utils'
+import { arrayCaseInsensitiveContains, capitalize, last, when } from './utils'
 
 function scaleCanvas(canvas) {
   const scaled = document.createElement('canvas')
@@ -147,9 +147,7 @@ export default class ProfileForm extends Component<Props, State> {
 
     const trimmed = selected.trim()
 
-    if (
-      current.map(value => value.toLowerCase()).includes(trimmed.toLowerCase())
-    ) {
+    if (arrayCaseInsensitiveContains(current, trimmed)) {
       return
     }
 
@@ -170,11 +168,7 @@ export default class ProfileForm extends Component<Props, State> {
       const newValue = ((last(values): any): string).trim()
       const otherValues = values.slice(0, -1)
 
-      if (
-        otherValues
-          .map(value => value.toLowerCase())
-          .includes(newValue.toLowerCase())
-      ) {
+      if (arrayCaseInsensitiveContains(otherValues, newValue)) {
         return
       }
 
