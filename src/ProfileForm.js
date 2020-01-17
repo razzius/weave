@@ -145,14 +145,16 @@ export default class ProfileForm extends Component<Props, State> {
   handleCreate = (key: string) => (selected: string) => {
     const { [key]: current } = this.state
 
+    const trimmed = selected.trim()
+
     if (
-      current.map(value => value.toLowerCase()).includes(selected.toLowerCase())
+      current.map(value => value.toLowerCase()).includes(trimmed.toLowerCase())
     ) {
       return
     }
 
     this.setState({
-      [key]: [...current, capitalize(selected)],
+      [key]: [...current, capitalize(trimmed)],
     })
   }
 
@@ -165,8 +167,16 @@ export default class ProfileForm extends Component<Props, State> {
     const values = selected.map(({ value }) => value)
 
     if (meta.action === 'create-option') {
-      const newValue = ((last(values): any): string)
+      const newValue = ((last(values): any): string).trim()
       const otherValues = values.slice(0, -1)
+
+      if (
+        otherValues
+          .map(value => value.toLowerCase())
+          .includes(newValue.toLowerCase())
+      ) {
+        return
+      }
 
       const capitalized = capitalize(newValue)
 
