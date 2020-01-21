@@ -52,8 +52,9 @@ class BasicAuthModelView(ModelView):
         return super().delete_view()
 
 
-class ModelViewSortedById(BasicAuthModelView):
+class VerificationEmailModelView(BasicAuthModelView):
     column_default_sort = ('id', False)
+    column_searchable_list = ['email']
 
 
 class ModelViewSortedByValue(BasicAuthModelView):
@@ -66,7 +67,7 @@ class ModelViewSortedByDateCreated(BasicAuthModelView):
 
 admin = Admin(index_view=BasicAuthAdminView())
 admin.add_view(ModelViewSortedByDateCreated(VerificationToken, db.session))
-admin.add_view(ModelViewSortedById(VerificationEmail, db.session))
+admin.add_view(VerificationEmailModelView(VerificationEmail, db.session))
 admin.add_view(ModelViewSortedByDateCreated(Profile, db.session))
 admin.add_view(ModelViewSortedByValue(ClinicalSpecialtyOption, db.session))
 admin.add_view(ModelViewSortedByValue(ProfessionalInterestOption, db.session))
