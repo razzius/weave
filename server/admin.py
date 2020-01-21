@@ -52,23 +52,32 @@ class BasicAuthModelView(ModelView):
         return super().delete_view()
 
 
-class VerificationEmailModelView(BasicAuthModelView):
+class BasicAuthExportableModelView(BasicAuthModelView):
+    can_export = True
+
+
+class VerificationEmailModelView(BasicAuthExportableModelView):
     column_default_sort = ('id', False)
     column_searchable_list = ['email']
 
 
-class ModelViewSortedByValue(BasicAuthModelView):
+class ModelViewSortedByValue(BasicAuthExportableModelView):
     column_default_sort = ('value', False)
 
 
-class ModelViewSortedByDateCreated(BasicAuthModelView):
+class ModelViewSortedByDateCreated(BasicAuthExportableModelView):
     column_default_sort = ('date_created', False)
+
+
+class ProfileModelView(BasicAuthExportableModelView):
+    column_default_sort = ('date_created', False)
+    column_display_all_relations = True
 
 
 admin = Admin(index_view=BasicAuthAdminView())
 admin.add_view(ModelViewSortedByDateCreated(VerificationToken, db.session))
 admin.add_view(VerificationEmailModelView(VerificationEmail, db.session))
-admin.add_view(ModelViewSortedByDateCreated(Profile, db.session))
+admin.add_view(ProfileModelView(Profile, db.session))
 admin.add_view(ModelViewSortedByValue(ClinicalSpecialtyOption, db.session))
 admin.add_view(ModelViewSortedByValue(ProfessionalInterestOption, db.session))
 admin.add_view(ModelViewSortedByValue(PartsOfMeOption, db.session))

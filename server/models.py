@@ -80,7 +80,15 @@ class DegreeOption(UserEditableTagMixin, db.Model):
     pass
 
 
-class HospitalAffiliation(IDMixin, db.Model):
+class ProfileTagMixin(IDMixin):
+    def __str__(self):
+        return self.tag.value
+
+    def __repr__(self):
+        return '<{}: {}>'.format(self.__class__.__name__, self.tag.value)
+
+
+class HospitalAffiliation(ProfileTagMixin, db.Model):
     tag_id = db.Column(
         db.Integer, db.ForeignKey(HospitalAffiliationOption.id), nullable=False
     )
@@ -89,7 +97,7 @@ class HospitalAffiliation(IDMixin, db.Model):
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
-class ClinicalSpecialty(IDMixin, db.Model):
+class ClinicalSpecialty(ProfileTagMixin, db.Model):
     tag_id = db.Column(
         db.Integer, db.ForeignKey(ClinicalSpecialtyOption.id), nullable=False
     )
@@ -98,14 +106,14 @@ class ClinicalSpecialty(IDMixin, db.Model):
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
-class PartsOfMe(IDMixin, db.Model):
+class PartsOfMe(ProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(PartsOfMeOption.id), nullable=False)
     tag = relationship(PartsOfMeOption)
 
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
-class ProfessionalInterest(IDMixin, db.Model):
+class ProfessionalInterest(ProfileTagMixin, db.Model):
     tag_id = db.Column(
         db.Integer, db.ForeignKey(ProfessionalInterestOption.id), nullable=False
     )
@@ -114,14 +122,14 @@ class ProfessionalInterest(IDMixin, db.Model):
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
-class ProfileActivity(IDMixin, db.Model):
+class ProfileActivity(ProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(ActivityOption.id), nullable=False)
     tag = relationship(ActivityOption)
 
     profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
-class ProfileDegree(IDMixin, db.Model):
+class ProfileDegree(ProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(DegreeOption.id), nullable=False)
     tag = relationship(DegreeOption)
 
