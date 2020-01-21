@@ -61,11 +61,12 @@ def send_faculty_registration_email(email, token):
 
     <p>
         Welcome to Weave, a mentorship platform to connect students and faculty
-        at Harvard Medical School. You have successfully registered for a
-        faculty mentor profile. The following link will direct you to create
-        your profile page: {verify_link}. You may return to edit your profile
-        or change your availability settings anytime by returning to
-        {CLIENT_URL} and clicking “Login” in the top right-hand corner.
+        at Harvard Medical School and Harvard School of Dental Medicine. You
+        have successfully registered for a faculty mentor profile. The
+        following link will direct you to create your profile page:
+        {verify_link}. You may return to edit your profile or change your
+        availability settings anytime by returning to {CLIENT_URL} and clicking
+        “Login” in the top right-hand corner.
     </p>
 
     <p>
@@ -88,11 +89,12 @@ def send_student_registration_email(email, token):
 
     <p>
         Welcome to Weave, a mentorship platform to connect students and faculty
-        at Harvard Medical School. You have successfully registered for a
-        student mentee profile. The following link will direct you to view the
-        database of faculty mentors: {verify_link}. You may access this
-        database of mentors anytime by returning to {CLIENT_URL} and clicking
-        “Login” in the top right-hand corner.
+        at Harvard Medical School and Harvard School of Dental Medicine. You
+        have successfully registered for a student mentee profile. The
+        following link will direct you to view the database of faculty mentors:
+        {verify_link}. You may access this database of mentors anytime by
+        returning to {CLIENT_URL} and clicking “Login” in the top right-hand
+        corner.
     </p>
 
     <p>
@@ -116,9 +118,9 @@ def send_faculty_login_email(email, token):
 
     <p>
         Welcome back to Weave, a mentorship platform to connect students and
-        faculty at Harvard Medical School. You have previously created a
-        profile; you may return to your profile for editing or viewing through
-        this link: {verify_link}.
+        faculty at Harvard Medical School and Harvard School of Dental
+        Medicine. You have previously created a profile; you may return to your
+        profile for editing or viewing through this link: {verify_link}.
     </p>
 
     {EMAIL_CLOSING}
@@ -137,8 +139,9 @@ def send_student_login_email(email, token):
 
     <p>
         Welcome back to Weave, a mentorship platform to connect students and
-        faculty at Harvard Medical School. You may access the faculty
-        mentorship database though this link: {verify_link}.
+        faculty at Harvard Medical School and Harvard School of Dental
+        Medicine. You may access the faculty mentorship database though this
+        link: {verify_link}.
     </p>
 
     {EMAIL_CLOSING}
