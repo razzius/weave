@@ -23,7 +23,7 @@ import Logout from './Logout'
 import MenteeExpectations from './MenteeExpectations'
 import MentorExpectations from './MentorExpectations'
 import NotLoggedIn from './NotLoggedIn'
-import OurTeam from './OurTeam'
+import About from './About'
 import Profile from './Profile'
 import Resources from './Resources'
 import StudentExpectations from './StudentExpectations'
@@ -151,7 +151,7 @@ class App extends Component<Props, State> {
               )}
 
               <nav>
-                <a href="/#about-weave" className="App-title">
+                <a href="/about" className="App-title">
                   About
                 </a>
 
@@ -165,10 +165,6 @@ class App extends Component<Props, State> {
 
                 <Link to="/help" className="App-title">
                   Help
-                </Link>
-
-                <Link to="/our-team" className="App-title">
-                  Our&nbsp;Team
                 </Link>
               </nav>
             </div>
@@ -271,7 +267,7 @@ class App extends Component<Props, State> {
             <Route path="/mentee-expectations" component={MenteeExpectations} />
             <Route path="/resources" component={Resources} />
             <Route path="/help" component={Help} />
-            <Route path="/our-team" component={OurTeam} />
+            <Route path="/about" component={About} />
 
             <Route
               path="/profiles/:id"
