@@ -54,8 +54,8 @@ const About = () => (
     <p>
       If you are passionate about improving mentoring at Harvard Medical School
       and Harvard School of Dental Medical or at similar institutions, we would
-      love to hear from you! Please reach out to us at:{' '}
-      <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>
+      love to hear from you! Please reach out to us at:
+      <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>.
     </p>
 
     <h2>About Our Team</h2>
