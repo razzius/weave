@@ -2,35 +2,30 @@ import React from 'react'
 import AppScreen from './AppScreen'
 import { LiteralLink } from './utils'
 
-const emailLink = (
-  <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>
-)
-
 const About = () => (
   <AppScreen className="resources">
     <h2>About Weave</h2>
     <p>
-      Soon after entering medical school and dental school, students are faced
-      with a new learning and social environment and pressure to quickly
-      determine academic or clinical interests. Although resources for faculty
-      contact information exist, both students and faculty have found there to
-      be unclear expectations about what a mentorship relationship or experience
+      Soon after entering medical school and dental school, students encounter
+      new learning and social environments and pressure to quickly determine
+      academic or clinical interests. While resources for faculty contact
+      information exist, both students and faculty have found there to be
+      unclear expectations about what a mentorship relationship or experience
       will constitute. Furthermore, for students with myriad interests who are
-      still in the process of discovering their desired field of medicine, it is
-      often challenging to know who to reach out to when lists of faculty
-      members are provided solely based on clinical specialty.
+      still in the process of discovering their desired field of medicine or
+      dentistry, it is often challenging to know who to reach out to when lists
+      of faculty members are provided solely based on clinical specialty.
     </p>
 
     <p>
       We developed a mentorship platform that provides an interest-driven way
       for students to find invested mentors for professional or personal
-      guidance. In recognizing that students can only set expectations for their
-      side of the mentoring relationship, our platform will allow faculty to
-      more clearly communicate their own level of comfort in engaging in a
+      guidance. In recognizing that students may only set expectations for their
+      side of the mentoring relationship, our platform allows faculty to
+      communicate more clearly their own level of comfort in engaging in a
       mentoring relationship. In recognizing that many clinical, academic, and
       personal demands exist for faculty, we hope to empower faculty to
-      articulate for themselves what their level of mentorship involvement will
-      be.
+      articulate what their desired level of mentorship involvement will be.
     </p>
 
     <p>
@@ -49,13 +44,6 @@ const About = () => (
       mentoring structure with clear, adjustable expectations for both mentors
       and mentees that may encourage more longitudinal and meaningful mentoring
       experiences.
-    </p>
-
-    <p>
-      If you are passionate about improving mentoring at Harvard Medical School
-      and Harvard School of Dental Medical or at similar institutions, we would
-      love to hear from you! Please reach out to us at:
-      <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>.
     </p>
 
     <h2>About Our Team</h2>
@@ -118,7 +106,12 @@ const About = () => (
     </p>
 
     <h2>How Do I Contact The Weave Team?</h2>
-    <p>Please contact us at {emailLink}.</p>
+    <p>
+      If you are passionate about improving mentoring at Harvard Medical School,
+      Harvard School of Dental Medical, or at similar institutions, we would
+      love to hear from you! Please reach out to us at:{' '}
+      <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>.
+    </p>
   </AppScreen>
 )
 
