@@ -343,11 +343,11 @@ def update_profile(profile_id=None):
         else:
             setattr(profile, key, value)
 
-    editing_as_adming = (
+    editing_as_admin = (
         is_admin and profile.verification_email_id != verification_token.email_id
     )
 
-    if not editing_as_adming:
+    if not editing_as_admin:
         profile.date_updated = datetime.datetime.utcnow()
 
     try:
