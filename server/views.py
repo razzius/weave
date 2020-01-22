@@ -225,13 +225,13 @@ def save_tags(profile, tag_values, option_class, profile_relation_class):
         ).values(profile_relation_class.tag_id)
     )
 
-    profile_relations = [
+    new_profile_relations = [
         profile_relation_class(tag_id=activity.id, profile_id=profile.id)
         for activity in existing_activity_options  # All activities exist by this point
         if activity.id not in existing_profile_relation_tag_ids
     ]
 
-    db.session.add_all(profile_relations)
+    db.session.add_all(new_profile_relations)
     db.session.commit()
 
 
@@ -303,7 +303,7 @@ def create_profile():
 
     save_all_tags(profile, schema)
 
-    return jsonify(profile_schema.dump(profile)), 201
+    return jsonify(profile_schema.dump(profile)), HTTPStatus.CREATED.value
 
 
 @api.route('/api/profiles/<profile_id>', methods=['PUT'])
