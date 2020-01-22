@@ -2,7 +2,6 @@ import datetime
 import os
 import uuid
 from http import HTTPStatus
-from typing import Tuple
 
 from cloudinary import uploader
 from dateutil.relativedelta import relativedelta
@@ -97,7 +96,9 @@ def get_token(headers):
         raise UnauthorizedError({'token': ['unknown token']})
 
     if _token_expired(verification_token):
-        raise UnauthorizedError({'token': ['expired']}, status_code=LOGIN_TIMEOUT_STATUS)
+        raise UnauthorizedError(
+            {'token': ['expired']}, status_code=LOGIN_TIMEOUT_STATUS
+        )
 
     return verification_token
 
@@ -384,19 +385,17 @@ def upload_image():
     return jsonify({'image_url': response['eager'][0]['secure_url']})
 
 
-def get_verification_email(
-    email: str, is_mentor: bool
-) -> Tuple[VerificationEmail, bool]:
+def get_or_create_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:
-        return existing_email, False
+        return existing_email
 
     verification_email = VerificationEmail(email=email, is_mentor=is_mentor)
 
     save(verification_email)
 
-    return verification_email, True
+    return verification_email
 
 
 def save_verification_token(email_id, token, is_personal_device):
@@ -453,7 +452,7 @@ def process_send_verification_email(is_mentor):
     if existing_email:
         raise UserError({'email': ['claimed']})
 
-    verification_email, _ = get_verification_email(email, is_mentor=is_mentor)
+    verification_email = get_or_create_verification_email(email, is_mentor=is_mentor)
 
     send_token(
         verification_email,
@@ -550,7 +549,9 @@ def verify_token():
         raise UnauthorizedError({'token': ['not recognized']})
 
     if _token_expired(match):
-        raise UnauthorizedError({'token': ['expired']}, status_code=LOGIN_TIMEOUT_STATUS)
+        raise UnauthorizedError(
+            {'token': ['expired']}, status_code=LOGIN_TIMEOUT_STATUS
+        )
 
     match.verified = True
 
