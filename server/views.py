@@ -46,6 +46,35 @@ from .schemas import profile_schema, profiles_schema, valid_email_schema
 
 api = Blueprint('api', __name__)
 
+# This is a non-standard http status, used by Microsoft's IIS, but it's useful
+# to disambiguate between unrecognized and expired tokens.
+LOGIN_TIMEOUT_STATUS = 440
+
+
+class UserError(Exception):
+    status_code = HTTPStatus.BAD_REQUEST.value
+
+    def __init__(self, invalid_data, status_code=None):
+        self.invalid_data = invalid_data
+
+        if status_code is not None:
+            self.status_code = status_code
+
+
+class UnauthorizedError(UserError):
+    status_code = HTTPStatus.UNAUTHORIZED.value
+
+
+class InvalidPayloadError(UserError):
+    status_code = HTTPStatus.UNPROCESSABLE_ENTITY.value
+
+
+@api.errorhandler(UserError)
+def handle_user_error(e):
+    invalid_data = e.invalid_data
+    status_code = e.status_code
+    return jsonify(invalid_data), status_code
+
 
 def get_token(headers):
     token = headers.get('Authorization')
@@ -53,44 +82,24 @@ def get_token(headers):
     current_app.logger.info('Getting token from header %s', token)
 
     if token is None:
-        return (
-            error_response(
-                {'token': ['unauthorized']}, status_code=HTTPStatus.UNAUTHORIZED.value
-            ),
-            None,
-        )
+        raise UnauthorizedError({'token': ['missing']})
 
     token_parts = token.split()
 
     if token_parts[0].lower() != 'token' or len(token_parts) != 2:
-        return (
-            error_response(
-                {'token': ['bad format']}, status_code=HTTPStatus.UNAUTHORIZED.value
-            ),
-            None,
-        )
+        raise UnauthorizedError({'token': ['bad format']})
 
     token_value = token_parts[1]
 
     verification_token = VerificationToken.query.get(token_value)
 
     if verification_token is None:
-        return (
-            error_response(
-                {'token': ['unknown token']}, status_code=HTTPStatus.UNAUTHORIZED.value
-            ),
-            None,
-        )
+        raise UnauthorizedError({'token': ['unknown token']})
 
     if _token_expired(verification_token):
-        login_timeout_status = 440
+        raise UnauthorizedError({'token': ['expired']}, status_code=LOGIN_TIMEOUT_STATUS)
 
-        return (
-            error_response({'token': ['expired']}, status_code=login_timeout_status),
-            None,
-        )
-
-    return None, verification_token
+    return verification_token
 
 
 def pagination(page):
@@ -105,10 +114,7 @@ def pagination(page):
 
 @api.route('/api/profiles')
 def get_profiles():
-    error, verification_token = get_token(request.headers)
-
-    if error:
-        return error
+    verification_token = get_token(request.headers)
 
     query = request.args.get('query')
     tags = request.args.get('tags', '')
@@ -173,7 +179,7 @@ def get_profile(profile_id=None):
     profile = Profile.query.filter(Profile.id == profile_id).one_or_none()
 
     if profile is None:
-        return error_response({'profile_id': ['Not found']}, HTTPStatus.NOT_FOUND.value)
+        raise UserError({'profile_id': ['Not found']}, HTTPStatus.NOT_FOUND.value)
 
     response = make_response(jsonify(profile_schema.dump(profile)))
 
@@ -182,10 +188,6 @@ def get_profile(profile_id=None):
     response.headers['Expires'] = '0'
 
     return response
-
-
-def error_response(reason, status_code=HTTPStatus.BAD_REQUEST.value):
-    return jsonify(reason), status_code
 
 
 def api_post(route):
@@ -275,10 +277,7 @@ def basic_profile_data(verification_token, schema):
 
 @api_post('profile')
 def create_profile():
-    error, verification_token = get_token(request.headers)
-
-    if error:
-        return error
+    verification_token = get_token(request.headers)
 
     try:
         schema = profile_schema.load(request.json)
@@ -289,7 +288,7 @@ def create_profile():
     if db.session.query(
         exists().where(Profile.contact_email == schema['contact_email'])
     ).scalar():
-        return error_response({'email': ['This email already exists in the database']})
+        raise UserError({'email': ['This email already exists in the database']})
 
     profile_data = {
         'verification_email_id': verification_token.email_id,
@@ -316,11 +315,7 @@ def update_profile(profile_id=None):
 
     profile = Profile.query.get(profile_id)
 
-    # TODO could implement get_token using exceptions
-    error, verification_token = get_token(request.headers)
-
-    if error:
-        return error
+    verification_token = get_token(request.headers)
 
     is_admin = VerificationEmail.query.filter(
         VerificationEmail.id == verification_token.email_id
@@ -380,7 +375,7 @@ def upload_image():
     data = request.data
 
     if not data:
-        return error_response({'file': ['No image sent']})
+        raise UserError({'file': ['No image sent']})
 
     response = uploader.upload(
         data, eager=[{'width': 200, 'height': 200, 'crop': 'crop'}]
@@ -447,7 +442,7 @@ def process_send_verification_email(is_mentor):
         schema = valid_email_schema.load(request.json)
     except ValidationError as err:
         capture_exception(err)
-        return error_response(err.messages)
+        raise InvalidPayloadError(err.messages)
 
     email = schema['email'].lower()
 
@@ -456,7 +451,7 @@ def process_send_verification_email(is_mentor):
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:
-        return error_response({'email': ['claimed']})
+        raise UserError({'email': ['claimed']})
 
     verification_email, _ = get_verification_email(email, is_mentor=is_mentor)
 
@@ -484,7 +479,7 @@ def login():
     schema = valid_email_schema.load(request.json)
 
     if 'errors' in schema:
-        return error_response(schema.errors)
+        raise InvalidPayloadError(schema.errors)
 
     email = schema['email'].lower()
 
@@ -495,7 +490,7 @@ def login():
     ).one_or_none()
 
     if verification_email is None:
-        return error_response({'email': ['unregistered']})
+        raise UserError({'email': ['unregistered']})
 
     email_function = (
         send_faculty_login_email
@@ -552,14 +547,10 @@ def verify_token():
     match = query.one_or_none()
 
     if match is None:
-        return error_response(
-            {'token': ['not recognized']}, status_code=HTTPStatus.UNAUTHORIZED.value
-        )
+        raise UnauthorizedError({'token': ['not recognized']})
 
     if _token_expired(match):
-        return error_response(
-            {'token': ['expired']}, status_code=HTTPStatus.UNAUTHORIZED.value
-        )
+        raise UnauthorizedError({'token': ['expired']}, status_code=LOGIN_TIMEOUT_STATUS)
 
     match.verified = True
 
@@ -601,10 +592,7 @@ def get_profile_by_token(token):
 
 @api_post('availability')
 def availability():
-    error, verification_token = get_token(request.headers)
-
-    if error is not None:
-        return error
+    verification_token = get_token(request.headers)
 
     available = request.json['available']
 

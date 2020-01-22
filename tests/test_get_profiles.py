@@ -3,12 +3,12 @@ import http
 from server.models import VerificationEmail, VerificationToken, save
 
 
-def test_get_profiles_unauthorized(client):
+def test_get_profiles_missing_token(client):
     response = client.get('/api/profiles')
 
     assert response.status_code == http.HTTPStatus.UNAUTHORIZED.value
 
-    assert response.json == {'token': ['unauthorized']}
+    assert response.json == {'token': ['missing']}
 
 
 def test_get_profiles_bogus_token(client):

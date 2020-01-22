@@ -6,7 +6,7 @@ from server.models import db, VerificationEmail, VerificationToken
 
 def test_verify_invalid_token(client):
     response = client.post('/api/verify-token', json={'token': '123'})
-    assert response.status_code == HTTPStatus.BAD_REQUEST.value
+    assert response.status_code == HTTPStatus.UNAUTHORIZED.value
     assert response.json == {'token': ['not recognized']}
 
 

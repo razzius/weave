@@ -30,4 +30,4 @@ def test_faculty_registration_invalid_email(client, requests_mock):
         '/api/send-faculty-verification-email', json={'email': 'test@test.com'}
     )
 
-    assert response.status_code == HTTPStatus.BAD_REQUEST.value
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY.value
