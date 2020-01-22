@@ -34,7 +34,7 @@ def test_get_profiles_empty(client):
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    assert response.json == {'profileCount': 0, 'profiles': []}
+    assert response.json == {'profile_count': 0, 'profiles': []}
 
 
 def test_get_profiles_search_empty(client):
@@ -52,4 +52,4 @@ def test_get_profiles_search_empty(client):
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    assert response.json == {'profileCount': 0, 'profiles': []}
+    assert response.json == {'profile_count': 0, 'profiles': []}

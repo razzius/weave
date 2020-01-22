@@ -162,7 +162,7 @@ def get_profiles():
 
     return jsonify(
         {
-            'profileCount': profiles_queryset.count(),
+            'profile_count': profiles_queryset.count(),
             'profiles': profiles_schema.dump(sorted_queryset[start:end]),
         }
     )
@@ -175,11 +175,7 @@ def get_profile(profile_id=None):
     if profile is None:
         return error_response({'profile_id': ['Not found']}, 404)
 
-    response = make_response(
-        jsonify(
-            profile_schema.dump(Profile.query.filter(Profile.id == profile_id).one())
-        )
-    )
+    response = make_response(jsonify(profile_schema.dump(profile)))
 
     response.headers['Cache-Control'] = 'public, max-age=0'
     response.headers['Pragma'] = 'no-cache'

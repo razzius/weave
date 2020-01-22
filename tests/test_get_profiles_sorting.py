@@ -52,7 +52,7 @@ def test_sort_profiles_by_date_updated(client):
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    assert response.json['profileCount'] == 3
+    assert response.json['profile_count'] == 3
 
     results = response.json['profiles']
 

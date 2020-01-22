@@ -14,13 +14,13 @@ function pluralizeResults(length) {
 type Props = {
   error: string | null,
   results: {
-    profileCount: number,
-    profiles: Array<Object>
+    profile_count: number,
+    profiles: Array<Object>,
   } | null,
   queried: boolean,
   loading: boolean,
-  nextPage: (Event => void),
-  resetSearch: (Event => void),
+  nextPage: Event => void,
+  resetSearch: Event => void,
   savedState: Object,
 }
 
@@ -41,7 +41,7 @@ const ResultsView = ({
     return <p>Loading...</p>
   }
 
-  const nextButton = results.profiles.length < results.profileCount && (
+  const nextButton = results.profiles.length < results.profile_count && (
     <Button disabled={loading} onClick={nextPage}>
       Load 20 more
     </Button>
@@ -71,8 +71,8 @@ const ResultsView = ({
     <div style={{ padding: '1em 0' }}>
       <p>
         Showing {results.profiles.length}{' '}
-        {pluralizeResults(results.profiles.length)} of{' '}
-        {results.profileCount}. {loading && <span>Loading...</span>}
+        {pluralizeResults(results.profiles.length)} of {results.profile_count}.{' '}
+        {loading && <span>Loading...</span>}
         {queried && (
           <button type="button" onClick={resetSearch}>
             Clear search
