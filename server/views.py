@@ -36,10 +36,13 @@ from .models import (
     VerificationEmail,
     VerificationToken,
     db,
-    get_verification_email_by_email,
     save,
 )
-from .queries import matching_profiles
+from .queries import (
+    get_profile_by_token,
+    get_verification_email_by_email,
+    matching_profiles,
+)
 from .schemas import profile_schema, profiles_schema, valid_email_schema
 
 
@@ -576,19 +579,6 @@ def verify_token():
             'available_for_mentoring': available_for_mentoring,
         }
     )
-
-
-def get_profile_by_token(token):
-    verification_token = VerificationToken.query.get(token)
-
-    if verification_token is None:
-        return None
-
-    verification_email = VerificationEmail.query.get(verification_token.email_id)
-
-    return Profile.query.filter(
-        Profile.verification_email_id == verification_email.id
-    ).one_or_none()
 
 
 @api_post('availability')

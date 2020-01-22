@@ -14,12 +14,6 @@ def save(instance):
     db.session.commit()
 
 
-def get_verification_email_by_email(email):
-    return VerificationEmail.query.filter(
-        VerificationEmail.email == email
-    ).one_or_none()
-
-
 def default_now():
     """
     Bind a reference to datetime.utcnow() so that freezegun can patch it.
