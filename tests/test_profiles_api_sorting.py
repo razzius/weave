@@ -24,7 +24,7 @@ def create_profile(email, name, date_updated):
     return profile
 
 
-def test_get_profiles_unauthorized(client):
+def test_sort_profiles_by_date_updated(client):
     own_profile = create_profile(
         email='test@test.com',
         name='Own Profile',
