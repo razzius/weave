@@ -53,32 +53,12 @@ def test_update_profile(client):
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    check_json = {
-        key: value
-        for key, value in response.json.items()
-        if key not in {'id', 'date_updated'}
-    }
-
-    assert check_json == {
-        'activities': [],
-        'additional_information': '',
-        'professional_interests': [],
-        'affiliations': [],
-        'cadence': 'monthly',
-        'clinical_specialties': [],
-        'degrees': [],
+    expected_fields = {
         'contact_email': 'new@test.com',
         'name': 'New User',
-        'other_cadence': None,
-        'parts_of_me': [],
-        'profile_image_url': None,
-        'willing_discuss_personal': False,
-        'willing_goal_setting': False,
-        'willing_networking': False,
-        'willing_career_guidance': False,
-        'willing_student_group': False,
-        'willing_shadowing': False,
     }
+
+    assert expected_fields.items() <= response.json.items()
 
     profile = Profile.query.first()
 
