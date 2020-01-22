@@ -173,7 +173,7 @@ def get_profile(profile_id=None):
     profile = Profile.query.filter(Profile.id == profile_id).one_or_none()
 
     if profile is None:
-        return error_response({'profile_id': ['Not found']}, 404)
+        return error_response({'profile_id': ['Not found']}, HTTPStatus.NOT_FOUND.value)
 
     response = make_response(jsonify(profile_schema.dump(profile)))
 
@@ -316,10 +316,11 @@ def update_profile(profile_id=None):
 
     profile = Profile.query.get(profile_id)
 
+    # TODO could implement get_token using exceptions
     error, verification_token = get_token(request.headers)
 
     if error:
-        return error  # TODO exceptions
+        return error
 
     is_admin = VerificationEmail.query.filter(
         VerificationEmail.id == verification_token.email_id
@@ -551,7 +552,9 @@ def verify_token():
     match = query.one_or_none()
 
     if match is None:
-        return error_response({'token': ['not recognized']})
+        return error_response(
+            {'token': ['not recognized']}, status_code=HTTPStatus.UNAUTHORIZED.value
+        )
 
     if _token_expired(match):
         return error_response(
