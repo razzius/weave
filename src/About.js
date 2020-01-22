@@ -117,7 +117,7 @@ const About = () => (
     <h2>How Do I Contact The Weave Team?</h2>
     <p>
       If you are passionate about improving mentoring at Harvard Medical School,
-      Harvard School of Dental Medical, or at similar institutions, we would
+      Harvard School of Dental Medicine, or at similar institutions, we would
       love to hear from you! Please reach out to us at:{' '}
       <a href="mailto:weave@hms.harvard.edu">weave@hms.harvard.edu</a>.
     </p>
