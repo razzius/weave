@@ -183,6 +183,8 @@ def get_profiles():
 
 @api.route('/api/profiles/<profile_id>')
 def get_profile(profile_id=None):
+    get_token(request.headers)  # Ensure valid requesting token
+
     profile = Profile.query.filter(Profile.id == profile_id).one_or_none()
 
     if profile is None:
