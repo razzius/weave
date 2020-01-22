@@ -154,7 +154,7 @@ def get_profiles():
         elif sorting == 'date_updated':
             return Profile.date_updated
         else:
-            raise ValueError(f'Unknown sorting {sorting}')
+            raise InvalidPayloadError({'sorting': ['invalid']})
 
     asc_or_desc = get_ordering(sort_ascending)
 
