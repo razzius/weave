@@ -283,7 +283,7 @@ def create_profile():
         schema = profile_schema.load(request.json)
     except ValidationError as err:
         capture_exception(err)
-        return jsonify(err.messages), 422
+        raise InvalidPayloadError(err.messages)
 
     if db.session.query(
         exists().where(Profile.contact_email == schema['contact_email'])
@@ -311,7 +311,7 @@ def update_profile(profile_id=None):
         schema = profile_schema.load(request.json)
     except ValidationError as err:
         capture_exception(err)
-        return jsonify(err.messages), 422
+        raise InvalidPayloadError(err.messages)
 
     profile = Profile.query.get(profile_id)
 
@@ -345,7 +345,7 @@ def update_profile(profile_id=None):
     try:
         save(profile)
     except IntegrityError:
-        return jsonify({'error': 'Account with this contact email already exists'}), 400
+        raise UserError({'error': 'Account with this contact email already exists'})
 
     # TODO rather than deleting all, delete only ones that haven't changed
     profile_relation_classes = {
