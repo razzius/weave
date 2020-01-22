@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-from server import app
 from server.models import VerificationEmail
 
 
@@ -17,8 +16,7 @@ def test_faculty_registration_email(client, requests_mock):
 
     verification_email_id = response.json['id']
 
-    with app.app_context():
-        verification_email = VerificationEmail.query.get(verification_email_id)
+    verification_email = VerificationEmail.query.get(verification_email_id)
 
     assert verification_email.email == email
 

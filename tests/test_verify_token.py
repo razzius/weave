@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-from server import app
 from server.models import db, VerificationEmail, VerificationToken
 
 
@@ -16,16 +15,16 @@ def test_verify_valid_token(client):
 
     verification_email = VerificationEmail(email=email, is_mentor=True)
 
-    with app.app_context():
-        db.session.add(verification_email)
-        db.session.commit()
+    db.session.add(verification_email)
+    db.session.commit()
 
-        db.session.add(VerificationToken(token=token, email_id=verification_email.id))
-        db.session.commit()
+    db.session.add(VerificationToken(token=token, email_id=verification_email.id))
+    db.session.commit()
 
     response = client.post('/api/verify-token', json={'token': token})
 
     assert response.status_code == HTTPStatus.OK.value
+
     assert response.json == {
         'available_for_mentoring': None,
         'email': 'test@test.com',
