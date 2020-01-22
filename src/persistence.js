@@ -1,5 +1,5 @@
 // @flow
-import { addHours, isAfter } from 'date-fns'
+import { addHours, isAfter, isValid } from 'date-fns'
 import settings from './settings'
 
 function pluralizeHour() {
@@ -30,6 +30,15 @@ export function loadToken(): string | null {
   console.log('loadToken: tokenTimestamp', tokenTimestamp)
 
   if (tokenTimestamp == null) {
+    return null
+  }
+
+  const tokenTimestampDate = new Date(tokenTimestamp)
+
+  if (!isValid(tokenTimestampDate)) {
+    console.log('loadToken: clearing token due to invalid tokenTimestamp')
+
+    clearToken()
     return null
   }
 
