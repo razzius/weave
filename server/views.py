@@ -43,11 +43,14 @@ from .queries import matching_profiles
 from .schemas import profile_schema, profiles_schema, valid_email_schema
 
 
-api = Blueprint('api', __name__)
-
 # This is a non-standard http status, used by Microsoft's IIS, but it's useful
 # to disambiguate between unrecognized and expired tokens.
 LOGIN_TIMEOUT_STATUS = 440
+
+TOKEN_EXPIRY_AGE_HOURS = int(os.environ.get('REACT_APP_TOKEN_EXPIRY_AGE_HOURS', 1))
+
+
+api = Blueprint('api', __name__)
 
 
 class UserError(Exception):
@@ -532,9 +535,6 @@ def _token_expired(verification_token):
     )
 
     return expired
-
-
-TOKEN_EXPIRY_AGE_HOURS = int(os.environ.get('REACT_APP_TOKEN_EXPIRY_AGE_HOURS', 1))
 
 
 @api_post('verify-token')
