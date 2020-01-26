@@ -89,7 +89,6 @@ const About = () => (
     </p>
 
     <h2>Where Can I Learn More About Weave?</h2>
-
     <iframe
       className="video"
       src="https://www.youtube.com/embed/fFuAOtyzVYY?modestbranding=1&rel=0"
