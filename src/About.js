@@ -88,11 +88,19 @@ const About = () => (
       and professional identities and interests through this platform.
     </p>
 
-    <h2>Where Can I Read More About Weave?</h2>
+    <h2>Where Can I Learn More About Weave?</h2>
+
+    <iframe
+      title="Video about Weave"
+      width="640"
+      height="360"
+      src="https://drive.google.com/file/d/1wd8hBkuR4A9RwJj4SXdsrcmUuvB5Odzx/preview"
+    />
+
     <p>
       To read more about our motivation and process for creating Weave, please
       visit:{' '}
-      <LiteralLink href="https://hwpi.harvard.edu/jhsma/learners-review" />,{' '}
+      <LiteralLink href="https://hwpi.harvard.edu/jhsma/learners-review" /> and{' '}
       <LiteralLink href="https://hms.harvard.edu/news/value-mentorship" />.
     </p>
     <p>
