@@ -52,7 +52,7 @@ const VerifiedView = (props: Props) => {
             className="video"
             src="https://www.youtube.com/embed/6nAUk502ycA?modestbranding=1&rel=0"
             title="Weave tutorial video: How to create a faculty profile"
-            allow="autoplay; encrypted-media"
+            allow="encrypted-media"
             allowFullScreen
           />
         )}

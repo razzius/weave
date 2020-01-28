@@ -400,8 +400,8 @@ h3 {
 }
 
 iframe.video {
-  width: '640px';
-  height: '360px';
-  maxwidth: '100%';
+  width: 640px;
+  height: 360px;
+  maxwidth: 100%;
   frameborder: 0;
 }

@@ -92,10 +92,10 @@ const About = () => (
 
     <iframe
       className="video"
+      src="https://www.youtube.com/embed/fFuAOtyzVYY?modestbranding=1&rel=0"
       title="Video about Weave"
-      width="640"
-      height="360"
-      src="https://drive.google.com/file/d/1wd8hBkuR4A9RwJj4SXdsrcmUuvB5Odzx/preview"
+      allow="encrypted-media"
+      allowFullScreen
     />
 
     <p>
