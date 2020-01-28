@@ -18,7 +18,8 @@ export default class VerifyEmail extends Component<Props, State> {
     const token = getParam('token')
     if (token === null) {
       this.setState({
-        error: 'Your link is missing its token. Check that it is the link from your verification email.',
+        error:
+          'Your link is missing its token. Check that it is the link from your verification email.',
       })
       return
     }

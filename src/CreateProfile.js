@@ -12,24 +12,22 @@ type Props = {
   history: RouterHistory,
 }
 
-const CreateProfile = ({
-  setProfileId,
-  token,
-  history,
-}: Props) => {
+const CreateProfile = ({ setProfileId, token, history }: Props) => {
   if (token === null) {
     return 'You are not logged in. Click "Login" above to log in.'
   }
 
-  return <AppScreen>
-    <ProfileForm
-      firstTimePublish={false}
-      saveProfile={createProfile}
-      setProfileId={setProfileId}
-      token={token}
-      history={history}
-    />
-  </AppScreen>
+  return (
+    <AppScreen>
+      <ProfileForm
+        firstTimePublish={false}
+        saveProfile={createProfile}
+        setProfileId={setProfileId}
+        token={token}
+        history={history}
+      />
+    </AppScreen>
+  )
 }
 
 export default CreateProfile
