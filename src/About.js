@@ -91,6 +91,7 @@ const About = () => (
     <h2>Where Can I Learn More About Weave?</h2>
 
     <iframe
+      className="video"
       title="Video about Weave"
       width="640"
       height="360"

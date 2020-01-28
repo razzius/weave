@@ -398,3 +398,10 @@ input[disabled] {
 h3 {
   margin-top: 2em;
 }
+
+iframe.video {
+  width: '640px';
+  height: '360px';
+  maxwidth: '100%';
+  frameborder: 0;
+}

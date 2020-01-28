@@ -49,14 +49,9 @@ const VerifiedView = (props: Props) => {
       <div>
         {account.isMentor && (
           <iframe
-            style={{
-              width: '640px',
-              height: '360px',
-              maxWidth: '100%',
-            }}
+            className="video"
             src="https://www.youtube.com/embed/6nAUk502ycA?modestbranding=1&rel=0"
             title="Weave tutorial video: How to create a faculty profile"
-            frameBorder="0"
             allow="autoplay; encrypted-media"
             allowFullScreen
           />
