@@ -6,7 +6,7 @@ from server.models import VerificationEmail
 def test_faculty_registration_email(client, requests_mock):
     email = 'test@hms.harvard.edu'
 
-    requests_mock.post(f'https://api.sendgrid.com/v3/mail/send', {}, reason='OK')
+    requests_mock.post(f'https://api.sparkpost.com/api/v1/transmissions', {}, reason='OK')
 
     response = client.post(
         '/api/send-faculty-verification-email', json={'email': email}
@@ -22,7 +22,7 @@ def test_faculty_registration_email(client, requests_mock):
 
 
 def test_faculty_registration_invalid_email(client, requests_mock):
-    requests_mock.post(f'https://api.sendgrid.com/v3/mail/send', {}, reason='OK')
+    requests_mock.post(f'https://api.sparkpost.com/api/v1/transmissions', {}, reason='OK')
 
     response = client.post(
         '/api/send-faculty-verification-email', json={'email': 'test@test.com'}
