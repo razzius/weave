@@ -11,7 +11,7 @@ function displayError(error, email) {
     return null
   }
 
-  if (error.message === 'Failed to fetch') {
+  if (error.name === 'TypeError') {
     return (
       <p>There was a problem with our server. Please try again in a moment.</p>
     )
