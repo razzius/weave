@@ -6,28 +6,30 @@ import requests
 
 SERVER_URL = os.environ.get('REACT_APP_SERVER_URL', 'localhost:5000')
 CLIENT_URL = os.environ.get('WEAVE_CLIENT_URL', SERVER_URL)
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+SPARKPOST_API_KEY = os.environ.get('SPARKPOST_API_KEY')
 
 
 class EmailMisconfiguredError(Exception):
-    message = 'Email not configured. Set the SENDGRID_API_KEY environment variable to send email.'
+    message = 'Email not configured. Set the SPARKPOST_API_KEY environment variable to send email.'
 
     def __str__(self):
         return self.message
 
 
 def _send_email(to, subject, html):
-    if SENDGRID_API_KEY is None:
+    if SPARKPOST_API_KEY is None:
         raise EmailMisconfiguredError
 
     return requests.post(
-        'https://api.sendgrid.com/v3/mail/send',
-        headers={'Authorization': f'Bearer {SENDGRID_API_KEY}'},
+        'https://api.sparkpost.com/api/v1/transmissions',
+        headers={'Authorization': SPARKPOST_API_KEY},
         json={
-            'personalizations': [{'to': [{'email': to}]}],
-            'from': {'email': 'admin@hmsweave.com'},
-            'subject': subject,
-            'content': [{'type': 'text/html', 'value': html}],
+            'content': {
+                'from': 'admin@hmsweave.com',
+                'subject': subject,
+                'html': html
+            },
+            'recipients': [{'address': to}]
         },
     )
 
