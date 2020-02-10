@@ -16,9 +16,13 @@ class EmailMisconfiguredError(Exception):
         return self.message
 
 
-def _send_email(to, subject, html):
+def verify_email_configured():
     if SPARKPOST_API_KEY is None:
         raise EmailMisconfiguredError
+
+
+def _send_email(to, subject, html):
+    verify_email_configured()
 
     return requests.post(
         'https://api.sparkpost.com/api/v1/transmissions',

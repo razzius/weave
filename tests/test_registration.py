@@ -1,3 +1,4 @@
+from unittest.mock import patch
 from http import HTTPStatus
 
 from server.models import VerificationEmail
@@ -8,9 +9,10 @@ def test_faculty_registration_email(client, requests_mock):
 
     requests_mock.post(f'https://api.sparkpost.com/api/v1/transmissions', {}, reason='OK')
 
-    response = client.post(
-        '/api/send-faculty-verification-email', json={'email': email}
-    )
+    with patch('server.emails.verify_email_configured'):
+        response = client.post(
+            '/api/send-faculty-verification-email', json={'email': email}
+        )
 
     assert response.json['email'] == email
 
@@ -24,8 +26,9 @@ def test_faculty_registration_email(client, requests_mock):
 def test_faculty_registration_invalid_email(client, requests_mock):
     requests_mock.post(f'https://api.sparkpost.com/api/v1/transmissions', {}, reason='OK')
 
-    response = client.post(
-        '/api/send-faculty-verification-email', json={'email': 'test@test.com'}
-    )
+    with patch('server.emails.verify_email_configured'):
+        response = client.post(
+            '/api/send-faculty-verification-email', json={'email': 'test@test.com'}
+        )
 
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY.value
