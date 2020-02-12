@@ -41,16 +41,15 @@ class VerificationEmail(IDMixin, db.Model):
         return f'<VerificationEmail {self.id}: {self.email}>'
 
 
-class PredefinedTagMixin(IDMixin):
+class TagValueMixin(IDMixin):
     value = db.Column(db.String(50))
 
 
-class UserEditableTagMixin(IDMixin):
-    value = db.Column(db.String(50))
+class UserEditableTagMixin(TagValueMixin):
     public = db.Column(db.Boolean, default=False)
 
 
-class HospitalAffiliationOption(PredefinedTagMixin, db.Model):
+class HospitalAffiliationOption(TagValueMixin, db.Model):
     pass
 
 
@@ -62,8 +61,8 @@ class ProfessionalInterestOption(UserEditableTagMixin, db.Model):
     pass
 
 
-class PartsOfMeOption(IDMixin, db.Model):
-    value = db.Column(db.String(50))
+class PartsOfMeOption(TagValueMixin, db.Model):
+    pass
 
 
 class ActivityOption(UserEditableTagMixin, db.Model):
@@ -172,7 +171,9 @@ class Profile(db.Model):
 
 class VerificationToken(db.Model):
     token = db.Column(db.String(36), primary_key=True)
-    email_id = db.Column(db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False)
+    email_id = db.Column(
+        db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
+    )
     email = relationship(VerificationEmail, backref='verification_tokens')
     date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     verified = db.Column(db.Boolean, default=False)
