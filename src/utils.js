@@ -77,3 +77,22 @@ export function arrayCaseInsensitiveContains(
 ) {
   return array.map(item => item.toLowerCase()).includes(value.toLowerCase())
 }
+
+export function delay(ms: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms)
+  })
+}
+
+export async function retry(callback: Function, options: Object) {
+  try {
+    await callback()
+  } catch (e) {
+    if (options.times === 0) {
+      throw e
+    }
+    options.onError()
+    await delay(options.delay)
+    retry(callback, { ...options, times: options.times - 1 })
+  }
+}

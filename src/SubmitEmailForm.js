@@ -13,13 +13,15 @@ function displayError(error, email) {
 
   if (error.name === 'TypeError') {
     return (
-      <p>There was a problem with our server. Please try again in a moment.</p>
+      <p className="error">
+        There was a problem with our server. Please try again in a moment.
+      </p>
     )
   }
 
   if (error.email[0] === 'unregistered') {
     return (
-      <p>
+      <p className="error">
         That email has not been registered. Please sign up using the links
         above.
       </p>
@@ -28,13 +30,13 @@ function displayError(error, email) {
 
   if (error.email[0] === 'claimed') {
     return (
-      <p>
+      <p className="error">
         That email has already been registered. Please{' '}
         <Link to={`/login?email=${email}`}>log in</Link>.
       </p>
     )
   }
-  return <p>{error.email[0]}</p>
+  return <p className="error">{error.email[0]}</p>
 }
 
 type Props = {

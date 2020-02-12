@@ -16,8 +16,7 @@ body,
 }
 .App-body {
   max-width: 850px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 20px auto;
   word-wrap: break-word;
 }
 
@@ -404,4 +403,14 @@ iframe.video {
   height: 360px;
   max-width: 100%;
   border: none;
+}
+
+.error {
+    margin: 1em 0;
+    padding: 1em;
+    background: #ffff0095;
+}
+.banner {
+    margin: 0;
+    text-align: center;
 }
