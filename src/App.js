@@ -159,9 +159,9 @@ class App extends Component<Props, State> {
               )}
 
               <nav>
-                <a href="/about" className="App-title">
+                <Link to="/about" className="App-title">
                   About
-                </a>
+                </Link>
 
                 <Link to="/expectations" className="App-title">
                   Expectations
