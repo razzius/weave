@@ -55,7 +55,7 @@ class App extends Component<Props, State> {
     const { token } = this.state
 
     if (token !== null && window.location.pathname !== '/verify') {
-      await retry(async () => this.loadAccount(token), {
+      await retry(this.loadAccount, {
         times: 30,
         delay: 2000,
         onError: () => {
@@ -67,6 +67,13 @@ class App extends Component<Props, State> {
 
   authenticate = ({ token, account }: { token: string, account: Account }) => {
     this.setState({ token, account })
+  }
+
+  loadAccount = async () => {
+    const { token } = this.state
+
+    const account = await verifyToken(token)
+    this.setState({ account, error: false, loading: false })
   }
 
   setProfileId = (profileId: string) => {
@@ -90,11 +97,6 @@ class App extends Component<Props, State> {
     }
 
     this.setState({ account: updatedAccount })
-  }
-
-  async loadAccount(token: string) {
-    const account = await verifyToken(token)
-    this.setState({ account, error: false, loading: false })
   }
 
   render() {
