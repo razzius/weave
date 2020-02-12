@@ -62,8 +62,8 @@ class ProfessionalInterestOption(UserEditableTagMixin, db.Model):
     pass
 
 
-class PartsOfMeOption(UserEditableTagMixin, db.Model):
-    pass
+class PartsOfMeOption(IDMixin, db.Model):
+    value = db.Column(db.String(50))
 
 
 class ActivityOption(UserEditableTagMixin, db.Model):
