@@ -9,6 +9,7 @@ import server.views
 from .models import db
 from .app import app
 from .admin import init_admin
+from .email import init_email
 
 sentry_dsn = os.environ.get('PYTHON_SENTRY_DSN')
 
@@ -20,6 +21,7 @@ CORS(app)
 SSLify(app)
 
 init_admin(app)
+init_email(app)
 
 
 @app.route('/')

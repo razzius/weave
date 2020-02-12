@@ -1,2 +1,2 @@
-tmux split-window pipenv run start
-npm start
+BROWSER=none COLOR=1 npm start | cat &
+pipenv run start
