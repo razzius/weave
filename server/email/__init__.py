@@ -7,7 +7,7 @@ from .email_backend import EmailBackend
 from .sparkpost_email_backend import SparkPostEmailBackend
 
 
-SERVER_URL = os.environ.get('REACT_APP_SERVER_URL', 'localhost:5000')
+SERVER_URL = os.environ.get('REACT_APP_SERVER_URL', 'http://localhost:5000')
 CLIENT_URL = os.environ.get('WEAVE_CLIENT_URL', SERVER_URL)
 
 SPARKPOST_API_KEY = os.environ.get('SPARKPOST_API_KEY')
