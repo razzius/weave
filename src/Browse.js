@@ -50,8 +50,10 @@ class Browse extends Component<Props, State> {
   }
 
   onUnload = () => {
+    const { location, history } = this.props
+
     console.log('Clearing location.state from onUnload reload')
-    window.history.replaceState(null, '/browse')
+    history.replace(location.pathname, null)
   }
 
   loadProfilesFromHistory = state => {
