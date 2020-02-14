@@ -1,6 +1,7 @@
 // @flow
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
+import { Beforeunload } from 'react-beforeunload'
 
 import AppScreen from './AppScreen'
 import ResultsView from './ResultsView'
@@ -33,8 +34,6 @@ class Browse extends Component<Props, State> {
   state = originalState
 
   async componentDidMount() {
-    window.addEventListener('beforeunload', this.onUnload)
-
     const { token, location } = this.props
     const { page } = this.state
 
@@ -43,10 +42,6 @@ class Browse extends Component<Props, State> {
     } else {
       this.loadProfilesFromServer({ token, page })
     }
-  }
-
-  componentWillUnmount() {
-    window.removeEventListener('beforeunload', this.onUnload)
   }
 
   onUnload = () => {
@@ -255,38 +250,40 @@ class Browse extends Component<Props, State> {
     } = this.state
 
     return (
-      <AppScreen>
-        <SearchInput
-          values={searchTerms}
-          search={search}
-          degrees={degrees}
-          affiliations={affiliations}
-          inputValue={search}
-          menuOpen={menuOpen}
-          onBlur={() => this.setState({ menuOpen: false })}
-          onFocus={() => this.setState({ menuOpen: true })}
-          onChange={this.handleChange}
-          onChangeDegrees={this.handleChangeDegrees}
-          onChangeAffiliations={this.handleChangeAffiliations}
-          onChangeSorting={this.handleChangeSorting}
-          onInputChange={this.handleInputChange}
-          onKeyDown={this.handleKeyDown}
-          onSubmit={() => {
-            this.setState({ queried: true }, this.handleSearch)
-          }}
-        />
-        <div style={{ padding: '1em 0' }}>
-          <ResultsView
-            queried={queried}
-            resetSearch={this.resetSearch}
-            loading={loading}
-            results={results}
-            error={error}
-            nextPage={this.nextPage}
-            savedState={this.state}
+      <Beforeunload onBeforeunload={this.onUnload}>
+        <AppScreen>
+          <SearchInput
+            values={searchTerms}
+            search={search}
+            degrees={degrees}
+            affiliations={affiliations}
+            inputValue={search}
+            menuOpen={menuOpen}
+            onBlur={() => this.setState({ menuOpen: false })}
+            onFocus={() => this.setState({ menuOpen: true })}
+            onChange={this.handleChange}
+            onChangeDegrees={this.handleChangeDegrees}
+            onChangeAffiliations={this.handleChangeAffiliations}
+            onChangeSorting={this.handleChangeSorting}
+            onInputChange={this.handleInputChange}
+            onKeyDown={this.handleKeyDown}
+            onSubmit={() => {
+              this.setState({ queried: true }, this.handleSearch)
+            }}
           />
-        </div>
-      </AppScreen>
+          <div style={{ padding: '1em 0' }}>
+            <ResultsView
+              queried={queried}
+              resetSearch={this.resetSearch}
+              loading={loading}
+              results={results}
+              error={error}
+              nextPage={this.nextPage}
+              savedState={this.state}
+            />
+          </div>
+        </AppScreen>
+      </Beforeunload>
     )
   }
 }
