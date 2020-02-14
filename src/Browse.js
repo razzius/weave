@@ -33,6 +33,8 @@ class Browse extends Component<Props, State> {
   state = originalState
 
   async componentDidMount() {
+    window.addEventListener('beforeunload', this.onUnload)
+
     const { token, location } = this.props
     const { page } = this.state
 
@@ -41,6 +43,15 @@ class Browse extends Component<Props, State> {
     } else {
       this.loadProfilesFromServer({ token, page })
     }
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('beforeunload', this.onUnload)
+  }
+
+  onUnload = () => {
+    console.log('Clearing location.state from onUnload reload')
+    window.history.replaceState(null, '/browse')
   }
 
   loadProfilesFromHistory = state => {
