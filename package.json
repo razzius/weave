@@ -28,7 +28,7 @@
     "slick-carousel": "^1.8.1",
     "url-polyfill": "^1.1.0",
     "weakmap-polyfill": "^2.0.0",
-    "yarn": "^1.7.0"
+    "yarn": "^1.22.0"
   },
   "scripts": {
     "start": "react-scripts start",

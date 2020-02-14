@@ -6,7 +6,7 @@
 - Node 12.10.0
 - Postgresql 11.1
 - [pipenv](https://github.com/pypa/pipenv#installation) 2018.11.26
-- [yarn](https://yarnpkg.com/en/docs/install) 1.17.3
+- [yarn](https://yarnpkg.com/en/docs/install) 1.22.0
 
 ## Installation
 
