@@ -42,6 +42,7 @@ class VerificationEmail(IDMixin, db.Model):
 
 
 class TagValueMixin(IDMixin):
+    date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     value = db.Column(db.String(50))
 
 
