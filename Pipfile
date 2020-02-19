@@ -25,6 +25,7 @@ python-dotenv = "*"
 psycopg2-binary = "*"
 freezegun = "*"
 requests-mock = "*"
+pytest-postgresql = "*"
 
 [dev-packages]
 ipython = "*"

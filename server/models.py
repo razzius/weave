@@ -13,6 +13,8 @@ def save(instance):
     db.session.add(instance)
     db.session.commit()
 
+    return instance
+
 
 def default_now():
     """
@@ -44,9 +46,6 @@ class VerificationEmail(IDMixin, db.Model):
 class TagValueMixin(IDMixin):
     date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     value = db.Column(db.String(50))
-
-
-class UserEditableTagMixin(TagValueMixin):
     public = db.Column(db.Boolean, default=False)
 
 
@@ -54,11 +53,11 @@ class HospitalAffiliationOption(TagValueMixin, db.Model):
     pass
 
 
-class ClinicalSpecialtyOption(UserEditableTagMixin, db.Model):
+class ClinicalSpecialtyOption(TagValueMixin, db.Model):
     pass
 
 
-class ProfessionalInterestOption(UserEditableTagMixin, db.Model):
+class ProfessionalInterestOption(TagValueMixin, db.Model):
     pass
 
 
@@ -66,11 +65,11 @@ class PartsOfMeOption(TagValueMixin, db.Model):
     pass
 
 
-class ActivityOption(UserEditableTagMixin, db.Model):
+class ActivityOption(TagValueMixin, db.Model):
     pass
 
 
-class DegreeOption(UserEditableTagMixin, db.Model):
+class DegreeOption(TagValueMixin, db.Model):
     pass
 
 

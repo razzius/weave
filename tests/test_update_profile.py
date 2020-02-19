@@ -2,10 +2,9 @@ import datetime
 import http
 
 from freezegun import freeze_time
-
 from server.models import Profile, VerificationEmail, VerificationToken
 
-from .utils import save
+from server.models import save
 
 
 MOCK_DATE = datetime.datetime(2019, 10, 21)
@@ -53,10 +52,7 @@ def test_update_profile(client):
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    expected_fields = {
-        'contact_email': 'new@test.com',
-        'name': 'New User',
-    }
+    expected_fields = {'contact_email': 'new@test.com', 'name': 'New User'}
 
     assert expected_fields.items() <= response.json.items()
 
@@ -87,10 +83,7 @@ def test_admin_update_does_not_update_date(client):
 def test_tags_cannot_have_trailing_spaces(client):
     token = 'abcd'
 
-    update = {
-        **PROFILE_UPDATE,
-        'clinical_specialties': ['Test '],
-    }
+    update = {**PROFILE_UPDATE, 'clinical_specialties': ['Test ']}
 
     profile = create_test_profile(token)
 
