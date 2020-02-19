@@ -176,3 +176,22 @@ def matching_profiles(
     return _filter_query(
         available_profiles, words, tag_list, degree_list, affiliation_list
     )
+
+
+def get_all_public_tags():
+    tag_classes = [
+        ActivityOption,
+        ClinicalSpecialtyOption,
+        DegreeOption,
+        HospitalAffiliationOption,
+        PartsOfMeOption,
+        ProfessionalInterestOption,
+    ]
+    tag_queries = [cls.query.with_entities(cls.value) for cls in tag_classes]
+
+    def union_selects(s1, s2):
+        return s1.union_all(s2)
+
+    res = reduce(union_selects, tag_queries)
+
+    return res.all()
