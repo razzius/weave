@@ -74,16 +74,20 @@ class ProfileModelView(BasicAuthExportableModelView):
     column_display_all_relations = True
 
 
+class ActivitiesIEnjoyAdmin(ModelViewSortedByValue):
+    name = 'Activities I Enjoy'  # TODO no effect
+
+
 admin = Admin(index_view=BasicAuthAdminView())
-admin.add_view(ModelViewSortedByDateCreated(VerificationToken, db.session))
-admin.add_view(VerificationEmailModelView(VerificationEmail, db.session))
 admin.add_view(ProfileModelView(Profile, db.session))
+admin.add_view(ModelViewSortedByValue(DegreeOption, db.session))
+admin.add_view(ModelViewSortedByValue(HospitalAffiliationOption, db.session))
 admin.add_view(ModelViewSortedByValue(ClinicalSpecialtyOption, db.session))
 admin.add_view(ModelViewSortedByValue(ProfessionalInterestOption, db.session))
 admin.add_view(ModelViewSortedByValue(PartsOfMeOption, db.session))
-admin.add_view(ModelViewSortedByValue(ActivityOption, db.session))
-admin.add_view(ModelViewSortedByValue(HospitalAffiliationOption, db.session))
-admin.add_view(ModelViewSortedByValue(DegreeOption, db.session))
+admin.add_view(ActivitiesIEnjoyAdmin(ActivityOption, db.session))
+admin.add_view(ModelViewSortedByDateCreated(VerificationToken, db.session))
+admin.add_view(VerificationEmailModelView(VerificationEmail, db.session))
 
 
 def init_admin(app):
