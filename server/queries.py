@@ -187,10 +187,13 @@ def get_all_public_tags():
         PartsOfMeOption,
         ProfessionalInterestOption,
     ]
-    tag_queries = [cls.query.with_entities(cls.value) for cls in tag_classes]
+    tag_queries = [
+        cls.query.with_entities(cls.value).filter(cls.public.is_(True))
+        for cls in tag_classes
+    ]
 
     def union_selects(s1, s2):
-        return s1.union_all(s2)
+        return s1.union(s2)
 
     res = reduce(union_selects, tag_queries)
 
