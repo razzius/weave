@@ -33,12 +33,14 @@ import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
 import { setAvailabilityForMentoring, verifyToken, type Account } from './api'
 import { clearToken, loadToken } from './persistence'
+import { retry } from './utils'
 
 type Props = empty
 type State = {|
   token: string | null,
   account: Account | null,
   loading: boolean,
+  error: boolean,
 |}
 
 class App extends Component<Props, State> {
@@ -46,26 +48,32 @@ class App extends Component<Props, State> {
     token: loadToken(),
     account: null,
     loading: true,
+    error: false,
   }
 
   async componentDidMount() {
     const { token } = this.state
 
     if (token !== null && window.location.pathname !== '/verify') {
-      try {
-        const account = await verifyToken(token)
-        this.setState({ account })
-      } catch (e) {
-        console.error('App componentDidMount: error causing token to clear', e)
-        clearToken()
-        this.setState({ token: null })
-      }
-      this.setState({ loading: false })
+      await retry(this.loadAccount, {
+        times: 30,
+        delay: 2000,
+        onError: () => {
+          this.setState({ loading: false, error: true })
+        },
+      })
     }
   }
 
   authenticate = ({ token, account }: { token: string, account: Account }) => {
     this.setState({ token, account })
+  }
+
+  loadAccount = async () => {
+    const { token } = this.state
+
+    const account = await verifyToken(token)
+    this.setState({ account, error: false, loading: false })
   }
 
   setProfileId = (profileId: string) => {
@@ -92,7 +100,7 @@ class App extends Component<Props, State> {
   }
 
   render() {
-    const { token, account, loading } = this.state
+    const { token, account, loading, error } = this.state
 
     const loggedOut = token === null
 
@@ -151,9 +159,9 @@ class App extends Component<Props, State> {
               )}
 
               <nav>
-                <a href="/about" className="App-title">
+                <Link to="/about" className="App-title">
                   About
-                </a>
+                </Link>
 
                 <Link to="/expectations" className="App-title">
                   Expectations
@@ -169,6 +177,12 @@ class App extends Component<Props, State> {
               </nav>
             </div>
           </header>
+          {error && (
+            <p className="error banner">
+              Unable to communicate with server. Check your network connection
+              and try again in a moment.
+            </p>
+          )}
           <Switch>
             <Route
               exact
