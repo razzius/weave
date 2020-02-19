@@ -1,10 +1,14 @@
-from freezegun import freeze_time
 import datetime
 import http
 
-from server.models import VerificationEmail, VerificationToken, ActivityOption, Profile
-
-from .utils import save
+from freezegun import freeze_time
+from server.models import (
+    ActivityOption,
+    Profile,
+    VerificationEmail,
+    VerificationToken,
+    save
+)
 
 
 MOCK_DATE = datetime.datetime(2019, 12, 18, tzinfo=datetime.timezone.utc)
