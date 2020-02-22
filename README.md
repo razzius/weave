@@ -25,8 +25,6 @@ Note that this drops your local database to start from a clean state.
 # You can call your database however you'd like; I use hms
 $ createdb hms
 $ export DATABASE_URL='postgresql:///hms'
-# For local development, this can be anything
-$ export SECRET_KEY='localsecret'
 $ pipenv run python -m server.scripts.resetdb
 ```
 
