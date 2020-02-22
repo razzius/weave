@@ -22,16 +22,17 @@ $ pipenv install
 Note that this drops your local database to start from a clean state.
 
 ```sh
-# You can call your database however you'd like; I use hms
-$ createdb hms
-$ export DATABASE_URL='postgresql:///hms'
+# You can call your database however you'd like; I use "weave"
+$ createdb weave
+$ export DATABASE_URL='postgresql:///weave'
 $ pipenv run python -m server.scripts.resetdb
 ```
 
-## Run the app
+## Run the app in development mode
 
 ```sh
 # run backend
+$ export FLASK_DEBUG=1
 $ pipenv run start
 # in another shell, start frontend with:
 $ npm start
