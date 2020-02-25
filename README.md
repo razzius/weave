@@ -1,5 +1,12 @@
 # Weave
 
+Weave is a mentorship application designed for connecting faculty with medical and dental students.
+
+## Tech Stack
+
+- Flask powers the API and serves static files
+- React powers the web interface
+
 ## Requirements
 
 - Python 3.7.3
