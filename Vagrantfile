@@ -4,31 +4,26 @@
 ENV["PORT"] ||= "3000"
 
 $provision = <<SCRIPT
-sudo apt-get update
-sudo apt-get install curl
-
 DISTRO="$(lsb_release -s -c)"
 
 # Add postgresql repository
 curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
 echo "deb http://apt.postgresql.org/pub/repos/apt/ $DISTRO-pgdg main" | sudo tee /etc/apt/sources.list.d/postgresql.list
 
-# Add nodejs repository
-curl -sS https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo apt-key add -
-NODE_VERSION=node_12.10.x
-echo "deb https://deb.nodesource.com/$NODE_VERSION $DISTRO main" | sudo tee /etc/apt/sources.list.d/nodesource.list
-echo "deb-src https://deb.nodesource.com/$NODE_VERSION $DISTRO main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
 sudo apt-get update
-sudo apt-get install nodejs
 
-# Install dependencies
 sudo apt-get install -y \
-  curl \
   python-minimal \
   python-pip \
   python3-distutils \
   python3.7 \
   postgresql-10
+
+# Install nodejs
+TEMPDIR=$(mktemp -d)
+curl -sL https://deb.nodesource.com/node_12.x/pool/main/n/nodejs/nodejs_12.10.0-1nodesource1_amd64.deb -o $TEMPDIR/node.deb
+sudo dpkg -i $TEMPDIR/node.deb
+rm -r $TEMPDIR
 
 # Install pipenv
 sudo -H pip install pipenv
@@ -52,7 +47,7 @@ sudo apt-get install -y iptables-persistent
 cd /vagrant
 
 # Install python dependencies
-PIPENV_NOSPIN=1 pipenv install --dev
+PIPENV_NOSPIN=1 pipenv install --dev --ignore-pipfile
 
 # Install database schema
 pipenv run python -m server.scripts.resetdb
@@ -60,10 +55,16 @@ pipenv run python -m server.scripts.resetdb
 # Install javascript dependencies
 # yarn install
 
-# Automatically switch to /vagrant directory
+# Automatically switch to /vagrant directory upon login
 test -e ~/.bash_profile || echo 'cd /vagrant' > ~/.bash_profile
 
 SCRIPT
+
+$start = <<SCRIPT
+echo 'To start the development server, run the following command:'
+echo 'vagrant ssh -c "/vagrant/server/scripts/servers.sh"'
+SCRIPT
+
 
 Vagrant.configure("2") do |config|
 
@@ -82,7 +83,7 @@ Vagrant.configure("2") do |config|
   # This is optional; if this is not used, you may access the virtual machine at http://192.168.33.10.
   if defined?(VagrantPlugins::HostsUpdater)
     config.vm.hostname = "weave.local"
-    config.vm.network "private_network", ip: "192.168.42.42"
+    config.vm.network "private_network", ip: "192.168.50.4"
     config.hostsupdater.remove_on_suspend = false
   end
 
@@ -92,4 +93,6 @@ Vagrant.configure("2") do |config|
   end
 
   config.vm.provision "shell", inline: $provision, privileged: false
+
+  config.vm.provision "shell", inline: $start, privileged: false, run: "always"
 end
