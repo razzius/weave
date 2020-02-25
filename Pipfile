@@ -36,7 +36,7 @@ pylint = "*"
 "flake8" = "*"
 requests-mock = "*"
 mypy = "*"
-colorama = {version = "*",sys_platform = "== 'win32'"}
+colorama = {version = "*", sys_platform = "== 'win32'"}
 isort = "*"
 
 [requires]
@@ -44,7 +44,7 @@ python_version = "3.7"
 
 [scripts]
 flake8 = "flake8 server tests"
-start = "flask run"
+start = "env FLASK_ENV=development flask run --host=0.0.0.0"
 shell = "ipython -i server/scripts/shell.py"
 test = "py.test tests"
 

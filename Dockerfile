@@ -38,7 +38,7 @@ RUN yarn build
 ENV LANG 'C.UTF-8'
 ENV LC_ALL C.UTF-8
 
-ENV FLASK_DEBUG '1'
+ENV FLASK_ENV 'development'
 ENV REACT_APP_SERVER_URL 'http://localhost:5000'
 ENV CLOUDINARY_URL ''
 
