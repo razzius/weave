@@ -10,7 +10,7 @@ RUN apt-get update -y && apt-get install -y \
 RUN curl -sL https://deb.nodesource.com/node_12.x/pool/main/n/nodejs/nodejs_12.10.0-1nodesource1_amd64.deb -o node.deb
 RUN dpkg -i node.deb
 
-RUN curl -sL https://github.com/yarnpkg/yarn/releases/download/v1.17.3/yarn_1.17.3_all.deb -o yarn.deb
+RUN curl -sL https://github.com/yarnpkg/yarn/releases/download/v1.22.0/yarn_1.22.0_all.deb -o yarn.deb
 RUN dpkg -i yarn.deb
 
 ## Build the backend
