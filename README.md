@@ -39,7 +39,6 @@ $ pipenv run python -m server.scripts.resetdb
 
 ```sh
 # run backend
-$ export FLASK_DEBUG=1
 $ pipenv run start
 # in another shell, start frontend with:
 $ yarn start
@@ -66,6 +65,16 @@ Though inefficient, the backend will serve this html file when the index is requ
 
 A more efficient setup would be to serve the index.html from a CDN when any path
 is requested on your domain.
+
+## Running the backend in production
+
+Gunicorn is the production application server. The usual configuration is to use nginx or another reverse proxy
+to terminate ssl and forward requests from port 443 to port 5000.
+
+```sh
+$ pipenv run shell
+$ gunicorn server:app -b 0.0.0.0:5000
+```
 
 ## Running in `docker`
 
