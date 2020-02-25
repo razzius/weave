@@ -67,11 +67,13 @@ The following commands are run automatically when provisioning Vagrant for the f
 and can be rerun via `vagrant provision`. Nonetheless, you may need to re-run or modify a setup command 
 if you are not using Vagrant or if you are making changes such as installing new Python or Node packages.
 
-### Installing the frontend
+### Installing the frontend requirements
 
 ```sh
 $ yarn install
 ```
+
+### Install the backend requirements
 
 ```sh
 $ pipenv install --dev --ignore-pipfile
