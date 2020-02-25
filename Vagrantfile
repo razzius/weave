@@ -76,6 +76,9 @@ Vagrant.configure("2") do |config|
   # Forward localhost:5000 for the backend
   config.vm.network "forwarded_port", guest: 5000, host: 5000
 
+  # Enable accessing the virtual machine from http://192.168.50.4
+  config.vm.network "private_network", ip: "192.168.50.4"
+
   # If you install the vagrant hosts updater plugin using
   #   $ vagrant plugin install vagrant-hostsupdater
   # Then you can access http://weave.local from your host machine.
@@ -83,7 +86,6 @@ Vagrant.configure("2") do |config|
   # This is optional; if this is not used, you may access the virtual machine at http://192.168.33.10.
   if defined?(VagrantPlugins::HostsUpdater)
     config.vm.hostname = "weave.local"
-    config.vm.network "private_network", ip: "192.168.50.4"
     config.hostsupdater.remove_on_suspend = false
   end
 
