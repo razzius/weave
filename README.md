@@ -35,7 +35,7 @@ $ pipenv run python -m server.scripts.resetdb
 $ export FLASK_DEBUG=1
 $ pipenv run start
 # in another shell, start frontend with:
-$ npm start
+$ yarn start
 ```
 
 ## Accessing the app locally
