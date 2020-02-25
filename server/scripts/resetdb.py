@@ -1,7 +1,7 @@
-from .context import context
 from server import db
+from server import app
 
 
-context()
-db.drop_all()
-db.create_all()
+with app.app_context():
+    db.drop_all()
+    db.create_all()
