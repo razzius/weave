@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from server.models import (
     ActivityOption,
     ClinicalSpecialtyOption,
@@ -5,15 +7,25 @@ from server.models import (
     HospitalAffiliationOption,
     PartsOfMeOption,
     ProfessionalInterestOption,
-    save,
+    save
 )
 from server.queries import get_all_public_tags
+
+
+EMPTY_TAGS: Dict[str, List[str]] = {
+    'activities': [],
+    'clinical_specialties': [],
+    'degrees': [],
+    'hospital_affiliations': [],
+    'parts_of_me': [],
+    'professional_interests': [],
+}
 
 
 def test_get_all_public_tags_no_tags(db_session):
     tags = get_all_public_tags()
 
-    assert tags == []
+    assert tags == EMPTY_TAGS
 
 
 def test_get_all_public_tags_one_of_each_tag(db_session):
@@ -31,7 +43,14 @@ def test_get_all_public_tags_one_of_each_tag(db_session):
 
     tags = get_all_public_tags()
 
-    assert {tag.value for tag in tags} == {option.value for option in options}
+    assert tags == {
+        'activities': ['Activity'],
+        'clinical_specialties': ['Specialty'],
+        'degrees': ['Degree'],
+        'hospital_affiliations': ['Hospital'],
+        'parts_of_me': ['Part'],
+        'professional_interests': ['Interest'],
+    }
 
 
 def test_get_all_public_tags_duplicate_tags(db_session):
@@ -45,9 +64,10 @@ def test_get_all_public_tags_duplicate_tags(db_session):
 
     tags = get_all_public_tags()
 
-    assert set(tags) == {
-        ('duplicate', 'activities'),
-        ('duplicate', 'clinical_specialties'),
+    assert tags == {
+        **EMPTY_TAGS,
+        'activities': ['duplicate'],
+        'clinical_specialties': ['duplicate'],
     }
 
 
@@ -59,4 +79,4 @@ def test_non_public_tags_excluded(db_session):
 
     tags = get_all_public_tags()
 
-    assert tags == []
+    assert tags == EMPTY_TAGS
