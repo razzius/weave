@@ -43,10 +43,10 @@ isort = "*"
 python_version = "3.7"
 
 [scripts]
-flake8 = "flake8 server tests"
 start = "env FLASK_ENV=development flask run --host=0.0.0.0"
+test = "env FLASK_ENV=development py.test tests"
+flake8 = "flake8 server tests"
 shell = "ipython -i server/scripts/shell.py"
-test = "py.test tests"
 
 [pipenv]
 allow_prereleases = true
