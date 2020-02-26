@@ -1,4 +1,4 @@
-from server import db
+from server.models import db
 from server import app
 
 

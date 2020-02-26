@@ -96,6 +96,6 @@ def init_admin(app):
         basic_auth.init_app(app)
         admin.init_app(app)
     else:
-        app.logger.warn(
+        app.logger.warning(
             'Not configuring admin because BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD are not set.'
         )

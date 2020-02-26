@@ -17,7 +17,7 @@ def init_email(app):
     email_backend: EmailBackend
 
     if SPARKPOST_API_KEY is None:
-        app.logger.warn(
+        app.logger.warning(
             'Configuring email to log to console because SPARKPOST_API_KEY is not set.'
         )
         app.email_backend = ConsoleEmailBackend()

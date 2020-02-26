@@ -1,22 +1,7 @@
 import pytest
 from pytest_postgresql.factories import DatabaseJanitor
-from server.app import app
+from server.app import create_app
 from server.models import db
-
-
-@pytest.fixture
-def client():
-    app.config['TESTING'] = True
-
-    test_client = app.test_client()
-
-    with app.app_context():
-        db.create_all()
-
-        yield test_client
-
-        db.session.remove()
-        db.drop_all()
 
 
 @pytest.fixture(scope='session')
@@ -38,8 +23,29 @@ def database():
     janitor.drop()
 
 
+@pytest.fixture
+def app():
+    app = create_app()
+    app.config['TESTING'] = True
+    app.config['ENV'] = 'development'
+    return app
+
+
+@pytest.fixture
+def client(app):
+    test_client = app.test_client()
+
+    with app.app_context():
+        db.create_all()
+
+        yield test_client
+
+        db.session.remove()
+        db.drop_all()
+
+
 @pytest.fixture(scope='function')
-def _db(database):
+def _db(database, app):
     """
     Provide the transactional fixtures with access to the database via a Flask-SQLAlchemy
     database connection.
