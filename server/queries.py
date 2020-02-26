@@ -1,4 +1,4 @@
-from .models import VerificationToken
+from .models import VerificationToken, db
 import operator
 from functools import reduce
 from typing import List, Optional
@@ -189,15 +189,22 @@ def get_all_public_tags():
     ]
 
     tag_queries = [
-        cls.query.with_entities(cls.value, sql.expression.literal(name)).filter(
-            cls.public.is_(True)
-        )
+        cls.query.with_entities(
+            cls.value.label('value'), sql.expression.literal(name).label('option_type')
+        ).filter(cls.public.is_(True))
         for cls, name in tag_classes
     ]
 
-    def union_selects(s1, s2):
-        return s1.union(s2)
+    select = tag_queries[0].union(*tag_queries[1:])
 
-    res = reduce(union_selects, tag_queries)
+    cte = select.cte('tags')
 
-    return res.all()
+    result = db.session.query(
+        cte.columns.option_type, func.array_agg(cte.columns.value)
+    ).group_by(cte.columns.option_type)
+
+    # Need to default to empty list for each tag type, since tags with no
+    # public values will not be in the result
+    empty_values = {name: [] for _, name in tag_classes}
+
+    return {**empty_values, **dict(result)}

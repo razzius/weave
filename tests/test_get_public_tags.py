@@ -1,11 +1,6 @@
 from http import HTTPStatus
 
-from server.models import (
-    ActivityOption,
-    VerificationEmail,
-    VerificationToken,
-    save
-)
+from server.models import ActivityOption, VerificationEmail, VerificationToken, save
 
 
 def test_get_public_tags_needs_authorization(client):
@@ -44,11 +39,11 @@ def test_get_public_tags(client):
 
     save(VerificationToken(token=token, email_id=verification_email.id))
 
+    save(ActivityOption(value='activity', public=True))
+
     response = client.get('/api/tags', headers={'Authorization': f'Token {token}'})
 
     assert response.status_code == HTTPStatus.OK.value
-
-    save(ActivityOption(value='activity', public=True))
 
     assert response.json == {
         'tags': {
