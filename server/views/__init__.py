@@ -53,7 +53,7 @@ LOGIN_TIMEOUT_STATUS = 440
 TOKEN_EXPIRY_AGE_HOURS = int(os.environ.get('REACT_APP_TOKEN_EXPIRY_AGE_HOURS', 1))
 
 
-api = Blueprint('api', __name__)
+api = Blueprint('api', __name__, url_prefix='/api/')
 
 
 class UserError(Exception):
@@ -109,7 +109,7 @@ def get_token(headers):
     return verification_token
 
 
-@api.route('/api/profiles')
+@api.route('profiles')
 def get_profiles():
     verification_token = get_token(request.headers)
 
@@ -171,7 +171,12 @@ def get_profiles():
     )
 
 
-@api.route('/api/profiles/<profile_id>')
+@api.route('tags')
+def get_public_tags():
+    pass
+
+
+@api.route('profiles/<profile_id>')
 def get_profile(profile_id=None):
     get_token(request.headers)  # Ensure valid requesting token
 
@@ -190,7 +195,7 @@ def get_profile(profile_id=None):
 
 
 def api_post(route):
-    return api.route(f'/api/{route}', methods=['POST'])
+    return api.route(route, methods=['POST'])
 
 
 def flat_values(values):
@@ -304,7 +309,7 @@ def create_profile():
     return jsonify(profile_schema.dump(profile)), HTTPStatus.CREATED.value
 
 
-@api.route('/api/profiles/<profile_id>', methods=['PUT'])
+@api.route('profiles/<profile_id>', methods=['PUT'])
 def update_profile(profile_id=None):
     try:
         schema = profile_schema.load(request.json)
