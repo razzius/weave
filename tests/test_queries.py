@@ -45,7 +45,10 @@ def test_get_all_public_tags_duplicate_tags(db_session):
 
     tags = get_all_public_tags()
 
-    assert [tag.value for tag in tags] == ['duplicate']
+    assert set(tags) == {
+        ('duplicate', 'activities'),
+        ('duplicate', 'clinical_specialties'),
+    }
 
 
 def test_non_public_tags_excluded(db_session):

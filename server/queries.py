@@ -4,7 +4,7 @@ from functools import reduce
 from typing import List, Optional
 
 from flask_sqlalchemy import BaseQuery
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, sql
 
 from .models import (
     ActivityOption,
@@ -180,16 +180,19 @@ def matching_profiles(
 
 def get_all_public_tags():
     tag_classes = [
-        ActivityOption,
-        ClinicalSpecialtyOption,
-        DegreeOption,
-        HospitalAffiliationOption,
-        PartsOfMeOption,
-        ProfessionalInterestOption,
+        (ActivityOption, 'activities'),
+        (ClinicalSpecialtyOption, 'clinical_specialties'),
+        (DegreeOption, 'degrees'),
+        (HospitalAffiliationOption, 'hospital_affiliations'),
+        (PartsOfMeOption, 'parts_of_me'),
+        (ProfessionalInterestOption, 'professional_interests'),
     ]
+
     tag_queries = [
-        cls.query.with_entities(cls.value).filter(cls.public.is_(True))
-        for cls in tag_classes
+        cls.query.with_entities(cls.value, sql.expression.literal(name)).filter(
+            cls.public.is_(True)
+        )
+        for cls, name in tag_classes
     ]
 
     def union_selects(s1, s2):
