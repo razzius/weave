@@ -20,7 +20,7 @@ def database():
     pg_host = parsed_url.hostname
     pg_port = parsed_url.port
     pg_user = parsed_url.username
-    pg_db = 'weave_test'
+    pg_db = parsed_url.path[1:]
     pg_version = 10.11
 
     janitor = DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, pg_version)
