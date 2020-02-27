@@ -26,6 +26,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     app.config['BASIC_AUTH_USERNAME'] = os.environ.get('BASIC_AUTH_USERNAME')
     app.config['BASIC_AUTH_PASSWORD'] = os.environ.get('BASIC_AUTH_PASSWORD')
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
 
     db.init_app(app)
     CORS(app)
