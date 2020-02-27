@@ -39,19 +39,6 @@ def app():
     return app
 
 
-@pytest.fixture
-def client(app):
-    test_client = app.test_client()
-
-    with app.app_context():
-        db.create_all()
-
-        yield test_client
-
-        db.session.remove()
-        db.drop_all()
-
-
 @pytest.fixture(scope='function')
 def _db(database, app):
     """
@@ -67,3 +54,8 @@ def _db(database, app):
 
         db.session.remove()
         db.drop_all()
+
+
+@pytest.fixture
+def client(app, _db):
+    return app.test_client()
