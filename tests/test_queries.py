@@ -30,10 +30,10 @@ def test_get_all_public_tags_no_tags(db_session):
 
 def test_get_all_public_tags_one_of_each_tag(db_session):
     options = [
+        HospitalAffiliationOption(value='Hospital'),
+        DegreeOption(value='Degree'),
         ActivityOption(value='Activity', public=True),
         ClinicalSpecialtyOption(value='Specialty', public=True),
-        DegreeOption(value='Degree', public=True),
-        HospitalAffiliationOption(value='Hospital', public=True),
         PartsOfMeOption(value='Part', public=True),
         ProfessionalInterestOption(value='Interest', public=True),
     ]
