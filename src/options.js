@@ -4,7 +4,7 @@ import clinicalSpecialties from './clinicalSpecialties'
 import activitiesIEnjoyTags from './activitiesIEnjoyTags'
 import degrees from './degrees'
 
-function makeOptions(list) {
+export function makeOptions(list) {
   return list.map(item => ({
     label: item,
     value: item,

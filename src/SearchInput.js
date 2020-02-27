@@ -2,11 +2,8 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import {
-  hospitalOptions,
-  displayDegreeOptions,
-  searchableOptions,
-} from './options'
+import { type OptionType } from 'react-select/src/types'
+import { displayDegreeOptions } from './options'
 
 function labelValues(values) {
   if (values === null) {
@@ -30,6 +27,8 @@ type Props = {
   menuOpen: boolean,
   onFocus: Function,
   onBlur: Function,
+  searchableOptions: Array<string>,
+  hospitalOptions: Array<OptionType>,
 }
 
 type KeyboardEvent = SyntheticKeyboardEvent<HTMLElement>
@@ -57,6 +56,8 @@ export default class SearchInput extends Component<Props> {
       menuOpen,
       onFocus,
       onBlur,
+      searchableOptions,
+      hospitalOptions,
     } = this.props
 
     return (
