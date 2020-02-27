@@ -46,6 +46,9 @@ class VerificationEmail(IDMixin, db.Model):
 class TagValueMixin(IDMixin):
     date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     value = db.Column(db.String(50))
+
+
+class UserEditableTagMixin(TagValueMixin):
     public = db.Column(db.Boolean, default=False)
 
 
@@ -53,23 +56,23 @@ class HospitalAffiliationOption(TagValueMixin, db.Model):
     pass
 
 
-class ClinicalSpecialtyOption(TagValueMixin, db.Model):
-    pass
-
-
-class ProfessionalInterestOption(TagValueMixin, db.Model):
-    pass
-
-
-class PartsOfMeOption(TagValueMixin, db.Model):
-    pass
-
-
-class ActivityOption(TagValueMixin, db.Model):
-    pass
-
-
 class DegreeOption(TagValueMixin, db.Model):
+    pass
+
+
+class ClinicalSpecialtyOption(UserEditableTagMixin, db.Model):
+    pass
+
+
+class ProfessionalInterestOption(UserEditableTagMixin, db.Model):
+    pass
+
+
+class PartsOfMeOption(UserEditableTagMixin, db.Model):
+    pass
+
+
+class ActivityOption(UserEditableTagMixin, db.Model):
     pass
 
 
