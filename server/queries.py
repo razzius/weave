@@ -179,23 +179,35 @@ def matching_profiles(
 
 
 def get_all_public_tags():
-    tag_classes = [
+    config_tag_classes = [
+        (HospitalAffiliationOption, 'hospital_affiliations'),
+        (DegreeOption, 'degrees'),
+    ]
+
+    public_tag_classes = [
         (ActivityOption, 'activities'),
         (ClinicalSpecialtyOption, 'clinical_specialties'),
-        (DegreeOption, 'degrees'),
-        (HospitalAffiliationOption, 'hospital_affiliations'),
         (PartsOfMeOption, 'parts_of_me'),
         (ProfessionalInterestOption, 'professional_interests'),
     ]
 
-    tag_queries = [
+    config_tag_queries = [
+        cls.query.with_entities(
+            cls.value.label('value'), sql.expression.literal(name).label('option_type')
+        )
+        for cls, name in config_tag_classes
+    ]
+
+    public_tag_queries = [
         cls.query.with_entities(
             cls.value.label('value'), sql.expression.literal(name).label('option_type')
         ).filter(cls.public.is_(True))
-        for cls, name in tag_classes
+        for cls, name in public_tag_classes
     ]
 
-    select = tag_queries[0].union(*tag_queries[1:])
+    queries = config_tag_queries + public_tag_queries
+
+    select = queries[0].union(*queries[1:])
 
     cte = select.cte('tags')
 
@@ -205,6 +217,6 @@ def get_all_public_tags():
 
     # Need to default to empty list for each tag type, since tags with no
     # public values will not be in the result
-    empty_values = {name: [] for _, name in tag_classes}
+    empty_values = {name: [] for _, name in [*config_tag_classes, *public_tag_classes]}
 
     return {**empty_values, **dict(result)}
