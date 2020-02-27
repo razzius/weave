@@ -1,7 +1,13 @@
+import os
+from urllib.parse import urlparse
+
 import pytest
 from pytest_postgresql.factories import DatabaseJanitor
 from server.app import create_app
 from server.models import db
+
+
+TEST_DATABASE_URL = os.environ.get('TEST_DATABASE_URL', 'postgresql:///weave_test')
 
 
 @pytest.fixture(scope='session')
@@ -9,10 +15,12 @@ def database():
     """
     Create a Postgres database for the tests, and drop it when the tests are done.
     """
-    pg_host = None
-    pg_port = None
-    pg_user = None
-    pg_db = 'test_weave'
+    parsed_url = urlparse(TEST_DATABASE_URL)
+
+    pg_host = parsed_url.hostname
+    pg_port = parsed_url.port
+    pg_user = parsed_url.username
+    pg_db = 'weave_test'
     pg_version = 10.11
 
     janitor = DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, pg_version)
@@ -50,7 +58,7 @@ def _db(database, app):
     Provide the transactional fixtures with access to the database via a Flask-SQLAlchemy
     database connection.
     """
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///test_weave'
+    app.config['SQLALCHEMY_DATABASE_URI'] = TEST_DATABASE_URL
 
     with app.app_context():
         db.create_all()
