@@ -1,6 +1,7 @@
 import os
 from urllib.parse import urlparse
 
+import psycopg2
 import pytest
 from pytest_postgresql.factories import DatabaseJanitor
 from server.app import create_app
@@ -24,7 +25,11 @@ def database():
     pg_version = 10.11
 
     janitor = DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, pg_version)
-    janitor.init()
+
+    try:
+        janitor.init()
+    except psycopg2.errors.DuplicateDatabase:
+        print('`database` fixture: Database already created')
 
     yield
 
