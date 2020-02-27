@@ -261,3 +261,7 @@ export async function uploadPicture(token: string, file: File) {
     body: file,
   })
 }
+
+export async function getTags(token: string) {
+  return http(token, buildURL('api/tags'))
+}
