@@ -13,7 +13,7 @@ def database():
     pg_port = None
     pg_user = None
     pg_db = 'test_weave'
-    pg_version = 11.1
+    pg_version = 10.11
 
     janitor = DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, pg_version)
     janitor.init()

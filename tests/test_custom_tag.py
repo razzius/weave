@@ -7,7 +7,7 @@ from server.models import (
     Profile,
     VerificationEmail,
     VerificationToken,
-    save
+    save,
 )
 
 

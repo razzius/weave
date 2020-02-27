@@ -7,7 +7,7 @@ from server.models import (
     HospitalAffiliationOption,
     PartsOfMeOption,
     ProfessionalInterestOption,
-    save
+    save,
 )
 from server.queries import get_all_public_tags
 
