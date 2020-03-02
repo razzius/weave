@@ -53,7 +53,7 @@ PIPENV_NOSPIN=1 pipenv install --dev --ignore-pipfile
 pipenv run python -m server.scripts.resetdb
 
 # Install javascript dependencies
-# yarn install
+yarn install
 
 # Automatically switch to /vagrant directory upon login
 test -e ~/.bash_profile || echo 'cd /vagrant' > ~/.bash_profile
