@@ -546,7 +546,7 @@ export default class ProfileForm extends Component<Props, State> {
                 where faculty may share optional demographic or personally
                 meaningful information that is viewable by students and faculty
                 on Weave. Please{' '}
-                <Link to="/help" target="_blank">
+                <Link to="/help#how-do-i-create-my-own-tags" target="_blank">
                   create your own tags
                 </Link>{' '}
                 in this section. You may create as many “Parts of me” tags as
