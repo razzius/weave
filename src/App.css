@@ -24,7 +24,7 @@ section {
   margin: 1em;
 }
 #background {
-  background: url('https://i.imgur.com/HUdSiNr.png');
+  background: url('assets/harvard-campus.png');
   background-size: cover;
   width: 100%;
   overflow: auto;
