@@ -109,12 +109,19 @@ $ yarn start
 
 If you are running the application outside of a virtual machine, or if the
 virtual machine has a graphical user interface, you may access the application
-directly on `localhost`.
+directly at http://localhost:3000.
+
+The admin is served by the server, rather than the frontend, so it is accessible at http://localhost:5000/admin.
+It is protected by http basic auth using the environment variables `BASIC_AUTH_USERNAME`,
+`BASIC_AUTH_PASSWORD`, and `SECRET_KEY`. The username and password are used to sign in and the secret key is used
+as a persistent key to sign sessions.
 
 ```sh
-# Open the frontend in your browser
-$ open http://localhost:3000
-# Open the local admin (note that the backend serves the admin as html, rather than the frontend serving it)
+# The following secrets can be set to anything locally. Use secret values in production.
+$ export BASIC_AUTH_USERNAME='username'
+$ export BASIC_AUTH_PASSWORD='password'
+$ export SECRET_KEY='secret'
+# Open the local admin
 $ open http://localhost:5000/admin
 ```
 
