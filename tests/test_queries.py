@@ -80,3 +80,11 @@ def test_non_public_tags_excluded(db_session):
     tags = get_all_public_tags()
 
     assert tags == EMPTY_TAGS
+
+
+def test_tags_with_no_profiles_excluded(db_session):
+    save(ActivityOption(value='Activity', public=True))
+
+    tags = get_all_public_tags()
+
+    assert tags == EMPTY_TAGS
