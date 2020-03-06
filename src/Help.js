@@ -102,7 +102,7 @@ const Help = () => (
       students.
     </p>
 
-    <h3>How do I create my own tags?</h3>
+    <h3 id="how-do-i-create-my-own-tags">How do I create my own tags?</h3>
     <p>
       We recognize that our default lists will not allow every faculty member to
       describe themselves fully. In order to do so, you may create your own tags
