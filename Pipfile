@@ -39,6 +39,7 @@ mypy = "*"
 colorama = {version = "*",sys_platform = "== 'win32'"}
 isort = "*"
 pytest-flask-sqlalchemy = "*"
+pytest-watch = "*"
 
 [requires]
 python_version = "3.7"
