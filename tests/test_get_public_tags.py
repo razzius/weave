@@ -1,6 +1,13 @@
 from http import HTTPStatus
 
-from server.models import ActivityOption, VerificationEmail, VerificationToken, save
+from server.models import (
+    ActivityOption,
+    Profile,
+    ProfileActivity,
+    VerificationEmail,
+    VerificationToken,
+    save,
+)
 
 
 def test_get_public_tags_needs_authorization(client):
@@ -39,7 +46,18 @@ def test_get_public_tags(client):
 
     save(VerificationToken(token=token, email_id=verification_email.id))
 
-    save(ActivityOption(value='activity', public=True))
+    profile = save(
+        Profile(
+            verification_email=verification_email,
+            name='Test User',
+            cadence='monthly',
+            contact_email='user@test.com',
+        )
+    )
+
+    activity_option = save(ActivityOption(value='activity', public=True))
+
+    save(ProfileActivity(profile=profile, tag=activity_option))
 
     response = client.get('/api/tags', headers={'Authorization': f'Token {token}'})
 

@@ -178,31 +178,37 @@ def matching_profiles(
     )
 
 
-def get_all_public_tags():
+def get_all_searchable_tags():
+    def query_value_with_option_type_label(tag_class, profile_relation_class, name):
+        return tag_class.query.join(
+            profile_relation_class, tag_class.id == profile_relation_class.tag_id
+        ).with_entities(
+            tag_class.value.label('value'),
+            sql.expression.literal(name).label('option_type'),
+        )
+
     config_tag_classes = [
-        (HospitalAffiliationOption, 'hospital_affiliations'),
-        (DegreeOption, 'degrees'),
+        (HospitalAffiliationOption, HospitalAffiliation, 'hospital_affiliations'),
+        (DegreeOption, ProfileDegree, 'degrees'),
     ]
 
     public_tag_classes = [
-        (ActivityOption, 'activities'),
-        (ClinicalSpecialtyOption, 'clinical_specialties'),
-        (PartsOfMeOption, 'parts_of_me'),
-        (ProfessionalInterestOption, 'professional_interests'),
+        (ActivityOption, ProfileActivity, 'activities'),
+        (ClinicalSpecialtyOption, ClinicalSpecialty, 'clinical_specialties'),
+        (PartsOfMeOption, PartsOfMe, 'parts_of_me'),
+        (ProfessionalInterestOption, ProfessionalInterest, 'professional_interests'),
     ]
 
     config_tag_queries = [
-        cls.query.with_entities(
-            cls.value.label('value'), sql.expression.literal(name).label('option_type')
-        )
-        for cls, name in config_tag_classes
+        query_value_with_option_type_label(tag_class, profile_relation_class, name)
+        for tag_class, profile_relation_class, name in config_tag_classes
     ]
 
     public_tag_queries = [
-        cls.query.with_entities(
-            cls.value.label('value'), sql.expression.literal(name).label('option_type')
-        ).filter(cls.public.is_(True))
-        for cls, name in public_tag_classes
+        query_value_with_option_type_label(
+            tag_class, profile_relation_class, name
+        ).filter(tag_class.public.is_(True))
+        for tag_class, profile_relation_class, name in public_tag_classes
     ]
 
     queries = config_tag_queries + public_tag_queries
@@ -217,6 +223,8 @@ def get_all_public_tags():
 
     # Need to default to empty list for each tag type, since tags with no
     # public values will not be in the result
-    empty_values = {name: [] for _, name in [*config_tag_classes, *public_tag_classes]}
+    empty_values = {
+        name: [] for _, _, name in [*config_tag_classes, *public_tag_classes]
+    }
 
     return {**empty_values, **dict(result)}
