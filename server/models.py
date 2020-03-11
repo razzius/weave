@@ -50,7 +50,7 @@ class TagValueMixin(IDMixin):
 
 
 class UserEditableTagMixin(TagValueMixin):
-    public = db.Column(db.Boolean, default=False)
+    public = db.Column(db.Boolean, default=True)
 
 
 class HospitalAffiliationOption(TagValueMixin, db.Model):
