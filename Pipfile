@@ -50,6 +50,7 @@ start = "env FLASK_ENV=development flask run --host=0.0.0.0"
 test = "env FLASK_ENV=development pytest tests"
 flake8 = "flake8 server tests"
 shell = "ipython -i server/scripts/shell.py"
+resetdb = "python -m server.scripts.resetdb"
 
 [pipenv]
 allow_prereleases = true
