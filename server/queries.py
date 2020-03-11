@@ -180,11 +180,16 @@ def matching_profiles(
 
 def get_all_searchable_tags():
     def query_value_with_option_type_label(tag_class, profile_relation_class, name):
-        return tag_class.query.join(
-            profile_relation_class, tag_class.id == profile_relation_class.tag_id
-        ).with_entities(
-            tag_class.value.label('value'),
-            sql.expression.literal(name).label('option_type'),
+        return (
+            tag_class.query.join(
+                profile_relation_class, tag_class.id == profile_relation_class.tag_id
+            )
+            .join(Profile, profile_relation_class.profile_id == Profile.id)
+            .filter(Profile.available_for_mentoring.is_(True))
+            .with_entities(
+                tag_class.value.label('value'),
+                sql.expression.literal(name).label('option_type'),
+            )
         )
 
     config_tag_classes = [
@@ -222,7 +227,7 @@ def get_all_searchable_tags():
     ).group_by(cte.columns.option_type)
 
     # Need to default to empty list for each tag type, since tags with no
-    # public values will not be in the result
+    # searchable values will not be in the result
     empty_values = {
         name: [] for _, _, name in [*config_tag_classes, *public_tag_classes]
     }
