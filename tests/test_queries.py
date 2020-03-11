@@ -2,14 +2,22 @@ from typing import Dict, List
 
 from server.models import (
     ActivityOption,
+    ClinicalSpecialty,
     ClinicalSpecialtyOption,
     DegreeOption,
+    HospitalAffiliation,
     HospitalAffiliationOption,
+    PartsOfMe,
     PartsOfMeOption,
+    ProfessionalInterest,
     ProfessionalInterestOption,
+    ProfileActivity,
+    ProfileDegree,
     save,
 )
-from server.queries import get_all_public_tags
+from server.queries import get_all_searchable_tags
+
+from .utils import create_test_profile
 
 
 EMPTY_TAGS: Dict[str, List[str]] = {
@@ -22,13 +30,15 @@ EMPTY_TAGS: Dict[str, List[str]] = {
 }
 
 
-def test_get_all_public_tags_no_tags(db_session):
-    tags = get_all_public_tags()
+def test_get_all_searchable_tags_no_tags(db_session):
+    tags = get_all_searchable_tags()
 
     assert tags == EMPTY_TAGS
 
 
-def test_get_all_public_tags_one_of_each_tag(db_session):
+def test_get_all_searchable_tags_one_of_each_tag(db_session):
+    profile = create_test_profile()
+
     options = [
         HospitalAffiliationOption(value='Hospital'),
         DegreeOption(value='Degree'),
@@ -38,10 +48,27 @@ def test_get_all_public_tags_one_of_each_tag(db_session):
         ProfessionalInterestOption(value='Interest', public=True),
     ]
 
+    relation_classes = [
+        HospitalAffiliation,
+        ProfileDegree,
+        ProfileActivity,
+        ClinicalSpecialty,
+        PartsOfMe,
+        ProfessionalInterest,
+    ]
+
     for option in options:
         save(option)
 
-    tags = get_all_public_tags()
+    profile_relations = [
+        cls(tag_id=option.id, profile_id=profile.id)
+        for cls, option in zip(relation_classes, options)
+    ]
+
+    for relation in profile_relations:
+        save(relation)
+
+    tags = get_all_searchable_tags()
 
     assert tags == {
         'activities': ['Activity'],
@@ -53,7 +80,9 @@ def test_get_all_public_tags_one_of_each_tag(db_session):
     }
 
 
-def test_get_all_public_tags_duplicate_tags(db_session):
+def test_get_all_searchable_tags_duplicate_tags(db_session):
+    profile = create_test_profile()
+
     options = [
         ActivityOption(value='duplicate', public=True),
         ClinicalSpecialtyOption(value='duplicate', public=True),
@@ -62,7 +91,17 @@ def test_get_all_public_tags_duplicate_tags(db_session):
     for option in options:
         save(option)
 
-    tags = get_all_public_tags()
+    relation_classes = [ProfileActivity, ClinicalSpecialty]
+
+    profile_relations = [
+        cls(tag_id=option.id, profile_id=profile.id)
+        for cls, option in zip(relation_classes, options)
+    ]
+
+    for relation in profile_relations:
+        save(relation)
+
+    tags = get_all_searchable_tags()
 
     assert tags == {
         **EMPTY_TAGS,
@@ -77,7 +116,7 @@ def test_non_public_tags_excluded(db_session):
     for option in options:
         save(option)
 
-    tags = get_all_public_tags()
+    tags = get_all_searchable_tags()
 
     assert tags == EMPTY_TAGS
 
@@ -85,6 +124,6 @@ def test_non_public_tags_excluded(db_session):
 def test_tags_with_no_profiles_excluded(db_session):
     save(ActivityOption(value='Activity', public=True))
 
-    tags = get_all_public_tags()
+    tags = get_all_searchable_tags()
 
     assert tags == EMPTY_TAGS

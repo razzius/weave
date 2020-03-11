@@ -9,7 +9,7 @@ from cloudinary import uploader
 from dateutil.relativedelta import relativedelta
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
-from server.queries import get_all_public_tags
+from server.queries import get_all_searchable_tags
 from sqlalchemy import asc, desc, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import exists
@@ -175,7 +175,7 @@ def get_profiles():
 def get_public_tags():
     get_token(request.headers)  # Ensure valid requesting token
 
-    tags = get_all_public_tags()
+    tags = get_all_searchable_tags()
 
     return {'tags': tags}
 
