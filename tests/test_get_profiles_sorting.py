@@ -9,16 +9,21 @@ def test_sort_profiles_by_date_updated(client):
         email='test@test.com',
         name='Own Profile',
         date_updated=datetime.datetime(2018, 1, 1),
+        available_for_mentoring=True,
     )
 
     recently_updated_profile = create_test_profile(
-        email='updated@test.com', name='Z', date_updated=datetime.datetime(2019, 10, 1)
+        email='updated@test.com',
+        name='Z',
+        date_updated=datetime.datetime(2019, 10, 1),
+        available_for_mentoring=True,
     )
 
     not_recently_updated_profile = create_test_profile(
         email='not_updated@test.com',
         name='A',
         date_updated=datetime.datetime(2017, 10, 1),
+        available_for_mentoring=True,
     )
 
     own_token = own_profile.verification_email.verification_tokens[0].token

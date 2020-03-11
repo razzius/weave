@@ -37,7 +37,7 @@ def test_get_all_searchable_tags_no_tags(db_session):
 
 
 def test_get_all_searchable_tags_one_of_each_tag(db_session):
-    profile = create_test_profile()
+    profile = create_test_profile(available_for_mentoring=True)
 
     options = [
         HospitalAffiliationOption(value='Hospital'),
@@ -81,7 +81,7 @@ def test_get_all_searchable_tags_one_of_each_tag(db_session):
 
 
 def test_get_all_searchable_tags_duplicate_tags(db_session):
-    profile = create_test_profile()
+    profile = create_test_profile(available_for_mentoring=True)
 
     options = [
         ActivityOption(value='duplicate', public=True),
@@ -123,6 +123,18 @@ def test_non_public_tags_excluded(db_session):
 
 def test_tags_with_no_profiles_excluded(db_session):
     save(ActivityOption(value='Activity', public=True))
+
+    tags = get_all_searchable_tags()
+
+    assert tags == EMPTY_TAGS
+
+
+def test_only_available_profile_tags(db_session):
+    profile = create_test_profile()
+
+    tag = save(ActivityOption(value='duplicate', public=True))
+
+    save(ProfileActivity(tag=tag, profile=profile))
 
     tags = get_all_searchable_tags()
 

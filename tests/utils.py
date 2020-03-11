@@ -20,6 +20,7 @@ def create_test_profile(
     name='Test User',
     email='test@test.com',
     is_admin=False,
+    available_for_mentoring=False,
     date_updated=datetime.date.today(),
 ) -> Profile:
     if token is None:
@@ -36,6 +37,7 @@ def create_test_profile(
             name=name,
             verification_email_id=verification_email.id,
             contact_email=email,
+            available_for_mentoring=available_for_mentoring,
             cadence='monthly',
         )
     )
