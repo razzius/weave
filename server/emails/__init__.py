@@ -2,6 +2,8 @@ import os
 
 from flask import current_app
 
+from flask_mail import Mail, Message
+
 from .console_email_backend import ConsoleEmailBackend
 from .email_backend import EmailBackend
 from .sparkpost_email_backend import SparkPostEmailBackend
@@ -11,18 +13,22 @@ SERVER_URL = os.environ.get('REACT_APP_SERVER_URL', 'http://localhost:5000')
 CLIENT_URL = os.environ.get('WEAVE_CLIENT_URL', SERVER_URL)
 
 SPARKPOST_API_KEY = os.environ.get('SPARKPOST_API_KEY')
+MAIL_SERVER = os.environ.get('MAIL_SERVER')
 
 
 def init_email(app):
     email_backend: EmailBackend
 
-    if SPARKPOST_API_KEY is None:
+    if MAIL_SERVER is not None:
+        mail = Mail(app)
+        app.email_backend = mail
+    elif SPARKPOST_API_KEY:
+        app.email_backend = SparkPostEmailBackend(SPARKPOST_API_KEY)
+    else:
         app.logger.warning(
             'Configuring email to log to console because SPARKPOST_API_KEY is not set.'
         )
         app.email_backend = ConsoleEmailBackend()
-    else:
-        app.email_backend = SparkPostEmailBackend(SPARKPOST_API_KEY)
 
 
 EMAIL_CLOSING = """
@@ -69,9 +75,9 @@ def send_faculty_registration_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return current_app.email_backend.send_email(
-        email, 'Weave Mentor Registration', html
-    )
+    message = Message('Weave Mentor Registration', recipients=[email], html=html)
+
+    return current_app.email_backend.send(message)
 
 
 def send_student_registration_email(email, token):
@@ -100,9 +106,9 @@ def send_student_registration_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return current_app.email_backend.send_email(
-        email, 'Weave Mentee Registration', html
-    )
+    message = Message('Weave Mentee Registration', recipients=[email], html=html)
+
+    return current_app.email_backend.send(message)
 
 
 def send_faculty_login_email(email, token):
@@ -123,7 +129,9 @@ def send_faculty_login_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return current_app.email_backend.send_email(email, 'Weave Mentor Login', html)
+    message = Message('Weave Mentor Login', recipients=[email], html=html)
+
+    return current_app.email_backend.send(message)
 
 
 def send_student_login_email(email, token):
@@ -144,4 +152,6 @@ def send_student_login_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return current_app.email_backend.send_email(email, 'Weave Mentee Login', html)
+    message = Message('Weave Mentee Login', recipients=[email], html=html)
+
+    return current_app.email_backend.send(message)
