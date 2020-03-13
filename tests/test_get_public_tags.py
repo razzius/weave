@@ -11,7 +11,7 @@ from server.models import (
 
 
 def test_get_public_tags_needs_authorization(client):
-    response = client.get('/api/tags')
+    response = client.get('/api/search_tags')
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED.value
 
@@ -24,7 +24,9 @@ def test_get_empty_public_tags(client):
     verification_token = VerificationToken(token=token, email_id=verification_email.id)
     save(verification_token)
 
-    response = client.get('/api/tags', headers={'Authorization': f'Token {token}'})
+    response = client.get(
+        '/api/search_tags', headers={'Authorization': f'Token {token}'}
+    )
 
     assert response.status_code == HTTPStatus.OK.value
 
@@ -59,7 +61,9 @@ def test_get_public_tags(client):
 
     save(ProfileActivity(profile=profile, tag=activity_option))
 
-    response = client.get('/api/tags', headers={'Authorization': f'Token {token}'})
+    response = client.get(
+        '/api/search_tags', headers={'Authorization': f'Token {token}'}
+    )
 
     assert response.status_code == HTTPStatus.OK.value
 
