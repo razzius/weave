@@ -171,7 +171,7 @@ def get_profiles():
     )
 
 
-@api.route('/tags')
+@api.route('/search_tags')
 def get_public_tags():
     get_token(request.headers)  # Ensure valid requesting token
 
