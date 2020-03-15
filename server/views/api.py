@@ -1,3 +1,4 @@
+from server.queries import query_profile_tags
 import datetime
 import os
 import uuid
@@ -9,7 +10,7 @@ from cloudinary import uploader
 from dateutil.relativedelta import relativedelta
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
-from server.queries import get_all_searchable_tags
+from server.queries import query_searchable_tags
 from sqlalchemy import asc, desc, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import exists
@@ -171,11 +172,20 @@ def get_profiles():
     )
 
 
-@api.route('/search_tags')
-def get_public_tags():
+@api.route('/profile-tags')
+def get_profile_tags():
     get_token(request.headers)  # Ensure valid requesting token
 
-    tags = get_all_searchable_tags()
+    tags = query_profile_tags()
+
+    return {'tags': tags}
+
+
+@api.route('/search-tags')
+def get_search_tags():
+    get_token(request.headers)  # Ensure valid requesting token
+
+    tags = query_searchable_tags()
 
     return {'tags': tags}
 

@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import { Link, Prompt, type RouterHistory } from 'react-router-dom'
 import AvatarEditor from 'react-avatar-editor'
-import Select from 'react-select'
 import { type ValueType } from 'react-select/src/types'
 import Dropzone from 'react-dropzone'
 import Promise from 'promise-polyfill'
@@ -11,13 +10,14 @@ import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
 import PreviewProfile from './PreviewProfile'
 import CadenceOption from './CadenceOption'
+import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
-import { uploadPicture, type Profile } from './api'
+import { getProfileTags, uploadPicture, type Profile } from './api'
 import {
+  makeOptions,
   clinicalSpecialtyOptions,
   professionalInterestOptions,
   activitiesIEnjoyOptions,
-  hospitalOptions,
   degreeOptions,
 } from './options'
 import { arrayCaseInsensitiveContains, capitalize, last, when } from './utils'
@@ -91,6 +91,8 @@ type State = {
   otherCadence: string,
   preview: boolean,
   saved: boolean,
+
+  hospitalOptions: Array<string>,
 }
 
 export default class ProfileForm extends Component<Props, State> {
@@ -132,14 +134,21 @@ export default class ProfileForm extends Component<Props, State> {
     otherCadence: '',
     preview: false,
     saved: false,
+
+    hospitalOptions: [],
   }
 
   async componentDidMount() {
-    const { loadInitial } = this.props
-    if (loadInitial) {
-      const data = await loadInitial()
-      this.setState(data)
-    }
+    const { loadInitial, token } = this.props
+
+    const initialData = loadInitial ? await loadInitial() : {}
+
+    const { tags } = await getProfileTags(token)
+
+    this.setState({
+      ...initialData,
+      hospitalOptions: tags.hospital_affiliations,
+    })
   }
 
   handleCreate = (key: string) => (selected: string) => {
@@ -293,6 +302,7 @@ export default class ProfileForm extends Component<Props, State> {
       clinicalSpecialties,
       contactEmail,
       degrees,
+      hospitalOptions,
       image,
       imageUrl,
       name,
@@ -503,23 +513,10 @@ export default class ProfileForm extends Component<Props, State> {
               handleChange={this.handleChange('degrees')}
               handleAdd={this.handleCreate('degrees')}
             />
-            <p>Institutional Affiliations</p>
-            <Select
-              styles={{
-                control: base => ({ ...base, backgroundColor: 'white' }),
-                multiValue: styles => ({
-                  ...styles,
-                  backgroundColor: '#edf4fe',
-                }),
-              }}
-              className="column"
-              isMulti
-              options={hospitalOptions}
-              value={affiliations.map(value => ({
-                label: value,
-                value,
-              }))}
-              onChange={this.handleChange('affiliations')}
+            <InstitutionalAffiliationsForm
+              affiliations={makeOptions(affiliations)}
+              hospitalOptions={hospitalOptions}
+              handleChange={this.handleChange('affiliations')}
             />
             <div className="user-tip">
               In the following sections, in addition to choosing from the tags
