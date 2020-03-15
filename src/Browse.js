@@ -6,7 +6,7 @@ import { Beforeunload } from 'react-beforeunload'
 import AppScreen from './AppScreen'
 import ResultsView from './ResultsView'
 import SearchInput from './SearchInput'
-import { getProfiles, getTags } from './api'
+import { getProfiles, getSearchTags } from './api'
 import { makeOptions } from './options'
 import { partition } from './utils'
 
@@ -37,7 +37,7 @@ class Browse extends Component<Props, State> {
     const { token, location } = this.props
     const { page } = this.state
 
-    const { tags } = await getTags(token)
+    const { tags } = await getSearchTags(token)
 
     this.setState({
       predefinedTags: makeOptions([
