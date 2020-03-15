@@ -13,13 +13,7 @@ import CadenceOption from './CadenceOption'
 import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
 import { getProfileTags, uploadPicture, type Profile } from './api'
-import {
-  makeOptions,
-  clinicalSpecialtyOptions,
-  professionalInterestOptions,
-  activitiesIEnjoyOptions,
-  degreeOptions,
-} from './options'
+import { makeOptions, degreeOptions } from './options'
 import { arrayCaseInsensitiveContains, capitalize, last, when } from './utils'
 
 function scaleCanvas(canvas) {
@@ -93,6 +87,9 @@ type State = {
   saved: boolean,
 
   hospitalOptions: Array<string>,
+  clinicalSpecialtyOptions: Array<string>,
+  activitiesIEnjoyOptions: Array<string>,
+  professionalInterestOptions: Array<string>,
 }
 
 export default class ProfileForm extends Component<Props, State> {
@@ -136,6 +133,9 @@ export default class ProfileForm extends Component<Props, State> {
     saved: false,
 
     hospitalOptions: [],
+    clinicalSpecialtyOptions: [],
+    activitiesIEnjoyOptions: [],
+    professionalInterestOptions: [],
   }
 
   async componentDidMount() {
@@ -148,6 +148,9 @@ export default class ProfileForm extends Component<Props, State> {
     this.setState({
       ...initialData,
       hospitalOptions: tags.hospital_affiliations,
+      clinicalSpecialtyOptions: tags.clinical_specialties,
+      professionalInterestOptions: tags.professional_interests,
+      activitiesIEnjoyOptions: tags.activities,
     })
   }
 
@@ -297,9 +300,11 @@ export default class ProfileForm extends Component<Props, State> {
   renderForm() {
     const {
       activities,
+      activitiesIEnjoyOptions,
       affiliations,
       cadence,
       clinicalSpecialties,
+      clinicalSpecialtyOptions,
       contactEmail,
       degrees,
       hospitalOptions,
@@ -309,6 +314,7 @@ export default class ProfileForm extends Component<Props, State> {
       otherCadence,
       partsOfMe,
       preview,
+      professionalInterestOptions,
       professionalInterests,
       rotate,
       scale,
@@ -526,14 +532,14 @@ export default class ProfileForm extends Component<Props, State> {
             <p>Clinical Interests</p>
             <CreatableTagSelect
               values={clinicalSpecialties}
-              options={clinicalSpecialtyOptions}
+              options={makeOptions(clinicalSpecialtyOptions)}
               handleChange={this.handleChange('clinicalSpecialties')}
               handleAdd={this.handleCreate('clinicalSpecialties')}
             />
             <p>Professional Interests</p>
             <CreatableTagSelect
               values={professionalInterests}
-              options={professionalInterestOptions}
+              options={makeOptions(professionalInterestOptions)}
               handleChange={this.handleChange('professionalInterests')}
               handleAdd={this.handleCreate('professionalInterests')}
             />
@@ -566,7 +572,7 @@ export default class ProfileForm extends Component<Props, State> {
               <p>Activities I Enjoy</p>
               <CreatableTagSelect
                 values={activities}
-                options={activitiesIEnjoyOptions}
+                options={makeOptions(activitiesIEnjoyOptions)}
                 handleChange={this.handleChange('activities')}
                 handleAdd={this.handleCreate('activities')}
               />
