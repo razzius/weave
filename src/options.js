@@ -1,6 +1,3 @@
-import professionalInterests from './professionalInterests'
-import clinicalSpecialties from './clinicalSpecialties'
-import activitiesIEnjoyTags from './activitiesIEnjoyTags'
 import degrees from './degrees'
 
 export function makeOptions(list) {
@@ -15,18 +12,6 @@ const displayDegrees = degrees
   .concat('DMD / DDS', 'MD / DO')
   .sort()
 
-export const clinicalSpecialtyOptions = makeOptions(clinicalSpecialties)
-
-export const professionalInterestOptions = makeOptions(professionalInterests)
-
-export const activitiesIEnjoyOptions = makeOptions(activitiesIEnjoyTags)
-
 export const degreeOptions = makeOptions(degrees)
 
 export const displayDegreeOptions = makeOptions(displayDegrees)
-
-export const searchableOptions = [
-  ...clinicalSpecialtyOptions,
-  ...professionalInterestOptions,
-  ...activitiesIEnjoyOptions,
-]
