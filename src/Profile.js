@@ -1,8 +1,10 @@
 // @flow
 import React, { Component } from 'react'
+import { Redirect } from 'react-router'
 
 import AppScreen from './AppScreen'
 import { getProfile, type Account } from './api'
+import { clearToken } from './persistence'
 import ProfileView, { type BaseProfileData } from './ProfileView'
 
 type ProfileData = {|
@@ -11,15 +13,26 @@ type ProfileData = {|
   ...BaseProfileData,
 |}
 
-type ClientError = {
-  profile_id: Array<string>,
-}
+type ClientError =
+  | {
+      profile_id: Array<string>,
+    }
+  | {
+      token: Array<string>,
+    }
 
 function errorView(error: string | ClientError) {
   if (typeof error === 'string') {
     return error
   }
-  if (error.profile_id[0] === 'Not found') {
+  if (error.token instanceof Array && error.token[0] === 'unknown token') {
+    clearToken()
+    return <Redirect to="/login" />
+  }
+  if (
+    error.profile_id instanceof Array &&
+    error.profile_id[0] === 'Not found'
+  ) {
     return 'Profile not found'
   }
 
