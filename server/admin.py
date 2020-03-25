@@ -63,6 +63,7 @@ class VerificationEmailModelView(BasicAuthExportableModelView):
 
 class ModelViewSortedByValue(BasicAuthExportableModelView):
     column_default_sort = ('date_created', False)
+    column_searchable_list = ['value']
 
 
 class ModelViewSortedByDateCreated(BasicAuthExportableModelView):
