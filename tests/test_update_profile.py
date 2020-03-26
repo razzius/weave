@@ -2,10 +2,9 @@ import datetime
 import http
 
 from freezegun import freeze_time
+from server.models import Profile
 
-from server.models import Profile, VerificationEmail, VerificationToken
-
-from .utils import save
+from .utils import create_test_profile
 
 
 MOCK_DATE = datetime.datetime(2019, 10, 21)
@@ -22,23 +21,6 @@ PROFILE_UPDATE = {
 }
 
 
-def create_test_profile(token, email='test@test.com', is_admin=False):
-    verification_email = save(VerificationEmail(email=email, is_admin=is_admin))
-
-    save(VerificationToken(token=token, email_id=verification_email.id))
-
-    profile = save(
-        Profile(
-            name='Test User',
-            verification_email_id=verification_email.id,
-            contact_email=email,
-            cadence='monthly',
-        )
-    )
-
-    return profile
-
-
 @freeze_time(MOCK_DATE)
 def test_update_profile(client):
     token = '1234'
@@ -53,10 +35,7 @@ def test_update_profile(client):
 
     assert response.status_code == http.HTTPStatus.OK.value
 
-    expected_fields = {
-        'contact_email': 'new@test.com',
-        'name': 'New User',
-    }
+    expected_fields = {'contact_email': 'new@test.com', 'name': 'New User'}
 
     assert expected_fields.items() <= response.json.items()
 
@@ -87,10 +66,7 @@ def test_admin_update_does_not_update_date(client):
 def test_tags_cannot_have_trailing_spaces(client):
     token = 'abcd'
 
-    update = {
-        **PROFILE_UPDATE,
-        'clinical_specialties': ['Test '],
-    }
+    update = {**PROFILE_UPDATE, 'clinical_specialties': ['Test ']}
 
     profile = create_test_profile(token)
 

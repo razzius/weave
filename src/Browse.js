@@ -6,8 +6,8 @@ import { Beforeunload } from 'react-beforeunload'
 import AppScreen from './AppScreen'
 import ResultsView from './ResultsView'
 import SearchInput from './SearchInput'
-import { getProfiles } from './api'
-import { searchableOptions } from './options'
+import { getProfiles, getSearchTags } from './api'
+import { makeOptions } from './options'
 import { partition } from './utils'
 
 type Props = Object
@@ -15,6 +15,7 @@ type State = Object
 
 const originalState = {
   affiliations: [],
+  predefinedTags: [],
   degrees: [],
   error: null,
   loading: true,
@@ -26,9 +27,8 @@ const originalState = {
   searchTerms: [],
   sortAscending: false,
   sorting: 'date_updated',
+  hospitalOptions: [],
 }
-
-const predefinedTags = new Set(searchableOptions.map(option => option.value))
 
 class Browse extends Component<Props, State> {
   state = originalState
@@ -36,6 +36,18 @@ class Browse extends Component<Props, State> {
   async componentDidMount() {
     const { token, location } = this.props
     const { page } = this.state
+
+    const { tags } = await getSearchTags(token)
+
+    this.setState({
+      predefinedTags: makeOptions([
+        ...tags.clinical_specialties,
+        ...tags.professional_interests,
+        ...tags.activities,
+        ...tags.parts_of_me,
+      ]),
+      hospitalOptions: makeOptions(tags.hospital_affiliations),
+    })
 
     if (location.state) {
       this.loadProfilesFromHistory(location.state)
@@ -85,12 +97,13 @@ class Browse extends Component<Props, State> {
       results,
       degrees,
       affiliations,
+      predefinedTags,
       sorting,
       sortAscending,
     } = this.state
 
     const [knownTags, userTags] = partition(
-      tag => predefinedTags.has(tag),
+      tag => predefinedTags.includes(tag),
       searchTerms
     )
     const searchArray = search === '' ? [] : [search]
@@ -228,7 +241,15 @@ class Browse extends Component<Props, State> {
   }
 
   resetSearch = () => {
-    this.setState(originalState, this.handleSearch)
+    const { predefinedTags, hospitalOptions } = this.state
+    this.setState(
+      {
+        ...originalState,
+        predefinedTags,
+        hospitalOptions,
+      },
+      this.handleSearch
+    )
   }
 
   nextPage = () => {
@@ -247,6 +268,8 @@ class Browse extends Component<Props, State> {
       queried,
       affiliations,
       menuOpen,
+      predefinedTags,
+      hospitalOptions,
     } = this.state
 
     return (
@@ -259,6 +282,8 @@ class Browse extends Component<Props, State> {
             affiliations={affiliations}
             inputValue={search}
             menuOpen={menuOpen}
+            searchableOptions={predefinedTags}
+            hospitalOptions={hospitalOptions}
             onBlur={() => this.setState({ menuOpen: false })}
             onFocus={() => this.setState({ menuOpen: true })}
             onChange={this.handleChange}

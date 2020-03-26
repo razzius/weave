@@ -62,7 +62,8 @@ class VerificationEmailModelView(BasicAuthExportableModelView):
 
 
 class ModelViewSortedByValue(BasicAuthExportableModelView):
-    column_default_sort = ('value', False)
+    column_default_sort = ('date_created', False)
+    column_searchable_list = ['value']
 
 
 class ModelViewSortedByDateCreated(BasicAuthExportableModelView):
@@ -75,15 +76,17 @@ class ProfileModelView(BasicAuthExportableModelView):
 
 
 admin = Admin(index_view=BasicAuthAdminView())
-admin.add_view(ModelViewSortedByDateCreated(VerificationToken, db.session))
-admin.add_view(VerificationEmailModelView(VerificationEmail, db.session))
 admin.add_view(ProfileModelView(Profile, db.session))
+admin.add_view(ModelViewSortedByValue(DegreeOption, db.session))
+admin.add_view(ModelViewSortedByValue(HospitalAffiliationOption, db.session))
 admin.add_view(ModelViewSortedByValue(ClinicalSpecialtyOption, db.session))
 admin.add_view(ModelViewSortedByValue(ProfessionalInterestOption, db.session))
 admin.add_view(ModelViewSortedByValue(PartsOfMeOption, db.session))
-admin.add_view(ModelViewSortedByValue(ActivityOption, db.session))
-admin.add_view(ModelViewSortedByValue(HospitalAffiliationOption, db.session))
-admin.add_view(ModelViewSortedByValue(DegreeOption, db.session))
+admin.add_view(
+    ModelViewSortedByValue(ActivityOption, db.session, name='Activities I Enjoy')
+)
+admin.add_view(ModelViewSortedByDateCreated(VerificationToken, db.session))
+admin.add_view(VerificationEmailModelView(VerificationEmail, db.session))
 
 
 def init_admin(app):
@@ -94,6 +97,6 @@ def init_admin(app):
         basic_auth.init_app(app)
         admin.init_app(app)
     else:
-        app.logger.warn(
+        app.logger.warning(
             'Not configuring admin because BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD are not set.'
         )

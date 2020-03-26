@@ -1,10 +1,10 @@
-from .models import VerificationToken
+from .models import VerificationToken, db
 import operator
 from functools import reduce
 from typing import List, Optional
 
 from flask_sqlalchemy import BaseQuery
-from sqlalchemy import func, or_
+from sqlalchemy import func, or_, sql
 
 from .models import (
     ActivityOption,
@@ -176,3 +176,119 @@ def matching_profiles(
     return _filter_query(
         available_profiles, words, tag_list, degree_list, affiliation_list
     )
+
+
+def query_value_with_option_type_label(query, tag_class, name):
+    return query.with_entities(
+        tag_class.value.label('value'),
+        sql.expression.literal(name).label('option_type'),
+    )
+
+
+def query_tag_related_to_active_profile(tag_class, profile_relation_class, name):
+    query = (
+        tag_class.query.join(
+            profile_relation_class, tag_class.id == profile_relation_class.tag_id
+        )
+        .join(Profile, profile_relation_class.profile_id == Profile.id)
+        .filter(Profile.available_for_mentoring.is_(True))
+    )
+
+    return query_value_with_option_type_label(query, tag_class, name)
+
+
+def union_queries(queries):
+    return queries[0].union(*queries[1:])
+
+
+def query_tags_with_active_profiles(config_tag_classes, public_tag_classes):
+    config_tag_queries = [
+        query_tag_related_to_active_profile(tag_class, profile_relation_class, name)
+        for tag_class, profile_relation_class, name in config_tag_classes
+    ]
+
+    public_tag_queries = [
+        query_tag_related_to_active_profile(
+            tag_class, profile_relation_class, name
+        ).filter(tag_class.public.is_(True))
+        for tag_class, profile_relation_class, name in public_tag_classes
+    ]
+
+    queries = config_tag_queries + public_tag_queries
+
+    select = union_queries(queries)
+
+    cte = select.cte('tags')
+
+    result = db.session.query(
+        cte.columns.option_type, func.array_agg(cte.columns.value)
+    ).group_by(cte.columns.option_type)
+
+    # Need to default to empty list for each tag type, since tags with no
+    # searchable values will not be in the result
+    empty_values = {
+        name: [] for _, _, name in [*config_tag_classes, *public_tag_classes]
+    }
+
+    return {**empty_values, **dict(result)}
+
+
+def query_profile_tag_classes(config_tag_classes, public_tag_classes):
+    config_tag_queries = [
+        query_value_with_option_type_label(tag_class.query, tag_class, name)
+        for tag_class, name in config_tag_classes
+    ]
+
+    public_tag_queries = [
+        query_value_with_option_type_label(tag_class.query, tag_class, name).filter(
+            tag_class.public.is_(True)
+        )
+        for tag_class, name in public_tag_classes
+    ]
+
+    queries = config_tag_queries + public_tag_queries
+
+    select = union_queries(queries)
+
+    cte = select.cte('tags')
+
+    result = db.session.query(
+        cte.columns.option_type, func.array_agg(cte.columns.value)
+    ).group_by(cte.columns.option_type)
+
+    # Need to default to empty list for each tag type, since tags with no
+    # searchable values will not be in the result
+    empty_values = {name: [] for _, name in [*config_tag_classes, *public_tag_classes]}
+
+    return {**empty_values, **dict(result)}
+
+
+def query_profile_tags():
+    config_tag_classes = [
+        (HospitalAffiliationOption, 'hospital_affiliations'),
+        (DegreeOption, 'degrees'),
+    ]
+
+    public_tag_classes = [
+        (ActivityOption, 'activities'),
+        (ClinicalSpecialtyOption, 'clinical_specialties'),
+        (ProfessionalInterestOption, 'professional_interests'),
+    ]
+
+    return query_profile_tag_classes(config_tag_classes, public_tag_classes)
+
+
+def query_searchable_tags():
+    config_tag_classes = [
+        (HospitalAffiliationOption, HospitalAffiliation, 'hospital_affiliations'),
+        (DegreeOption, ProfileDegree, 'degrees'),
+    ]
+
+    public_tag_classes = [
+        (ActivityOption, ProfileActivity, 'activities'),
+        (ClinicalSpecialtyOption, ClinicalSpecialty, 'clinical_specialties'),
+        (PartsOfMeOption, PartsOfMe, 'parts_of_me'),
+        (ProfessionalInterestOption, ProfessionalInterest, 'professional_interests'),
+    ]
+
+    return query_tags_with_active_profiles(config_tag_classes, public_tag_classes)

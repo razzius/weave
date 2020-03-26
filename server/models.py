@@ -4,6 +4,7 @@ from typing import Any
 
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from sqlalchemy.ext.declarative import declared_attr
 
 
 db: Any = SQLAlchemy()
@@ -12,6 +13,8 @@ db: Any = SQLAlchemy()
 def save(instance):
     db.session.add(instance)
     db.session.commit()
+
+    return instance
 
 
 def default_now():
@@ -42,14 +45,19 @@ class VerificationEmail(IDMixin, db.Model):
 
 
 class TagValueMixin(IDMixin):
-    value = db.Column(db.String(50))
+    date_created = db.Column(db.DateTime, nullable=False, default=default_now)
+    value = db.Column(db.String(50), unique=True)
 
 
 class UserEditableTagMixin(TagValueMixin):
-    public = db.Column(db.Boolean, default=False)
+    public = db.Column(db.Boolean, default=True)
 
 
 class HospitalAffiliationOption(TagValueMixin, db.Model):
+    pass
+
+
+class DegreeOption(TagValueMixin, db.Model):
     pass
 
 
@@ -61,7 +69,7 @@ class ProfessionalInterestOption(UserEditableTagMixin, db.Model):
     pass
 
 
-class PartsOfMeOption(TagValueMixin, db.Model):
+class PartsOfMeOption(UserEditableTagMixin, db.Model):
     pass
 
 
@@ -69,11 +77,15 @@ class ActivityOption(UserEditableTagMixin, db.Model):
     pass
 
 
-class DegreeOption(UserEditableTagMixin, db.Model):
-    pass
-
-
 class ProfileTagMixin(IDMixin):
+    @declared_attr
+    def profile_id(cls):
+        return db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+
+    @declared_attr
+    def profile(cls):
+        return relationship('Profile')
+
     def __str__(self):
         return self.tag.value
 
@@ -96,14 +108,10 @@ class ClinicalSpecialty(ProfileTagMixin, db.Model):
     )
     tag = relationship(ClinicalSpecialtyOption)
 
-    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
-
 
 class PartsOfMe(ProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(PartsOfMeOption.id), nullable=False)
     tag = relationship(PartsOfMeOption)
-
-    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
 class ProfessionalInterest(ProfileTagMixin, db.Model):
@@ -112,21 +120,15 @@ class ProfessionalInterest(ProfileTagMixin, db.Model):
     )
     tag = relationship(ProfessionalInterestOption)
 
-    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
-
 
 class ProfileActivity(ProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(ActivityOption.id), nullable=False)
     tag = relationship(ActivityOption)
 
-    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
-
 
 class ProfileDegree(ProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(DegreeOption.id), nullable=False)
     tag = relationship(DegreeOption)
-
-    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
 
 
 class Profile(db.Model):

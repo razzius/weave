@@ -261,3 +261,11 @@ export async function uploadPicture(token: string, file: File) {
     body: file,
   })
 }
+
+export async function getSearchTags(token: string) {
+  return get(token, 'search-tags')
+}
+
+export async function getProfileTags(token: string) {
+  return get(token, 'profile-tags')
+}

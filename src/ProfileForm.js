@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import { Link, Prompt, type RouterHistory } from 'react-router-dom'
 import AvatarEditor from 'react-avatar-editor'
-import Select from 'react-select'
 import { type ValueType } from 'react-select/src/types'
 import Dropzone from 'react-dropzone'
 import Promise from 'promise-polyfill'
@@ -11,15 +10,10 @@ import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
 import PreviewProfile from './PreviewProfile'
 import CadenceOption from './CadenceOption'
+import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
-import { uploadPicture, type Profile } from './api'
-import {
-  clinicalSpecialtyOptions,
-  professionalInterestOptions,
-  activitiesIEnjoyOptions,
-  hospitalOptions,
-  degreeOptions,
-} from './options'
+import { getProfileTags, uploadPicture, type Profile } from './api'
+import { makeOptions, degreeOptions } from './options'
 import { arrayCaseInsensitiveContains, capitalize, last, when } from './utils'
 
 function scaleCanvas(canvas) {
@@ -91,6 +85,11 @@ type State = {
   otherCadence: string,
   preview: boolean,
   saved: boolean,
+
+  hospitalOptions: Array<string>,
+  clinicalSpecialtyOptions: Array<string>,
+  activitiesIEnjoyOptions: Array<string>,
+  professionalInterestOptions: Array<string>,
 }
 
 export default class ProfileForm extends Component<Props, State> {
@@ -132,14 +131,27 @@ export default class ProfileForm extends Component<Props, State> {
     otherCadence: '',
     preview: false,
     saved: false,
+
+    hospitalOptions: [],
+    clinicalSpecialtyOptions: [],
+    activitiesIEnjoyOptions: [],
+    professionalInterestOptions: [],
   }
 
   async componentDidMount() {
-    const { loadInitial } = this.props
-    if (loadInitial) {
-      const data = await loadInitial()
-      this.setState(data)
-    }
+    const { loadInitial, token } = this.props
+
+    const initialData = loadInitial ? await loadInitial() : {}
+
+    const { tags } = await getProfileTags(token)
+
+    this.setState({
+      ...initialData,
+      hospitalOptions: tags.hospital_affiliations,
+      clinicalSpecialtyOptions: tags.clinical_specialties,
+      professionalInterestOptions: tags.professional_interests,
+      activitiesIEnjoyOptions: tags.activities,
+    })
   }
 
   handleCreate = (key: string) => (selected: string) => {
@@ -288,17 +300,21 @@ export default class ProfileForm extends Component<Props, State> {
   renderForm() {
     const {
       activities,
+      activitiesIEnjoyOptions,
       affiliations,
       cadence,
       clinicalSpecialties,
+      clinicalSpecialtyOptions,
       contactEmail,
       degrees,
+      hospitalOptions,
       image,
       imageUrl,
       name,
       otherCadence,
       partsOfMe,
       preview,
+      professionalInterestOptions,
       professionalInterests,
       rotate,
       scale,
@@ -503,23 +519,10 @@ export default class ProfileForm extends Component<Props, State> {
               handleChange={this.handleChange('degrees')}
               handleAdd={this.handleCreate('degrees')}
             />
-            <p>Institutional Affiliations</p>
-            <Select
-              styles={{
-                control: base => ({ ...base, backgroundColor: 'white' }),
-                multiValue: styles => ({
-                  ...styles,
-                  backgroundColor: '#edf4fe',
-                }),
-              }}
-              className="column"
-              isMulti
-              options={hospitalOptions}
-              value={affiliations.map(value => ({
-                label: value,
-                value,
-              }))}
-              onChange={this.handleChange('affiliations')}
+            <InstitutionalAffiliationsForm
+              affiliations={makeOptions(affiliations)}
+              hospitalOptions={hospitalOptions}
+              handleChange={this.handleChange('affiliations')}
             />
             <div className="user-tip">
               In the following sections, in addition to choosing from the tags
@@ -529,14 +532,14 @@ export default class ProfileForm extends Component<Props, State> {
             <p>Clinical Interests</p>
             <CreatableTagSelect
               values={clinicalSpecialties}
-              options={clinicalSpecialtyOptions}
+              options={makeOptions(clinicalSpecialtyOptions)}
               handleChange={this.handleChange('clinicalSpecialties')}
               handleAdd={this.handleCreate('clinicalSpecialties')}
             />
             <p>Professional Interests</p>
             <CreatableTagSelect
               values={professionalInterests}
-              options={professionalInterestOptions}
+              options={makeOptions(professionalInterestOptions)}
               handleChange={this.handleChange('professionalInterests')}
               handleAdd={this.handleCreate('professionalInterests')}
             />
@@ -546,7 +549,7 @@ export default class ProfileForm extends Component<Props, State> {
                 where faculty may share optional demographic or personally
                 meaningful information that is viewable by students and faculty
                 on Weave. Please{' '}
-                <Link to="/help" target="_blank">
+                <Link to="/help#how-do-i-create-my-own-tags" target="_blank">
                   create your own tags
                 </Link>{' '}
                 in this section. You may create as many “Parts of me” tags as
@@ -569,7 +572,7 @@ export default class ProfileForm extends Component<Props, State> {
               <p>Activities I Enjoy</p>
               <CreatableTagSelect
                 values={activities}
-                options={activitiesIEnjoyOptions}
+                options={makeOptions(activitiesIEnjoyOptions)}
                 handleChange={this.handleChange('activities')}
                 handleAdd={this.handleCreate('activities')}
               />

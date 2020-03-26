@@ -1,5 +1,11 @@
 import os
 from flask import Flask
+from flask_cors import CORS
+from flask_sslify import SSLify
+from .admin import init_admin
+from .emails import init_email
+from .models import db
+from . import views
 
 
 class NoCacheIndexFlask(Flask):
@@ -9,15 +15,27 @@ class NoCacheIndexFlask(Flask):
         return 31536000
 
 
-app = NoCacheIndexFlask(
-    __name__, static_url_path='/static', static_folder='../build/static'
-)
+def create_app():
+    app = NoCacheIndexFlask(
+        __name__, static_url_path='/static', static_folder='../build/static'
+    )
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-    'DATABASE_URL', 'postgresql:///weave'
-)
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['BASIC_AUTH_USERNAME'] = os.environ.get('BASIC_AUTH_USERNAME')
-app.config['BASIC_AUTH_PASSWORD'] = os.environ.get('BASIC_AUTH_PASSWORD')
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
-# app.config['SQLALCHEMY_ECHO'] = app.debug
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
+        'DATABASE_URL', 'postgresql:///weave'
+    )
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['BASIC_AUTH_USERNAME'] = os.environ.get('BASIC_AUTH_USERNAME')
+    app.config['BASIC_AUTH_PASSWORD'] = os.environ.get('BASIC_AUTH_PASSWORD')
+    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+
+    db.init_app(app)
+    CORS(app)
+    SSLify(app)
+
+    init_admin(app)
+    init_email(app)
+
+    app.register_blueprint(views.home)
+    app.register_blueprint(views.api)
+
+    return app
