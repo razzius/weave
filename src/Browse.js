@@ -15,7 +15,7 @@ type State = Object
 
 const originalState = {
   affiliations: [],
-  predefinedTags: [],
+  searchableTags: [],
   degrees: [],
   error: null,
   loading: true,
@@ -40,12 +40,14 @@ class Browse extends Component<Props, State> {
     const { tags } = await getSearchTags(token)
 
     this.setState({
-      predefinedTags: makeOptions([
-        ...tags.clinical_specialties,
-        ...tags.professional_interests,
-        ...tags.activities,
-        ...tags.parts_of_me,
-      ]),
+      searchableTags: makeOptions(
+        [
+          ...tags.clinical_specialties,
+          ...tags.professional_interests,
+          ...tags.activities,
+          ...tags.parts_of_me,
+        ].sort()
+      ),
       hospitalOptions: makeOptions(tags.hospital_affiliations),
     })
 
@@ -97,13 +99,13 @@ class Browse extends Component<Props, State> {
       results,
       degrees,
       affiliations,
-      predefinedTags,
+      searchableTags,
       sorting,
       sortAscending,
     } = this.state
 
     const [knownTags, userTags] = partition(
-      tag => predefinedTags.includes(tag),
+      tag => searchableTags.includes(tag),
       searchTerms
     )
     const searchArray = search === '' ? [] : [search]
@@ -241,11 +243,11 @@ class Browse extends Component<Props, State> {
   }
 
   resetSearch = () => {
-    const { predefinedTags, hospitalOptions } = this.state
+    const { searchableTags, hospitalOptions } = this.state
     this.setState(
       {
         ...originalState,
-        predefinedTags,
+        searchableTags,
         hospitalOptions,
       },
       this.handleSearch
@@ -268,7 +270,7 @@ class Browse extends Component<Props, State> {
       queried,
       affiliations,
       menuOpen,
-      predefinedTags,
+      searchableTags,
       hospitalOptions,
     } = this.state
 
@@ -282,7 +284,7 @@ class Browse extends Component<Props, State> {
             affiliations={affiliations}
             inputValue={search}
             menuOpen={menuOpen}
-            searchableOptions={predefinedTags}
+            searchableOptions={searchableTags}
             hospitalOptions={hospitalOptions}
             onBlur={() => this.setState({ menuOpen: false })}
             onFocus={() => this.setState({ menuOpen: true })}
