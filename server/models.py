@@ -171,6 +171,11 @@ class Profile(db.Model):
         return f'<Profile id={self.id} name={self.name}>'
 
 
+class ProfileStar(db.Model):
+    from_id = db.Column(db.String, db.ForeignKey(Profile.id), primary_key=True)
+    to_id = db.Column(db.String, db.ForeignKey(Profile.id), primary_key=True)
+
+
 class VerificationToken(db.Model):
     token = db.Column(db.String(36), primary_key=True)
     email_id = db.Column(

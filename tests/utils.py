@@ -17,14 +17,17 @@ def create_test_verification_token(
 
 def create_test_profile(
     token: Optional[str] = None,
+    email: Optional[str] = None,
     name='Test User',
-    email='test@test.com',
     is_admin=False,
     available_for_mentoring=False,
     date_updated=datetime.date.today(),
 ) -> Profile:
     if token is None:
         token = str(uuid.uuid4())
+
+    if email is None:
+        email = f'{str(uuid.uuid4())}@test.com'
 
     verification_email = create_test_verification_email(email, is_admin)
 
