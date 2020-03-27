@@ -106,7 +106,7 @@ const About = () => (
     <p>
       In recognition of fostering innovation and sustainability in mentoring
       while building a culture of excellence in mentoring, Weave was awarded the 
-      2019 Dean's Innovation Award in Diversity and Inclusion and the
+      2019 Dean&apos;s Innovation Award in Diversity and Inclusion and the
       2019 Program Award for a Culture of Excellence in Mentoring (PACEM) by the
       Office for Diversity Inclusion & Community Partnership at Harvard Medical
       School:{' '}
