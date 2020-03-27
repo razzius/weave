@@ -40,7 +40,6 @@
     "heroku-postbuild": "yarn build"
   },
   "devDependencies": {
-    "babel-eslint": "^10.0.3",
     "cross-env": "^6.0.3",
     "eslint": "^6.7.2",
     "eslint-config-airbnb": "^18.0.1",
