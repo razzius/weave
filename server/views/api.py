@@ -18,7 +18,7 @@ from ..emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
-    send_student_registration_email
+    send_student_registration_email,
 )
 from ..models import (
     ActivityOption,
@@ -37,12 +37,12 @@ from ..models import (
     VerificationEmail,
     VerificationToken,
     db,
-    save
+    save,
 )
 from ..queries import (
     get_profile_by_token,
     get_verification_email_by_email,
-    matching_profiles
+    matching_profiles,
 )
 from ..schemas import profile_schema, profiles_schema, valid_email_schema
 from .pagination import paginate
@@ -609,6 +609,8 @@ def availability():
 def star_profile():
     verification_token = get_token(request.headers)
 
+    from_email = verification_token.email
+
     if 'profile_id' not in request.json:
         return (
             jsonify({'profile_id': ['`profile_id` missing from request']}),
@@ -616,23 +618,24 @@ def star_profile():
         )
 
     to_profile_id = request.json['profile_id']
+    to_profile = Profile.query.get(to_profile_id)
 
-    from_profile = get_profile_by_token(verification_token.token)
-
-    if to_profile_id == from_profile.id:
-        return (
-            jsonify({'profile_id': ['Cannot star own profile']}),
-            HTTPStatus.UNPROCESSABLE_ENTITY.value,
-        )
-
-    if not Profile.query.get(to_profile_id):
+    if to_profile is None:
         return (
             jsonify({'profile_id': ['`profile_id` invalid']}),
             HTTPStatus.UNPROCESSABLE_ENTITY.value,
         )
 
-    profile_star = ProfileStar(from_id=from_profile.id, to_id=to_profile_id)
+    if to_profile.verification_email.id == from_email.id:
+        return (
+            jsonify({'profile_id': ['Cannot star own profile']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    profile_star = ProfileStar(
+        from_verification_email_id=from_email.id, to_profile_id=to_profile_id
+    )
 
     save(profile_star)
 
-    return jsonify({'from_id': from_profile.id, 'to_id': to_profile_id})
+    return jsonify({'profile_id': to_profile_id})
