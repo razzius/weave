@@ -42,6 +42,11 @@ class ProfileSchema(Schema):
     other_cadence = fields.String(allow_none=True)
 
 
+class ProfileWithStarSchema(ProfileSchema):
+    # Assumes the Profile query has been filtered based on a VerificationEmail.
+    starred = fields.Function(lambda profile: bool(profile.stars))
+
+
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent
 VALID_DOMAINS = json.load(open(PROJECT_ROOT / 'src' / 'valid_domains.json'))
 
@@ -62,5 +67,5 @@ class ValidEmailSchema(Schema):
 
 
 profile_schema = ProfileSchema()
-profiles_schema = ProfileSchema(many=True)
+profiles_response_schema = ProfileWithStarSchema(many=True)
 valid_email_schema = ValidEmailSchema()

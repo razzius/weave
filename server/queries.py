@@ -1,4 +1,3 @@
-from .models import VerificationToken, db
 import operator
 from functools import reduce
 from typing import List, Optional
@@ -20,7 +19,10 @@ from .models import (
     Profile,
     ProfileActivity,
     ProfileDegree,
+    ProfileStar,
     VerificationEmail,
+    VerificationToken,
+    db,
 )
 
 
@@ -106,7 +108,7 @@ def _filter_query_on_affiliations(
     )
 
 
-def _filter_query(
+def _filter_profiles(
     available_profiles: BaseQuery,
     words: List[str],
     tags: List[str],
@@ -158,9 +160,15 @@ def _filter_query(
 
 
 def matching_profiles(
-    query: str, tags: str, degrees: str, affiliations: str
+    query: str,
+    tags: str,
+    degrees: str,
+    affiliations: str,
+    verification_email: VerificationEmail,
 ) -> List[tuple]:
-    available_profiles = Profile.query.filter(Profile.available_for_mentoring)
+    available_profiles = Profile.query.filter(
+        Profile.available_for_mentoring
+    ).outerjoin(ProfileStar, ProfileStar.to_profile_id == Profile.id)
 
     if not any([query, tags, degrees, affiliations]):
         return available_profiles
@@ -173,7 +181,7 @@ def matching_profiles(
     degree_list = degrees.lower().split(',') if degrees else []
     affiliation_list = affiliations.lower().split(',') if affiliations else []
 
-    return _filter_query(
+    return _filter_profiles(
         available_profiles, words, tag_list, degree_list, affiliation_list
     )
 
