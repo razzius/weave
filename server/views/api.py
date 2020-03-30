@@ -44,7 +44,7 @@ from ..queries import (
     get_verification_email_by_email,
     matching_profiles,
 )
-from ..schemas import profile_schema, profiles_response_schema, valid_email_schema
+from ..schemas import profile_schema, profiles_schema, valid_email_schema
 from .pagination import paginate
 
 
@@ -164,7 +164,7 @@ def get_profiles():
     return jsonify(
         {
             'profile_count': profiles_queryset.count(),
-            'profiles': profiles_response_schema.dump(sorted_queryset[start:end]),
+            'profiles': profiles_schema.dump(sorted_queryset[start:end]),
         }
     )
 
@@ -189,9 +189,14 @@ def get_search_tags():
 
 @api.route('/profiles/<profile_id>')
 def get_profile(profile_id=None):
-    get_token(request.headers)  # Ensure valid requesting token
+    token = get_token(request.headers)
 
-    profile = Profile.query.filter(Profile.id == profile_id).one_or_none()
+    profile = (
+        Profile.query.filter(Profile.id == profile_id)
+        .outerjoin(ProfileStar, ProfileStar.to_profile_id == Profile.id)
+        .filter(ProfileStar.from_verification_email_id == token.email_id)
+        .one_or_none()
+    )
 
     if profile is None:
         raise UserError({'profile_id': ['Not found']}, HTTPStatus.NOT_FOUND.value)
