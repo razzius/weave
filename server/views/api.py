@@ -44,7 +44,7 @@ from ..queries import (
     get_verification_email_by_email,
     matching_profiles,
 )
-from ..schemas import profile_schema, profiles_schema, valid_email_schema
+from ..schemas import profile_schema, profiles_response_schema, valid_email_schema
 from .pagination import paginate
 
 
@@ -125,13 +125,11 @@ def get_profiles():
 
     start, end = paginate(page)
 
-    verification_email_id = VerificationToken.query.filter(
-        VerificationToken.token == verification_token.token
-    ).value(VerificationToken.email_id)
+    verification_email = verification_token.email
 
-    profiles_queryset = matching_profiles(query, tags, degrees, affiliations).group_by(
-        Profile.id
-    )
+    profiles_queryset = matching_profiles(
+        query, tags, degrees, affiliations, verification_email=verification_email
+    ).group_by(Profile.id)
 
     def get_ordering(sort_ascending):
         if sort_ascending:
@@ -157,7 +155,7 @@ def get_profiles():
 
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
-        Profile.verification_email_id != verification_email_id,
+        Profile.verification_email_id != verification_email.id,
         asc_or_desc(get_sorting(sorting)),
     ]
 
@@ -166,7 +164,7 @@ def get_profiles():
     return jsonify(
         {
             'profile_count': profiles_queryset.count(),
-            'profiles': profiles_schema.dump(sorted_queryset[start:end]),
+            'profiles': profiles_response_schema.dump(sorted_queryset[start:end]),
         }
     )
 
