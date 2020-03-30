@@ -41,10 +41,8 @@ class ProfileSchema(Schema):
     cadence = fields.String()
     other_cadence = fields.String(allow_none=True)
 
-
-class ProfileWithStarSchema(ProfileSchema):
     # Assumes the Profile query has been filtered based on a VerificationEmail.
-    starred = fields.Function(lambda profile: bool(profile.stars))
+    starred = fields.Function(lambda profile: bool(profile.stars), dump_only=True)
 
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent
@@ -67,5 +65,5 @@ class ValidEmailSchema(Schema):
 
 
 profile_schema = ProfileSchema()
-profiles_response_schema = ProfileWithStarSchema(many=True)
+profiles_schema = ProfileSchema(many=True)
 valid_email_schema = ValidEmailSchema()
