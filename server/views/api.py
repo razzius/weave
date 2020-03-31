@@ -8,11 +8,17 @@ from dateutil.relativedelta import relativedelta
 from flask import Blueprint, current_app, jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
-from server.models import ProfileStar
-from server.queries import query_profile_tags, query_searchable_tags
 from sqlalchemy import asc, desc, func
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import exists
+
+from server.models import ProfileStar
+from server.queries import (
+    add_stars_to_profiles,
+    query_profile_tags,
+    query_profiles_and_stars,
+    query_searchable_tags,
+)
 
 from ..emails import (
     send_faculty_login_email,
@@ -113,58 +119,60 @@ def get_token(headers):
 def get_profiles():
     verification_token = get_token(request.headers)
 
-    query = request.args.get('query')
+    query = request.args.get('query', '')
     tags = request.args.get('tags', '')
     degrees = request.args.get('degrees', '')
     affiliations = request.args.get('affiliations', '')
 
     page = int(request.args.get('page', 1))
 
-    sorting = request.args.get('sorting', 'last_name')
-    sort_ascending = request.args.get('sort_ascending', False) == 'true'
+    sorting = request.args.get('sorting', 'starred')
 
     start, end = paginate(page)
 
-    verification_email = verification_token.email
+    verification_email_id = verification_token.email_id
 
     profiles_queryset = matching_profiles(
-        query, tags, degrees, affiliations, verification_email=verification_email
-    ).group_by(Profile.id)
+        query, tags, degrees, affiliations, verification_email_id=verification_email_id
+    )
 
-    def get_ordering(sort_ascending):
-        if sort_ascending:
-            return asc
-        return desc
+    def get_ordering(sorting):
+        last_name_sorting = func.split_part(
+            Profile.name,
+            ' ',
+            func.array_length(
+                func.string_to_array(Profile.name, ' '),
+                1,  # Length in the 1st dimension
+            ),
+        )
 
-    def get_sorting(sorting):
-        if sorting == 'last_name':
-            return func.split_part(
-                Profile.name,
-                ' ',
-                func.array_length(
-                    func.string_to_array(Profile.name, ' '),
-                    1,  # Length in the 1st dimension
-                ),
-            )
+        if sorting == 'starred':
+            return [desc(Profile.starred), desc(Profile.date_updated)]
+        elif sorting == 'last_name_alphabetical':
+            return [desc(last_name_sorting)]
+        elif sorting == 'last_name_reverse_alphabetical':
+            return [asc(last_name_sorting)]
         elif sorting == 'date_updated':
-            return Profile.date_updated
+            return [desc(Profile.date_updated)]
         else:
             raise InvalidPayloadError({'sorting': ['invalid']})
 
-    asc_or_desc = get_ordering(sort_ascending)
-
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
-        Profile.verification_email_id != verification_email.id,
-        asc_or_desc(get_sorting(sorting)),
+        Profile.verification_email_id != verification_email_id,
+        *get_ordering(sorting)
     ]
 
     sorted_queryset = profiles_queryset.order_by(*ordering)
 
+    sliced_queryset = sorted_queryset[start:end]
+
+    profiles_with_stars = add_stars_to_profiles(sliced_queryset)
+
     return jsonify(
         {
             'profile_count': profiles_queryset.count(),
-            'profiles': profiles_schema.dump(sorted_queryset[start:end]),
+            'profiles': profiles_schema.dump(profiles_with_stars),
         }
     )
 
@@ -191,15 +199,16 @@ def get_search_tags():
 def get_profile(profile_id=None):
     token = get_token(request.headers)
 
-    profile = (
-        Profile.query.filter(Profile.id == profile_id)
-        .outerjoin(ProfileStar, ProfileStar.to_profile_id == Profile.id)
-        .filter(ProfileStar.from_verification_email_id == token.email_id)
-        .one_or_none()
+    profile_and_star_list = query_profiles_and_stars(token.email_id).filter(
+        Profile.id == profile_id
     )
 
-    if profile is None:
+    if not profile_and_star_list:
         raise UserError({'profile_id': ['Not found']}, HTTPStatus.NOT_FOUND.value)
+
+    profile, star_count = profile_and_star_list[0]
+    # TODO do this without mutating profile
+    profile.starred = star_count > 0
 
     response = make_response(jsonify(profile_schema.dump(profile)))
 

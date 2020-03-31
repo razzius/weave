@@ -10,7 +10,11 @@ def test_matching_profiles_starred_profile(db_session):
     other_profile = create_test_profile(available_for_mentoring=True)
 
     profiles = matching_profiles(
-        query='', tags='', degrees='', affiliations='', verification_email=user_email
+        query='',
+        tags='',
+        degrees='',
+        affiliations='',
+        verification_email_id=user_email.id,
     )
 
     save(
@@ -19,10 +23,10 @@ def test_matching_profiles_starred_profile(db_session):
         )
     )
 
-    profile = profiles[0]
+    profile, starred = profiles[0]
 
     assert profile.id == other_profile.id
-    assert profile.starred
+    assert starred
 
 
 def test_matching_profiles(db_session):
@@ -32,17 +36,26 @@ def test_matching_profiles(db_session):
 
     # TODO pluralized arguments to matching_profiles should be arrays; query should be Optional[str]
     profiles = matching_profiles(
-        query='', tags='', degrees='', affiliations='', verification_email=user_email
+        query='',
+        tags='',
+        degrees='',
+        affiliations='',
+        verification_email_id=user_email.id,
     )
 
-    assert profiles[0].id == profile.id
+    profile_result, starred = profiles[0]
+    assert profile_result.id == profile.id
 
 
 def test_matching_profiles_empty(db_session):
     user_email = create_test_verification_email()
 
     profiles = matching_profiles(
-        query='', tags='', degrees='', affiliations='', verification_email=user_email
+        query='',
+        tags='',
+        degrees='',
+        affiliations='',
+        verification_email_id=user_email.id,
     )
 
     assert list(profiles) == []
