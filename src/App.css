@@ -414,3 +414,12 @@ iframe.video {
     margin: 0;
     text-align: center;
 }
+
+.profile-star {
+    position: absolute;
+    width: 40px;
+}
+
+.profile-star.active {
+    background-color: #007aff;
+}

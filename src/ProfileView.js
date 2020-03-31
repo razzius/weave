@@ -3,8 +3,10 @@ import React, { Fragment, type Node } from 'react'
 import MediaQuery from 'react-responsive'
 import { withRouter } from 'react-router-dom'
 
+import { starProfile } from './api'
 import Button from './Button'
 import ProfileAvatar from './ProfileAvatar'
+import ProfileStar from './ProfileStar'
 import { CADENCE_LABELS } from './CadenceOption'
 
 const Buttons = ({
@@ -228,6 +230,8 @@ const ProfileView = ({
   location,
   profileId,
   dateUpdated,
+  token,
+  starred,
 }: {
   data: BaseProfileData,
   ownProfile?: boolean,
@@ -237,6 +241,8 @@ const ProfileView = ({
   location: Object,
   profileId?: ?string,
   dateUpdated?: Date,
+  token: string,
+  starred: boolean,
 }) => {
   const adminButton =
     isAdmin && !ownProfile && profileId ? (
@@ -302,8 +308,17 @@ const ProfileView = ({
         <div className="profile-contact">
           <div className="columns">
             <div className="column contact">
-              {avatar}
+              {profileId != null && !ownProfile && (
+                <ProfileStar
+                  active={starred}
+                  onClick={() => {
+                    starProfile(token, profileId)
+                  }}
+                  type="button"
+                />
+              )}
 
+              {avatar}
               <ContactInformation contactEmail={data.contactEmail} />
 
               <Cadence

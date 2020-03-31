@@ -74,3 +74,24 @@ def test_get_starred_profile(client):
     )
 
     assert response.json['profiles'][0]['starred']
+
+
+def test_get_profile_other_user_starred(client):
+    verification_token = create_test_verification_token()
+
+    other_verification_token = create_test_verification_token()
+
+    starred_profile = create_test_profile(available_for_mentoring=True)
+
+    save(
+        ProfileStar(
+            from_verification_email_id=other_verification_token.email.id,
+            to_profile_id=starred_profile.id,
+        )
+    )
+
+    response = client.get(
+        '/api/profiles', headers={'Authorization': f'Token {verification_token.token}'}
+    )
+
+    assert not response.json['profiles'][0]['starred']

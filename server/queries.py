@@ -3,7 +3,7 @@ from functools import reduce
 from typing import List, Optional
 
 from flask_sqlalchemy import BaseQuery
-from sqlalchemy import func, or_, sql
+from sqlalchemy import and_, func, or_, sql
 
 from .models import (
     ActivityOption,
@@ -159,19 +159,25 @@ def _filter_profiles(
     return query
 
 
-def matching_profiles(
-    query: str,
-    tags: str,
-    degrees: str,
-    affiliations: str,
-    verification_email: VerificationEmail,
-) -> List[tuple]:
-    available_profiles = Profile.query.filter(
-        Profile.available_for_mentoring
-    ).outerjoin(ProfileStar, ProfileStar.to_profile_id == Profile.id)
+def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
+    return (
+        db.session.query(Profile, func.count(ProfileStar.from_verification_email_id))
+        .filter(Profile.available_for_mentoring)
+        .outerjoin(
+            ProfileStar,
+            and_(
+                ProfileStar.to_profile_id == Profile.id,
+                ProfileStar.from_verification_email_id == verification_email_id,
+            ),
+        )
+        .group_by(Profile.id)
+    )
 
-    if not any([query, tags, degrees, affiliations]):
-        return available_profiles
+
+def matching_profiles(
+    query: str, tags: str, degrees: str, affiliations: str, verification_email_id: int
+) -> BaseQuery:
+    profiles_and_stars = query_profiles_and_stars(verification_email_id)
 
     words = ''.join(
         character if character.isalnum() else ' ' for character in query.lower()
@@ -181,9 +187,22 @@ def matching_profiles(
     degree_list = degrees.lower().split(',') if degrees else []
     affiliation_list = affiliations.lower().split(',') if affiliations else []
 
-    return _filter_profiles(
-        available_profiles, words, tag_list, degree_list, affiliation_list
+    filtered_profiles = _filter_profiles(
+        profiles_and_stars, words, tag_list, degree_list, affiliation_list
     )
+
+    return filtered_profiles
+
+
+def add_stars_to_profiles(profiles_and_stars):
+    # TODO do this without mutating profile
+    available_profiles = []
+
+    for profile, star_count in profiles_and_stars:
+        profile.starred = star_count > 0
+        available_profiles.append(profile)
+
+    return available_profiles
 
 
 def query_value_with_option_type_label(query, tag_class, name):

@@ -330,7 +330,7 @@ export default class ProfileForm extends Component<Props, State> {
       imageEdited,
     } = this.state
 
-    const { firstTimePublish } = this.props
+    const { firstTimePublish, token } = this.props
 
     if (preview) {
       return (
@@ -358,6 +358,7 @@ export default class ProfileForm extends Component<Props, State> {
           firstTimePublish={firstTimePublish}
           onEdit={this.unsetPreview}
           onPublish={this.submit}
+          token={token}
         />
       )
     }

@@ -167,10 +167,6 @@ class Profile(db.Model):
 
     available_for_mentoring = db.Column(db.Boolean, default=True)
 
-    @property
-    def starred(self):
-        return bool(self.stars)
-
     def __repr__(self):
         return f'<Profile id={self.id} name={self.name}>'
 
@@ -180,7 +176,7 @@ class ProfileStar(db.Model):
         db.Integer, db.ForeignKey(VerificationEmail.id), primary_key=True
     )
     to_profile_id = db.Column(db.String, db.ForeignKey(Profile.id), primary_key=True)
-    to_profile = relationship(Profile, backref='stars')
+    to_profile = relationship(Profile)
 
 
 class VerificationToken(db.Model):

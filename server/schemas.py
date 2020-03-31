@@ -41,8 +41,8 @@ class ProfileSchema(Schema):
     cadence = fields.String()
     other_cadence = fields.String(allow_none=True)
 
-    # Assumes the Profile query has been filtered based on a VerificationEmail.
-    starred = fields.Function(lambda profile: bool(profile.stars), dump_only=True)
+    # This is assigned to profiles by mutation. TODO find a better way
+    starred = fields.Boolean(dump_only=True)
 
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent
