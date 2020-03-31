@@ -8,7 +8,7 @@ from dateutil.relativedelta import relativedelta
 from flask import Blueprint, current_app, jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
-from sqlalchemy import asc, desc, func
+from sqlalchemy import asc, desc, func, and_
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.sql import exists
 
@@ -160,7 +160,7 @@ def get_profiles():
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
         Profile.verification_email_id != verification_email_id,
-        *get_ordering(sorting)
+        *get_ordering(sorting),
     ]
 
     sorted_queryset = profiles_queryset.order_by(*ordering)
@@ -621,7 +621,7 @@ def availability():
 def star_profile():
     verification_token = get_token(request.headers)
 
-    from_email = verification_token.email
+    from_email_id = verification_token.email_id
 
     if 'profile_id' not in request.json:
         return (
@@ -638,15 +638,31 @@ def star_profile():
             HTTPStatus.UNPROCESSABLE_ENTITY.value,
         )
 
-    if to_profile.verification_email.id == from_email.id:
+    if to_profile.verification_email.id == from_email_id:
         return (
             jsonify({'profile_id': ['Cannot star own profile']}),
             HTTPStatus.UNPROCESSABLE_ENTITY.value,
         )
 
     profile_star = ProfileStar(
-        from_verification_email_id=from_email.id, to_profile_id=to_profile_id
+        from_verification_email_id=from_email_id, to_profile_id=to_profile_id
     )
+
+    preexisting_star = db.session.query(
+        exists().where(
+            and_(
+                ProfileStar.from_verification_email_id
+                == profile_star.from_verification_email_id,
+                ProfileStar.to_profile_id == profile_star.to_profile_id,
+            )
+        )
+    ).scalar()
+
+    if preexisting_star:
+        return (
+            jsonify({'profile_id': ['Already starred']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
 
     save(profile_star)
 

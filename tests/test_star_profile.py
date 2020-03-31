@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from server.models import ProfileStar
+from server.models import ProfileStar, save
 
 from .utils import create_test_profile, create_test_verification_token
 
@@ -79,3 +79,26 @@ def test_cannot_star_own_profile(client):
     star = ProfileStar.query.first()
 
     assert star is None
+
+
+def test_cannot_star_profile_twice(client):
+    verification_token = create_test_verification_token()
+
+    profile = create_test_profile()
+
+    save(
+        ProfileStar(
+            from_verification_email_id=verification_token.email_id,
+            to_profile_id=profile.id,
+        )
+    )
+
+    data = {'profile_id': profile.id}
+
+    response = client.post(
+        '/api/star_profile',
+        json=data,
+        headers={'Authorization': f'Token {verification_token.token}'},
+    )
+
+    assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY.value
