@@ -180,7 +180,10 @@ export default class ProfileForm extends Component<Props, State> {
       const newValue = ((last(values): any): string).trim()
       const otherValues = values.slice(0, -1)
 
-      if (arrayCaseInsensitiveContains(otherValues, newValue)) {
+      if (
+        newValue === '' ||
+        arrayCaseInsensitiveContains(otherValues, newValue)
+      ) {
         return
       }
 
