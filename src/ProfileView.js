@@ -1,9 +1,9 @@
 // @flow
-import React, { Fragment, type Node } from 'react'
+import React, { Fragment, useState, type Node } from 'react'
 import MediaQuery from 'react-responsive'
-import { withRouter } from 'react-router-dom'
+import { withRouter, type RouterHistory } from 'react-router-dom'
 
-import { starProfile } from './api'
+import { starProfile, unstarProfile } from './api'
 import Button from './Button'
 import ProfileAvatar from './ProfileAvatar'
 import ProfileStar from './ProfileStar'
@@ -232,6 +232,7 @@ const ProfileView = ({
   dateUpdated,
   token,
   starred,
+  history,
 }: {
   data: BaseProfileData,
   ownProfile?: boolean,
@@ -243,7 +244,10 @@ const ProfileView = ({
   dateUpdated?: Date,
   token: string,
   starred: boolean,
+  history: RouterHistory,
 }) => {
+  const [starredState, setStarred] = useState(starred)
+
   const adminButton =
     isAdmin && !ownProfile && profileId ? (
       <Button to={`/admin-edit-profile/${profileId}`}>
@@ -310,9 +314,16 @@ const ProfileView = ({
             <div className="column contact">
               {profileId != null && !ownProfile && (
                 <ProfileStar
-                  active={starred}
+                  active={starredState}
                   onClick={() => {
-                    starProfile(token, profileId)
+                    const newStarred = !starredState
+                    setStarred(newStarred)
+                    if (newStarred) {
+                      starProfile(token, profileId)
+                    } else {
+                      unstarProfile(token, profileId)
+                    }
+                    history.replace(location.state, null)
                   }}
                   type="button"
                 />
