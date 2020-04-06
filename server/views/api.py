@@ -667,3 +667,35 @@ def star_profile():
     save(profile_star)
 
     return jsonify({'profile_id': to_profile_id})
+
+
+@api_post('unstar_profile')
+def unstar_profile():
+    verification_token = get_token(request.headers)
+
+    from_email_id = verification_token.email_id
+
+    if 'profile_id' not in request.json:
+        return (
+            jsonify({'profile_id': ['`profile_id` missing from request']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    to_profile_id = request.json['profile_id']
+    to_profile = Profile.query.get(to_profile_id)
+
+    if to_profile is None:
+        return (
+            jsonify({'profile_id': ['`profile_id` invalid']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    # TODO inconsistenly idempotent; allows repeating whereas starring does not
+    ProfileStar.query.filter(
+        ProfileStar.from_verification_email_id == from_email_id,
+        ProfileStar.to_profile_id == to_profile.id,
+    ).delete()
+
+    db.session.commit()
+
+    return {}

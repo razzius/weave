@@ -274,3 +274,7 @@ export async function getProfileTags(token: string) {
 export async function starProfile(token: string, profileId: string) {
   return post(token, 'star_profile', { profile_id: profileId })
 }
+
+export async function unstarProfile(token: string, profileId: string) {
+  return post(token, 'unstar_profile', { profile_id: profileId })
+}
