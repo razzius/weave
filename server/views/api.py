@@ -10,7 +10,7 @@ from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import asc, desc, func, and_
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.sql import exists
+from sqlalchemy import exists, text
 
 from server.models import ProfileStar
 from server.queries import (
@@ -147,11 +147,11 @@ def get_profiles():
         )
 
         if sorting == 'starred':
-            return [desc(Profile.starred), desc(Profile.date_updated)]
+            return [desc(text('profile_star_count')), desc(Profile.date_updated)]
         elif sorting == 'last_name_alphabetical':
-            return [desc(last_name_sorting)]
-        elif sorting == 'last_name_reverse_alphabetical':
             return [asc(last_name_sorting)]
+        elif sorting == 'last_name_reverse_alphabetical':
+            return [desc(last_name_sorting)]
         elif sorting == 'date_updated':
             return [desc(Profile.date_updated)]
         else:

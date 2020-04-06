@@ -112,7 +112,7 @@ export async function getProfiles({
   degrees = [],
   affiliations = [],
   page = 1,
-  sorting = 'date_updated',
+  sorting = 'starred',
   sortAscending = false,
 }: {
   token: string,
