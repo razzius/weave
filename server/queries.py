@@ -161,7 +161,12 @@ def _filter_profiles(
 
 def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
     return (
-        db.session.query(Profile, func.count(ProfileStar.from_verification_email_id))
+        db.session.query(
+            Profile,
+            func.count(ProfileStar.from_verification_email_id).label(
+                'profile_star_count'
+            ),
+        )
         .filter(Profile.available_for_mentoring)
         .outerjoin(
             ProfileStar,

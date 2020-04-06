@@ -26,7 +26,7 @@ const originalState = {
   search: '',
   searchTerms: [],
   sortAscending: false,
-  sorting: 'date_updated',
+  sorting: 'starred',
   hospitalOptions: [],
 }
 
@@ -188,12 +188,11 @@ class Browse extends Component<Props, State> {
   }
 
   handleChangeSorting = option => {
-    const { sorting, ascending } = option.value
+    const sorting = option.value
 
     this.setState(
       {
         sorting,
-        sortAscending: ascending,
         page: 1,
       },
       this.handleSearch
