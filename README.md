@@ -12,10 +12,10 @@ but it is intended to be configurable to the needs of different medical schools.
 ## Requirements
 
 - Python 3.7.3
-- Node 12.10.0
+- Node 13.10.0
 - Postgresql 10.11
 - [pipenv](https://github.com/pypa/pipenv#installation) 2018.11.26
-- [yarn](https://yarnpkg.com/en/docs/install) 1.22.0
+- [yarn](https://yarnpkg.com/en/docs/install) 1.22.4
 
 ## Developing with `vagrant`
 
