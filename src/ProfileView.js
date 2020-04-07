@@ -2,6 +2,7 @@
 import React, { Fragment, useState, type Node } from 'react'
 import MediaQuery from 'react-responsive'
 import { withRouter, type RouterHistory } from 'react-router-dom'
+import ReactTooltip from 'react-tooltip'
 
 import { starProfile, unstarProfile } from './api'
 import Button from './Button'
@@ -247,7 +248,7 @@ const ProfileView = ({
   starred?: ?boolean,
   history: RouterHistory,
 }) => {
-  const [starredState, setStarred] = useState(starred)
+  const [starredState, setStarred] = useState(Boolean(starred))
 
   const adminButton =
     isAdmin && !ownProfile && profileId ? (
@@ -314,20 +315,26 @@ const ProfileView = ({
           <div className="columns">
             <div className="column contact">
               {profileId != null && !ownProfile && (
-                <ProfileStar
-                  active={Boolean(starredState)}
-                  onClick={() => {
-                    const newStarred = !starredState
-                    setStarred(newStarred)
-                    if (newStarred) {
-                      starProfile(token, profileId)
-                    } else {
-                      unstarProfile(token, profileId)
-                    }
-                    history.replace(location.pathname, null)
-                  }}
-                  type="button"
-                />
+                <div data-tip data-for="starTooltip">
+                  <ReactTooltip id="starTooltip" place="top">
+                    Click here to{' '}
+                    {starredState ? 'remove star' : 'mark profile as starred'}
+                  </ReactTooltip>
+                  <ProfileStar
+                    active={starredState}
+                    onClick={() => {
+                      const newStarred = !starredState
+                      setStarred(newStarred)
+                      if (newStarred) {
+                        starProfile(token, profileId)
+                      } else {
+                        unstarProfile(token, profileId)
+                      }
+                      history.replace(location.pathname, null)
+                    }}
+                    type="button"
+                  />
+                </div>
               )}
 
               {avatar}
