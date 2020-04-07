@@ -81,7 +81,6 @@ type State = {
 
 class ProfileResult extends Component<Props, State> {
   state = {
-    starred: false, // TODO
     scrollY: 0,
   }
 

@@ -25,7 +25,6 @@ const originalState = {
   results: null,
   search: '',
   searchTerms: [],
-  sortAscending: false,
   sorting: 'starred',
   hospitalOptions: [],
 }
@@ -101,7 +100,6 @@ class Browse extends Component<Props, State> {
       affiliations,
       searchableTags,
       sorting,
-      sortAscending,
     } = this.state
 
     const [knownTags, userTags] = partition(
@@ -125,7 +123,6 @@ class Browse extends Component<Props, State> {
       degrees: searchDegrees,
       affiliations: searchAffiliations,
       sorting,
-      sortAscending,
     })
 
     if (results !== null && page > 1) {
