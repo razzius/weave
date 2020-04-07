@@ -8,17 +8,11 @@ export default ({
   onClick: ?Function,
   active: boolean,
 }) => (
-  <img
-    tabIndex="1"
+  <input
+    type="image"
     alt="Star"
     className={`profile-star ${active ? 'active' : ''}`}
     src="/assets/star-outline.png"
     onClick={onClick}
-    onKeyDown={e => {
-      e.preventDefault()
-      if ((e.key === 'Enter' || e.key === ' ') && onClick) {
-        onClick()
-      }
-    }}
   />
 )
