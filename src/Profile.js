@@ -10,6 +10,7 @@ import ProfileView, { type BaseProfileData } from './ProfileView'
 type ProfileData = {|
   id: string,
   dateUpdated: Date,
+  starred?: ?boolean,
   ...BaseProfileData,
 |}
 

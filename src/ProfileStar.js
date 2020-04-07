@@ -5,7 +5,7 @@ export default ({
   onClick,
   active,
 }: {
-  onClick: ?Function,
+  onClick?: Function,
   active: boolean,
 }) => (
   <input
