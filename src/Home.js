@@ -13,7 +13,7 @@ const Home = ({
   token: string | null,
   account: ?Account,
 }) => {
-  const isMentor = account && account.isMentor
+  const isMentor = Boolean(account && account.isMentor)
   const profileId = account && account.profileId
 
   return (
