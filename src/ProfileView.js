@@ -323,7 +323,7 @@ const ProfileView = ({
                     } else {
                       unstarProfile(token, profileId)
                     }
-                    history.replace(location.state, null)
+                    history.replace(location.pathname, null)
                   }}
                   type="button"
                 />
