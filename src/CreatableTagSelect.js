@@ -95,7 +95,6 @@ export default class CreatableTagSelect extends Component<Props, State> {
       noOptionsMessage,
     } = this.props
     return (
-      // $FlowFixMe CreatableSelect props are not typechecking as expected
       <CreatableSelect
         styles={{
           control: base => ({ ...base, backgroundColor: 'white' }),
