@@ -113,7 +113,6 @@ export async function getProfiles({
   affiliations = [],
   page = 1,
   sorting = 'starred',
-  sortAscending = false,
 }: {
   token: string,
   query?: string,
@@ -122,7 +121,6 @@ export async function getProfiles({
   affiliations?: Array<string>,
   page: number,
   sorting?: string,
-  sortAscending?: boolean,
 }) {
   const params = {
     page,
