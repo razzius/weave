@@ -56,6 +56,7 @@ const ExpectationDisplay = ({
 }
 
 export type BaseProfileData = {|
+  id?: ?string,
   name: string,
   contactEmail: string,
   imageUrl: ?string,
@@ -243,7 +244,7 @@ const ProfileView = ({
   profileId?: ?string,
   dateUpdated?: Date,
   token: string,
-  starred: boolean,
+  starred?: ?boolean,
   history: RouterHistory,
 }) => {
   const [starredState, setStarred] = useState(starred)
@@ -314,7 +315,7 @@ const ProfileView = ({
             <div className="column contact">
               {profileId != null && !ownProfile && (
                 <ProfileStar
-                  active={starredState}
+                  active={Boolean(starredState)}
                   onClick={() => {
                     const newStarred = !starredState
                     setStarred(newStarred)
