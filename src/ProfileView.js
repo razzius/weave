@@ -27,10 +27,7 @@ const Buttons = ({
     {ownProfile && <Button to="/edit-profile">Edit Profile</Button>}
     {adminButton}
     {!firstTimePublish && !editing && (
-      <Button
-        className="button next-button"
-        to={{ pathname: '/browse', state: location.state }}
-      >
+      <Button to={{ pathname: '/browse', state: location.state }}>
         Back to list
       </Button>
     )}
