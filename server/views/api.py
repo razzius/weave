@@ -146,16 +146,17 @@ def get_profiles():
             ),
         )
 
-        if sorting == 'starred':
-            return [desc(text('profile_star_count')), desc(Profile.date_updated)]
-        elif sorting == 'last_name_alphabetical':
-            return [asc(last_name_sorting)]
-        elif sorting == 'last_name_reverse_alphabetical':
-            return [desc(last_name_sorting)]
-        elif sorting == 'date_updated':
-            return [desc(Profile.date_updated)]
-        else:
+        sort_options = {
+            'starred': [desc(text('profile_star_count')), desc(Profile.date_updated)],
+            'last_name_alphabetical': [asc(last_name_sorting)],
+            'last_name_reverse_alphabetical': [desc(last_name_sorting)],
+            'date_updated': [desc(Profile.date_updated)],
+        }
+
+        if sorting not in sort_options:
             raise InvalidPayloadError({'sorting': ['invalid']})
+
+        return sort_options[sorting]
 
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)

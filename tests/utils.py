@@ -56,6 +56,7 @@ def create_test_profile(
             verification_email_id=verification_email.id,
             contact_email=email,
             available_for_mentoring=available_for_mentoring,
+            date_updated=date_updated,
             cadence='monthly',
         )
     )
