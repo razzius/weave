@@ -7,6 +7,12 @@ repos:
     language: system
     entry: pipenv run flake8
     types: [python]
+  - id: eslint
+    name: eslint
+    stages: [commit]
+    language: system
+    entry: eslint src
+    types: [javascript]
   - id: pytest
     name: pytest
     stages: [manual]
