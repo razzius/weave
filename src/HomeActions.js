@@ -22,21 +22,19 @@ const FacultyLanding = ({
   profileId: ?string,
   token: string | null,
   isMentor: boolean,
-}) => {
-  return (
-    <div>
-      <h1>Faculty</h1>
-      <Button to={getFacultyLink(token, profileId)}>
-        {getFacultyText(token, profileId)}
-      </Button>
-      {isMentor && (
-        <div>
-          <Button to="/browse">Browse all profiles</Button>
-        </div>
-      )}
-    </div>
-  )
-}
+}) => (
+  <div>
+    <h1>Faculty</h1>
+    <Button to={getFacultyLink(token, profileId)}>
+      {getFacultyText(token, profileId)}
+    </Button>
+    {isMentor && (
+      <div>
+        <Button to="/browse">Browse all profiles</Button>
+      </div>
+    )}
+  </div>
+)
 
 export default ({
   token,
@@ -51,11 +49,10 @@ export default ({
     return (
       <div>
         <h1>Students</h1>
-        <Button to={'/student-expectations'}>Register as a student</Button>
+        <Button to="/student-expectations">Register as a student</Button>
+
         <h1>Faculty</h1>
-        <Button to={'/faculty-expectations'}>
-          Register as a faculty member
-        </Button>
+        <Button to="/faculty-expectations">Register as a faculty member</Button>
       </div>
     )
   }
