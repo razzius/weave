@@ -3,6 +3,10 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[requires]
+python_version = "3.7.7"
+pipenv_version = "2018.11.26"
+
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
@@ -40,9 +44,6 @@ isort = "*"
 pytest-flask-sqlalchemy = "*"
 pytest-watch = "*"
 pytest-icdiff = "*"
-
-[requires]
-python_version = "3.7"
 
 [scripts]
 start = "env FLASK_ENV=development flask run --host=0.0.0.0"

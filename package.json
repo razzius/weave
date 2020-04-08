@@ -1,7 +1,16 @@
 {
   "name": "weave-mentorship",
-  "version": "0.4.0",
-  "private": true,
+  "engines": {
+    "node": "13.12.0",
+    "yarn": "1.22.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "deploy": "gh-pages -d build",
+    "build": "cross-env REACT_APP_GIT_SHA=$SOURCE_VERSION react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
   "dependencies": {
     "@sentry/browser": "5.10.2",
     "blueimp-canvas-to-blob": "^3.16.0",
@@ -28,15 +37,7 @@
     "react-waypoint": "^8.1.0",
     "slick-carousel": "^1.8.1",
     "url-polyfill": "^1.1.0",
-    "weakmap-polyfill": "^2.0.0",
-    "yarn": "^1.22.0"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "deploy": "gh-pages -d build",
-    "build": "cross-env REACT_APP_GIT_SHA=$SOURCE_VERSION react-scripts build",
-    "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "weakmap-polyfill": "^2.0.0"
   },
   "devDependencies": {
     "cross-env": "^6.0.3",
@@ -54,9 +55,6 @@
     "trailingComma": "es5",
     "singleQuote": true,
     "semi": false
-  },
-  "engines": {
-    "node": "13.10.0"
   },
   "browserslist": {
     "production": [
