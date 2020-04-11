@@ -13,7 +13,7 @@ but it is intended to be configurable to the needs of different medical schools.
 
 - [Python](https://www.python.org/) [(version)](Pipfile#L7)
 - [Node](https://nodejs.org/) [(version)](package.json#L4)
-- [Postgresql](https://www.postgresql.org/) 10.11
+- [Postgresql](https://www.postgresql.org/) [(version)](tests/conftest.py#L11)
 - [pipenv](https://github.com/pypa/pipenv#installation) [(version)](Pipfile#L8)
 - [yarn](https://yarnpkg.com/en/docs/install) [(version)](package.json#L5)
 
@@ -64,7 +64,7 @@ and http://192.168.50.4 otherwise.
 ## Manual Development Setup
 
 The following commands are run automatically when provisioning Vagrant for the first time,
-and can be rerun via `vagrant provision`. Nonetheless, you may need to re-run or modify a setup command 
+and can be rerun via `vagrant provision`. Nonetheless, you may need to re-run or modify a setup command
 if you are not using Vagrant or if you are making changes such as installing new Python or Node packages.
 
 ### Installing the frontend requirements

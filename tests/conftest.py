@@ -8,6 +8,8 @@ from server.app import create_app
 from server.models import db
 
 
+PG_VERSION = 12.2
+
 TEST_DATABASE_URL = os.environ.get('TEST_DATABASE_URL', 'postgresql:///weave_test')
 
 
@@ -22,9 +24,8 @@ def database():
     pg_port = parsed_url.port
     pg_user = parsed_url.username
     pg_db = parsed_url.path[1:]
-    pg_version = 10.11
 
-    janitor = DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, pg_version)
+    janitor = DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, PG_VERSION)
 
     try:
         janitor.init()
