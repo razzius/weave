@@ -167,7 +167,12 @@ def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
                 'profile_star_count'
             ),
         )
-        .filter(Profile.available_for_mentoring)
+        .filter(
+            or_(
+                Profile.available_for_mentoring,
+                Profile.verification_email_id == verification_email_id
+            )
+        )
         .outerjoin(
             ProfileStar,
             and_(
