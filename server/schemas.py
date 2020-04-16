@@ -41,6 +41,9 @@ class ProfileSchema(Schema):
     cadence = fields.String()
     other_cadence = fields.String(allow_none=True)
 
+    # This is assigned to profiles by mutation. TODO find a better way
+    starred = fields.Boolean(dump_only=True)
+
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent
 VALID_DOMAINS = json.load(open(PROJECT_ROOT / 'src' / 'valid_domains.json'))

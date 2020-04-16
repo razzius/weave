@@ -10,6 +10,7 @@ import ProfileView, { type BaseProfileData } from './ProfileView'
 type ProfileData = {|
   id: string,
   dateUpdated: Date,
+  starred?: ?boolean,
   ...BaseProfileData,
 |}
 
@@ -42,7 +43,7 @@ function errorView(error: string | ClientError) {
 
 type State = {
   profile: ProfileData | null,
-  error: string | ClientError | null,
+  error: ClientError | null,
 }
 
 type Props = {
@@ -69,15 +70,7 @@ export default class Profile extends Component<Props, State> {
       },
     } = this.props
 
-    if (token === null) {
-      this.setState({ error: 'You are not logged in. Please log in.' })
-      return
-    }
-
-    if (id == null) {
-      this.setState({
-        error: 'There is no profile id in the URL. Navigate to a profile.',
-      })
+    if (token === null || id == null) {
       return
     }
 
@@ -95,16 +88,31 @@ export default class Profile extends Component<Props, State> {
   }
 
   render() {
+    const {
+      account,
+      token,
+      match: {
+        params: { id },
+      },
+    } = this.props
+
+    if (id === null) {
+      return 'There is no profile id in the URL. Navigate to a profile.'
+    }
+
     const { profile, error } = this.state
 
     if (error !== null) {
       return errorView(error)
     }
 
-    const { account } = this.props
+    if (token === null) {
+      return 'You are not logged in. Please log in.'
+    }
 
     if (account === null) {
-      return errorView('You are not logged in. Please log in.')
+      // Account hasn't loaded yet
+      return null
     }
 
     const { profileId, isAdmin } = account
@@ -115,7 +123,7 @@ export default class Profile extends Component<Props, State> {
 
     const ownProfile = profileId === profile.id
 
-    const { id, dateUpdated, ...baseProfileData } = profile
+    const { dateUpdated, starred, ...baseProfileData } = profile
 
     return (
       <AppScreen>
@@ -125,6 +133,8 @@ export default class Profile extends Component<Props, State> {
           data={baseProfileData}
           profileId={id}
           dateUpdated={dateUpdated}
+          token={token}
+          starred={starred}
         />
       </AppScreen>
     )

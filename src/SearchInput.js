@@ -141,16 +141,20 @@ export default class SearchInput extends Component<Props> {
             }}
             options={[
               {
+                label: 'Starred Profiles First',
+                value: 'starred',
+              },
+              {
                 label: 'Most Recently Updated',
-                value: { sorting: 'date_updated', ascending: false },
+                value: 'date_updated',
               },
               {
                 label: 'Alphabetical',
-                value: { sorting: 'last_name', ascending: true },
+                value: 'last_name_alphabetical',
               },
               {
                 label: 'Reverse Alphabetical',
-                value: { sorting: 'last_name', ascending: false },
+                value: 'last_name_reverse_alphabetical',
               },
             ]}
             onChange={onChangeSorting}

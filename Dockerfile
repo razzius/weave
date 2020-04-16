@@ -5,12 +5,13 @@ RUN apt-get update -y && apt-get install -y \
   python-minimal \
   python-pip \
   python3-distutils \
+  libpython3.7-dev \
   python3.7
 
-RUN curl -sL https://deb.nodesource.com/node_12.x/pool/main/n/nodejs/nodejs_12.10.0-1nodesource1_amd64.deb -o node.deb
+RUN curl -sL https://deb.nodesource.com/node_13.x/pool/main/n/nodejs/nodejs_13.10.0-1nodesource1_amd64.deb -o node.deb
 RUN dpkg -i node.deb
 
-RUN curl -sL https://github.com/yarnpkg/yarn/releases/download/v1.22.0/yarn_1.22.0_all.deb -o yarn.deb
+RUN curl -sL https://github.com/yarnpkg/yarn/releases/download/v1.22.4/yarn_1.22.4_all.deb -o yarn.deb
 RUN dpkg -i yarn.deb
 
 ## Build the backend

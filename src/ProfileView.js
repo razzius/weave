@@ -1,10 +1,13 @@
 // @flow
-import React, { Fragment, type Node } from 'react'
+import React, { Fragment, useState, type Node } from 'react'
 import MediaQuery from 'react-responsive'
-import { withRouter } from 'react-router-dom'
+import { withRouter, type RouterHistory } from 'react-router-dom'
+import ReactTooltip from 'react-tooltip'
 
+import { starProfile, unstarProfile } from './api'
 import Button from './Button'
 import ProfileAvatar from './ProfileAvatar'
+import ProfileStar from './ProfileStar'
 import { CADENCE_LABELS } from './CadenceOption'
 
 const Buttons = ({
@@ -54,6 +57,7 @@ const ExpectationDisplay = ({
 }
 
 export type BaseProfileData = {|
+  id?: ?string,
   name: string,
   contactEmail: string,
   imageUrl: ?string,
@@ -228,6 +232,9 @@ const ProfileView = ({
   location,
   profileId,
   dateUpdated,
+  token,
+  starred,
+  history,
 }: {
   data: BaseProfileData,
   ownProfile?: boolean,
@@ -237,7 +244,12 @@ const ProfileView = ({
   location: Object,
   profileId?: ?string,
   dateUpdated?: Date,
+  token: string,
+  starred?: ?boolean,
+  history: RouterHistory,
 }) => {
+  const [starredState, setStarred] = useState(Boolean(starred))
+
   const adminButton =
     isAdmin && !ownProfile && profileId ? (
       <Button to={`/admin-edit-profile/${profileId}`}>
@@ -302,8 +314,30 @@ const ProfileView = ({
         <div className="profile-contact">
           <div className="columns">
             <div className="column contact">
-              {avatar}
+              {profileId != null && !ownProfile && (
+                <div data-tip data-for="starTooltip">
+                  <ReactTooltip id="starTooltip" place="top">
+                    Click here to{' '}
+                    {starredState ? 'remove star' : 'mark profile as starred'}
+                  </ReactTooltip>
+                  <ProfileStar
+                    active={starredState}
+                    onClick={() => {
+                      const newStarred = !starredState
+                      setStarred(newStarred)
+                      if (newStarred) {
+                        starProfile(token, profileId)
+                      } else {
+                        unstarProfile(token, profileId)
+                      }
+                      history.replace(location.pathname, null)
+                    }}
+                    type="button"
+                  />
+                </div>
+              )}
 
+              {avatar}
               <ContactInformation contactEmail={data.contactEmail} />
 
               <Cadence

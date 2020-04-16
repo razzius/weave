@@ -1,10 +1,9 @@
-from .models import VerificationToken, db
 import operator
 from functools import reduce
 from typing import List, Optional
 
 from flask_sqlalchemy import BaseQuery
-from sqlalchemy import func, or_, sql
+from sqlalchemy import and_, func, or_, sql
 
 from .models import (
     ActivityOption,
@@ -20,7 +19,10 @@ from .models import (
     Profile,
     ProfileActivity,
     ProfileDegree,
+    ProfileStar,
     VerificationEmail,
+    VerificationToken,
+    db,
 )
 
 
@@ -106,7 +108,7 @@ def _filter_query_on_affiliations(
     )
 
 
-def _filter_query(
+def _filter_profiles(
     available_profiles: BaseQuery,
     words: List[str],
     tags: List[str],
@@ -157,13 +159,35 @@ def _filter_query(
     return query
 
 
-def matching_profiles(
-    query: str, tags: str, degrees: str, affiliations: str
-) -> List[tuple]:
-    available_profiles = Profile.query.filter(Profile.available_for_mentoring)
+def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
+    return (
+        db.session.query(
+            Profile,
+            func.count(ProfileStar.from_verification_email_id).label(
+                'profile_star_count'
+            ),
+        )
+        .filter(
+            or_(
+                Profile.available_for_mentoring,
+                Profile.verification_email_id == verification_email_id
+            )
+        )
+        .outerjoin(
+            ProfileStar,
+            and_(
+                ProfileStar.to_profile_id == Profile.id,
+                ProfileStar.from_verification_email_id == verification_email_id,
+            ),
+        )
+        .group_by(Profile.id)
+    )
 
-    if not any([query, tags, degrees, affiliations]):
-        return available_profiles
+
+def matching_profiles(
+    query: str, tags: str, degrees: str, affiliations: str, verification_email_id: int
+) -> BaseQuery:
+    profiles_and_stars = query_profiles_and_stars(verification_email_id)
 
     words = ''.join(
         character if character.isalnum() else ' ' for character in query.lower()
@@ -173,9 +197,22 @@ def matching_profiles(
     degree_list = degrees.lower().split(',') if degrees else []
     affiliation_list = affiliations.lower().split(',') if affiliations else []
 
-    return _filter_query(
-        available_profiles, words, tag_list, degree_list, affiliation_list
+    filtered_profiles = _filter_profiles(
+        profiles_and_stars, words, tag_list, degree_list, affiliation_list
     )
+
+    return filtered_profiles
+
+
+def add_stars_to_profiles(profiles_and_stars):
+    # TODO do this without mutating profile
+    available_profiles = []
+
+    for profile, star_count in profiles_and_stars:
+        profile.starred = star_count > 0
+        available_profiles.append(profile)
+
+    return available_profiles
 
 
 def query_value_with_option_type_label(query, tag_class, name):

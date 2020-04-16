@@ -6,6 +6,7 @@ import { withRouter, Link } from 'react-router-dom'
 
 import { capitalize } from './utils'
 import ProfileAvatar from './ProfileAvatar'
+import ProfileStar from './ProfileStar'
 
 const CheckboxIndicator = ({
   title,
@@ -69,6 +70,7 @@ type Props = {
     willingDiscussPersonal: boolean,
     willingCareerGuidance: boolean,
     willingStudentGroup: boolean,
+    starred: boolean,
   },
   browseState: Object,
 }
@@ -99,6 +101,7 @@ class ProfileResult extends Component<Props, State> {
         willingDiscussPersonal,
         willingCareerGuidance,
         willingStudentGroup,
+        starred,
       },
       browseState, // for history
     } = this.props
@@ -136,6 +139,7 @@ class ProfileResult extends Component<Props, State> {
               this.setState({ scrollY: window.scrollY })
             }}
           >
+            {starred && <ProfileStar active />}
             <ProfileAvatar imageUrl={imageUrl} name={name} size={160} />
             <div style={{ flexGrow: '0', flexShrink: '0', width: '400px' }}>
               <h2>
@@ -160,7 +164,6 @@ class ProfileResult extends Component<Props, State> {
                 ))}
               </p>
             </div>
-
             <div
               className="profile-result-right"
               style={{

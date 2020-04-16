@@ -5,26 +5,44 @@ from typing import Optional
 from server.models import Profile, VerificationEmail, VerificationToken, save
 
 
-def create_test_verification_email(email: str, is_admin: bool):
+def generate_test_email():
+    return f'{str(uuid.uuid4())}@test.com'
+
+
+def create_test_verification_email(email: Optional[str] = None, is_admin: bool = False):
+    if email is None:
+        email = generate_test_email()
+
     return save(VerificationEmail(email=email, is_admin=is_admin))
 
 
 def create_test_verification_token(
-    token: str, verification_email: VerificationEmail, is_admin: bool
+    token: Optional[str] = None,
+    verification_email: VerificationEmail = None,
+    is_admin: bool = False,
 ) -> VerificationToken:
+    if token is None:
+        token = str(uuid.uuid4())
+
+    if verification_email is None:
+        verification_email = create_test_verification_email()
+
     return save(VerificationToken(token=token, email_id=verification_email.id))
 
 
 def create_test_profile(
     token: Optional[str] = None,
+    email: Optional[str] = None,
     name='Test User',
-    email='test@test.com',
     is_admin=False,
     available_for_mentoring=False,
     date_updated=datetime.date.today(),
 ) -> Profile:
     if token is None:
         token = str(uuid.uuid4())
+
+    if email is None:
+        email = generate_test_email()
 
     verification_email = create_test_verification_email(email, is_admin)
 
@@ -38,6 +56,7 @@ def create_test_profile(
             verification_email_id=verification_email.id,
             contact_email=email,
             available_for_mentoring=available_for_mentoring,
+            date_updated=date_updated,
             cadence='monthly',
         )
     )

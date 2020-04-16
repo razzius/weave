@@ -3,10 +3,13 @@ url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[requires]
+python_version = "3.7.6"
+pipenv_version = "2018.11.26"
+
 [packages]
 flask = "*"
 flask-sqlalchemy = "*"
-marshmallow-sqlalchemy = "*"
 flask-marshmallow = "*"
 flask-cors = "*"
 gunicorn = "*"
@@ -42,13 +45,10 @@ pytest-flask-sqlalchemy = "*"
 pytest-watch = "*"
 pytest-icdiff = "*"
 
-[requires]
-python_version = "3.7"
-
 [scripts]
 start = "env FLASK_ENV=development flask run --host=0.0.0.0"
 test = "env FLASK_ENV=development pytest tests"
-flake8 = "flake8 server tests"
+lint = "flake8 server tests && mypy server tests"
 shell = "ipython -i server/scripts/shell.py"
 resetdb = "python -m server.scripts.resetdb"
 

@@ -100,6 +100,8 @@ function payloadToProfile(payload: ProfilePayload): Profile {
 
     cadence: payload.cadence,
     otherCadence: payload.other_cadence,
+
+    starred: payload.starred,
   }
 }
 
@@ -110,8 +112,7 @@ export async function getProfiles({
   degrees = [],
   affiliations = [],
   page = 1,
-  sorting = 'date_updated',
-  sortAscending = false,
+  sorting = 'starred',
 }: {
   token: string,
   query?: string,
@@ -120,7 +121,6 @@ export async function getProfiles({
   affiliations?: Array<string>,
   page: number,
   sorting?: string,
-  sortAscending?: boolean,
 }) {
   const params = {
     page,
@@ -129,7 +129,6 @@ export async function getProfiles({
     degrees,
     affiliations,
     sorting,
-    sort_ascending: sortAscending,
   }
   const results = await get(token, 'profiles', params)
 
@@ -268,4 +267,12 @@ export async function getSearchTags(token: string) {
 
 export async function getProfileTags(token: string) {
   return get(token, 'profile-tags')
+}
+
+export async function starProfile(token: string, profileId: string) {
+  return post(token, 'star_profile', { profile_id: profileId })
+}
+
+export async function unstarProfile(token: string, profileId: string) {
+  return post(token, 'unstar_profile', { profile_id: profileId })
 }

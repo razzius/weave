@@ -1,19 +1,24 @@
-from server.queries import query_profile_tags
 import datetime
 import os
 import uuid
 from http import HTTPStatus
 
-from flask import Blueprint, current_app, jsonify, make_response, request
-
 from cloudinary import uploader
 from dateutil.relativedelta import relativedelta
+from flask import Blueprint, current_app, jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
-from server.queries import query_searchable_tags
-from sqlalchemy import asc, desc, func
+from sqlalchemy import asc, desc, func, and_
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.sql import exists
+from sqlalchemy import exists, text
+
+from server.models import ProfileStar
+from server.queries import (
+    add_stars_to_profiles,
+    query_profile_tags,
+    query_profiles_and_stars,
+    query_searchable_tags,
+)
 
 from ..emails import (
     send_faculty_login_email,
@@ -114,60 +119,61 @@ def get_token(headers):
 def get_profiles():
     verification_token = get_token(request.headers)
 
-    query = request.args.get('query')
+    query = request.args.get('query', '')
     tags = request.args.get('tags', '')
     degrees = request.args.get('degrees', '')
     affiliations = request.args.get('affiliations', '')
 
     page = int(request.args.get('page', 1))
 
-    sorting = request.args.get('sorting', 'last_name')
-    sort_ascending = request.args.get('sort_ascending', False) == 'true'
+    sorting = request.args.get('sorting', 'starred')
 
     start, end = paginate(page)
 
-    verification_email_id = VerificationToken.query.filter(
-        VerificationToken.token == verification_token.token
-    ).value(VerificationToken.email_id)
+    verification_email_id = verification_token.email_id
 
-    profiles_queryset = matching_profiles(query, tags, degrees, affiliations).group_by(
-        Profile.id
+    profiles_queryset = matching_profiles(
+        query, tags, degrees, affiliations, verification_email_id=verification_email_id
     )
 
-    def get_ordering(sort_ascending):
-        if sort_ascending:
-            return asc
-        return desc
+    def get_ordering(sorting):
+        last_name_sorting = func.split_part(
+            Profile.name,
+            ' ',
+            func.array_length(
+                func.string_to_array(Profile.name, ' '),
+                1,  # Length in the 1st dimension
+            ),
+        )
 
-    def get_sorting(sorting):
-        if sorting == 'last_name':
-            return func.split_part(
-                Profile.name,
-                ' ',
-                func.array_length(
-                    func.string_to_array(Profile.name, ' '),
-                    1,  # Length in the 1st dimension
-                ),
-            )
-        elif sorting == 'date_updated':
-            return Profile.date_updated
-        else:
+        sort_options = {
+            'starred': [desc(text('profile_star_count')), desc(Profile.date_updated)],
+            'last_name_alphabetical': [asc(last_name_sorting)],
+            'last_name_reverse_alphabetical': [desc(last_name_sorting)],
+            'date_updated': [desc(Profile.date_updated)],
+        }
+
+        if sorting not in sort_options:
             raise InvalidPayloadError({'sorting': ['invalid']})
 
-    asc_or_desc = get_ordering(sort_ascending)
+        return sort_options[sorting]
 
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
         Profile.verification_email_id != verification_email_id,
-        asc_or_desc(get_sorting(sorting)),
+        *get_ordering(sorting),
     ]
 
     sorted_queryset = profiles_queryset.order_by(*ordering)
 
+    sliced_queryset = sorted_queryset[start:end]
+
+    profiles_with_stars = add_stars_to_profiles(sliced_queryset)
+
     return jsonify(
         {
             'profile_count': profiles_queryset.count(),
-            'profiles': profiles_schema.dump(sorted_queryset[start:end]),
+            'profiles': profiles_schema.dump(profiles_with_stars),
         }
     )
 
@@ -192,12 +198,18 @@ def get_search_tags():
 
 @api.route('/profiles/<profile_id>')
 def get_profile(profile_id=None):
-    get_token(request.headers)  # Ensure valid requesting token
+    token = get_token(request.headers)
 
-    profile = Profile.query.filter(Profile.id == profile_id).one_or_none()
+    profile_and_star_list = query_profiles_and_stars(token.email_id).filter(
+        Profile.id == profile_id
+    )
 
-    if profile is None:
+    if not profile_and_star_list:
         raise UserError({'profile_id': ['Not found']}, HTTPStatus.NOT_FOUND.value)
+
+    profile, star_count = profile_and_star_list[0]
+    # TODO do this without mutating profile
+    profile.starred = star_count > 0
 
     response = make_response(jsonify(profile_schema.dump(profile)))
 
@@ -604,3 +616,87 @@ def availability():
     save(profile)
 
     return jsonify({'available': available})
+
+
+@api_post('star_profile')
+def star_profile():
+    verification_token = get_token(request.headers)
+
+    from_email_id = verification_token.email_id
+
+    if 'profile_id' not in request.json:
+        return (
+            jsonify({'profile_id': ['`profile_id` missing from request']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    to_profile_id = request.json['profile_id']
+    to_profile = Profile.query.get(to_profile_id)
+
+    if to_profile is None:
+        return (
+            jsonify({'profile_id': ['`profile_id` invalid']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    if to_profile.verification_email.id == from_email_id:
+        return (
+            jsonify({'profile_id': ['Cannot star own profile']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    profile_star = ProfileStar(
+        from_verification_email_id=from_email_id, to_profile_id=to_profile_id
+    )
+
+    preexisting_star = db.session.query(
+        exists().where(
+            and_(
+                ProfileStar.from_verification_email_id
+                == profile_star.from_verification_email_id,
+                ProfileStar.to_profile_id == profile_star.to_profile_id,
+            )
+        )
+    ).scalar()
+
+    if preexisting_star:
+        return (
+            jsonify({'profile_id': ['Already starred']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    save(profile_star)
+
+    return jsonify({'profile_id': to_profile_id})
+
+
+@api_post('unstar_profile')
+def unstar_profile():
+    verification_token = get_token(request.headers)
+
+    from_email_id = verification_token.email_id
+
+    if 'profile_id' not in request.json:
+        return (
+            jsonify({'profile_id': ['`profile_id` missing from request']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    to_profile_id = request.json['profile_id']
+    to_profile = Profile.query.get(to_profile_id)
+
+    if to_profile is None:
+        return (
+            jsonify({'profile_id': ['`profile_id` invalid']}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    # TODO inconsistenly idempotent; allows repeating whereas starring does not
+    ProfileStar.query.filter(
+        ProfileStar.from_verification_email_id == from_email_id,
+        ProfileStar.to_profile_id == to_profile.id,
+    ).delete()
+
+    db.session.commit()
+
+    return {}
