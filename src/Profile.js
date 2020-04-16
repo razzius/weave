@@ -106,8 +106,13 @@ export default class Profile extends Component<Props, State> {
       return errorView(error)
     }
 
-    if (token === null || account === null) {
+    if (token === null) {
       return 'You are not logged in. Please log in.'
+    }
+
+    if (account === null) {
+      // Account hasn't loaded yet
+      return null
     }
 
     const { profileId, isAdmin } = account
