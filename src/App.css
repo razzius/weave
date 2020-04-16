@@ -216,10 +216,6 @@ input[type='email'].fullWidth {
   background: #f1e4b8;
 }
 
-/* .next-button { */
-/*   text-align: center; */
-/* } */
-
 /* .slick-dots li button:before { */
 /*   font-size: 10px !important; */
 /* } */
@@ -406,16 +402,16 @@ iframe.video {
 }
 
 .error {
-    margin: 1em 0;
-    padding: 1em;
-    background: #ffff0095;
+  margin: 1em 0;
+  padding: 1em;
+  background: #ffff0095;
 }
 .banner {
-    margin: 0;
-    text-align: center;
+  margin: 0;
+  text-align: center;
 }
 
 .profile-star {
-    position: absolute;
-    width: 40px;
+  position: absolute;
+  width: 40px;
 }

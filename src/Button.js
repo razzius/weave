@@ -7,7 +7,7 @@ type Props = any
 const Button = ({ to, onClick, children, style, disabled }: Props) => {
   if (to) {
     return (
-      <Link className="button next-button" to={to}>
+      <Link className="button" to={to}>
         {children}
       </Link>
     )
@@ -16,7 +16,7 @@ const Button = ({ to, onClick, children, style, disabled }: Props) => {
     <button
       type="button"
       onClick={onClick}
-      className="button next-button"
+      className="button"
       style={style}
       disabled={disabled}
     >
