@@ -2,6 +2,7 @@
 import React, { Component } from 'react'
 import { Link, Prompt, type RouterHistory } from 'react-router-dom'
 import AvatarEditor from 'react-avatar-editor'
+import Select from 'react-select'
 import { type ValueType } from 'react-select/src/types'
 import Dropzone from 'react-dropzone'
 import Promise from 'promise-polyfill'
@@ -13,7 +14,7 @@ import CadenceOption from './CadenceOption'
 import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
 import { getProfileTags, uploadPicture, type Profile } from './api'
-import { makeOptions, degreeOptions } from './options'
+import { makeOptions } from './options'
 import { arrayCaseInsensitiveContains, capitalize, last, when } from './utils'
 
 function scaleCanvas(canvas) {
@@ -421,14 +422,14 @@ export default class ProfileForm extends Component<Props, State> {
               <h3>I am available to mentor in the following ways:</h3>
 
               <div className="expectation">
-                <label htmlFor="willing-shadowing">
+                <label htmlFor="willing-discuss-personal">
                   <input
-                    id="willing-shadowing"
+                    id="willing-discuss-personal"
                     type="checkbox"
-                    checked={willingShadowing}
-                    onChange={this.updateBoolean('willingShadowing')}
+                    checked={willingDiscussPersonal}
+                    onChange={this.updateBoolean('willingDiscussPersonal')}
                   />
-                  Clinical shadowing opportunities
+                  <span>Discussing personal as well as professional life</span>
                 </label>
               </div>
 
@@ -452,19 +453,7 @@ export default class ProfileForm extends Component<Props, State> {
                     checked={willingGoalSetting}
                     onChange={this.updateBoolean('willingGoalSetting')}
                   />
-                  Goal setting
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-discuss-personal">
-                  <input
-                    id="willing-discuss-personal"
-                    type="checkbox"
-                    checked={willingDiscussPersonal}
-                    onChange={this.updateBoolean('willingDiscussPersonal')}
-                  />
-                  Discussing personal as well as professional life
+                  Research
                 </label>
               </div>
 
@@ -476,7 +465,19 @@ export default class ProfileForm extends Component<Props, State> {
                     checked={willingCareerGuidance}
                     onChange={this.updateBoolean('willingCareerGuidance')}
                   />
-                  Career guidance
+                  Residency applications
+                </label>
+              </div>
+
+              <div className="expectation">
+                <label htmlFor="willing-student-group">
+                  <input
+                    id="willing-student-group"
+                    type="checkbox"
+                    checked={willingStudentGroup}
+                    onChange={this.updateBoolean('willingStudentGroup')}
+                  />
+                  Student life
                 </label>
               </div>
 
@@ -512,12 +513,55 @@ export default class ProfileForm extends Component<Props, State> {
               value={contactEmail}
               onChange={this.update('contactEmail')}
             />
-            <p>Academic Degrees</p>
-            <CreatableTagSelect
+            <p>Program</p>
+            <Select
+              styles={{
+                control: base => ({ ...base, backgroundColor: 'white' }),
+                multiValue: styles => ({
+                  ...styles,
+                  backgroundColor: '#edf4fe',
+                }),
+              }}
+              className="column"
+              isMulti
+              options={makeOptions(['HSDM', 'HST', 'New Pathway', 'Pathways'])}
+            />
+            <p>Current Year</p>
+            <Select
               values={degrees}
-              options={degreeOptions}
+              options={makeOptions([
+                'MS1',
+                'MS2',
+                'MS3',
+                'MS4+',
+                'DMD1',
+                'DMD2',
+                'DMD3',
+                'DMD4+',
+                'Dual Degree: EdM',
+                'Dual Degree: MBA',
+                'Dual Degree: MPH',
+                'Dual Degree: MPP',
+                'Dual Degree: PhD',
+                '5th Year: Research',
+                'G1',
+                'G2',
+                'G3',
+                'G4+',
+              ])}
               handleChange={this.handleChange('degrees')}
               handleAdd={this.handleCreate('degrees')}
+            />
+            <p>PCE Site</p>
+            <Select
+              values={degrees}
+              options={makeOptions([
+                'Beth Israel DMC',
+                'BWH',
+                'CHA',
+                'MGH',
+                'HSDM',
+              ])}
             />
             <InstitutionalAffiliationsForm
               affiliations={makeOptions(affiliations)}
@@ -577,7 +621,11 @@ export default class ProfileForm extends Component<Props, State> {
                 handleAdd={this.handleCreate('activities')}
               />
             </div>
-            <p>What else would you like to share with potential mentees?</p>
+            <p>
+              Is there anything else you would like to share with potential
+              mentees (i.e. classes or clinical electives that you have taken,
+              favorite place in Boston)?
+            </p>
             <textarea
               onChange={this.update('additionalInformation')}
               value={additionalInformation}

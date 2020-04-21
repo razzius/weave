@@ -95,6 +95,24 @@ class ProfileTagMixin(IDMixin):
         return "<{}: {}>".format(self.__class__.__name__, self.tag.value)
 
 
+class StudentHospitalRotations(ProfileTagMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(HospitalAffiliationOption.id), nullable=False
+    )
+    tag = relationship(HospitalAffiliationOption)
+
+    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+
+
+class StudentPCESite(ProfileTagMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(HospitalAffiliationOption.id), nullable=False
+    )
+    tag = relationship(HospitalAffiliationOption)
+
+    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+
+
 class HospitalAffiliation(ProfileTagMixin, db.Model):
     tag_id = db.Column(
         db.Integer, db.ForeignKey(HospitalAffiliationOption.id), nullable=False

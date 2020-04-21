@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 
-import Select from 'react-select'
+import CreatableTagSelect from './CreatableTagSelect'
 import { makeOptions } from './options'
 
 export default ({
@@ -14,20 +14,12 @@ export default ({
   handleChange: Function,
 }) => (
   <>
-    <p>Institutional Affiliations</p>
-    <Select
-      styles={{
-        control: base => ({ ...base, backgroundColor: 'white' }),
-        multiValue: styles => ({
-          ...styles,
-          backgroundColor: '#edf4fe',
-        }),
-      }}
-      className="column"
-      isMulti
+    <p>Hospitals Where I Have Completed Rotations</p>
+    <CreatableTagSelect
       options={makeOptions(hospitalOptions)}
-      value={affiliations}
+      values={affiliations}
       onChange={handleChange}
+      handleAdd={() => {}}
     />
   </>
 )
