@@ -29,6 +29,7 @@ psycopg2-binary = "*"
 freezegun = "*"
 requests-mock = "*"
 pytest-postgresql = "*"
+flask-saml2 = "*"
 
 [dev-packages]
 ipython = "*"

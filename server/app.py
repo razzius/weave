@@ -37,5 +37,6 @@ def create_app():
 
     app.register_blueprint(views.home)
     app.register_blueprint(views.api)
+    app.register_blueprint(views.auth)
 
     return app
