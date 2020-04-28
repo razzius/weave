@@ -7,7 +7,7 @@ def test_faculty_registration_email(client, requests_mock):
     email = 'test@hms.harvard.edu'
 
     requests_mock.post(
-        f'https://api.sparkpost.com/api/v1/transmissions', {}, reason='OK'
+        'https://api.sparkpost.com/api/v1/transmissions', {}, reason='OK'
     )
 
     response = client.post(
@@ -25,7 +25,7 @@ def test_faculty_registration_email(client, requests_mock):
 
 def test_faculty_registration_invalid_email(client, requests_mock):
     requests_mock.post(
-        f'https://api.sparkpost.com/api/v1/transmissions', {}, reason='OK'
+        'https://api.sparkpost.com/api/v1/transmissions', {}, reason='OK'
     )
 
     response = client.post(
