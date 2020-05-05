@@ -18,7 +18,7 @@ class NoCacheIndexFlask(Flask):
 
 def create_app():
     app = NoCacheIndexFlask(
-        __name__, static_url_path="/static", static_folder="../build/static"
+        "server", static_url_path="/static", static_folder="../build/static"
     )
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
