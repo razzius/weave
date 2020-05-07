@@ -5,6 +5,7 @@ from flask_sslify import SSLify
 from .admin import init_admin
 from .emails import init_email
 from .models import db
+from .auth import login_manager
 from . import views
 from . import cli
 
@@ -30,6 +31,7 @@ def create_app():
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
     db.init_app(app)
+    login_manager.init_app(app)
     CORS(app)
     SSLify(app)
 
