@@ -29,6 +29,7 @@ psycopg2-binary = "*"
 freezegun = "*"
 requests-mock = "*"
 pytest-postgresql = "*"
+flask-login = "*"
 
 [dev-packages]
 ipython = "*"
@@ -45,6 +46,8 @@ pytest-watch = "*"
 pytest-icdiff = "*"
 mypy = {editable = true, git = "https://github.com/razzius/mypy.git"}
 flask-shell-ipython = "*"
+black = "*"
+autoflake = "*"
 
 [scripts]
 start = "env FLASK_ENV=development flask run --host=0.0.0.0"

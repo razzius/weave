@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Any
 
 from flask_sqlalchemy import SQLAlchemy
+from flask_login.mixins import UserMixin
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declared_attr
 
@@ -35,10 +36,11 @@ class IDMixin:
     id = db.Column(db.Integer, primary_key=True)
 
 
-class VerificationEmail(IDMixin, db.Model):
+class VerificationEmail(IDMixin, UserMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean)
     is_mentor = db.Column(db.Boolean)
+    is_active = True
 
     def __str__(self):
         return f"<VerificationEmail {self.id}: {self.email}>"
