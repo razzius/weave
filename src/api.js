@@ -12,6 +12,7 @@ function addQueryString(url, params) {
 
 function buildURL(path, params = null) {
   const url = new URL(`${settings.serverUrl}/${path}`)
+
   if (params) {
     addQueryString(url, params)
   }
