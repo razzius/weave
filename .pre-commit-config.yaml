@@ -11,7 +11,7 @@ repos:
     name: eslint
     stages: [commit]
     language: system
-    entry: eslint
+    entry: yarn run eslint
     types: [javascript]
     files: src/.+.js
   - id: pytest
