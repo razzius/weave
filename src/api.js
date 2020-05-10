@@ -27,6 +27,7 @@ async function http(token, url, options = {}) {
   const optionsWithAuth = {
     ...options,
     headers: authHeaders,
+    credentials: 'include',
   }
 
   const response = await fetch(url, optionsWithAuth)
