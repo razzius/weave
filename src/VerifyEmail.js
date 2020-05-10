@@ -43,6 +43,12 @@ export default class VerifyEmail extends Component<Props, State> {
         return
       }
 
+      if (!Array.isArray(err.token)) {
+        this.setState({
+          error: `Unknown error: ${err.message}`,
+        })
+        return
+      }
       const errorMessage = err.token[0]
       if (errorMessage === 'not recognized') {
         this.setState({

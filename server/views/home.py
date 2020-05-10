@@ -9,13 +9,13 @@ home = Blueprint("home", __name__)
 @home.route("/")
 @home.route("/<path:path>")  # Enable any url redirecting to home for SPA
 def index(path=None):
-    return """<form method="POST" action="/login">
-    <input name="email" type="text" placeholder="email">
-    <input name="token" type="password" placeholder="token">
-    <input type="submit" value="submitme">
-    </form>
-"""
-    # return send_from_directory('../build', 'index.html')
+    #     return """<form method="POST" action="/login">
+    #     <input name="email" type="text" placeholder="email">
+    #     <input name="token" type="password" placeholder="token">
+    #     <input type="submit" value="submitme">
+    #     </form>
+    # """
+    return send_from_directory("../build", "index.html")
 
 
 @home.route("/assets/<path:path>")
