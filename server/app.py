@@ -32,7 +32,7 @@ def create_app():
 
     db.init_app(app)
     login_manager.init_app(app)
-    CORS(app)
+    CORS(app, supports_credentials=True)
     SSLify(app)
 
     init_admin(app)

@@ -36,7 +36,7 @@ class IDMixin:
     id = db.Column(db.Integer, primary_key=True)
 
 
-class VerificationEmail(IDMixin, UserMixin, db.Model):
+class VerificationEmail(IDMixin, db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     is_admin = db.Column(db.Boolean)
     is_mentor = db.Column(db.Boolean)
@@ -181,7 +181,7 @@ class ProfileStar(db.Model):
     to_profile = relationship(Profile)
 
 
-class VerificationToken(db.Model):
+class VerificationToken(UserMixin, db.Model):
     token = db.Column(db.String(36), primary_key=True)
     email_id = db.Column(
         db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
@@ -195,3 +195,6 @@ class VerificationToken(db.Model):
     email_log = db.Column(db.Text)
 
     is_personal_device = db.Column(db.Boolean)
+
+    def get_id(self):
+        return self.token

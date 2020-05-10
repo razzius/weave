@@ -3,6 +3,7 @@ import os
 import uuid
 from http import HTTPStatus
 
+import flask_login
 from cloudinary import uploader
 from dateutil.relativedelta import relativedelta
 from flask import Blueprint, current_app, jsonify, make_response, request
@@ -577,8 +578,9 @@ def verify_token():
             {"token": ["expired"]}, status_code=LOGIN_TIMEOUT_STATUS
         )
 
-    match.verified = True
+    flask_login.login_user(match)
 
+    match.verified = True
     save(match)
 
     verification_email = VerificationEmail.query.get(match.email_id)
@@ -604,6 +606,8 @@ def verify_token():
 
 @api_post("/availability")
 def availability():
+    print(flask_login.current_user)
+
     verification_token = get_token(request.headers)
 
     available = request.json["available"]
