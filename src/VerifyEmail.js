@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import AppScreen from './AppScreen'
 import { getParam } from './utils'
-import { saveToken } from './persistence'
 import { verifyToken } from './api'
 import VerifiedView from './VerifiedView'
 
@@ -28,12 +27,7 @@ export default class VerifyEmail extends Component<Props, State> {
     try {
       const account = await verifyToken(token)
 
-      saveToken(token)
-
-      authenticate({
-        token,
-        account,
-      })
+      authenticate({ account })
     } catch (err) {
       if (err.message === 'Failed to fetch') {
         this.setState({

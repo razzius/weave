@@ -15,51 +15,51 @@ export function loggedOutNotification() {
   )
 }
 
-export function saveToken(token: string) {
-  window.localStorage.setItem('tokenTimestamp', new Date().toISOString())
-  window.localStorage.setItem('token', token)
-}
+// export function saveToken(token: string) {
+//   window.localStorage.setItem('tokenTimestamp', new Date().toISOString())
+//   window.localStorage.setItem('token', token)
+// }
 
-export function clearToken() {
-  window.localStorage.removeItem('tokenTimestamp')
-  window.localStorage.removeItem('token')
-}
+// export function clearToken() {
+//   window.localStorage.removeItem('tokenTimestamp')
+//   window.localStorage.removeItem('token')
+// }
 
-export function loadToken(): string | null {
-  const tokenTimestamp = window.localStorage.getItem('tokenTimestamp')
-  console.log('loadToken: tokenTimestamp', tokenTimestamp)
+// export function loadToken(): string | null {
+//   const tokenTimestamp = window.localStorage.getItem('tokenTimestamp')
+//   console.log('loadToken: tokenTimestamp', tokenTimestamp)
 
-  if (tokenTimestamp == null) {
-    return null
-  }
+//   if (tokenTimestamp == null) {
+//     return null
+//   }
 
-  const tokenTimestampDate = new Date(tokenTimestamp)
+//   const tokenTimestampDate = new Date(tokenTimestamp)
 
-  if (!isValid(tokenTimestampDate)) {
-    console.log('loadToken: clearing token due to invalid tokenTimestamp')
+//   if (!isValid(tokenTimestampDate)) {
+//     console.log('loadToken: clearing token due to invalid tokenTimestamp')
 
-    clearToken()
-    return null
-  }
+//     clearToken()
+//     return null
+//   }
 
-  const whenTokenExpires = addHours(
-    new Date(tokenTimestamp),
-    settings.maxTokenAgeHours
-  )
-  console.log('loadToken: whenTokenExpires', whenTokenExpires)
+//   const whenTokenExpires = addHours(
+//     new Date(tokenTimestamp),
+//     settings.maxTokenAgeHours
+//   )
+//   console.log('loadToken: whenTokenExpires', whenTokenExpires)
 
-  const now = new Date()
-  console.log('loadToken: now', now)
+//   const now = new Date()
+//   console.log('loadToken: now', now)
 
-  if (isAfter(now, whenTokenExpires)) {
-    console.log('loadToken: clearing expired token')
+//   if (isAfter(now, whenTokenExpires)) {
+//     console.log('loadToken: clearing expired token')
 
-    clearToken()
-    return null
-  }
+//     clearToken()
+//     return null
+//   }
 
-  const token = window.localStorage.getItem('token')
-  console.log('loadToken: token', token)
+//   const token = window.localStorage.getItem('token')
+//   console.log('loadToken: token', token)
 
-  return token
-}
+//   return token
+// }

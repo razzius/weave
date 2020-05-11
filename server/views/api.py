@@ -88,37 +88,38 @@ def handle_user_error(e):
     return jsonify(invalid_data), status_code
 
 
-def get_token(headers):
-    token = headers.get("Authorization")
+# def get_token(headers):
+#     token = headers.get("Authorization")
 
-    current_app.logger.info("Getting token from header %s", token)
+#     current_app.logger.info("Getting token from header %s", token)
 
-    if token is None:
-        raise UnauthorizedError({"token": ["missing"]})
+#     if token is None:
+#         raise UnauthorizedError({"token": ["missing"]})
 
-    token_parts = token.split()
+#     token_parts = token.split()
 
-    if token_parts[0].lower() != "token" or len(token_parts) != 2:
-        raise UnauthorizedError({"token": ["bad format"]})
+#     if token_parts[0].lower() != "token" or len(token_parts) != 2:
+#         raise UnauthorizedError({"token": ["bad format"]})
 
-    token_value = token_parts[1]
+#     token_value = token_parts[1]
 
-    verification_token = VerificationToken.query.get(token_value)
+#     verification_token = VerificationToken.query.get(token_value)
 
-    if verification_token is None:
-        raise UnauthorizedError({"token": ["unknown token"]})
+#     if verification_token is None:
+#         raise UnauthorizedError({"token": ["unknown token"]})
 
-    if _token_expired(verification_token):
-        raise UnauthorizedError(
-            {"token": ["expired"]}, status_code=LOGIN_TIMEOUT_STATUS
-        )
+#     if _token_expired(verification_token):
+#         raise UnauthorizedError(
+#             {"token": ["expired"]}, status_code=LOGIN_TIMEOUT_STATUS
+#         )
 
-    return verification_token
+#     return verification_token
 
 
 @api.route("/profiles")
+@flask_login.login_required
 def get_profiles():
-    verification_token = get_token(request.headers)
+    verification_token = flask_login.current_user
 
     query = request.args.get("query", "")
     tags = request.args.get("tags", "")
@@ -180,18 +181,16 @@ def get_profiles():
 
 
 @api.route("/profile-tags")
+@flask_login.login_required
 def get_profile_tags():
-    get_token(request.headers)  # Ensure valid requesting token
-
     tags = query_profile_tags()
 
     return {"tags": tags}
 
 
 @api.route("/search-tags")
+@flask_login.login_required
 def get_search_tags():
-    get_token(request.headers)  # Ensure valid requesting token
-
     tags = query_searchable_tags()
 
     return {"tags": tags}
@@ -199,11 +198,11 @@ def get_search_tags():
 
 @api.route("/profiles/<profile_id>")
 def get_profile(profile_id=None):
-    token = get_token(request.headers)
+    verification_token = flask_login.current_user
 
-    profile_and_star_list = query_profiles_and_stars(token.email_id).filter(
-        Profile.id == profile_id
-    )
+    profile_and_star_list = query_profiles_and_stars(
+        verification_token.email_id
+    ).filter(Profile.id == profile_id)
 
     if not profile_and_star_list.first():
         raise UserError({"profile_id": ["Not found"]}, HTTPStatus.NOT_FOUND.value)
@@ -308,7 +307,7 @@ def basic_profile_data(verification_token, schema):
 
 @api_post("/profile")
 def create_profile():
-    verification_token = get_token(request.headers)
+    verification_token = flask_login.current_user
 
     try:
         schema = profile_schema.load(request.json)
@@ -344,9 +343,9 @@ def update_profile(profile_id=None):
         capture_exception(err)
         raise InvalidPayloadError(err.messages)
 
-    profile = Profile.query.get(profile_id)
+    verification_token = flask_login.current_user
 
-    verification_token = get_token(request.headers)
+    profile = Profile.query.get(profile_id)
 
     is_admin = VerificationEmail.query.filter(
         VerificationEmail.id == verification_token.email_id
@@ -550,7 +549,7 @@ def _token_expired(verification_token):
 
     current_time = datetime.datetime.utcnow()
 
-    expired = datetime.datetime.utcnow() > expire_time
+    expired = current_time > expire_time
 
     current_app.logger.info(
         "current time %s versus expire time %s is expired? %s",
@@ -562,30 +561,49 @@ def _token_expired(verification_token):
     return expired
 
 
-@api_post("/verify-token")
-def verify_token():
+def get_token_from_cookie_or_parameters():
+    """
+    Once a user is logged in, they will be stored in the session cookie.
+
+    On the first login, they will pass the token as a json parameter.
+    """
+    verification_token = flask_login.current_user
+
+    if verification_token.is_authenticated:
+        return verification_token
+
+    if "token" not in request.json:
+        raise UnauthorizedError({"token": ["not set"]})
+
     token = request.json["token"]
 
     query = VerificationToken.query.filter(VerificationToken.token == token)
 
-    match = query.one_or_none()
+    verification_token = query.one_or_none()
 
-    if match is None:
+    if verification_token is None:
         raise UnauthorizedError({"token": ["not recognized"]})
 
-    if _token_expired(match):
+    if _token_expired(verification_token):
         raise UnauthorizedError(
             {"token": ["expired"]}, status_code=LOGIN_TIMEOUT_STATUS
         )
 
-    flask_login.login_user(match)
+    flask_login.login_user(verification_token)
 
-    match.verified = True
-    save(match)
+    verification_token.verified = True
+    save(verification_token)
 
-    verification_email = VerificationEmail.query.get(match.email_id)
+    return verification_token
 
-    profile = get_profile_by_token(token)
+
+@api_post("/verify-token")
+def verify_token():
+    verification_token = get_token_from_cookie_or_parameters()
+
+    verification_email = VerificationEmail.query.get(verification_token.email_id)
+
+    profile = get_profile_by_token(verification_token)
 
     profile_id = profile.id if profile is not None else None
 
@@ -604,15 +622,21 @@ def verify_token():
     )
 
 
-@api_post("/availability")
-def availability():
-    print(flask_login.current_user)
+@api_post("/logout")
+def logout():
+    flask_login.logout_user()
 
-    verification_token = get_token(request.headers)
+    return {}
+
+
+@api_post("/availability")
+@flask_login.login_required
+def availability():
+    verification_token = flask_login.current_user
+
+    profile = get_profile_by_token(verification_token)
 
     available = request.json["available"]
-
-    profile = get_profile_by_token(verification_token.token)
 
     profile.available_for_mentoring = available
     profile.date_updated = datetime.datetime.utcnow()
@@ -622,9 +646,9 @@ def availability():
     return jsonify({"available": available})
 
 
-@api_post("star_profile")
+@api_post("/star_profile")
 def star_profile():
-    verification_token = get_token(request.headers)
+    verification_token = flask_login.current_user
 
     from_email_id = verification_token.email_id
 
@@ -676,7 +700,7 @@ def star_profile():
 
 @api_post("unstar_profile")
 def unstar_profile():
-    verification_token = get_token(request.headers)
+    verification_token = flask_login.current_user
 
     from_email_id = verification_token.email_id
 

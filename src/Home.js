@@ -5,13 +5,7 @@ import { LiteralLink } from './utils'
 import { type Account } from './api'
 import HomeActions from './HomeActions'
 
-const Home = ({
-  token,
-  account,
-}: {
-  token: string | null,
-  account: ?Account,
-}) => {
+const Home = ({ account }: { account: ?Account }) => {
   const isMentor = Boolean(account && account.isMentor)
   const profileId = account && account.profileId
 
@@ -30,7 +24,7 @@ const Home = ({
       <div id="background">
         <div className="App-intro">
           <HomeActions
-            token={token}
+            account={account}
             isMentor={Boolean(isMentor)}
             profileId={profileId}
           />

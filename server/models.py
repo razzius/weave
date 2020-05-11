@@ -3,7 +3,6 @@ from datetime import datetime
 from typing import Any
 
 from flask_sqlalchemy import SQLAlchemy
-from flask_login.mixins import UserMixin
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declared_attr
 
@@ -181,7 +180,7 @@ class ProfileStar(db.Model):
     to_profile = relationship(Profile)
 
 
-class VerificationToken(UserMixin, db.Model):
+class VerificationToken(db.Model):
     token = db.Column(db.String(36), primary_key=True)
     email_id = db.Column(
         db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
@@ -198,3 +197,15 @@ class VerificationToken(UserMixin, db.Model):
 
     def get_id(self):
         return self.token
+
+    @property
+    def is_active(self):
+        return not self.expired
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_anonymous(self):
+        return False

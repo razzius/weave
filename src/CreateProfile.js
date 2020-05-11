@@ -3,17 +3,17 @@ import React from 'react'
 import { type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
-import { createProfile } from './api'
+import { createProfile, type Account } from './api'
 import ProfileForm from './ProfileForm'
 
 type Props = {
   setProfileId: string => void,
-  token: string | null,
+  account: Account | null,
   history: RouterHistory,
 }
 
-const CreateProfile = ({ setProfileId, token, history }: Props) => {
-  if (token === null) {
+const CreateProfile = ({ setProfileId, account, history }: Props) => {
+  if (account === null) {
     return 'You are not logged in. Click "Login" above to log in.'
   }
 
@@ -23,7 +23,6 @@ const CreateProfile = ({ setProfileId, token, history }: Props) => {
         firstTimePublish={false}
         saveProfile={createProfile}
         setProfileId={setProfileId}
-        token={token}
         history={history}
       />
     </AppScreen>

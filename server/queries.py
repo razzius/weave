@@ -32,12 +32,7 @@ def get_verification_email_by_email(email: str) -> Optional[VerificationEmail]:
     ).one_or_none()
 
 
-def get_profile_by_token(token: str) -> Optional[Profile]:
-    verification_token = VerificationToken.query.get(token)
-
-    if verification_token is None:
-        return None
-
+def get_profile_by_token(verification_token: VerificationToken) -> Optional[Profile]:
     verification_email = VerificationEmail.query.get(verification_token.email_id)
 
     return Profile.query.filter(
