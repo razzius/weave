@@ -9,7 +9,7 @@ but it is intended to be configurable to the needs of different medical schools.
 - Flask powers the API and serves static files
 - React powers the web interface
 
-## Requirements
+### Requirements
 
 - [Python](https://www.python.org/) [(version)](Pipfile#L7)
 - [Node](https://nodejs.org/) [(version)](package.json#L4)
@@ -17,7 +17,7 @@ but it is intended to be configurable to the needs of different medical schools.
 - [pipenv](https://github.com/pypa/pipenv#installation) [(version)](Pipfile#L8)
 - [yarn](https://yarnpkg.com/en/docs/install) [(version)](package.json#L5)
 
-## Developing with `vagrant`
+### Developing with `vagrant`
 
 A `Vagrantfile` is provided which allows developing in the same
 Ubuntu 18.04 environment that is supported in production.
@@ -79,7 +79,7 @@ $ yarn install
 $ pipenv install --dev --ignore-pipfile
 ```
 
-## Create the database
+### Create the database
 
 Note that this drops your local database to start from a clean state.
 
@@ -93,7 +93,7 @@ $ export DATABASE_URL='postgresql:///weave'
 $ pipenv run python -m server.scripts.resetdb
 ```
 
-## Run the app in development mode
+### Run the app in development mode
 
 In development mode, there is both a `python` process to serve the API and a `node` server process to serve the frontend.
 Both are configured to automatically reload.
@@ -105,7 +105,7 @@ $ pipenv run start
 $ yarn start
 ```
 
-## Accessing the app locally
+### Accessing the app locally
 
 If you are running the application outside of a virtual machine, or if the
 virtual machine has a graphical user interface, you may access the application
@@ -125,7 +125,7 @@ $ export SECRET_KEY='secret'
 $ open http://localhost:5000/admin
 ```
 
-## Building the frontend for production
+### Building the frontend for production
 
 ```sh
 $ yarn build
@@ -138,7 +138,7 @@ Though inefficient, the backend will serve this html file when the index is requ
 A more efficient setup would be to serve the index.html from a CDN when any path
 is requested on your domain.
 
-## Running the backend in production
+### Running the backend in production
 
 Gunicorn is the production application server. The usual configuration is to use nginx or another reverse proxy
 to terminate ssl and forward requests from port 443 to port 5000.
@@ -148,7 +148,7 @@ $ pipenv run shell
 $ gunicorn server:app -b 0.0.0.0:5000
 ```
 
-## Running in `docker`
+### Running in `docker`
 
 Docker as of now is only supported in development.
 The only current production deployment of Weave which is at HMS runs on Heroku.
@@ -194,3 +194,7 @@ As a useful snippet, here's how to build a docker image and debug with `bash`:
 ```sh
 $ docker run -it --entrypoint /bin/bash $(docker build -q .)
 ```
+
+## Security
+
+Please do not submit issues or pull requests for security issues. Instead, email the maintainer at razzi@abuissa.net.
