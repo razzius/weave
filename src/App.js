@@ -37,7 +37,6 @@ import {
   verifyToken,
   type Account,
 } from './api'
-import { retry } from './utils'
 
 type Props = empty
 type State = {|
@@ -54,16 +53,9 @@ class App extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    this.loadAccount()
-    // if (token !== null && window.location.pathname !== '/verify') {
-    //   await retry(this.loadAccount, {
-    //     times: 30,
-    //     delay: 2000,
-    //     onError: () => {
-    //       this.setState({ loading: false, error: true })
-    //     },
-    //   })
-    // }
+    if (window.location.pathname !== '/verify') {
+      this.loadAccount()
+    }
   }
 
   authenticate = ({ account }: { account: Account }) => {
@@ -71,8 +63,12 @@ class App extends Component<Props, State> {
   }
 
   loadAccount = async () => {
-    const account = await verifyToken()
-    this.setState({ account, error: false, loading: false })
+    try {
+      const account = await verifyToken()
+      this.setState({ account, loading: false })
+    } catch (e) {
+      this.setState({ loading: false })
+    }
   }
 
   setProfileId = (profileId: string) => {
@@ -100,21 +96,24 @@ class App extends Component<Props, State> {
   render() {
     const { account, loading, error } = this.state
 
-    const loggedOut = account === null
-
-    const loginButton = (
+    const loginButton = () => (
       <Link to="/login" className="App-title auth-button">
         Login
       </Link>
     )
 
-    const logoutButton = (
-      <Link to="/logout" className="App-title auth-button">
-        Logout
-      </Link>
+    const logoutButton = () => (
+      <span data-tip data-offset="{'left': 20}" data-for="loggedInAsTooltip">
+        <Link to="/logout" className="App-title auth-button">
+          Logout
+        </Link>
+        <ReactTooltip id="loggedInAsTooltip" place="bottom">
+          Logged in as {account.email}
+        </ReactTooltip>
+      </span>
     )
 
-    const loginAction = loggedOut ? loginButton : logoutButton
+    const loginAction = account === null ? loginButton() : logoutButton()
 
     return (
       <Router>

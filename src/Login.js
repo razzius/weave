@@ -9,13 +9,16 @@ import { sendLoginEmail } from './api'
 const instructions = (
   <div>
     <p>
-      Enter your Harvard or hospital-affiliated email and we will confirm your
-      account by sending a verification email.
-    </p>
-    <p>
       If you have not signed up yet, please start{' '}
       <Link to="/faculty-expectations">here</Link> for mentors or{' '}
       <Link to="/student-expectations">here</Link> for mentees.
+    </p>
+    <a className="button" href="http://localhost:5000/saml/login">
+      Authenticate with HarvardKey
+    </a>
+    <p>
+      Or enter your Harvard or hospital-affiliated email and we will confirm
+      your account by sending a verification email.
     </p>
   </div>
 )

@@ -1,5 +1,5 @@
 // @flow
-import { loggedOutNotification } from './persistence'
+import loggedOutNotification from './persistence'
 import { availableForMentoringFromVerifyTokenResponse } from './utils'
 import settings from './settings'
 

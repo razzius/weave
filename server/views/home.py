@@ -1,4 +1,4 @@
-from flask import Blueprint, request, send_from_directory
+from flask import Blueprint, request, send_from_directory, url_for
 
 from server.models import VerificationToken
 from server.auth import flask_login
@@ -9,12 +9,9 @@ home = Blueprint("home", __name__)
 @home.route("/")
 @home.route("/<path:path>")  # Enable any url redirecting to home for SPA
 def index(path=None):
-    #     return """<form method="POST" action="/login">
-    #     <input name="email" type="text" placeholder="email">
-    #     <input name="token" type="password" placeholder="token">
-    #     <input type="submit" value="submitme">
-    #     </form>
-    # """
+    login_url = url_for("flask_saml2_sp.login")
+    print(login_url)
+    # return f'<a href="{login_url}">Log in!!</a>'
     return send_from_directory("../build", "index.html")
 
 

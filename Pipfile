@@ -30,6 +30,7 @@ freezegun = "*"
 requests-mock = "*"
 pytest-postgresql = "*"
 flask-login = "*"
+flask-saml2 = "*"
 
 [dev-packages]
 ipython = "*"
