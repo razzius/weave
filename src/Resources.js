@@ -66,6 +66,19 @@ const Resources = () => (
     </p>
 
     <h3>
+      <ExternalLink href="https://collaborate.hms.harvard.edu/display/hmsadvising/HMS+Office+of+Student+Affairs">
+        Office of Student Affairs
+      </ExternalLink>
+    </h3>
+
+    <p>
+      The Office of Student Affairs homepage contains information about student organizations,
+      wellness, and career advising resources, including class meeting videos, slides, and details 
+      about the residency application process. Here, you may also find the HMS Student Handbook and 
+      archives of the Student Affairs Pulse newsletter.
+    </p>
+
+    <h3>
       <ExternalLink href="https://collaborate.hms.harvard.edu/dashboard.action">
         HMS Collaborate
       </ExternalLink>
@@ -73,12 +86,10 @@ const Resources = () => (
 
     <p>
       HMS Collaborate is an interactive wiki-type platform that enables Harvard
-      Medical School faculty, staff, and students to easily create a
+      Medical School faculty, staff, and students to create a
       collaboration space (wiki site) to support an HMS administrative, academic
-      or research department mission. Within HMS Collaborate, the Office of
-      Student Affairs contains information about student organizations,
-      wellness, and career advising resources, such as details about class
-      meetings and the residency application process.
+      or research department mission. A number of resources are embedded here, including 
+      Curriculum Services, Database Services, and Educational Technology resources, among others.
     </p>
 
     <h3>
