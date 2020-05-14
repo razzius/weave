@@ -20,6 +20,19 @@ def test_get_profile(client):
     assert not response.json["starred"]
 
 
+def test_get_unavailable_profile(client):
+    verification_token = create_test_verification_token()
+
+    profile = create_test_profile(available_for_mentoring=False)
+
+    response = client.get(
+        f"/api/profiles/{profile.id}",
+        headers={"Authorization": f"Token {verification_token.token}"},
+    )
+
+    assert response.status_code == HTTPStatus.NOT_FOUND.value
+
+
 def test_get_starred_profile(client):
     verification_token = create_test_verification_token()
 

@@ -204,7 +204,7 @@ def get_profile(profile_id=None):
         Profile.id == profile_id
     )
 
-    if not profile_and_star_list:
+    if not profile_and_star_list.first():
         raise UserError({"profile_id": ["Not found"]}, HTTPStatus.NOT_FOUND.value)
 
     profile, star_count = profile_and_star_list[0]
