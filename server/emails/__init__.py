@@ -7,10 +7,10 @@ from .email_backend import EmailBackend
 from .sparkpost_email_backend import SparkPostEmailBackend
 
 
-SERVER_URL = os.environ.get('REACT_APP_SERVER_URL', 'http://localhost:5000')
-CLIENT_URL = os.environ.get('WEAVE_CLIENT_URL', SERVER_URL)
+SERVER_URL = os.environ.get("REACT_APP_SERVER_URL", "http://localhost:5000")
+CLIENT_URL = os.environ.get("WEAVE_CLIENT_URL", SERVER_URL)
 
-SPARKPOST_API_KEY = os.environ.get('SPARKPOST_API_KEY')
+SPARKPOST_API_KEY = os.environ.get("SPARKPOST_API_KEY")
 
 
 def init_email(app):
@@ -18,7 +18,7 @@ def init_email(app):
 
     if SPARKPOST_API_KEY is None:
         app.logger.warning(
-            'Configuring email to log to console because SPARKPOST_API_KEY is not set.'
+            "Configuring email to log to console because SPARKPOST_API_KEY is not set."
         )
         app.email_backend = ConsoleEmailBackend()
     else:
@@ -37,7 +37,7 @@ EMAIL_CLOSING = """
 
 
 def get_verification_url(token):
-    return f'{CLIENT_URL}/verify?token={token}'
+    return f"{CLIENT_URL}/verify?token={token}"
 
 
 def self_link(href):
@@ -47,7 +47,7 @@ def self_link(href):
 def send_faculty_registration_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
-    current_app.logger.info('Sending faculty registration verify_link %s', verify_link)
+    current_app.logger.info("Sending faculty registration verify_link %s", verify_link)
 
     html = f"""
     <p>Hello,</p>
@@ -70,14 +70,14 @@ def send_faculty_registration_email(email, token):
     """
 
     return current_app.email_backend.send_email(
-        email, 'Weave Mentor Registration', html
+        email, "Weave Mentor Registration", html
     )
 
 
 def send_student_registration_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
-    current_app.logger.info('Sending student registration verify_link %s', verify_link)
+    current_app.logger.info("Sending student registration verify_link %s", verify_link)
 
     html = f"""
     <p>Hello,</p>
@@ -101,14 +101,14 @@ def send_student_registration_email(email, token):
     """
 
     return current_app.email_backend.send_email(
-        email, 'Weave Mentee Registration', html
+        email, "Weave Mentee Registration", html
     )
 
 
 def send_faculty_login_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
-    current_app.logger.info('Sending faculty login verify_link %s', verify_link)
+    current_app.logger.info("Sending faculty login verify_link %s", verify_link)
 
     html = f"""
     <p>Hello,</p>
@@ -123,13 +123,13 @@ def send_faculty_login_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return current_app.email_backend.send_email(email, 'Weave Mentor Login', html)
+    return current_app.email_backend.send_email(email, "Weave Mentor Login", html)
 
 
 def send_student_login_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
-    current_app.logger.info('Sending student login verify_link %s', verify_link)
+    current_app.logger.info("Sending student login verify_link %s", verify_link)
 
     html = f"""
     <p>Hello,</p>
@@ -144,4 +144,4 @@ def send_student_login_email(email, token):
     {EMAIL_CLOSING}
     """
 
-    return current_app.email_backend.send_email(email, 'Weave Mentee Login', html)
+    return current_app.email_backend.send_email(email, "Weave Mentee Login", html)

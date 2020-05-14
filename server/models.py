@@ -41,7 +41,7 @@ class VerificationEmail(IDMixin, db.Model):
     is_mentor = db.Column(db.Boolean)
 
     def __str__(self):
-        return f'<VerificationEmail {self.id}: {self.email}>'
+        return f"<VerificationEmail {self.id}: {self.email}>"
 
 
 class TagValueMixin(IDMixin):
@@ -80,17 +80,17 @@ class ActivityOption(UserEditableTagMixin, db.Model):
 class ProfileTagMixin(IDMixin):
     @declared_attr
     def profile_id(cls):
-        return db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+        return db.Column(db.String, db.ForeignKey("profile.id"), nullable=False)
 
     @declared_attr
     def profile(cls):
-        return relationship('Profile')
+        return relationship("Profile")
 
     def __str__(self):
         return self.tag.value
 
     def __repr__(self):
-        return '<{}: {}>'.format(self.__class__.__name__, self.tag.value)
+        return "<{}: {}>".format(self.__class__.__name__, self.tag.value)
 
 
 class HospitalAffiliation(ProfileTagMixin, db.Model):
@@ -99,7 +99,7 @@ class HospitalAffiliation(ProfileTagMixin, db.Model):
     )
     tag = relationship(HospitalAffiliationOption)
 
-    profile_id = db.Column(db.String, db.ForeignKey('profile.id'), nullable=False)
+    profile_id = db.Column(db.String, db.ForeignKey("profile.id"), nullable=False)
 
 
 class ClinicalSpecialty(ProfileTagMixin, db.Model):
@@ -142,18 +142,18 @@ class Profile(db.Model):
 
     profile_image_url = db.Column(db.String(255))
 
-    clinical_specialties = relationship(ClinicalSpecialty, cascade='all, delete')
-    affiliations = relationship(HospitalAffiliation, cascade='all, delete')
-    professional_interests = relationship(ProfessionalInterest, cascade='all, delete')
-    parts_of_me = relationship(PartsOfMe, cascade='all, delete')
-    activities = relationship(ProfileActivity, cascade='all, delete')
-    degrees = relationship(ProfileDegree, cascade='all, delete')
+    clinical_specialties = relationship(ClinicalSpecialty, cascade="all, delete")
+    affiliations = relationship(HospitalAffiliation, cascade="all, delete")
+    professional_interests = relationship(ProfessionalInterest, cascade="all, delete")
+    parts_of_me = relationship(PartsOfMe, cascade="all, delete")
+    activities = relationship(ProfileActivity, cascade="all, delete")
+    degrees = relationship(ProfileDegree, cascade="all, delete")
 
     date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     date_updated = db.Column(db.DateTime, nullable=False, default=default_now)
 
     # TODO make not nullable and remove additional_information === null workarounds
-    additional_information = db.Column(db.String(500), default='')
+    additional_information = db.Column(db.String(500), default="")
 
     willing_shadowing = db.Column(db.Boolean, default=False)
     willing_networking = db.Column(db.Boolean, default=False)
@@ -168,7 +168,7 @@ class Profile(db.Model):
     available_for_mentoring = db.Column(db.Boolean, default=True)
 
     def __repr__(self):
-        return f'<Profile id={self.id} name={self.name}>'
+        return f"<Profile id={self.id} name={self.name}>"
 
 
 class ProfileStar(db.Model):
@@ -184,7 +184,7 @@ class VerificationToken(db.Model):
     email_id = db.Column(
         db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
     )
-    email = relationship(VerificationEmail, backref='verification_tokens')
+    email = relationship(VerificationEmail, backref="verification_tokens")
     date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     verified = db.Column(db.Boolean, default=False)
 

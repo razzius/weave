@@ -3,7 +3,9 @@ import uuid
 from server.models import VerificationEmail, VerificationToken, save, Profile
 from server.scripts.context import context
 
-CLOUDINARY_PREFIX = 'https://res.cloudinary.com/dxzddmun4/image/upload/c_crop,h_200,w_200'
+CLOUDINARY_PREFIX = (
+    "https://res.cloudinary.com/dxzddmun4/image/upload/c_crop,h_200,w_200"
+)
 
 
 def main():
@@ -11,9 +13,9 @@ def main():
 
     profiles = [
         Profile(
-            name='Manatee',
-            contact_email='mermaidofthesea@gmail.com',
-            profile_image_url=f'{CLOUDINARY_PREFIX}/v1528666929/keonolml4mwgsixpprsh.png',
+            name="Manatee",
+            contact_email="mermaidofthesea@gmail.com",
+            profile_image_url=f"{CLOUDINARY_PREFIX}/v1528666929/keonolml4mwgsixpprsh.png",
             clinical_specialties=[
                 # 'Advanced Heart Failure & Transplant Cardiology',
                 # 'Clinical Cardiac Electrophysiology',
@@ -21,49 +23,49 @@ def main():
             ],
             affiliations=[],  # 'Forsyth Institute'.split(),
             activities=[],
-            cadence='monthly',
+            cadence="monthly",
         ),
         Profile(
-            name='Falcon!!',
-            contact_email='F.alcon@birdsofprey.com',
-            profile_image_url=f'{CLOUDINARY_PREFIX}/v1528666737/nbnszojbvgqaxxlv1izh.png',
+            name="Falcon!!",
+            contact_email="F.alcon@birdsofprey.com",
+            profile_image_url=f"{CLOUDINARY_PREFIX}/v1528666737/nbnszojbvgqaxxlv1izh.png",
             clinical_specialties=[],  # 'Endocrinology, Diabetes & Metabolism'.split(','),
             affiliations=[],  # 'Dana-Farber Cancer Institute',
             activities=[],
             additional_information=(
-                'I am excited to take students under my wing and'
-                ' share my love of diabetes outcomes research!'
+                "I am excited to take students under my wing and"
+                " share my love of diabetes outcomes research!"
             ),
             willing_shadowing=True,
             willing_networking=True,
             willing_goal_setting=True,
             willing_discuss_personal=True,
             willing_career_guidance=False,
-            cadence='monthly',
+            cadence="monthly",
         ),
         Profile(
-            name='California Sea Lion',
-            contact_email='sea.ze.theday@gmail.com',
-            profile_image_url=f'{CLOUDINARY_PREFIX}/v1528667191/aqzz8rwsutgdx4bzpbbn.png',
+            name="California Sea Lion",
+            contact_email="sea.ze.theday@gmail.com",
+            profile_image_url=f"{CLOUDINARY_PREFIX}/v1528667191/aqzz8rwsutgdx4bzpbbn.png",
             clinical_specialties=[],  # 'Pediatric Hematology-Oncology,Pain Medicine'.split(','),
             affiliations=[],  # 'Children’s Hospital Boston',
             activities=[],
             additional_information=(
                 "I'm happy to discuss personal aspects,"
-                ' such as work-life balance, and how my role as a mother'
-                ' impacts my work in pediatrics.'
+                " such as work-life balance, and how my role as a mother"
+                " impacts my work in pediatrics."
             ),
             willing_shadowing=True,
             willing_networking=True,
             willing_goal_setting=True,
             willing_discuss_personal=True,
             willing_career_guidance=False,
-            cadence='monthly',
+            cadence="monthly",
         ),
         Profile(
-            name='Cat',
-            contact_email='hellokitty@gmail.com',
-            profile_image_url=f'{CLOUDINARY_PREFIX}/v1528741344/eo4fleywh2ljmj27i89s.png',
+            name="Cat",
+            contact_email="hellokitty@gmail.com",
+            profile_image_url=f"{CLOUDINARY_PREFIX}/v1528741344/eo4fleywh2ljmj27i89s.png",
             clinical_specialties=[],  # 'Dermatology,Procedural Dermatology'.split(','),
             affiliations=[],  # 'Brigham and Women’s Hospital',
             activities=[],
@@ -75,29 +77,29 @@ def main():
             willing_goal_setting=True,
             willing_discuss_personal=False,
             willing_career_guidance=False,
-            cadence='quarterly',
+            cadence="quarterly",
         ),
         Profile(
-            name='Puppy',
-            contact_email='happypuppy@gmail.com',
-            profile_image_url=f'{CLOUDINARY_PREFIX}/v1528668241/q8k83ozecn81gjq1qpjp.png',
+            name="Puppy",
+            contact_email="happypuppy@gmail.com",
+            profile_image_url=f"{CLOUDINARY_PREFIX}/v1528668241/q8k83ozecn81gjq1qpjp.png",
             clinical_specialties=[],  # ['Addiction Psychiatry', 'Child & Adolescent Psychiatry'],
             affiliations=[],  # 'McLean Hospital',
             activities=[],
             additional_information=(
-                'Looking forward to discussing all aspects of life and medicine with students.'
+                "Looking forward to discussing all aspects of life and medicine with students."
             ),
             willing_shadowing=True,
             willing_networking=True,
             willing_goal_setting=True,
             willing_discuss_personal=True,
             willing_career_guidance=False,
-            cadence='biweekly',
+            cadence="biweekly",
         ),
     ]
 
     for index, profile in enumerate(profiles):
-        email = VerificationEmail(email=f'animal{index}@gmail.com', is_mentor=True)
+        email = VerificationEmail(email=f"animal{index}@gmail.com", is_mentor=True)
 
         save(email)
 
@@ -110,5 +112,5 @@ def main():
     save(VerificationToken(token=str(uuid.uuid4()), email_id=email.id))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

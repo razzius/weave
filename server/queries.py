@@ -47,25 +47,25 @@ def get_profile_by_token(token: str) -> Optional[Profile]:
 
 def _filter_query_on_degrees(degree_list: List[str], query: BaseQuery) -> BaseQuery:
     regular_degree_filters = [
-        degree for degree in degree_list if degree not in ['dmd / dds', 'md / do']
+        degree for degree in degree_list if degree not in ["dmd / dds", "md / do"]
     ]
 
     # TODO replace this with alias tags
     md_do_filter = (
         [
-            func.bool_or(func.lower(DegreeOption.value) == 'md')
-            | func.bool_or(func.lower(DegreeOption.value) == 'do')
+            func.bool_or(func.lower(DegreeOption.value) == "md")
+            | func.bool_or(func.lower(DegreeOption.value) == "do")
         ]
-        if 'md / do' in degree_list
+        if "md / do" in degree_list
         else []
     )
 
     dmd_dds_filter = (
         [
-            func.bool_or(func.lower(DegreeOption.value) == 'dmd')
-            | func.bool_or(func.lower(DegreeOption.value) == 'dds')
+            func.bool_or(func.lower(DegreeOption.value) == "dmd")
+            | func.bool_or(func.lower(DegreeOption.value) == "dds")
         ]
-        if 'dmd / dds' in degree_list
+        if "dmd / dds" in degree_list
         else []
     )
 
@@ -164,13 +164,13 @@ def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
         db.session.query(
             Profile,
             func.count(ProfileStar.from_verification_email_id).label(
-                'profile_star_count'
+                "profile_star_count"
             ),
         )
         .filter(
             or_(
                 Profile.available_for_mentoring,
-                Profile.verification_email_id == verification_email_id
+                Profile.verification_email_id == verification_email_id,
             )
         )
         .outerjoin(
@@ -189,13 +189,13 @@ def matching_profiles(
 ) -> BaseQuery:
     profiles_and_stars = query_profiles_and_stars(verification_email_id)
 
-    words = ''.join(
-        character if character.isalnum() else ' ' for character in query.lower()
+    words = "".join(
+        character if character.isalnum() else " " for character in query.lower()
     ).split()
 
-    tag_list = tags.lower().split(',') if tags else []
-    degree_list = degrees.lower().split(',') if degrees else []
-    affiliation_list = affiliations.lower().split(',') if affiliations else []
+    tag_list = tags.lower().split(",") if tags else []
+    degree_list = degrees.lower().split(",") if degrees else []
+    affiliation_list = affiliations.lower().split(",") if affiliations else []
 
     filtered_profiles = _filter_profiles(
         profiles_and_stars, words, tag_list, degree_list, affiliation_list
@@ -217,8 +217,8 @@ def add_stars_to_profiles(profiles_and_stars):
 
 def query_value_with_option_type_label(query, tag_class, name):
     return query.with_entities(
-        tag_class.value.label('value'),
-        sql.expression.literal(name).label('option_type'),
+        tag_class.value.label("value"),
+        sql.expression.literal(name).label("option_type"),
     )
 
 
@@ -255,7 +255,7 @@ def query_tags_with_active_profiles(config_tag_classes, public_tag_classes):
 
     select = union_queries(queries)
 
-    cte = select.cte('tags')
+    cte = select.cte("tags")
 
     result = db.session.query(
         cte.columns.option_type, func.array_agg(cte.columns.value)
@@ -287,7 +287,7 @@ def query_profile_tag_classes(config_tag_classes, public_tag_classes):
 
     select = union_queries(queries)
 
-    cte = select.cte('tags')
+    cte = select.cte("tags")
 
     result = db.session.query(
         cte.columns.option_type, func.array_agg(cte.columns.value)
@@ -302,14 +302,14 @@ def query_profile_tag_classes(config_tag_classes, public_tag_classes):
 
 def query_profile_tags():
     config_tag_classes = [
-        (HospitalAffiliationOption, 'hospital_affiliations'),
-        (DegreeOption, 'degrees'),
+        (HospitalAffiliationOption, "hospital_affiliations"),
+        (DegreeOption, "degrees"),
     ]
 
     public_tag_classes = [
-        (ActivityOption, 'activities'),
-        (ClinicalSpecialtyOption, 'clinical_specialties'),
-        (ProfessionalInterestOption, 'professional_interests'),
+        (ActivityOption, "activities"),
+        (ClinicalSpecialtyOption, "clinical_specialties"),
+        (ProfessionalInterestOption, "professional_interests"),
     ]
 
     return query_profile_tag_classes(config_tag_classes, public_tag_classes)
@@ -317,15 +317,15 @@ def query_profile_tags():
 
 def query_searchable_tags():
     config_tag_classes = [
-        (HospitalAffiliationOption, HospitalAffiliation, 'hospital_affiliations'),
-        (DegreeOption, ProfileDegree, 'degrees'),
+        (HospitalAffiliationOption, HospitalAffiliation, "hospital_affiliations"),
+        (DegreeOption, ProfileDegree, "degrees"),
     ]
 
     public_tag_classes = [
-        (ActivityOption, ProfileActivity, 'activities'),
-        (ClinicalSpecialtyOption, ClinicalSpecialty, 'clinical_specialties'),
-        (PartsOfMeOption, PartsOfMe, 'parts_of_me'),
-        (ProfessionalInterestOption, ProfessionalInterest, 'professional_interests'),
+        (ActivityOption, ProfileActivity, "activities"),
+        (ClinicalSpecialtyOption, ClinicalSpecialty, "clinical_specialties"),
+        (PartsOfMeOption, PartsOfMe, "parts_of_me"),
+        (ProfessionalInterestOption, ProfessionalInterest, "professional_interests"),
     ]
 
     return query_tags_with_active_profiles(config_tag_classes, public_tag_classes)

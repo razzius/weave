@@ -10,18 +10,18 @@ class SparkPostEmailBackend(EmailBackend):
 
     def send_email(self, to, subject, html) -> str:
         response = requests.post(
-            'https://api.sparkpost.com/api/v1/transmissions',
-            headers={'Authorization': self.api_key},
+            "https://api.sparkpost.com/api/v1/transmissions",
+            headers={"Authorization": self.api_key},
             json={
-                'content': {
-                    'from': 'admin@hmsweave.com',
-                    'subject': subject,
-                    'html': html,
+                "content": {
+                    "from": "admin@hmsweave.com",
+                    "subject": subject,
+                    "html": html,
                 },
-                'recipients': [{'address': to}],
+                "recipients": [{"address": to}],
             },
         )
 
-        email_log = dump_all(response).decode('utf-8')
+        email_log = dump_all(response).decode("utf-8")
 
         return email_log

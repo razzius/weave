@@ -11,13 +11,13 @@ def test_get_profile(client):
     profile = create_test_profile(available_for_mentoring=True)
 
     response = client.get(
-        f'/api/profiles/{profile.id}',
-        headers={'Authorization': f'Token {verification_token.token}'},
+        f"/api/profiles/{profile.id}",
+        headers={"Authorization": f"Token {verification_token.token}"},
     )
 
     assert response.status_code == HTTPStatus.OK.value
 
-    assert not response.json['starred']
+    assert not response.json["starred"]
 
 
 def test_get_starred_profile(client):
@@ -52,12 +52,12 @@ def test_get_starred_profile(client):
     # event.listen(db.engine, 'after_execute', count_queries)
 
     response = client.get(
-        f'/api/profiles/{profile_id}', headers={'Authorization': f'Token {token}'}
+        f"/api/profiles/{profile_id}", headers={"Authorization": f"Token {token}"}
     )
 
     assert response.status_code == HTTPStatus.OK.value
 
-    assert response.json['starred']
+    assert response.json["starred"]
 
     # __import__('pdb').set_trace()
     # assert len(qs) == 1
@@ -78,10 +78,10 @@ def test_get_profile_starred_by_other_user(client):
     )
 
     response = client.get(
-        f'/api/profiles/{profile.id}',
-        headers={'Authorization': f'Token {verification_token.token}'},
+        f"/api/profiles/{profile.id}",
+        headers={"Authorization": f"Token {verification_token.token}"},
     )
 
     assert response.status_code == HTTPStatus.OK.value
 
-    assert not response.json['starred']
+    assert not response.json["starred"]

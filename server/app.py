@@ -10,23 +10,23 @@ from . import views
 
 class NoCacheIndexFlask(Flask):
     def get_send_file_max_age(self, name):
-        if name.lower().endswith('index.html'):
+        if name.lower().endswith("index.html"):
             return 0
         return 31536000
 
 
 def create_app():
     app = NoCacheIndexFlask(
-        __name__, static_url_path='/static', static_folder='../build/static'
+        __name__, static_url_path="/static", static_folder="../build/static"
     )
 
-    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(
-        'DATABASE_URL', 'postgresql:///weave'
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
+        "DATABASE_URL", "postgresql:///weave"
     )
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    app.config['BASIC_AUTH_USERNAME'] = os.environ.get('BASIC_AUTH_USERNAME')
-    app.config['BASIC_AUTH_PASSWORD'] = os.environ.get('BASIC_AUTH_PASSWORD')
-    app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY')
+    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    app.config["BASIC_AUTH_USERNAME"] = os.environ.get("BASIC_AUTH_USERNAME")
+    app.config["BASIC_AUTH_PASSWORD"] = os.environ.get("BASIC_AUTH_PASSWORD")
+    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
     db.init_app(app)
     CORS(app)

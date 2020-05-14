@@ -9,10 +9,10 @@ class CustomTagSchema(Schema):
 
 
 class CustomTagList(Schema):
-    tag = fields.Nested(CustomTagSchema, only='value')
+    tag = fields.Nested(CustomTagSchema, only="value")
 
 
-nested_tag_list = fields.Nested(CustomTagList, only='tag', many=True, required=True)
+nested_tag_list = fields.Nested(CustomTagList, only="tag", many=True, required=True)
 
 
 class ProfileSchema(Schema):
@@ -46,7 +46,7 @@ class ProfileSchema(Schema):
 
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent
-VALID_DOMAINS = json.load(open(PROJECT_ROOT / 'src' / 'valid_domains.json'))
+VALID_DOMAINS = json.load(open(PROJECT_ROOT / "src" / "valid_domains.json"))
 
 
 class ValidEmailSchema(Schema):
@@ -56,11 +56,11 @@ class ValidEmailSchema(Schema):
 
     @validates_schema
     def validate_email(self, in_data):
-        email = in_data.get('email', '').lower()
+        email = in_data.get("email", "").lower()
 
         if not any(email.endswith(domain) for domain in VALID_DOMAINS):
             raise ValidationError(
-                'Email must end with harvard.edu or partners.org', 'email'
+                "Email must end with harvard.edu or partners.org", "email"
             )
 
 

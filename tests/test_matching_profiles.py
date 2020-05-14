@@ -10,10 +10,10 @@ def test_matching_profiles_starred_profile(db_session):
     other_profile = create_test_profile(available_for_mentoring=True)
 
     profiles = matching_profiles(
-        query='',
-        tags='',
-        degrees='',
-        affiliations='',
+        query="",
+        tags="",
+        degrees="",
+        affiliations="",
         verification_email_id=user_email.id,
     )
 
@@ -36,10 +36,10 @@ def test_matching_profiles(db_session):
 
     # TODO pluralized arguments to matching_profiles should be arrays; query should be Optional[str]
     profiles = matching_profiles(
-        query='',
-        tags='',
-        degrees='',
-        affiliations='',
+        query="",
+        tags="",
+        degrees="",
+        affiliations="",
         verification_email_id=user_email.id,
     )
 
@@ -51,10 +51,10 @@ def test_matching_profiles_empty(db_session):
     user_email = create_test_verification_email()
 
     profiles = matching_profiles(
-        query='',
-        tags='',
-        degrees='',
-        affiliations='',
+        query="",
+        tags="",
+        degrees="",
+        affiliations="",
         verification_email_id=user_email.id,
     )
 
