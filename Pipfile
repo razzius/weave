@@ -38,12 +38,12 @@ pdbpp = "*"
 pylint = "*"
 "flake8" = "*"
 requests-mock = "*"
-mypy = "*"
 colorama = {version = "*",sys_platform = "== 'win32'"}
 isort = "*"
 pytest-flask-sqlalchemy = "*"
 pytest-watch = "*"
 pytest-icdiff = "*"
+mypy = {editable = true, git = "https://github.com/razzius/mypy.git"}
 
 [scripts]
 start = "env FLASK_ENV=development flask run --host=0.0.0.0"

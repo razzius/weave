@@ -1,5 +1,3 @@
-from typing import Any
-
 import click
 from flask import Blueprint
 
@@ -10,7 +8,7 @@ from .models import VerificationToken, save
 from .queries import get_verification_email_by_email
 
 
-blueprint: Any = Blueprint("cli", __name__, cli_group=None)
+blueprint = Blueprint("cli", __name__, cli_group=None)
 
 
 @blueprint.cli.command("create-session")
