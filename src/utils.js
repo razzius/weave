@@ -83,16 +83,3 @@ export function delay(ms: number) {
     setTimeout(resolve, ms)
   })
 }
-
-export async function retry(callback: Function, options: Object) {
-  try {
-    await callback()
-  } catch (e) {
-    if (options.times === 0) {
-      throw e
-    }
-    options.onError()
-    await delay(options.delay)
-    retry(callback, { ...options, times: options.times - 1 })
-  }
-}
