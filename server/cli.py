@@ -1,15 +1,46 @@
-import uuid
+import click
+from flask import Blueprint
 
-from server.models import VerificationEmail, VerificationToken, save, Profile
-from server.scripts.context import context
+from server.emails import get_verification_url
+from server.views.api import generate_token
 
-CLOUDINARY_PREFIX = (
-    "https://res.cloudinary.com/dxzddmun4/image/upload/c_crop,h_200,w_200"
-)
+from .models import Profile, VerificationEmail, VerificationToken, db, save
+from .queries import get_verification_email_by_email
 
 
-def main():
-    context()
+blueprint = Blueprint("cli", __name__, cli_group=None)
+
+
+@blueprint.cli.command()
+@click.argument("email")
+def create_session(email):
+    verification_email = get_verification_email_by_email(email)
+    if verification_email is None:
+        print(f"Email {email} not found.")
+        exit(1)
+
+    token = generate_token()
+    save(
+        VerificationToken(
+            email=verification_email, token=token, is_personal_device=True
+        )
+    )
+
+    url = get_verification_url(token)
+    print(url)
+
+
+@blueprint.cli.command()
+def reset_db():
+    db.drop_all()
+    db.create_all()
+
+
+@blueprint.cli.command()
+def populate():
+    CLOUDINARY_PREFIX = (
+        "https://res.cloudinary.com/dxzddmun4/image/upload/c_crop,h_200,w_200"
+    )
 
     profiles = [
         Profile(
@@ -108,9 +139,3 @@ def main():
         save(profile)
 
         print(profile.id)
-
-    save(VerificationToken(token=str(uuid.uuid4()), email_id=email.id))
-
-
-if __name__ == "__main__":
-    main()

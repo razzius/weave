@@ -174,6 +174,19 @@ class App extends Component<Props, State> {
                 <Link to="/help" className="App-title">
                   Help
                 </Link>
+
+                {account && account.isMentor && (
+                  <Link
+                    to={
+                      account.profileId
+                        ? `profiles/${account.profileId}`
+                        : 'create-profile'
+                    }
+                    className="App-title"
+                  >
+                    {account.profileId ? 'My Profile' : 'Create Profile'}
+                  </Link>
+                )}
               </nav>
             </div>
           </header>

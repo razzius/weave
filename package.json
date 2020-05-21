@@ -9,7 +9,8 @@
     "deploy": "gh-pages -d build",
     "build": "cross-env REACT_APP_GIT_SHA=$SOURCE_VERSION react-scripts build",
     "test": "react-scripts test --env=jsdom",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src && flow"
   },
   "dependencies": {
     "@sentry/browser": "5.10.2",

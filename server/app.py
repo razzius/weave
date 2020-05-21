@@ -6,6 +6,7 @@ from .admin import init_admin
 from .emails import init_email
 from .models import db
 from . import views
+from . import cli
 
 
 class NoCacheIndexFlask(Flask):
@@ -37,5 +38,6 @@ def create_app():
 
     app.register_blueprint(views.home)
     app.register_blueprint(views.api)
+    app.register_blueprint(cli.blueprint)
 
     return app
