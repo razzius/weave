@@ -44,13 +44,14 @@ pytest-flask-sqlalchemy = "*"
 pytest-watch = "*"
 pytest-icdiff = "*"
 mypy = {editable = true, git = "https://github.com/razzius/mypy.git"}
+flask-shell-ipython = "*"
 
 [scripts]
 start = "env FLASK_ENV=development flask run --host=0.0.0.0"
-test = "env FLASK_ENV=development pytest tests"
+test = "pytest tests"
+shell = "flask shell"
+resetdb = "flask resetdb"
 lint = "flake8 server tests && mypy server tests"
-shell = "ipython -i server/scripts/shell.py"
-resetdb = "python -m server.scripts.resetdb"
 
 [pipenv]
 allow_prereleases = true
