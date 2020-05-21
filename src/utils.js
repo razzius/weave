@@ -77,9 +77,3 @@ export function arrayCaseInsensitiveContains(
 ) {
   return array.map(item => item.toLowerCase()).includes(value.toLowerCase())
 }
-
-export function delay(ms: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms)
-  })
-}
