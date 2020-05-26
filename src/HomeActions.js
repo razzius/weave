@@ -3,30 +3,32 @@ import React from 'react'
 
 import Button from './Button'
 
-function getFacultyLink(token, profileId) {
+import { type Account } from './api'
+
+function getFacultyLink(profileId) {
   if (profileId == null) return '/create-profile'
   return `/profiles/${profileId}`
 }
 
-function getFacultyText(token, profileId) {
-  if (token === null) return 'Register as a faculty member'
+function getFacultyText(account: ?Account, profileId) {
+  if (account === null) return 'Register as a faculty member'
   if (profileId === null) return 'Create profile'
   return 'View my profile'
 }
 
 const FacultyLanding = ({
+  account,
   profileId,
-  token,
   isMentor,
 }: {
+  account: ?Account,
   profileId: ?string,
-  token: string | null,
   isMentor: boolean,
 }) => (
   <div>
     <h1>Faculty</h1>
-    <Button to={getFacultyLink(token, profileId)}>
-      {getFacultyText(token, profileId)}
+    <Button to={getFacultyLink(profileId)}>
+      {getFacultyText(account, profileId)}
     </Button>
     {isMentor && (
       <div>
@@ -37,15 +39,15 @@ const FacultyLanding = ({
 )
 
 export default ({
-  token,
+  account,
   isMentor,
   profileId,
 }: {
-  token: string | null,
+  account: ?Account,
   isMentor: boolean,
   profileId: ?string,
 }) => {
-  if (token === null) {
+  if (account === null) {
     return (
       <div>
         <h1>Students</h1>
@@ -66,7 +68,7 @@ export default ({
   }
   return (
     <FacultyLanding
-      token={token}
+      account={account}
       isMentor={Boolean(isMentor)}
       profileId={profileId}
     />
