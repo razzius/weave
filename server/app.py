@@ -30,6 +30,10 @@ def create_app():
     app.config["BASIC_AUTH_PASSWORD"] = os.environ.get("BASIC_AUTH_PASSWORD")
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
 
+    app.config["TOKEN_EXPIRY_AGE_HOURS"] = int(
+        os.environ.get("REACT_APP_TOKEN_EXPIRY_AGE_HOURS", 1)
+    )
+
     db.init_app(app)
     login_manager.init_app(app)
 

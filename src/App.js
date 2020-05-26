@@ -31,13 +31,16 @@ import StudentExpectations from './StudentExpectations'
 import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
-import { setAvailabilityForMentoring, verifyToken, type Account } from './api'
-import { clearToken, loadToken } from './persistence'
+import {
+  logout,
+  setAvailabilityForMentoring,
+  verifyToken,
+  type Account,
+} from './api'
 import { retry } from './utils'
 
 type Props = empty
 type State = {|
-  token: string | null,
   account: Account | null,
   loading: boolean,
   error: boolean,
@@ -45,34 +48,30 @@ type State = {|
 
 class App extends Component<Props, State> {
   state = {
-    token: loadToken(),
     account: null,
     loading: true,
     error: false,
   }
 
   async componentDidMount() {
-    const { token } = this.state
-
-    if (token !== null && window.location.pathname !== '/verify') {
-      await retry(this.loadAccount, {
-        times: 30,
-        delay: 2000,
-        onError: () => {
-          this.setState({ loading: false, error: true })
-        },
-      })
-    }
+    this.loadAccount()
+    // if (token !== null && window.location.pathname !== '/verify') {
+    //   await retry(this.loadAccount, {
+    //     times: 30,
+    //     delay: 2000,
+    //     onError: () => {
+    //       this.setState({ loading: false, error: true })
+    //     },
+    //   })
+    // }
   }
 
-  authenticate = ({ token, account }: { token: string, account: Account }) => {
-    this.setState({ token, account })
+  authenticate = ({ account }: { account: Account }) => {
+    this.setState({ account })
   }
 
   loadAccount = async () => {
-    const { token } = this.state
-
-    const account = await verifyToken(token)
+    const account = await verifyToken()
     this.setState({ account, error: false, loading: false })
   }
 
@@ -83,9 +82,8 @@ class App extends Component<Props, State> {
   }
 
   logout = () => {
-    clearToken()
-    this.setState({ token: null, account: null })
-    // todo logout on server as well
+    this.setState({ account: null })
+    logout()
   }
 
   setAvailableForMentoring = () => {
@@ -100,9 +98,9 @@ class App extends Component<Props, State> {
   }
 
   render() {
-    const { token, account, loading, error } = this.state
+    const { account, loading, error } = this.state
 
-    const loggedOut = token === null
+    const loggedOut = account === null
 
     const loginButton = (
       <Link to="/login" className="App-title auth-button">
@@ -131,7 +129,7 @@ class App extends Component<Props, State> {
 
               {loginAction}
 
-              {token && account && account.isMentor && (
+              {account && account.isMentor && (
                 <div
                   data-tip
                   className="available-for-mentoring"
@@ -151,7 +149,7 @@ class App extends Component<Props, State> {
                       }
                       this.setState({ account: newAccount })
                       if (account.profileId !== null) {
-                        setAvailabilityForMentoring(token, newAvailable)
+                        setAvailabilityForMentoring(newAvailable)
                       }
                     }}
                   />
@@ -197,11 +195,7 @@ class App extends Component<Props, State> {
             </p>
           )}
           <Switch>
-            <Route
-              exact
-              path="/"
-              render={() => <Home token={token} account={account} />}
-            />
+            <Route exact path="/" render={() => <Home account={account} />} />
             <Route
               path="/faculty-expectations"
               component={FacultyExpectations}
@@ -214,8 +208,8 @@ class App extends Component<Props, State> {
               path="/create-profile"
               render={({ history }) => (
                 <CreateProfile
+                  account={account}
                   setProfileId={this.setProfileId}
-                  token={token}
                   history={history}
                 />
               )}
@@ -226,9 +220,9 @@ class App extends Component<Props, State> {
                 if (account !== null) {
                   return (
                     <EditProfile
+                      account={account}
                       availableForMentoring={account.availableForMentoring}
                       setProfileId={this.setProfileId}
-                      token={token}
                       history={history}
                       profileId={account.profileId}
                     />
@@ -244,7 +238,7 @@ class App extends Component<Props, State> {
                 if (account !== null) {
                   return (
                     <EditProfile
-                      token={token}
+                      account={account}
                       isAdmin={account.isAdmin}
                       history={history}
                       profileId={match.params.id}
@@ -274,11 +268,10 @@ class App extends Component<Props, State> {
                   authenticate={this.authenticate}
                   history={history}
                   account={account}
-                  token={token}
                 />
               )}
             />
-            <Route path="/browse" render={() => <Browse token={token} />} />
+            <Route path="/browse" component={Browse} />
             <Route
               path="/login"
               render={({ history }) => <Login history={history} />}
@@ -299,7 +292,7 @@ class App extends Component<Props, State> {
             <Route
               path="/profiles/:id"
               render={({ match }) => (
-                <Profile account={account} token={token} match={match} />
+                <Profile account={account} match={match} />
               )}
             />
             <Route component={() => <p>404 Not found</p>} />

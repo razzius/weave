@@ -36,7 +36,7 @@ class Browse extends Component<Props, State> {
     const { token, location } = this.props
     const { page } = this.state
 
-    const { tags } = await getSearchTags(token)
+    const { tags } = await getSearchTags()
 
     this.setState({
       searchableTags: makeOptions(
@@ -70,11 +70,11 @@ class Browse extends Component<Props, State> {
     })
   }
 
-  loadProfilesFromServer = async ({ token, page }) => {
+  loadProfilesFromServer = async ({ page }) => {
     const { history } = this.props
     try {
       this.setState({
-        results: await getProfiles({ token, page }),
+        results: await getProfiles({ page }),
         loading: false,
       })
       history.replace('/browse', this.state)

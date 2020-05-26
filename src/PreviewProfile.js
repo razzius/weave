@@ -7,20 +7,14 @@ type Props = {
   firstTimePublish: boolean,
   onEdit: any => void,
   onPublish: any => any,
-  token: string,
 }
 
 const PreviewProfile = (props: Props) => {
-  const { data, firstTimePublish, onEdit, onPublish, token } = props
+  const { data, firstTimePublish, onEdit, onPublish } = props
 
   return (
     <div>
-      <ProfileView
-        data={data}
-        editing
-        firstTimePublish={firstTimePublish}
-        token={token}
-      />
+      <ProfileView data={data} editing firstTimePublish={firstTimePublish} />
       <div>
         <button type="button" className="button" onClick={onEdit}>
           Edit
