@@ -5,42 +5,41 @@ from server.models import ProfileStar, save
 from .utils import create_test_profile, create_test_verification_token
 
 
-def test_get_profile(client):
+def test_get_profile(client, auth):
     verification_token = create_test_verification_token()
 
     profile = create_test_profile(available_for_mentoring=True)
 
-    response = client.get(
-        f"/api/profiles/{profile.id}",
-        headers={"Authorization": f"Token {verification_token.token}"},
-    )
+    assert auth.login(verification_token.token).status_code == 200
+
+    response = client.get(f"/api/profiles/{profile.id}")
 
     assert response.status_code == HTTPStatus.OK.value
 
     assert not response.json["starred"]
 
 
-def test_get_unavailable_profile(client):
+def test_get_unavailable_profile(client, auth):
     verification_token = create_test_verification_token()
 
     profile = create_test_profile(available_for_mentoring=False)
 
-    response = client.get(
-        f"/api/profiles/{profile.id}",
-        headers={"Authorization": f"Token {verification_token.token}"},
-    )
+    assert auth.login(verification_token.token).status_code == 200
+
+    response = client.get(f"/api/profiles/{profile.id}")
 
     assert response.status_code == HTTPStatus.NOT_FOUND.value
 
 
-def test_get_starred_profile(client):
+def test_get_starred_profile(client, auth):
     verification_token = create_test_verification_token()
 
     profile = create_test_profile(available_for_mentoring=True)
 
     # Do queries here so that they don't add to the count later
     profile_id = profile.id
-    token = verification_token.token
+
+    assert auth.login(verification_token.token).status_code == 200
 
     save(
         ProfileStar(
@@ -64,9 +63,7 @@ def test_get_starred_profile(client):
 
     # event.listen(db.engine, 'after_execute', count_queries)
 
-    response = client.get(
-        f"/api/profiles/{profile_id}", headers={"Authorization": f"Token {token}"}
-    )
+    response = client.get(f"/api/profiles/{profile_id}")
 
     assert response.status_code == HTTPStatus.OK.value
 
@@ -76,7 +73,7 @@ def test_get_starred_profile(client):
     # assert len(qs) == 1
 
 
-def test_get_profile_starred_by_other_user(client):
+def test_get_profile_starred_by_other_user(client, auth):
     verification_token = create_test_verification_token()
 
     other_verification_token = create_test_verification_token()
@@ -90,10 +87,9 @@ def test_get_profile_starred_by_other_user(client):
         )
     )
 
-    response = client.get(
-        f"/api/profiles/{profile.id}",
-        headers={"Authorization": f"Token {verification_token.token}"},
-    )
+    assert auth.login(verification_token.token).status_code == 200
+
+    response = client.get(f"/api/profiles/{profile.id}")
 
     assert response.status_code == HTTPStatus.OK.value
 

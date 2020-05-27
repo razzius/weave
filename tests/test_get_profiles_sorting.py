@@ -1,11 +1,16 @@
 import datetime
 import http
 
+from server.views.api import generate_token
+
 from .utils import create_test_profile
 
 
-def test_sort_profiles_by_date_updated(client):
+def test_sort_profiles_by_date_updated(client, auth):
+    token = generate_token()
+
     own_profile = create_test_profile(
+        token=token,
         email="test@test.com",
         name="Own Profile",
         date_updated=datetime.datetime(2018, 1, 1),
@@ -26,12 +31,9 @@ def test_sort_profiles_by_date_updated(client):
         available_for_mentoring=True,
     )
 
-    own_token = own_profile.verification_email.verification_tokens[0].token
+    assert auth.login(token).status_code == 200
 
-    response = client.get(
-        "/api/profiles?sorting=date_updated",
-        headers={"Authorization": f"Token {own_token}"},
-    )
+    response = client.get("/api/profiles?sorting=date_updated")
 
     assert response.status_code == http.HTTPStatus.OK.value
 
