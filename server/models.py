@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.ext.declarative import declared_attr
 from sqlalchemy.orm import relationship
 
-from server.auth import token_expired
+from server.session import token_expired
 
 
 db: Any = SQLAlchemy(engine_options={"pool_pre_ping": True})
@@ -206,7 +206,7 @@ class VerificationToken(db.Model):
 
     @property
     def is_authenticated(self):
-        return not self.expired and not _token_expired(self)
+        return not self.expired and not token_expired(self)
 
     @property
     def is_anonymous(self):

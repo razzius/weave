@@ -51,7 +51,7 @@ autoflake = "*"
 
 [scripts]
 start = "env FLASK_ENV=development flask run --host=0.0.0.0"
-test = "pytest tests"
+test = "env FLASK_ENV=development pytest tests"
 shell = "flask shell"
 resetdb = "flask resetdb"
 lint = "flake8 server tests && mypy server tests"

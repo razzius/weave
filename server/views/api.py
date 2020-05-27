@@ -1,31 +1,29 @@
 import datetime
-import os
 import uuid
 from http import HTTPStatus
 
 import flask_login
 from cloudinary import uploader
-from dateutil.relativedelta import relativedelta
 from flask import Blueprint, current_app, jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
-from sqlalchemy import asc, desc, func, and_
+from sqlalchemy import and_, asc, desc, exists, func, text
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import exists, text
 
 from server.models import ProfileStar
 from server.queries import (
     add_stars_to_profiles,
     query_profile_tags,
     query_profiles_and_stars,
-    query_searchable_tags,
+    query_searchable_tags
 )
+from server.session import token_expired
 
 from ..emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
-    send_student_registration_email,
+    send_student_registration_email
 )
 from ..models import (
     ActivityOption,
@@ -44,12 +42,12 @@ from ..models import (
     VerificationEmail,
     VerificationToken,
     db,
-    save,
+    save
 )
 from ..queries import (
     get_profile_by_token,
     get_verification_email_by_email,
-    matching_profiles,
+    matching_profiles
 )
 from ..schemas import profile_schema, profiles_schema, valid_email_schema
 from .pagination import paginate
@@ -191,10 +189,6 @@ def get_profile(profile_id=None):
     return response
 
 
-def api_post(route):
-    return api.route(route, methods=["POST"])
-
-
 def flat_values(values):
     return [tup[0] for tup in values]
 
@@ -276,7 +270,8 @@ def basic_profile_data(verification_token, schema):
     }
 
 
-@api_post("/profile")
+@api.route("/profile", methods=["POST"])
+@flask_login.login_required
 def create_profile():
     verification_token = flask_login.current_user
 
@@ -371,7 +366,8 @@ def generate_token():
     return str(uuid.uuid4())
 
 
-@api_post("/upload-image")
+@api.route("/upload-image", methods=["POST"])
+@flask_login.login_required
 def upload_image():
     data = request.data
 
@@ -461,17 +457,17 @@ def process_send_verification_email(is_mentor):
     return jsonify({"id": verification_email.id, "email": email})
 
 
-@api_post("/send-faculty-verification-email")
+@api.route("/send-faculty-verification-email", methods=["POST"])
 def send_faculty_verification_email():
     return process_send_verification_email(is_mentor=True)
 
 
-@api_post("/send-student-verification-email")
+@api.route("/send-student-verification-email", methods=["POST"])
 def send_student_verification_email():
     return process_send_verification_email(is_mentor=False)
 
 
-@api_post("/login")
+@api.route("/login", methods=["POST"])
 def login():
     schema = valid_email_schema.load(request.json)
 
@@ -540,7 +536,7 @@ def get_token_from_cookie_or_parameters():
     return verification_token
 
 
-@api_post("/verify-token")
+@api.route("/verify-token", methods=["POST"])
 def verify_token():
     verification_token = get_token_from_cookie_or_parameters()
 
@@ -565,14 +561,14 @@ def verify_token():
     )
 
 
-@api_post("/logout")
+@api.route("/logout", methods=["POST"])
 def logout():
     flask_login.logout_user()
 
     return {}
 
 
-@api_post("/availability")
+@api.route("/availability", methods=["POST"])
 @flask_login.login_required
 def availability():
     verification_token = flask_login.current_user
@@ -589,7 +585,7 @@ def availability():
     return jsonify({"available": available})
 
 
-@api_post("/star_profile")
+@api.route("/star_profile", methods=["POST"])
 def star_profile():
     verification_token = flask_login.current_user
 
@@ -641,7 +637,7 @@ def star_profile():
     return jsonify({"profile_id": to_profile_id})
 
 
-@api_post("unstar_profile")
+@api.route("unstar_profile", methods=["POST"])
 def unstar_profile():
     verification_token = flask_login.current_user
 
