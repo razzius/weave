@@ -65,3 +65,16 @@ def _db(database, app):
 @pytest.fixture
 def client(app, _db):
     return app.test_client()
+
+
+class AuthActions:
+    def __init__(self, client):
+        self.client = client
+
+    def login(self, token):
+        return self.client.post("/api/verify-token", json={"token": token})
+
+
+@pytest.fixture
+def auth(client):
+    return AuthActions(client)
