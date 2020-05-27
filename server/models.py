@@ -7,7 +7,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declared_attr
 
 
-db: Any = SQLAlchemy()
+db: Any = SQLAlchemy(engine_options={"pool_pre_ping": True})
 
 
 def save(instance):
