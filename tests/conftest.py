@@ -12,6 +12,8 @@ PG_VERSION = 12.2
 
 TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "postgresql:///weave_test")
 
+os.environ["FLASK_ENV"] = "development"
+
 
 @pytest.fixture(scope="session")
 def database():
