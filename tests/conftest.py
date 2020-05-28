@@ -74,7 +74,10 @@ class AuthActions:
         self.client = client
 
     def login(self, token):
-        return self.client.post("/api/verify-token", json={"token": token})
+        assert (
+            self.client.post("/api/verify-token", json={"token": token}).status_code
+            == 200
+        )
 
 
 @pytest.fixture

@@ -45,7 +45,7 @@ def test_create_profile_with_custom_tag(client, auth):
         "cadence": "monthly",
     }
 
-    assert auth.login(token).ok
+    auth.login(token)
 
     response = client.post("/api/profile", json=profile)
 

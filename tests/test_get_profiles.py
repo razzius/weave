@@ -10,18 +10,11 @@ def test_get_profiles_missing_token(client):
 
     assert response.status_code == http.HTTPStatus.UNAUTHORIZED.value
 
-    # assert response.json == {"token": ["missing"]}
 
+def test_get_profiles_bogus_token(client):
+    response = client.get("/api/profiles", headers={"cookie": "session=fake"})
 
-# todo rewrite this with bogus session
-# def test_get_profiles_bogus_token(client):
-#     token = "1234"
-
-#     response = client.get("/api/profiles", headers={"Authorization": f"Token {token}"})
-
-#     assert response.status_code == http.HTTPStatus.UNAUTHORIZED.value
-
-#     assert response.json == {"token": ["unknown token"]}
+    assert response.status_code == http.HTTPStatus.UNAUTHORIZED.value
 
 
 def test_get_profiles_empty(client, auth):
@@ -31,7 +24,7 @@ def test_get_profiles_empty(client, auth):
         VerificationToken(token="1234", email_id=verification_email.id)
     )
 
-    assert auth.login(verification_token.token).status_code == 200
+    auth.login(verification_token.token)
 
     response = client.get("/api/profiles")
 
@@ -47,7 +40,7 @@ def test_get_profiles_search_empty(client, auth):
         VerificationToken(token="1234", email_id=verification_email.id)
     )
 
-    assert auth.login(verification_token.token).status_code == 200
+    auth.login(verification_token.token)
 
     response = client.get("/api/profiles", query_string={"query": "abc"},)
 
@@ -68,7 +61,7 @@ def test_get_starred_profile(client, auth):
         )
     )
 
-    assert auth.login(verification_token.token).status_code == 200
+    auth.login(verification_token.token)
 
     response = client.get("/api/profiles")
 
@@ -89,7 +82,7 @@ def test_get_profile_other_user_starred(client, auth):
         )
     )
 
-    assert auth.login(verification_token.token).status_code == 200
+    auth.login(verification_token.token)
 
     response = client.get("/api/profiles")
 

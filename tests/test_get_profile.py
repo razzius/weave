@@ -10,7 +10,7 @@ def test_get_profile(client, auth):
 
     profile = create_test_profile(available_for_mentoring=True)
 
-    assert auth.login(verification_token.token).status_code == 200
+    auth.login(verification_token.token)
 
     response = client.get(f"/api/profiles/{profile.id}")
 
@@ -24,7 +24,7 @@ def test_get_unavailable_profile(client, auth):
 
     profile = create_test_profile(available_for_mentoring=False)
 
-    assert auth.login(verification_token.token).status_code == 200
+    auth.login(verification_token.token)
 
     response = client.get(f"/api/profiles/{profile.id}")
 
@@ -39,7 +39,7 @@ def test_get_starred_profile(client, auth):
     # Do queries here so that they don't add to the count later
     profile_id = profile.id
 
-    assert auth.login(verification_token.token).status_code == 200
+    auth.login(verification_token.token)
 
     save(
         ProfileStar(
@@ -87,7 +87,7 @@ def test_get_profile_starred_by_other_user(client, auth):
         )
     )
 
-    assert auth.login(verification_token.token).status_code == 200
+    auth.login(verification_token.token)
 
     response = client.get(f"/api/profiles/{profile.id}")
 
