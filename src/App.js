@@ -37,7 +37,6 @@ import {
   verifyToken,
   type Account,
 } from './api'
-import { retry } from './utils'
 
 type Props = empty
 type State = {|

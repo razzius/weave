@@ -31,7 +31,7 @@ def test_sort_profiles_by_date_updated(client, auth):
         available_for_mentoring=True,
     )
 
-    assert auth.login(token).status_code == 200
+    auth.login(token)
 
     response = client.get("/api/profiles?sorting=date_updated")
 

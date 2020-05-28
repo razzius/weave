@@ -15,7 +15,7 @@ from server.queries import (
     add_stars_to_profiles,
     query_profile_tags,
     query_profiles_and_stars,
-    query_searchable_tags
+    query_searchable_tags,
 )
 from server.session import token_expired
 
@@ -23,7 +23,7 @@ from ..emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
-    send_student_registration_email
+    send_student_registration_email,
 )
 from ..models import (
     ActivityOption,
@@ -42,12 +42,12 @@ from ..models import (
     VerificationEmail,
     VerificationToken,
     db,
-    save
+    save,
 )
 from ..queries import (
     get_profile_by_token,
     get_verification_email_by_email,
-    matching_profiles
+    matching_profiles,
 )
 from ..schemas import profile_schema, profiles_schema, valid_email_schema
 from .pagination import paginate
@@ -302,6 +302,7 @@ def create_profile():
 
 
 @api.route("/profiles/<profile_id>", methods=["PUT"])
+@flask_login.login_required
 def update_profile(profile_id=None):
     try:
         schema = profile_schema.load(request.json)
@@ -562,6 +563,7 @@ def verify_token():
 
 
 @api.route("/logout", methods=["POST"])
+@flask_login.login_required
 def logout():
     flask_login.logout_user()
 
@@ -586,6 +588,7 @@ def availability():
 
 
 @api.route("/star_profile", methods=["POST"])
+@flask_login.login_required
 def star_profile():
     verification_token = flask_login.current_user
 
@@ -638,6 +641,7 @@ def star_profile():
 
 
 @api.route("unstar_profile", methods=["POST"])
+@flask_login.login_required
 def unstar_profile():
     verification_token = flask_login.current_user
 
