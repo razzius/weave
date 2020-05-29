@@ -297,7 +297,7 @@ const Resources = () => (
       <div>Timothy Rogers</div>
       <div>25 Shattuck Street, Gordon Hall, Room 211, Boston, MA 02115</div>
       <div>Email: timothy_rogers@hms.harvard.edu</div>
-      <div>Phone: (617) 432-0449</div>
+      <div>Phone: (617) 432-9198</div>
     </div>
 
     <p>
