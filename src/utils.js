@@ -30,8 +30,10 @@ export function caseInsensitiveFind(
   return values.find(value => value.toLowerCase() === lowercaseSearch)
 }
 
-export function availableForMentoringFromVerifyTokenResponse(response: Object) {
-  return response.profile_id === null ? true : response.available_for_mentoring
+export function availableForMentoringFromVerifyTokenResponse(
+  response: Object
+): boolean {
+  return response.profile_id !== null && response.available_for_mentoring
 }
 
 export const ExternalLink = ({
