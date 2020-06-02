@@ -34,7 +34,7 @@ const ResultsView = ({
   savedState,
 }: Props) => {
   if (error) {
-    return <p>error</p>
+    return <p>{error}</p>
   }
 
   if (results === null) {
