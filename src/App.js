@@ -53,16 +53,10 @@ class App extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    this.loadAccount()
-    // if (token !== null && window.location.pathname !== '/verify') {
-    //   await retry(this.loadAccount, {
-    //     times: 30,
-    //     delay: 2000,
-    //     onError: () => {
-    //       this.setState({ loading: false, error: true })
-    //     },
-    //   })
-    // }
+    if (window.location.pathname !== '/verify') {
+      // need error handling here...
+      this.loadAccount()
+    }
   }
 
   authenticate = ({ account }: { account: Account }) => {
@@ -76,7 +70,7 @@ class App extends Component<Props, State> {
 
   setProfileId = (profileId: string) => {
     const { account } = this.state
-    const newAccount = { ...account, profileId }
+    const newAccount = { ...account, profileId, availableForMentoring: true }
     this.setState({ account: newAccount })
   }
 
@@ -137,8 +131,11 @@ class App extends Component<Props, State> {
                   Available for mentoring:
                   <ReactTooltip id="toggleTooltip" place="bottom">
                     Controls whether your profile will be visible to mentees.
+                    {account.profileId === null &&
+                      ' You have not yet created a profile.'}
                   </ReactTooltip>
                   <Toggle
+                    enabled={account.profileId}
                     on={account.availableForMentoring}
                     onClick={() => {
                       const newAvailable = !account.availableForMentoring
