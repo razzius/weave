@@ -566,6 +566,10 @@ def verify_token():
 @api.route("/logout", methods=["POST"])
 @flask_login.login_required
 def logout():
+    verification_token = flask_login.current_user
+    verification_token.logged_out = True
+    save(verification_token)
+
     flask_login.logout_user()
 
     return {}

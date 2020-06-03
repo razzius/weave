@@ -5,11 +5,13 @@ from typing import Optional
 from server.models import Profile, VerificationEmail, VerificationToken, save
 
 
-def generate_test_email():
+def generate_test_email() -> str:
     return f"{str(uuid.uuid4())}@test.com"
 
 
-def create_test_verification_email(email: Optional[str] = None, is_admin: bool = False):
+def create_test_verification_email(
+    email: Optional[str] = None, is_admin: bool = False
+) -> VerificationEmail:
     if email is None:
         email = generate_test_email()
 
@@ -18,7 +20,7 @@ def create_test_verification_email(email: Optional[str] = None, is_admin: bool =
 
 def create_test_verification_token(
     token: Optional[str] = None,
-    verification_email: VerificationEmail = None,
+    verification_email: Optional[VerificationEmail] = None,
     is_admin: bool = False,
 ) -> VerificationToken:
     if token is None:
