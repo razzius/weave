@@ -1,6 +1,6 @@
 from http import HTTPStatus
 
-from server.models import db, VerificationEmail, VerificationToken
+from server.models import VerificationEmail, VerificationToken, save
 
 
 def test_verify_invalid_token(client):
@@ -13,13 +13,9 @@ def test_verify_valid_token(client):
     token = "123"
     email = "test@test.com"
 
-    verification_email = VerificationEmail(email=email, is_mentor=True)
+    verification_email = save(VerificationEmail(email=email, is_mentor=True))
 
-    db.session.add(verification_email)
-    db.session.commit()
-
-    db.session.add(VerificationToken(token=token, email_id=verification_email.id))
-    db.session.commit()
+    save(VerificationToken(token=token, email_id=verification_email.id))
 
     response = client.post("/api/verify-token", json={"token": token})
 
@@ -32,3 +28,20 @@ def test_verify_valid_token(client):
         "profile_id": None,
         "is_mentor": True,
     }
+
+
+def test_verify_token_logs_out_other_tokens(client):
+    token = "123"
+    email = "test@test.com"
+
+    verification_email = save(VerificationEmail(email=email, is_mentor=True))
+
+    prior_token = save(VerificationToken(token="1010", email_id=verification_email.id))
+
+    save(VerificationToken(token=token, email_id=verification_email.id))
+
+    response = client.post("/api/verify-token", json={"token": token})
+
+    assert response.status_code == HTTPStatus.OK.value
+
+    assert prior_token.logged_out
