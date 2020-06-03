@@ -73,7 +73,7 @@ class AuthActions:
     def __init__(self, client):
         self.client = client
 
-    def login(self, token):
+    def login(self, token: str):
         assert (
             self.client.post("/api/verify-token", json={"token": token}).status_code
             == 200
