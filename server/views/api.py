@@ -503,15 +503,14 @@ def get_token_from_cookie_or_parameters():
 
     On the first login, they will pass the token as a json parameter.
     """
-    verification_token = flask_login.current_user
+    session_token = flask_login.current_user
 
-    if verification_token.is_authenticated:
-        return verification_token
+    token = request.json.get("token")
 
-    if "token" not in request.json:
+    if token is None:
+        if session_token.is_authenticated:
+            return session_token
         raise UnauthorizedError({"token": ["not set"]})
-
-    token = request.json["token"]
 
     query = VerificationToken.query.filter(VerificationToken.token == token)
 
