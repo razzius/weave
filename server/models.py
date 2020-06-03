@@ -191,7 +191,7 @@ class VerificationToken(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     verified = db.Column(db.Boolean, default=False)
 
-    expired = db.Column(db.Boolean, default=False)
+    logged_out = db.Column(db.Boolean, default=False)
 
     email_log = db.Column(db.Text)
 
@@ -206,7 +206,7 @@ class VerificationToken(db.Model):
 
     @property
     def is_authenticated(self):
-        return not self.expired and not token_expired(self)
+        return not self.logged_out and not token_expired(self)
 
     @property
     def is_anonymous(self):

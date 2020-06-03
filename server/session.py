@@ -5,8 +5,8 @@ from flask import current_app
 
 
 def token_expired(verification_token):
-    if verification_token.expired:
-        current_app.logger.info("token %s expired", verification_token.token)
+    if verification_token.logged_out:
+        current_app.logger.info("token %s logged_out", verification_token.token)
 
         return True
 

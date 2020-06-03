@@ -408,10 +408,6 @@ def save_verification_token(email_id, token, is_personal_device):
 def send_token(verification_email, email_function, is_personal_device):
     current_app.logger.info("Invalidating token with id %s", verification_email.id)
 
-    VerificationToken.query.filter(
-        VerificationToken.email_id == verification_email.id
-    ).update({VerificationToken.expired: True})
-
     token = generate_token()
 
     verification_token = save_verification_token(
@@ -541,7 +537,12 @@ def get_token_from_cookie_or_parameters():
 def verify_token():
     verification_token = get_token_from_cookie_or_parameters()
 
-    verification_email = VerificationEmail.query.get(verification_token.email_id)
+    verification_email = verification_token.email
+
+    VerificationToken.query.filter(
+        VerificationToken.email_id == verification_email.id,
+        VerificationToken.token != verification_token.token,
+    ).update({VerificationToken.logged_out: True})
 
     profile = get_profile_by_token(verification_token)
 
