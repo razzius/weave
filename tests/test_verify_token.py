@@ -60,3 +60,25 @@ def test_verify_token_logs_out_other_tokens(client):
     assert response.status_code == HTTPStatus.OK.value
 
     assert prior_token.logged_out
+
+
+def test_verification_token_takes_priority_over_session_cookie(client, auth):
+    """
+    If a user is already logged in and verifies a new token,
+    the new token should replace the old one.
+    """
+    session_verification_token = create_test_verification_token()
+
+    auth.login(session_verification_token.token)
+
+    new_verification_token = create_test_verification_token(
+        verification_email=session_verification_token.email
+    )
+
+    response = client.post(
+        "/api/verify-token", json={"token": new_verification_token.token}
+    )
+
+    assert response.status_code == HTTPStatus.OK.value
+
+    assert session_verification_token.logged_out
