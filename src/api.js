@@ -33,7 +33,7 @@ async function http(url, options = {}) {
   }
 
   if (!response.ok) {
-    throw await response.text()
+    throw response
   }
 
   return response.json()

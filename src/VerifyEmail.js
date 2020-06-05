@@ -28,8 +28,8 @@ export default class VerifyEmail extends Component<Props, State> {
       const account = await verifyToken(token)
 
       authenticate({ account })
-    } catch (err) {
-      if (err.message === 'Failed to fetch') {
+    } catch (error) {
+      if (error.message === 'Failed to fetch') {
         this.setState({
           error:
             'There was a problem with our server. Please try again in a moment.',
@@ -37,13 +37,15 @@ export default class VerifyEmail extends Component<Props, State> {
         return
       }
 
-      if (!Array.isArray(err.token)) {
+      const errorJson = await error.json()
+
+      if (!Array.isArray(errorJson.token)) {
         this.setState({
-          error: `Unknown error: ${err.message}`,
+          error: `Unknown error: ${errorJson.message}`,
         })
         return
       }
-      const errorMessage = err.token[0]
+      const errorMessage = errorJson.token[0]
       if (errorMessage === 'not recognized') {
         this.setState({
           error: 'Your token is invalid. Try signing up or logging in again.',

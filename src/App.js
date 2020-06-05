@@ -64,8 +64,17 @@ class App extends Component<Props, State> {
   }
 
   loadAccount = async () => {
-    const account = await verifyToken()
-    this.setState({ account, error: false, loading: false })
+    const loaded = { loading: false }
+    try {
+      const account = await verifyToken()
+      this.setState({ account, error: false, ...loaded })
+    } catch (error) {
+      if (error.status === 401) {
+        this.setState(loaded)
+        return
+      }
+      this.setState({ error, ...loaded })
+    }
   }
 
   setProfileId = (profileId: string) => {

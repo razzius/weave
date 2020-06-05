@@ -6,37 +6,28 @@ import ReactTooltip from 'react-tooltip'
 import { any, getParam } from './utils'
 import VALID_DOMAINS from './valid_domains.json'
 
-function displayError(error, email) {
-  if (error === null) {
-    return null
-  }
-
+async function displayError(error, email) {
   if (error.name === 'TypeError') {
-    return (
-      <p className="error">
-        There was a problem with our server. Please try again in a moment.
-      </p>
-    )
+    return 'There was a problem with our server. Please try again in a moment.'
   }
 
-  if (error.email[0] === 'unregistered') {
-    return (
-      <p className="error">
-        That email has not been registered. Please sign up using the links
-        above.
-      </p>
-    )
+  const errorJson = await error.json()
+  const emailError = errorJson.email[0]
+
+  if (emailError === 'unregistered') {
+    return 'That email has not been registered. Please sign up using the links above.'
   }
 
-  if (error.email[0] === 'claimed') {
+  if (emailError === 'claimed') {
     return (
-      <p className="error">
+      <>
         That email has already been registered. Please{' '}
         <Link to={`/login?email=${email}`}>log in</Link>.
-      </p>
+      </>
     )
   }
-  return <p className="error">{error.email[0]}</p>
+
+  return `Unknown error: ${error}`
 }
 
 type Props = {
@@ -65,7 +56,6 @@ export default class SubmitEmailForm extends Component<Props, State> {
 
   submitEmail = async (e: Event) => {
     e.preventDefault()
-
     const { email, isPersonalDevice } = this.state
     const { sendEmail } = this.props
 
@@ -76,7 +66,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
       })
       this.setState({ success: true })
     } catch (error) {
-      this.setState({ error })
+      this.setState({ error: await displayError(error, email) })
     }
   }
 
@@ -110,7 +100,8 @@ export default class SubmitEmailForm extends Component<Props, State> {
             <ReactTooltip place="bottom" id="emailTooltip">
               Please enter your Harvard or hospital-affiliated email
             </ReactTooltip>
-            {displayError(error, email)}
+
+            {error && <p className="error">{error}</p>}
             <div>
               <input
                 type="checkbox"
