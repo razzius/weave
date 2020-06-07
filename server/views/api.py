@@ -166,6 +166,7 @@ def get_search_tags():
 
 
 @api.route("/profiles/<profile_id>")
+@flask_login.login_required
 def get_profile(profile_id=None):
     verification_token = flask_login.current_user
 
