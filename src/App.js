@@ -182,8 +182,8 @@ class App extends Component<Props, State> {
                   <Link
                     to={
                       account.profileId
-                        ? `profiles/${account.profileId}`
-                        : 'create-profile'
+                        ? `/profiles/${account.profileId}`
+                        : '/create-profile'
                     }
                     className="App-title"
                   >
