@@ -18,8 +18,3 @@ def send_static(path):
 @home.route("/debug-sentry")
 def trigger_error():
     raise Exception("Test error")
-
-
-@home.route("/debug-user")
-def debug_user():
-    return f"Logged in as {None}"
