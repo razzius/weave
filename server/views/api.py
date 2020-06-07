@@ -4,11 +4,12 @@ from http import HTTPStatus
 
 import flask_login
 from cloudinary import uploader
-from flask import Blueprint, current_app, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import and_, asc, desc, exists, func, text
 from sqlalchemy.exc import IntegrityError
+from structlog import get_logger
 
 from server.models import ProfileStar
 from server.queries import (
@@ -52,6 +53,8 @@ from ..queries import (
 from ..schemas import profile_schema, profiles_schema, valid_email_schema
 from .pagination import paginate
 
+
+log = get_logger()
 
 # This is a non-standard http status, used by Microsoft's IIS, but it's useful
 # to disambiguate between unrecognized and expired tokens.
@@ -319,7 +322,13 @@ def update_profile(profile_id=None):
         VerificationEmail.id == verification_token.email_id
     ).value(VerificationEmail.is_admin)
 
-    current_app.logger.info("Edit to profile %s is_admin: %s", profile_id, is_admin)
+    log.info(
+        "Edit profile",
+        profile_id=profile_id,
+        is_admin=is_admin,
+        token_id=verification_token.id,
+        email=verification_token.email.email,
+    )
 
     assert is_admin or profile.verification_email_id == verification_token.email_id
 
@@ -407,15 +416,13 @@ def save_verification_token(email_id, token, is_personal_device):
 
 
 def send_token(verification_email, email_function, is_personal_device):
-    current_app.logger.info("Invalidating token with id %s", verification_email.id)
-
     token = generate_token()
 
     verification_token = save_verification_token(
         verification_email.id, token, is_personal_device
     )
 
-    email_log = email_function(verification_email.email, token)
+    email_log = email_function(verification_email.email, verification_token)
 
     verification_token.email_log = email_log
 
@@ -550,6 +557,10 @@ def verify_token():
 
     available_for_mentoring = (
         profile.available_for_mentoring if profile is not None else None
+    )
+
+    log.info(
+        "Logged in", email=verification_email.email, token_id=verification_token.id
     )
 
     return jsonify(

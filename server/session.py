@@ -1,12 +1,21 @@
 import datetime
-
 from dateutil.relativedelta import relativedelta
+
 from flask import current_app
+
+from structlog import get_logger
+
+
+logger = get_logger()
 
 
 def token_expired(verification_token):
+    log = logger.bind(
+        email=verification_token.email.email, token_id=verification_token.id,
+    )
+
     if verification_token.logged_out:
-        current_app.logger.info("token %s logged_out", verification_token.token)
+        log.info("Token logged_out")
 
         return True
 
@@ -20,23 +29,17 @@ def token_expired(verification_token):
         hours=hours_until_expiry
     )
 
-    current_app.logger.info(
-        "Token %s date_created %s is_personal_device: %s set to expire %s",
-        verification_token.token,
-        verification_token.date_created,
-        verification_token.is_personal_device,
-        expire_time,
-    )
-
     current_time = datetime.datetime.utcnow()
 
     expired = current_time > expire_time
 
-    current_app.logger.info(
-        "current time %s versus expire time %s is expired? %s",
-        current_time,
-        expire_time,
-        expired,
+    log.info(
+        "Token expired?",
+        date_created=verification_token.date_created.isoformat(),
+        current_time=current_time.isoformat(),
+        is_personal_device=verification_token.is_personal_device,
+        expire_time=expire_time.isoformat(),
+        expired=expired,
     )
 
     return expired

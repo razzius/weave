@@ -182,8 +182,8 @@ class ProfileStar(db.Model):
     to_profile = relationship(Profile)
 
 
-class VerificationToken(db.Model):
-    token = db.Column(db.String(36), primary_key=True)
+class VerificationToken(db.Model, IDMixin):
+    token = db.Column(db.String(36), unique=True)
     email_id = db.Column(
         db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
     )

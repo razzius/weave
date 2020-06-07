@@ -22,4 +22,4 @@ login_manager = JSONLoginManager()
 
 @login_manager.user_loader
 def user_loader(token):
-    return VerificationToken.query.get(token)
+    return VerificationToken.query.filter_by(token=token).first()

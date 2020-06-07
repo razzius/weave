@@ -30,6 +30,7 @@ freezegun = "*"
 requests-mock = "*"
 pytest-postgresql = "*"
 flask-login = "*"
+structlog = "*"
 
 [dev-packages]
 ipython = "*"
@@ -44,7 +45,7 @@ isort = "*"
 pytest-flask-sqlalchemy = "*"
 pytest-watch = "*"
 pytest-icdiff = "*"
-mypy = {editable = true, git = "https://github.com/razzius/mypy.git"}
+mypy = {editable = true,git = "https://github.com/razzius/mypy.git"}
 flask-shell-ipython = "*"
 black = "*"
 autoflake = "*"

@@ -1,10 +1,16 @@
 import os
 
 from flask import current_app
+from structlog import get_logger
+
+from server.models import VerificationToken
 
 from .console_email_backend import ConsoleEmailBackend
 from .email_backend import EmailBackend
 from .sparkpost_email_backend import SparkPostEmailBackend
+
+
+log = get_logger()
 
 
 SERVER_URL = os.environ.get("REACT_APP_SERVER_URL", "http://localhost:5000")
@@ -17,7 +23,7 @@ def init_email(app):
     email_backend: EmailBackend
 
     if SPARKPOST_API_KEY is None:
-        app.logger.warning(
+        log.warning(
             "Configuring email to log to console because SPARKPOST_API_KEY is not set."
         )
         app.email_backend = ConsoleEmailBackend()
@@ -44,10 +50,10 @@ def self_link(href):
     return f'<a href="{href}">{href}</a>'
 
 
-def send_faculty_registration_email(email, token):
+def send_faculty_registration_email(email: str, token: VerificationToken) -> str:
     verify_link = self_link(get_verification_url(token))
 
-    current_app.logger.info("Sending faculty registration verify_link %s", verify_link)
+    log.info("Sending faculty registration link", token_id=token.id)
 
     html = f"""
     <p>Hello,</p>
@@ -74,10 +80,10 @@ def send_faculty_registration_email(email, token):
     )
 
 
-def send_student_registration_email(email, token):
+def send_student_registration_email(email: str, token: VerificationToken) -> str:
     verify_link = self_link(get_verification_url(token))
 
-    current_app.logger.info("Sending student registration verify_link %s", verify_link)
+    log.info("Sending student registration link", token_id=token.id)
 
     html = f"""
     <p>Hello,</p>
@@ -108,7 +114,7 @@ def send_student_registration_email(email, token):
 def send_faculty_login_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
-    current_app.logger.info("Sending faculty login verify_link %s", verify_link)
+    log.info("Sending faculty login link", token_id=token.id)
 
     html = f"""
     <p>Hello,</p>
@@ -129,7 +135,7 @@ def send_faculty_login_email(email, token):
 def send_student_login_email(email, token):
     verify_link = self_link(get_verification_url(token))
 
-    current_app.logger.info("Sending student login verify_link %s", verify_link)
+    log.info("Sending student login link", token_id=token.id)
 
     html = f"""
     <p>Hello,</p>

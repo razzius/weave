@@ -2,6 +2,8 @@ from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_basicauth import BasicAuth
 
+from structlog import get_logger
+
 from .models import (
     ActivityOption,
     ClinicalSpecialtyOption,
@@ -14,6 +16,8 @@ from .models import (
     VerificationToken,
     db,
 )
+
+log = get_logger()
 
 basic_auth = BasicAuth()
 
@@ -97,6 +101,6 @@ def init_admin(app):
         basic_auth.init_app(app)
         admin.init_app(app)
     else:
-        app.logger.warning(
+        log.warning(
             "Not configuring admin because BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD are not set."
         )
