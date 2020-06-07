@@ -20,6 +20,7 @@ type ClientError =
   | {
       token: Array<string>,
     }
+  | string
 
 function errorView(error: string | ClientError) {
   if (typeof error === 'string') {
@@ -79,7 +80,21 @@ export default class Profile extends Component<Props, State> {
       }
       this.setState({ profile })
     } catch (error) {
-      this.setState({ error })
+      if (error.message === 'Failed to fetch') {
+        this.setState({
+          error:
+            'There was a problem with our server. Please try again in a moment.',
+        })
+        return
+      }
+
+      if (error.status === 401) {
+        this.setState({ error: 'You are not logged in. Please log in.' })
+        return
+      }
+
+      const errorJson = await error.json()
+      this.setState({ error: errorJson })
     }
   }
 

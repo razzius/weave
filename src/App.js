@@ -144,7 +144,7 @@ class App extends Component<Props, State> {
                       ' You have not yet created a profile.'}
                   </ReactTooltip>
                   <Toggle
-                    enabled={account.profileId}
+                    enabled={Boolean(account.profileId)}
                     on={account.availableForMentoring}
                     onClick={() => {
                       const newAvailable = !account.availableForMentoring
