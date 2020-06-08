@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { withRouter, type RouterHistory } from 'react-router-dom'
+import { withRouter, type RouterHistory, type Location } from 'react-router-dom'
 import { Beforeunload } from 'react-beforeunload'
 
 import AppScreen from './AppScreen'
@@ -36,10 +36,12 @@ class Browse extends Component<Props, State> {
   state = originalState
 
   async componentDidMount() {
-    const { history } = this.props
+    const { history, location } = this.props
 
-    if (window.location.state) {
-      this.loadProfilesFromHistory(window.location.state)
+    console.log({ location_state: location.state })
+
+    if (location.state) {
+      this.loadProfilesFromHistory(location.state)
       return
     }
 
@@ -58,6 +60,7 @@ class Browse extends Component<Props, State> {
       hospitalOptions: makeOptions(tags.hospital_affiliations),
       loading: false,
     }
+
     this.setState(loadedState)
     history.replace('/browse', this.state)
   }
@@ -253,7 +256,11 @@ class Browse extends Component<Props, State> {
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error(err)
-      this.setState({ error: 'Unable to load profiles. Try again later.' })
+      if (err.status === 401) {
+        this.setState({ error: 'You are not logged in. Please log in.' })
+      } else {
+        this.setState({ error: 'Unable to load profiles. Try again later.' })
+      }
       throw err
     }
   }
