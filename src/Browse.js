@@ -36,9 +36,16 @@ class Browse extends Component<Props, State> {
   state = originalState
 
   async componentDidMount() {
+    const { history } = this.props
+
+    if (window.location.state) {
+      this.loadProfilesFromHistory(window.location.state)
+      return
+    }
+
     const { tags, profiles } = await this.loadInitialData()
 
-    this.setState({
+    const loadedState = {
       results: profiles,
       searchableTags: makeOptions(
         [
@@ -50,16 +57,9 @@ class Browse extends Component<Props, State> {
       ),
       hospitalOptions: makeOptions(tags.hospital_affiliations),
       loading: false,
-    })
-  }
-
-  loadProfiles = async () => {
-    if (window.location.state) {
-      this.loadProfilesFromHistory(window.location.state)
-    } else {
-      const { page } = this.state
-      this.loadProfilesFromServer({ page })
     }
+    this.setState(loadedState)
+    history.replace('/browse', this.state)
   }
 
   onUnload = () => {
@@ -73,25 +73,6 @@ class Browse extends Component<Props, State> {
     this.setState(state, () => {
       window.scrollTo(0, state.scrollY)
     })
-  }
-
-  loadProfilesFromServer = async ({ page }) => {
-    const { history } = this.props
-    let results
-
-    try {
-      results = await getProfiles({ page })
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(err)
-      this.setState({ error: 'Unable to load profiles. Try again later.' })
-    }
-
-    this.setState({
-      results,
-      loading: false,
-    })
-    history.replace('/browse', this.state)
   }
 
   handleSearch = async () => {

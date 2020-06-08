@@ -1,3 +1,4 @@
+from flask import session
 import flask_login
 
 from server.views.api import UnauthorizedError
@@ -5,21 +6,19 @@ from server.views.api import UnauthorizedError
 from .models import VerificationToken
 
 
-class JSONLoginManager(flask_login.LoginManager):
-    """
-    All authenticated views are currently API views.
-
-    This could be extended to return an html error page if the request
-    is not accessing the API blueprint.
-    """
-
-    def unauthorized(self):
-        raise UnauthorizedError({"token": ["not set"]})
-
-
-login_manager = JSONLoginManager()
+login_manager = flask_login.LoginManager()
 
 
 @login_manager.user_loader
 def user_loader(token):
     return VerificationToken.query.filter_by(token=token).first()
+
+
+@login_manager.unauthorized_handler
+def unauthorized():
+    if "_id" in session:
+        flask_login.logout_user()
+
+        raise UnauthorizedError({"token": ["invalid"]})
+
+    raise UnauthorizedError({"token": ["not set"]})

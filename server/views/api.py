@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 import flask_login
 from cloudinary import uploader
-from flask import Blueprint, jsonify, make_response, request
+from flask import Blueprint, jsonify, make_response, request, session
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import and_, asc, desc, exists, func, text
@@ -79,6 +79,10 @@ class UnauthorizedError(UserError):
 
 class InvalidPayloadError(UserError):
     status_code = HTTPStatus.UNPROCESSABLE_ENTITY.value
+
+
+class LoginTimeoutError(UserError):
+    status_code = LOGIN_TIMEOUT_STATUS
 
 
 @api.errorhandler(UserError)
@@ -505,32 +509,45 @@ def login():
     return jsonify({"email": email})
 
 
-def get_token_from_cookie_or_parameters():
+def get_token_from_cookie_or_parameters() -> VerificationToken:
     """
     Once a user is logged in, they will be stored in the session cookie.
 
     On the first login, they will pass the token as a json parameter.
     """
-    session_token = flask_login.current_user
-
     token = request.json.get("token")
 
     if token is None:
-        if session_token.is_authenticated:
-            return session_token
-        raise UnauthorizedError({"token": ["not set"]})
+        session_token = flask_login.current_user
 
-    query = VerificationToken.query.filter(VerificationToken.token == token)
+        if "_id" in session:
+            flask_login.logout_user()
 
-    verification_token = query.one_or_none()
+            raise UnauthorizedError({"token": ["invalid"]})
 
-    if verification_token is None:
-        raise UnauthorizedError({"token": ["not recognized"]})
+        if session_token.is_anonymous:
+            raise UnauthorizedError({"token": ["not set"]})
 
-    if token_expired(verification_token):
-        raise UnauthorizedError(
-            {"token": ["expired"]}, status_code=LOGIN_TIMEOUT_STATUS
-        )
+        verification_token = session_token
+
+    else:
+        query = VerificationToken.query.filter(VerificationToken.token == token)
+
+        verification_token = query.one_or_none()
+
+        if verification_token is None:
+            raise UnauthorizedError({"token": ["not recognized"]})
+
+    if not verification_token.is_authenticated:
+        flask_login.logout_user()
+
+        if verification_token.logged_out:
+            raise UnauthorizedError({"token": ["logged out"]})
+
+        if token_expired(verification_token):
+            raise LoginTimeoutError({"token": ["expired"]})
+
+        raise UnauthorizedError({"token": ["unknown error"]})
 
     flask_login.login_user(verification_token)
 
@@ -540,16 +557,20 @@ def get_token_from_cookie_or_parameters():
     return verification_token
 
 
+def logout_other_tokens(verification_email, verification_token):
+    VerificationToken.query.filter(
+        VerificationToken.email_id == verification_email.id,
+        VerificationToken.token != verification_token.token,
+    ).update({VerificationToken.logged_out: True})
+
+
 @api.route("/verify-token", methods=["POST"])
 def verify_token():
     verification_token = get_token_from_cookie_or_parameters()
 
     verification_email = verification_token.email
 
-    VerificationToken.query.filter(
-        VerificationToken.email_id == verification_email.id,
-        VerificationToken.token != verification_token.token,
-    ).update({VerificationToken.logged_out: True})
+    logout_other_tokens(verification_email, verification_token)
 
     profile = get_profile_by_token(verification_token)
 
