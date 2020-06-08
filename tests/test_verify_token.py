@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
 from server.models import VerificationEmail, VerificationToken, save
-from server.views.api import LOGIN_TIMEOUT_STATUS
 
 from .utils import create_test_verification_token
 
@@ -20,8 +19,8 @@ def test_does_not_verify_logged_out_token(client):
     response = client.post(
         "/api/verify-token", json={"token": verification_token.token}
     )
-    assert response.status_code == LOGIN_TIMEOUT_STATUS
-    assert response.json == {"token": ["expired"]}
+    assert response.status_code == HTTPStatus.UNAUTHORIZED.value
+    assert response.json == {"token": ["logged out"]}
 
 
 def test_verify_valid_token(client):
