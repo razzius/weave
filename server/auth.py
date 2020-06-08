@@ -7,6 +7,7 @@ from .models import VerificationToken
 
 
 login_manager = flask_login.LoginManager()
+login_manager.session_protection = "strong"
 
 
 @login_manager.user_loader

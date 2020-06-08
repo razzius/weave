@@ -509,6 +509,30 @@ def login():
     return jsonify({"email": email})
 
 
+def validate_verification_token(verification_token):
+    if not verification_token.is_authenticated:
+        if "_id" in session:
+            log.info("_id in session but user not authenticated")
+
+            flask_login.logout_user()
+
+            raise UnauthorizedError({"token": ["invalid"]})
+
+        if verification_token.logged_out:
+            log.info("Token logged_out", token_id=verification_token.id)
+
+            flask_login.logout_user()
+
+            raise UnauthorizedError({"token": ["logged out"]})
+
+        if token_expired(verification_token):
+            flask_login.logout_user()
+
+            raise LoginTimeoutError({"token": ["expired"]})
+
+        raise UnauthorizedError({"token": ["unknown error"]})
+
+
 def get_token_from_cookie_or_parameters() -> VerificationToken:
     """
     Once a user is logged in, they will be stored in the session cookie.
@@ -520,12 +544,9 @@ def get_token_from_cookie_or_parameters() -> VerificationToken:
     if token is None:
         session_token = flask_login.current_user
 
-        if "_id" in session:
-            flask_login.logout_user()
-
-            raise UnauthorizedError({"token": ["invalid"]})
-
         if session_token.is_anonymous:
+            log.info("No POSTed token and no user")
+
             raise UnauthorizedError({"token": ["not set"]})
 
         verification_token = session_token
@@ -536,23 +557,17 @@ def get_token_from_cookie_or_parameters() -> VerificationToken:
         verification_token = query.one_or_none()
 
         if verification_token is None:
+            log.info("POST Token not recognized")
+
             raise UnauthorizedError({"token": ["not recognized"]})
 
-    if not verification_token.is_authenticated:
-        flask_login.logout_user()
-
-        if verification_token.logged_out:
-            raise UnauthorizedError({"token": ["logged out"]})
-
-        if token_expired(verification_token):
-            raise LoginTimeoutError({"token": ["expired"]})
-
-        raise UnauthorizedError({"token": ["unknown error"]})
-
-    flask_login.login_user(verification_token)
+    validate_verification_token(verification_token)
 
     verification_token.verified = True
     save(verification_token)
+
+    if flask_login.current_user.is_anonymous:
+        flask_login.login_user(verification_token)
 
     return verification_token
 
