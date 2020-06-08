@@ -37,6 +37,12 @@ def reset_db():
 
 
 @blueprint.cli.command()
+@click.argument("email")
+def create_admin(email):
+    save(VerificationEmail(email=email, is_admin=True, is_mentor=True))
+
+
+@blueprint.cli.command()
 def populate():
     CLOUDINARY_PREFIX = (
         "https://res.cloudinary.com/dxzddmun4/image/upload/c_crop,h_200,w_200"
