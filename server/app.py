@@ -34,13 +34,14 @@ def create_app():
     app.config["TOKEN_EXPIRY_AGE_HOURS"] = int(
         os.environ.get("REACT_APP_TOKEN_EXPIRY_AGE_HOURS", 1)
     )
-    app.config["SESSION_COOKIE_SAMESITE"] = "Strict"
 
     db.init_app(app)
     login_manager.init_app(app)
 
     if app.debug:
         CORS(app, supports_credentials=True)
+    else:
+        app.config["SESSION_COOKIE_SAMESITE"] = "Strict"
 
     SSLify(app)
 
