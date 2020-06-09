@@ -1,7 +1,6 @@
 // @flow
 import loggedOutNotification from './loggedOutNotification'
 import { availableForMentoringFromVerifyTokenResponse } from './utils'
-import settings from './settings'
 
 // -_-
 function addQueryString(url, params: Object) {
@@ -11,7 +10,7 @@ function addQueryString(url, params: Object) {
 }
 
 function buildURL(path: string, params: ?Object = null) {
-  const url = new URL(`${settings.serverUrl}/${path}`)
+  const url = new URL(`/${path}`, window.location.origin)
 
   if (params !== null) {
     addQueryString(url, params)
@@ -23,6 +22,10 @@ async function http(url, options = {}) {
   const optionsWithAuth = {
     ...options,
     credentials: 'include',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
   }
 
   const response = await fetch(url, optionsWithAuth)
@@ -48,9 +51,6 @@ async function get(path, params = null) {
 async function post(path: string, payload) {
   return http(buildURL(`api/${path}`), {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
     body: JSON.stringify(payload),
   })
 }
@@ -58,9 +58,6 @@ async function post(path: string, payload) {
 async function put(path: string, payload) {
   return http(buildURL(`api/${path}`), {
     method: 'PUT',
-    headers: {
-      'content-type': 'application/json',
-    },
     body: JSON.stringify(payload),
   })
 }
