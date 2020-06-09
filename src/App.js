@@ -54,7 +54,6 @@ class App extends Component<Props, State> {
 
   async componentDidMount() {
     if (window.location.pathname !== '/verify') {
-      // need error handling here...
       this.loadAccount()
     }
   }
