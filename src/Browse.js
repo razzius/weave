@@ -38,8 +38,6 @@ class Browse extends Component<Props, State> {
   async componentDidMount() {
     const { history, location } = this.props
 
-    console.log({ location_state: location.state })
-
     if (location.state) {
       this.loadProfilesFromHistory(location.state)
       return
