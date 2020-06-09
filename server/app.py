@@ -1,7 +1,6 @@
 import os
 
 from flask import Flask
-from flask_cors import CORS
 from flask_sslify import SSLify
 from .admin import init_admin
 from .emails import init_email
@@ -38,12 +37,10 @@ def create_app():
     db.init_app(app)
     login_manager.init_app(app)
 
-    if app.debug:
-        CORS(app, supports_credentials=True)
-    else:
+    if not app.debug:
         app.config["SESSION_COOKIE_SAMESITE"] = "Strict"
-
-    SSLify(app)
+        app.config["SESSION_COOKIE_SECURE"] = True
+        SSLify(app)
 
     init_admin(app)
     init_email(app)
