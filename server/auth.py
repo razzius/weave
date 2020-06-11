@@ -1,7 +1,6 @@
-from flask import session
 import flask_login
 
-from server.views.api import UnauthorizedError
+from server.views.api import UnauthorizedError, validate_verification_token
 
 from .models import VerificationToken
 
@@ -17,9 +16,8 @@ def user_loader(token):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    if "_id" in session:
-        flask_login.logout_user()
+    verification_token = flask_login.current_user
+    if verification_token.is_anonymous:
+        raise UnauthorizedError({"token": ["not set"]})
 
-        raise UnauthorizedError({"token": ["invalid"]})
-
-    raise UnauthorizedError({"token": ["not set"]})
+    validate_verification_token(verification_token)

@@ -4,7 +4,7 @@ from http import HTTPStatus
 
 import flask_login
 from cloudinary import uploader
-from flask import Blueprint, jsonify, make_response, request, session
+from flask import Blueprint, jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import and_, asc, desc, exists, func, text
@@ -510,19 +510,7 @@ def login():
 
 
 def validate_verification_token(verification_token):
-    if verification_token.verified:
-        log.warning("Token already verified", token_id=verification_token.id)
-
-        raise UnauthorizedError({"token": ["already verified"]})
-
     if not verification_token.is_authenticated:
-        if "_id" in session:
-            log.info("_id in session but user not authenticated")
-
-            flask_login.logout_user()
-
-            raise UnauthorizedError({"token": ["invalid"]})
-
         if verification_token.logged_out:
             log.info("Token logged_out", token_id=verification_token.id)
 
@@ -559,6 +547,11 @@ def get_token_from_parameters() -> VerificationToken:
         log.info("POST token not recognized")
 
         raise UnauthorizedError({"token": ["not recognized"]})
+
+    if verification_token.verified:
+        log.warning("Token already verified", token_id=verification_token.id)
+
+        raise UnauthorizedError({"token": ["already verified"]})
 
     validate_verification_token(verification_token)
 
@@ -619,6 +612,8 @@ def verify_token():
 @flask_login.login_required
 def account():
     verification_token = flask_login.current_user
+
+    validate_verification_token(verification_token)
 
     return render_verification_token_account(verification_token)
 
