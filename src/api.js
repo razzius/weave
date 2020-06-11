@@ -229,10 +229,19 @@ function accountResponseToAccount(response): Account {
   }
 }
 
-export async function getAccount(): Promise<Account> {
-  const response = await get('account')
+export async function getAccount(): Promise<Account | null> {
+  try {
+    const response = await get('account')
 
-  return accountResponseToAccount(response)
+    return accountResponseToAccount(response)
+  } catch (e) {
+    if (e.status === 440 && (await e.json()).token[0] === 'expired') {
+      loggedOutNotification()
+
+      window.location.pathname = '/login'
+    }
+    return null
+  }
 }
 
 export async function verifyToken(token?: ?string): Promise<Account> {
