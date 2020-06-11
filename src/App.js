@@ -33,8 +33,8 @@ import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
 import {
   logout,
+  getAccount,
   setAvailabilityForMentoring,
-  verifyToken,
   type Account,
 } from './api'
 
@@ -65,7 +65,7 @@ class App extends Component<Props, State> {
   loadAccount = async () => {
     const loaded = { loading: false }
     try {
-      const account = await verifyToken()
+      const account = await getAccount()
       this.setState({ account, error: false, ...loaded })
     } catch (error) {
       if (error.status === 401) {

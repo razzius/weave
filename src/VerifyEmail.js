@@ -1,12 +1,15 @@
 // @flow
-import React, { Component } from 'react'
+import React, { Component, type Node } from 'react'
+
+import { Link } from 'react-router-dom'
+
 import AppScreen from './AppScreen'
 import { getParam } from './utils'
 import { verifyToken } from './api'
 import VerifiedView from './VerifiedView'
 
 type Props = Object
-type State = {| error: string | null |}
+type State = {| error: string | Node | null |}
 
 export default class VerifyEmail extends Component<Props, State> {
   state = {
@@ -49,6 +52,20 @@ export default class VerifyEmail extends Component<Props, State> {
       if (errorMessage === 'not recognized') {
         this.setState({
           error: 'Your token is invalid. Try signing up or logging in again.',
+        })
+      } else if (errorMessage === 'already verified') {
+        this.setState({
+          error: (
+            <div>
+              <p>
+                The token you have provided has already been used. For your
+                security, each token is only valid for one login.
+              </p>
+              <p>
+                <Link to="/login">Log in</Link> again for a new token.
+              </p>
+            </div>
+          ),
         })
       } else if (errorMessage === 'expired') {
         this.setState({

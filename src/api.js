@@ -216,9 +216,7 @@ export type Account = {|
   +availableForMentoring: boolean,
 |}
 
-export async function verifyToken(token?: ?string): Promise<Account> {
-  const response = await post('verify-token', { token })
-
+function accountResponseToAccount(response): Account {
   return {
     isMentor: response.is_mentor,
     isAdmin: response.is_admin,
@@ -229,6 +227,18 @@ export async function verifyToken(token?: ?string): Promise<Account> {
       response
     ),
   }
+}
+
+export async function getAccount(): Promise<Account> {
+  const response = await get('account')
+
+  return accountResponseToAccount(response)
+}
+
+export async function verifyToken(token?: ?string): Promise<Account> {
+  const response = await post('verify-token', { token })
+
+  return accountResponseToAccount(response)
 }
 
 export async function logout() {

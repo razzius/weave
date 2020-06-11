@@ -510,6 +510,11 @@ def login():
 
 
 def validate_verification_token(verification_token):
+    if verification_token.verified:
+        log.warning("Token already verified", token_id=verification_token.id)
+
+        raise UnauthorizedError({"token": ["already verified"]})
+
     if not verification_token.is_authenticated:
         if "_id" in session:
             log.info("_id in session but user not authenticated")
@@ -533,7 +538,7 @@ def validate_verification_token(verification_token):
         raise UnauthorizedError({"token": ["unknown error"]})
 
 
-def get_token_from_cookie_or_parameters() -> VerificationToken:
+def get_token_from_parameters() -> VerificationToken:
     """
     Once a user is logged in, they will be stored in the session cookie.
 
@@ -542,24 +547,18 @@ def get_token_from_cookie_or_parameters() -> VerificationToken:
     token = request.json.get("token")
 
     if token is None:
-        session_token = flask_login.current_user
+        log.info("POST token not set")
 
-        if session_token.is_anonymous:
-            log.info("No POSTed token and no user")
+        raise UnauthorizedError({"token": ["not set"]})
 
-            raise UnauthorizedError({"token": ["not set"]})
+    query = VerificationToken.query.filter(VerificationToken.token == token)
 
-        verification_token = session_token
+    verification_token = query.one_or_none()
 
-    else:
-        query = VerificationToken.query.filter(VerificationToken.token == token)
+    if verification_token is None:
+        log.info("POST token not recognized")
 
-        verification_token = query.one_or_none()
-
-        if verification_token is None:
-            log.info("POST Token not recognized")
-
-            raise UnauthorizedError({"token": ["not recognized"]})
+        raise UnauthorizedError({"token": ["not recognized"]})
 
     validate_verification_token(verification_token)
 
@@ -579,13 +578,8 @@ def logout_other_tokens(verification_email, verification_token):
     ).update({VerificationToken.logged_out: True})
 
 
-@api.route("/verify-token", methods=["POST"])
-def verify_token():
-    verification_token = get_token_from_cookie_or_parameters()
-
+def render_verification_token_account(verification_token):
     verification_email = verification_token.email
-
-    logout_other_tokens(verification_email, verification_token)
 
     profile = get_profile_by_token(verification_token)
 
@@ -593,10 +587,6 @@ def verify_token():
 
     available_for_mentoring = (
         profile.available_for_mentoring if profile is not None else None
-    )
-
-    log.info(
-        "Logged in", email=verification_email.email, token_id=verification_token.id
     )
 
     return jsonify(
@@ -608,6 +598,29 @@ def verify_token():
             "available_for_mentoring": available_for_mentoring,
         }
     )
+
+
+@api.route("/verify-token", methods=["POST"])
+def verify_token():
+    verification_token = get_token_from_parameters()
+
+    verification_email = verification_token.email
+
+    logout_other_tokens(verification_email, verification_token)
+
+    log.info(
+        "Logged in", email=verification_email.email, token_id=verification_token.id
+    )
+
+    return render_verification_token_account(verification_token)
+
+
+@api.route("/account")
+@flask_login.login_required
+def account():
+    verification_token = flask_login.current_user
+
+    return render_verification_token_account(verification_token)
 
 
 @api.route("/logout", methods=["POST"])
