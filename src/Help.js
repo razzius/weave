@@ -102,6 +102,15 @@ const Help = () => (
       students.
     </p>
 
+    <h3 id="how-do-i-create-a-profile">How do I create a profile?</h3>
+    <iframe
+      className="video"
+      src="https://www.youtube.com/embed/6nAUk502ycA?modestbranding=1&rel=0"
+      title="Weave tutorial video: How to create a mentorship profile"
+      allow="encrypted-media"
+      allowFullScreen
+    />
+
     <h3 id="how-do-i-create-my-own-tags">How do I create my own tags?</h3>
     <p>
       We recognize that our default lists will not allow every faculty member to
