@@ -1,8 +1,9 @@
 // @flow
 import React from 'react'
 
-import Button from './Button'
+import { Link } from 'react-router-dom'
 
+import Button from './Button'
 import { type Account } from './api'
 
 function getFacultyLink(profileId) {
@@ -35,6 +36,9 @@ const FacultyLanding = ({
         <Button to="/browse">Browse all profiles</Button>
       </div>
     )}
+    <p>
+      <Link to="/help#create-profile">Read how to create a profile</Link>
+    </p>
   </div>
 )
 
@@ -62,7 +66,19 @@ export default ({
     return (
       <div>
         <h1>Students</h1>
-        <Button to="/browse">Browse all profiles</Button>
+        <Button to="/browse">View Faculty Mentor Profiles</Button>
+        <hr />
+        <div>
+          <Button to="/peer-mentorship">View Student Mentor Profiles</Button>
+        </div>
+        <div>
+          <Button to="/create-profile">Create Student Mentor Profile</Button>
+        </div>
+        <p>
+          <Link to="/help#how-do-i-create-a-profile">
+            Read how to create a profile
+          </Link>
+        </p>
       </div>
     )
   }
