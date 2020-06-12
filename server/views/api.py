@@ -77,6 +77,10 @@ class UnauthorizedError(UserError):
     status_code = HTTPStatus.UNAUTHORIZED.value
 
 
+class ForbiddenError(UserError):
+    status_code = HTTPStatus.FORBIDDEN.value
+
+
 class InvalidPayloadError(UserError):
     status_code = HTTPStatus.UNPROCESSABLE_ENTITY.value
 
@@ -92,27 +96,16 @@ def handle_user_error(e):
     return jsonify(invalid_data), status_code
 
 
-@api.route("/profiles")
-@flask_login.login_required
-def get_profiles():
-    verification_token = flask_login.current_user
+def get_faculty_profiles(verification_email):
+    pass
 
-    query = request.args.get("query", "")
-    tags = request.args.get("tags", "")
-    degrees = request.args.get("degrees", "")
-    affiliations = request.args.get("affiliations", "")
 
+def render_matching_profiles(profiles_queryset, verification_email_id):
     page = int(request.args.get("page", 1))
 
     sorting = request.args.get("sorting", "starred")
 
     start, end = paginate(page)
-
-    verification_email_id = verification_token.email_id
-
-    profiles_queryset = matching_profiles(
-        query, tags, degrees, affiliations, verification_email_id=verification_email_id
-    )
 
     def get_ordering(sorting):
         last_name_sorting = func.split_part(
@@ -154,6 +147,64 @@ def get_profiles():
             "profiles": profiles_schema.dump(profiles_with_stars),
         }
     )
+
+
+@api.route("/profiles")
+@flask_login.login_required
+def get_profiles():
+    verification_token = flask_login.current_user
+
+    query = request.args.get("query", "")
+    tags = request.args.get("tags", "")
+    degrees = request.args.get("degrees", "")
+    affiliations = request.args.get("affiliations", "")
+
+    verification_email_id = verification_token.email_id
+
+    profiles_queryset = (
+        matching_profiles(
+            query,
+            tags,
+            degrees,
+            affiliations,
+            verification_email_id=verification_email_id,
+        )
+        .join(VerificationEmail, Profile.verification_email_id == VerificationEmail.id)
+        .filter(VerificationEmail.is_mentor.is_(True))
+    )
+
+    return render_matching_profiles(profiles_queryset, verification_email_id)
+
+
+@api.route("/peer-profiles")
+@flask_login.login_required
+def peer_profiles():
+    verification_token = flask_login.current_user
+
+    if verification_token.email.is_mentor:
+        raise ForbiddenError(
+            {"error": ["Peer to peer mentorship is only available for students"]}
+        )
+
+    query = request.args.get("query", "")
+    tags = request.args.get("tags", "")
+    degrees = request.args.get("degrees", "")
+    affiliations = request.args.get("affiliations", "")
+
+    verification_email_id = verification_token.email_id
+
+    profiles_queryset = (
+        matching_profiles(
+            query,
+            tags,
+            degrees,
+            affiliations,
+            verification_email_id=verification_email_id,
+        )
+        .join(VerificationEmail, Profile.verification_email_id == VerificationEmail.id)
+        .filter(VerificationEmail.is_mentor.is_(False))
+    )
+    return render_matching_profiles(profiles_queryset, verification_email_id)
 
 
 @api.route("/profile-tags")

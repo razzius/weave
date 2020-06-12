@@ -11,7 +11,7 @@ import 'react-toggle-switch/dist/css/switch.min.css'
 import 'blueimp-canvas-to-blob'
 
 import './App.css'
-import Browse from './Browse'
+import BrowseFaculty from './BrowseFaculty'
 import CreateProfile from './CreateProfile'
 import EditProfile from './EditProfile'
 import Expectations from './Expectations'
@@ -23,6 +23,7 @@ import Logout from './Logout'
 import MenteeExpectations from './MenteeExpectations'
 import MentorExpectations from './MentorExpectations'
 import NotLoggedIn from './NotLoggedIn'
+import BrowsePeerMentorship from './BrowsePeerMentorship'
 import About from './About'
 import Profile from './Profile'
 import Resources from './Resources'
@@ -275,7 +276,8 @@ class App extends Component<Props, State> {
                 />
               )}
             />
-            <Route path="/browse" component={Browse} />
+            <Route path="/browse" component={BrowseFaculty} />
+            <Route path="/peer-mentorship" component={BrowsePeerMentorship} />
             <Route
               path="/login"
               render={({ history }) => <Login history={history} />}
