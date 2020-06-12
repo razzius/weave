@@ -58,11 +58,11 @@ export default class VerifyEmail extends Component<Props, State> {
           error: (
             <div>
               <p>
-                The token you have provided has already been used. For your
-                security, each token is only valid for one login.
+                The email verification link you have provided has already been
+                used. For your security, each link is only valid for one login.
               </p>
               <p>
-                <Link to="/login">Log in</Link> again for a new token.
+                <Link to="/login">Log in</Link> again for a new link.
               </p>
             </div>
           ),
