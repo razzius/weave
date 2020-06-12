@@ -402,12 +402,14 @@ iframe.video {
 }
 
 .error {
-  margin: 1em 0;
-  padding: 1em;
   background: #ffff0095;
+}
+.welcome {
+  background: lightgreen;
 }
 .banner {
   margin: 0;
+  padding: 1em;
   text-align: center;
 }
 
