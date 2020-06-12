@@ -6,13 +6,14 @@ import { Beforeunload } from 'react-beforeunload'
 import AppScreen from './AppScreen'
 import ResultsView from './ResultsView'
 import SearchInput from './SearchInput'
-import { getProfiles, getSearchTags } from './api'
+import { getSearchTags } from './api'
 import { makeOptions } from './options'
 import { partition } from './utils'
 
 type Props = {|
   location: Location,
   history: RouterHistory,
+  getProfiles: Function,
 |}
 type State = Object
 
@@ -60,7 +61,7 @@ class Browse extends Component<Props, State> {
     }
 
     this.setState(loadedState)
-    history.replace('/browse', this.state)
+    history.replace(window.location.pathname, this.state)
   }
 
   onUnload = () => {
@@ -77,7 +78,7 @@ class Browse extends Component<Props, State> {
   }
 
   handleSearch = async () => {
-    const { history } = this.props
+    const { history, getProfiles } = this.props
 
     this.setState({ loading: true })
 
@@ -133,7 +134,7 @@ class Browse extends Component<Props, State> {
         sorting !== originalState.sorting
       this.setState({ results: newResults, loading: false, queried })
     }
-    history.replace('/browse', this.state)
+    history.replace(window.location.pathname, this.state)
   }
 
   handleChange = tags => {
@@ -245,6 +246,7 @@ class Browse extends Component<Props, State> {
   }
 
   loadInitialData = async (): Promise<{ tags: Object, profiles: Object }> => {
+    const { getProfiles } = this.props
     const { page } = this.state
     try {
       const tags = getSearchTags()

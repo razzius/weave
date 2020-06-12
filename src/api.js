@@ -128,6 +128,36 @@ export async function getProfiles({
   }
 }
 
+export async function getPeerProfiles({
+  query = '',
+  tags = [],
+  degrees = [],
+  affiliations = [],
+  page = 1,
+  sorting = 'starred',
+}: {
+  query?: string,
+  tags?: Array<string>,
+  degrees?: Array<string>,
+  affiliations?: Array<string>,
+  page: number,
+  sorting?: string,
+}) {
+  const params = {
+    page,
+    query,
+    tags,
+    degrees,
+    affiliations,
+    sorting,
+  }
+  const results = await get('peer-profiles', params)
+
+  return {
+    ...results,
+    profiles: results.profiles.map(payloadToProfile),
+  }
+}
 export async function getProfile(id: string): Profile {
   const profile = await get(`profiles/${id}`)
   return payloadToProfile(profile)
