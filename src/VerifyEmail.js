@@ -1,12 +1,12 @@
 // @flow
 import React, { Component, type Node } from 'react'
 
+import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
 import { getParam } from './utils'
 import { verifyToken } from './api'
-import VerifiedView from './VerifiedView'
 
 type Props = Object
 type State = {| error: string | Node | null |}
@@ -78,7 +78,7 @@ export default class VerifyEmail extends Component<Props, State> {
   render() {
     const { error } = this.state
 
-    const { authenticate, account, history, token } = this.props
+    const { account } = this.props
 
     const errorView = error !== null ? <p>{error}</p> : null
 
@@ -86,14 +86,7 @@ export default class VerifyEmail extends Component<Props, State> {
       <AppScreen>
         <h1>Confirm email verification</h1>
         {errorView}
-        {account && (
-          <VerifiedView
-            account={account}
-            authenticate={authenticate}
-            history={history}
-            token={token}
-          />
-        )}
+        {account && <Redirect to="/?welcome" />}
       </AppScreen>
     )
   }
