@@ -78,6 +78,9 @@ section {
   margin-right: auto;
   text-align: center;
 }
+.App-intro hr {
+  width: 230px;
+}
 .App-header {
   border-bottom: 3px solid #9c2b1c;
   background: #9c2b1c;
