@@ -93,6 +93,7 @@ $ export DATABASE_URL='postgresql:///weave'
 $ pipenv run python -m server.scripts.resetdb
 ```
 
+
 ### Run the app in development mode
 
 In development mode, there is both a `python` process to serve the API and a `node` server process to serve the frontend.
