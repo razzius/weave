@@ -93,6 +93,15 @@ $ export DATABASE_URL='postgresql:///weave'
 $ pipenv run python -m server.scripts.resetdb
 ```
 
+### Running Python test
+
+```sh
+
+pipenv run test
+#Run a command in virtual Environment without
+#keyword pip and virtualenv
+
+
 
 ### Run the app in development mode
 
