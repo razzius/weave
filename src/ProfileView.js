@@ -16,18 +16,25 @@ const Buttons = ({
   editing,
   location,
   adminButton,
+  isFaculty,
 }: {
   ownProfile: boolean,
   firstTimePublish: boolean,
   editing: boolean,
   location: Object,
   adminButton: Node | null,
+  isFaculty: boolean,
 }) => (
   <Fragment>
     {ownProfile && <Button to="/edit-profile">Edit Profile</Button>}
     {adminButton}
     {!firstTimePublish && !editing && (
-      <Button to={{ pathname: '/browse', state: location.state }}>
+      <Button
+        to={{
+          pathname: isFaculty ? '/browse' : '/peer-mentorship',
+          state: location.state,
+        }}
+      >
         Back to list
       </Button>
     )}
@@ -55,6 +62,8 @@ const ExpectationDisplay = ({
 
 export type BaseProfileData = {|
   id?: ?string,
+  isFaculty?: boolean,
+
   name: string,
   contactEmail: string,
   imageUrl: ?string,
@@ -259,6 +268,7 @@ const ProfileView = ({
       editing={editing}
       location={location}
       adminButton={adminButton}
+      isFaculty={Boolean(data.isFaculty)}
     />
   )
   const avatar = (

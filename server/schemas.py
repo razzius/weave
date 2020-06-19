@@ -44,6 +44,8 @@ class ProfileSchema(Schema):
     # This is assigned to profiles by mutation. TODO find a better way
     starred = fields.Boolean(dump_only=True)
 
+    is_faculty = fields.Boolean(dump_only=True)
+
 
 PROJECT_ROOT = pathlib.Path(__file__).parent.parent
 VALID_DOMAINS = json.load(open(PROJECT_ROOT / "src" / "valid_domains.json"))
