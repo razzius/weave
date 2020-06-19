@@ -42,8 +42,8 @@ EMAIL_CLOSING = """
 """
 
 
-def get_verification_url(token):
-    return f"{CLIENT_URL}/verify?token={token}"
+def get_verification_url(token: VerificationToken):
+    return f"{CLIENT_URL}/verify?token={token.token}"
 
 
 def self_link(href):
