@@ -3,8 +3,10 @@ from datetime import datetime
 from typing import Any
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declared_attr
+from sqlalchemy.orm import relationship
+
+from server.session import token_expired
 
 
 db: Any = SQLAlchemy(engine_options={"pool_pre_ping": True})
@@ -179,8 +181,8 @@ class ProfileStar(db.Model):
     to_profile = relationship(Profile)
 
 
-class VerificationToken(db.Model):
-    token = db.Column(db.String(36), primary_key=True)
+class VerificationToken(db.Model, IDMixin):
+    token = db.Column(db.String(36), unique=True)
     email_id = db.Column(
         db.Integer, db.ForeignKey(VerificationEmail.id), nullable=False
     )
@@ -188,8 +190,23 @@ class VerificationToken(db.Model):
     date_created = db.Column(db.DateTime, nullable=False, default=default_now)
     verified = db.Column(db.Boolean, default=False)
 
-    expired = db.Column(db.Boolean, default=False)
+    logged_out = db.Column(db.Boolean, default=False)
 
     email_log = db.Column(db.Text)
 
     is_personal_device = db.Column(db.Boolean)
+
+    def get_id(self):
+        return self.token
+
+    @property
+    def is_active(self):
+        return self.is_authenticated
+
+    @property
+    def is_authenticated(self):
+        return not self.logged_out and not token_expired(self)
+
+    @property
+    def is_anonymous(self):
+        return False

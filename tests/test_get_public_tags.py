@@ -16,17 +16,17 @@ def test_get_public_tags_needs_authorization(client):
     assert response.status_code == HTTPStatus.UNAUTHORIZED.value
 
 
-def test_get_empty_public_tags(client):
+def test_get_empty_public_tags(client, auth):
     token = "1234"
-    verification_email = VerificationEmail(email="test@test.com")
-    save(verification_email)
+    verification_email = save(VerificationEmail(email="test@test.com"))
 
-    verification_token = VerificationToken(token=token, email_id=verification_email.id)
-    save(verification_token)
-
-    response = client.get(
-        "/api/search-tags", headers={"Authorization": f"Token {token}"}
+    verification_token = save(
+        VerificationToken(token=token, email_id=verification_email.id)
     )
+
+    auth.login(verification_token.token)
+
+    response = client.get("/api/search-tags")
 
     assert response.status_code == HTTPStatus.OK.value
 
@@ -42,7 +42,7 @@ def test_get_empty_public_tags(client):
     }
 
 
-def test_get_public_tags(client):
+def test_get_public_tags(client, auth):
     token = "1234"
     verification_email = save(VerificationEmail(email="test@test.com"))
 
@@ -61,9 +61,9 @@ def test_get_public_tags(client):
 
     save(ProfileActivity(profile=profile, tag=activity_option))
 
-    response = client.get(
-        "/api/search-tags", headers={"Authorization": f"Token {token}"}
-    )
+    auth.login(token)
+
+    response = client.get("/api/search-tags")
 
     assert response.status_code == HTTPStatus.OK.value
 

@@ -15,7 +15,7 @@ MOCK_DATE = datetime.datetime(2019, 12, 18, tzinfo=datetime.timezone.utc)
 
 
 @freeze_time(MOCK_DATE)
-def test_create_profile_with_custom_tag(client):
+def test_create_profile_with_custom_tag(client, auth):
     token = "1234"
 
     name = "New User"
@@ -45,9 +45,9 @@ def test_create_profile_with_custom_tag(client):
         "cadence": "monthly",
     }
 
-    response = client.post(
-        "/api/profile", json=profile, headers={"Authorization": f"Token {token}"}
-    )
+    auth.login(token)
+
+    response = client.post("/api/profile", json=profile)
 
     assert response.status_code == http.HTTPStatus.CREATED.value
 

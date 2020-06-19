@@ -43,8 +43,7 @@ function displayError({ name, email }: { name: string, email: string }) {
 type Props = {
   loadInitial?: any => void,
   // TODO profileId is passed in updateProfile but not in createProfile. Can't seem to get types to support this without `any`
-  saveProfile: (token: string, profile: Profile, profileId: any) => Object,
-  token: string,
+  saveProfile: (profile: Profile, profileId: any) => Object,
   profileId?: string,
   setProfileId: ?Function,
   history: RouterHistory,
@@ -139,11 +138,11 @@ export default class ProfileForm extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    const { loadInitial, token } = this.props
+    const { loadInitial } = this.props
 
     const initialData = loadInitial ? await loadInitial() : {}
 
-    const { tags } = await getProfileTags(token)
+    const { tags } = await getProfileTags()
 
     this.setState({
       ...initialData,
@@ -208,7 +207,7 @@ export default class ProfileForm extends Component<Props, State> {
   }
 
   submit = async () => {
-    const { saveProfile, token, profileId, setProfileId, history } = this.props
+    const { saveProfile, profileId, setProfileId, history } = this.props
     const { cadence } = this.state
 
     await when(
@@ -224,7 +223,7 @@ export default class ProfileForm extends Component<Props, State> {
         })
     )
 
-    const profile = await saveProfile(token, this.state, profileId)
+    const profile = await saveProfile(this.state, profileId)
 
     if (setProfileId) {
       setProfileId(profile.id)
@@ -249,8 +248,6 @@ export default class ProfileForm extends Component<Props, State> {
   }
 
   saveImage = () => {
-    const { token } = this.props
-
     this.setState({ uploadingImage: true })
 
     const canvas = this.editor.getImage()
@@ -260,7 +257,7 @@ export default class ProfileForm extends Component<Props, State> {
     return new Promise(resolve => {
       scaled.toBlob(
         (async blob => {
-          const response = await uploadPicture(token, blob)
+          const response = await uploadPicture(blob)
 
           this.setState(
             {
@@ -333,7 +330,7 @@ export default class ProfileForm extends Component<Props, State> {
       imageEdited,
     } = this.state
 
-    const { firstTimePublish, token } = this.props
+    const { firstTimePublish } = this.props
 
     if (preview) {
       return (
@@ -361,7 +358,6 @@ export default class ProfileForm extends Component<Props, State> {
           firstTimePublish={firstTimePublish}
           onEdit={this.unsetPreview}
           onPublish={this.submit}
-          token={token}
         />
       )
     }

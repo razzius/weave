@@ -1,13 +1,15 @@
 // @flow
-import React, { Component } from 'react'
+import React, { Component, type Node } from 'react'
+
+import { Link } from 'react-router-dom'
+
 import AppScreen from './AppScreen'
 import { getParam } from './utils'
-import { saveToken } from './persistence'
 import { verifyToken } from './api'
 import VerifiedView from './VerifiedView'
 
 type Props = Object
-type State = {| error: string | null |}
+type State = {| error: string | Node | null |}
 
 export default class VerifyEmail extends Component<Props, State> {
   state = {
@@ -28,14 +30,9 @@ export default class VerifyEmail extends Component<Props, State> {
     try {
       const account = await verifyToken(token)
 
-      saveToken(token)
-
-      authenticate({
-        token,
-        account,
-      })
-    } catch (err) {
-      if (err.message === 'Failed to fetch') {
+      authenticate({ account })
+    } catch (error) {
+      if (error.message === 'Failed to fetch') {
         this.setState({
           error:
             'There was a problem with our server. Please try again in a moment.',
@@ -43,10 +40,32 @@ export default class VerifyEmail extends Component<Props, State> {
         return
       }
 
-      const errorMessage = err.token[0]
+      const errorJson = await error.json()
+
+      if (!Array.isArray(errorJson.token)) {
+        this.setState({
+          error: `Unknown error: ${errorJson.message}`,
+        })
+        return
+      }
+      const errorMessage = errorJson.token[0]
       if (errorMessage === 'not recognized') {
         this.setState({
           error: 'Your token is invalid. Try signing up or logging in again.',
+        })
+      } else if (errorMessage === 'already verified') {
+        this.setState({
+          error: (
+            <div>
+              <p>
+                The email verification link you have provided has already been
+                used. For your security, each link is only valid for one login.
+              </p>
+              <p>
+                <Link to="/login">Log in</Link> again for a new link.
+              </p>
+            </div>
+          ),
         })
       } else if (errorMessage === 'expired') {
         this.setState({

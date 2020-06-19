@@ -12,6 +12,8 @@ PG_VERSION = 12.2
 
 TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "postgresql:///weave_test")
 
+os.environ["FLASK_ENV"] = "development"
+
 
 @pytest.fixture(scope="session")
 def database():
@@ -65,3 +67,19 @@ def _db(database, app):
 @pytest.fixture
 def client(app, _db):
     return app.test_client()
+
+
+class AuthActions:
+    def __init__(self, client):
+        self.client = client
+
+    def login(self, token: str):
+        assert (
+            self.client.post("/api/verify-token", json={"token": token}).status_code
+            == 200
+        )
+
+
+@pytest.fixture
+def auth(client):
+    return AuthActions(client)

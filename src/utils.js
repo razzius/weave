@@ -30,8 +30,10 @@ export function caseInsensitiveFind(
   return values.find(value => value.toLowerCase() === lowercaseSearch)
 }
 
-export function availableForMentoringFromVerifyTokenResponse(response: Object) {
-  return response.profile_id === null ? true : response.available_for_mentoring
+export function availableForMentoringFromVerifyTokenResponse(
+  response: Object
+): boolean {
+  return response.profile_id !== null && response.available_for_mentoring
 }
 
 export const ExternalLink = ({
@@ -76,23 +78,4 @@ export function arrayCaseInsensitiveContains(
   value: string
 ) {
   return array.map(item => item.toLowerCase()).includes(value.toLowerCase())
-}
-
-export function delay(ms: number) {
-  return new Promise(resolve => {
-    setTimeout(resolve, ms)
-  })
-}
-
-export async function retry(callback: Function, options: Object) {
-  try {
-    await callback()
-  } catch (e) {
-    if (options.times === 0) {
-      throw e
-    }
-    options.onError()
-    await delay(options.delay)
-    retry(callback, { ...options, times: options.times - 1 })
-  }
 }

@@ -4,7 +4,6 @@ import { Redirect } from 'react-router'
 
 import AppScreen from './AppScreen'
 import { getProfile, type Account } from './api'
-import { clearToken } from './persistence'
 import ProfileView, { type BaseProfileData } from './ProfileView'
 
 type ProfileData = {|
@@ -21,13 +20,13 @@ type ClientError =
   | {
       token: Array<string>,
     }
+  | string
 
 function errorView(error: string | ClientError) {
   if (typeof error === 'string') {
     return error
   }
   if (error.token instanceof Array && error.token[0] === 'unknown token') {
-    clearToken()
     return <Redirect to="/login" />
   }
   if (
@@ -48,7 +47,6 @@ type State = {
 
 type Props = {
   account: Account | null,
-  token: string | null,
   match: {
     params: {
       [key: string]: ?string,
@@ -64,18 +62,17 @@ export default class Profile extends Component<Props, State> {
 
   async componentDidMount() {
     const {
-      token,
       match: {
         params: { id },
       },
     } = this.props
 
-    if (token === null || id == null) {
+    if (id == null) {
       return
     }
 
     try {
-      const data = await getProfile(token, id)
+      const data = await getProfile(id)
 
       const profile = {
         ...data,
@@ -83,14 +80,27 @@ export default class Profile extends Component<Props, State> {
       }
       this.setState({ profile })
     } catch (error) {
-      this.setState({ error })
+      if (error.message === 'Failed to fetch') {
+        this.setState({
+          error:
+            'There was a problem with our server. Please try again in a moment.',
+        })
+        return
+      }
+
+      if (error.status === 401) {
+        this.setState({ error: 'You are not logged in. Please log in.' })
+        return
+      }
+
+      const errorJson = await error.json()
+      this.setState({ error: errorJson })
     }
   }
 
   render() {
     const {
       account,
-      token,
       match: {
         params: { id },
       },
@@ -104,10 +114,6 @@ export default class Profile extends Component<Props, State> {
 
     if (error !== null) {
       return errorView(error)
-    }
-
-    if (token === null) {
-      return 'You are not logged in. Please log in.'
     }
 
     if (account === null) {
@@ -133,7 +139,6 @@ export default class Profile extends Component<Props, State> {
           data={baseProfileData}
           profileId={id}
           dateUpdated={dateUpdated}
-          token={token}
           starred={starred}
         />
       </AppScreen>

@@ -229,7 +229,6 @@ const ProfileView = ({
   location,
   profileId,
   dateUpdated,
-  token,
   starred,
   history,
 }: {
@@ -241,7 +240,6 @@ const ProfileView = ({
   location: Object,
   profileId?: ?string,
   dateUpdated?: Date,
-  token: string,
   starred?: ?boolean,
   history: RouterHistory,
 }) => {
@@ -323,9 +321,9 @@ const ProfileView = ({
                       const newStarred = !starredState
                       setStarred(newStarred)
                       if (newStarred) {
-                        starProfile(token, profileId)
+                        starProfile(profileId)
                       } else {
-                        unstarProfile(token, profileId)
+                        unstarProfile(profileId)
                       }
                       history.replace(location.pathname, null)
                     }}

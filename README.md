@@ -125,6 +125,18 @@ $ export SECRET_KEY='secret'
 $ open http://localhost:5000/admin
 ```
 
+### Creating a user session for any domain
+
+If, in development, you do not have an account on an authorized domain, you can use the `create-session` script to create a login link for yourself. Usage:
+
+```sh
+$ pipenv run flask create-session you@domain.com
+Loading .env environment variables…
+http://weave.localhost:3000/verify?token=...
+```
+
+This only works if the email is already registered. To create an account for yourself, manually add a Verification Email in the admin.
+
 ### Building the frontend for production
 
 ```sh

@@ -34,7 +34,7 @@
     "react-select": "^3.0.5",
     "react-slick": "^0.23.1",
     "react-toggle-switch": "^3.0.4",
-    "react-tooltip": "^3.6.1",
+    "react-tooltip": "^4.2.6",
     "react-waypoint": "^8.1.0",
     "slick-carousel": "^1.8.1",
     "url-polyfill": "^1.1.0",
@@ -69,5 +69,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:5000"
 }

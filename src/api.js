@@ -1,71 +1,63 @@
 // @flow
-import { clearToken, loggedOutNotification } from './persistence'
+import loggedOutNotification from './loggedOutNotification'
 import { availableForMentoringFromVerifyTokenResponse } from './utils'
-import settings from './settings'
 
 // -_-
-function addQueryString(url, params) {
+function addQueryString(url, params: Object) {
   return Object.keys(params).forEach(key => {
     url.searchParams.append(key, String(params[key]))
   })
 }
 
-function buildURL(path, params = null) {
-  const url = new URL(`${settings.serverUrl}/${path}`)
-  if (params) {
+function buildURL(path: string, params: ?Object = null) {
+  const url = new URL(`/${path}`, window.location.origin)
+
+  if (params !== null) {
     addQueryString(url, params)
   }
   return url
 }
 
-async function http(token, url, options = {}) {
-  const existingHeaders = options.headers || {}
-  const authHeaders = token
-    ? { Authorization: `Token ${token}`, ...existingHeaders }
-    : existingHeaders
-
+async function http(url, options = {}) {
   const optionsWithAuth = {
     ...options,
-    headers: authHeaders,
+    credentials: 'include',
+    headers: {
+      accept: 'application/json',
+      'content-type': 'application/json',
+    },
   }
 
   const response = await fetch(url, optionsWithAuth)
 
   if (response.status === 440) {
-    clearToken()
     loggedOutNotification()
     window.location.pathname = '/login'
   }
 
   if (!response.ok) {
-    throw await response.json()
+    throw response
   }
 
   return response.json()
 }
 
-async function get(token, path, params = null) {
+async function get(path, params = null) {
   const url = buildURL(`api/${path}`, params)
 
-  return http(token, url)
+  return http(url)
 }
 
-async function post(token, path, payload) {
-  return http(token, buildURL(`api/${path}`), {
+async function post(path: string, payload) {
+  return http(buildURL(`api/${path}`), {
     method: 'POST',
-    headers: {
-      'content-type': 'application/json',
-    },
     body: JSON.stringify(payload),
   })
 }
 
-async function put(token, path, payload) {
-  return http(token, buildURL(`api/${path}`), {
+async function put(path: string, payload) {
+  return http(buildURL(`api/${path}`), {
     method: 'PUT',
-    headers: {
-      'content-type': 'application/json',
-    },
     body: JSON.stringify(payload),
   })
 }
@@ -106,7 +98,6 @@ function payloadToProfile(payload: ProfilePayload): Profile {
 }
 
 export async function getProfiles({
-  token,
   query = '',
   tags = [],
   degrees = [],
@@ -114,7 +105,6 @@ export async function getProfiles({
   page = 1,
   sorting = 'starred',
 }: {
-  token: string,
   query?: string,
   tags?: Array<string>,
   degrees?: Array<string>,
@@ -130,7 +120,7 @@ export async function getProfiles({
     affiliations,
     sorting,
   }
-  const results = await get(token, 'profiles', params)
+  const results = await get('profiles', params)
 
   return {
     ...results,
@@ -138,8 +128,8 @@ export async function getProfiles({
   }
 }
 
-export async function getProfile(token: string, id: string): Profile {
-  const profile = await get(token, `profiles/${id}`)
+export async function getProfile(id: string): Profile {
+  const profile = await get(`profiles/${id}`)
   return payloadToProfile(profile)
 }
 
@@ -170,20 +160,16 @@ export function profileToPayload(profile: Profile): ProfilePayload {
   }
 }
 
-export async function createProfile(token: string, profile: Profile) {
+export async function createProfile(profile: Profile) {
   const payload = profileToPayload(profile)
 
-  return post(token, 'profile', payload)
+  return post('profile', payload)
 }
 
-export async function updateProfile(
-  token: string,
-  profile: Profile,
-  profileId: string
-) {
+export async function updateProfile(profile: Profile, profileId: string) {
   const payload = profileToPayload(profile)
 
-  return put(token, `profiles/${profileId}`, payload)
+  return put(`profiles/${profileId}`, payload)
 }
 
 export async function sendFacultyVerificationEmail({
@@ -193,7 +179,7 @@ export async function sendFacultyVerificationEmail({
   +email: string,
   +isPersonalDevice: boolean,
 |}) {
-  return post(null, 'send-faculty-verification-email', {
+  return post('send-faculty-verification-email', {
     email,
     is_personal_device: isPersonalDevice,
   })
@@ -206,7 +192,7 @@ export async function sendStudentVerificationEmail({
   +email: string,
   +isPersonalDevice: boolean,
 |}) {
-  return post(null, 'send-student-verification-email', {
+  return post('send-student-verification-email', {
     email,
     is_personal_device: isPersonalDevice,
   })
@@ -219,7 +205,7 @@ export async function sendLoginEmail({
   +email: string,
   +isPersonalDevice: boolean,
 |}) {
-  return post(null, 'login', { email, is_personal_device: isPersonalDevice })
+  return post('login', { email, is_personal_device: isPersonalDevice })
 }
 
 export type Account = {|
@@ -230,9 +216,7 @@ export type Account = {|
   +availableForMentoring: boolean,
 |}
 
-export async function verifyToken(token: string | null): Promise<Account> {
-  const response = await post(null, 'verify-token', { token })
-
+function accountResponseToAccount(response): Account {
   return {
     isMentor: response.is_mentor,
     isAdmin: response.is_admin,
@@ -245,34 +229,56 @@ export async function verifyToken(token: string | null): Promise<Account> {
   }
 }
 
-export async function setAvailabilityForMentoring(
-  token: string,
-  available: boolean
-) {
-  return post(token, 'availability', { available })
+export async function getAccount(): Promise<Account | null> {
+  try {
+    const response = await get('account')
+
+    return accountResponseToAccount(response)
+  } catch (e) {
+    if (e.status === 440 && (await e.json()).token[0] === 'expired') {
+      loggedOutNotification()
+
+      window.location.pathname = '/login'
+    }
+    return null
+  }
 }
 
-export async function uploadPicture(token: string, file: File) {
+export async function verifyToken(token?: ?string): Promise<Account> {
+  const response = await post('verify-token', { token })
+
+  return accountResponseToAccount(response)
+}
+
+export async function logout() {
+  return post('logout')
+}
+
+export async function setAvailabilityForMentoring(available: boolean) {
+  return post('availability', { available })
+}
+
+export async function uploadPicture(file: File) {
   const url = buildURL('api/upload-image')
 
-  return http(token, url, {
+  return http(url, {
     method: 'POST',
     body: file,
   })
 }
 
-export async function getSearchTags(token: string) {
-  return get(token, 'search-tags')
+export async function getSearchTags() {
+  return get('search-tags')
 }
 
-export async function getProfileTags(token: string) {
-  return get(token, 'profile-tags')
+export async function getProfileTags() {
+  return get('profile-tags')
 }
 
-export async function starProfile(token: string, profileId: string) {
-  return post(token, 'star_profile', { profile_id: profileId })
+export async function starProfile(profileId: string) {
+  return post('star_profile', { profile_id: profileId })
 }
 
-export async function unstarProfile(token: string, profileId: string) {
-  return post(token, 'unstar_profile', { profile_id: profileId })
+export async function unstarProfile(profileId: string) {
+  return post('unstar_profile', { profile_id: profileId })
 }

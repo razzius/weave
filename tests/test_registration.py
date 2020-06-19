@@ -2,6 +2,8 @@ from http import HTTPStatus
 
 from server.models import VerificationEmail
 
+from structlog.testing import capture_logs
+
 
 def test_faculty_registration_email(client, requests_mock):
     email = "test@hms.harvard.edu"
@@ -10,9 +12,14 @@ def test_faculty_registration_email(client, requests_mock):
         "https://api.sparkpost.com/api/v1/transmissions", {}, reason="OK"
     )
 
-    response = client.post(
-        "/api/send-faculty-verification-email", json={"email": email}
-    )
+    with capture_logs() as cap_logs:
+        response = client.post(
+            "/api/send-faculty-verification-email", json={"email": email}
+        )
+        assert len(cap_logs) >= 1
+
+        # Should log token id
+        assert any("token_id" in log for log in cap_logs)
 
     assert response.json["email"] == email
 

@@ -1,6 +1,8 @@
 from http import HTTPStatus
 
-from server.models import db, VerificationEmail, VerificationToken
+from server.models import VerificationEmail, VerificationToken, save
+
+from .utils import create_test_verification_token
 
 
 def test_verify_invalid_token(client):
@@ -9,17 +11,25 @@ def test_verify_invalid_token(client):
     assert response.json == {"token": ["not recognized"]}
 
 
+def test_does_not_verify_logged_out_token(client):
+    verification_token = create_test_verification_token()
+    verification_token.logged_out = True
+    save(verification_token)
+
+    response = client.post(
+        "/api/verify-token", json={"token": verification_token.token}
+    )
+    assert response.status_code == HTTPStatus.UNAUTHORIZED.value
+    assert response.json == {"token": ["logged out"]}
+
+
 def test_verify_valid_token(client):
     token = "123"
     email = "test@test.com"
 
-    verification_email = VerificationEmail(email=email, is_mentor=True)
+    verification_email = save(VerificationEmail(email=email, is_mentor=True))
 
-    db.session.add(verification_email)
-    db.session.commit()
-
-    db.session.add(VerificationToken(token=token, email_id=verification_email.id))
-    db.session.commit()
+    save(VerificationToken(token=token, email_id=verification_email.id))
 
     response = client.post("/api/verify-token", json={"token": token})
 
@@ -32,3 +42,42 @@ def test_verify_valid_token(client):
         "profile_id": None,
         "is_mentor": True,
     }
+
+
+def test_verify_token_logs_out_other_tokens(client):
+    token = "123"
+    email = "test@test.com"
+
+    verification_email = save(VerificationEmail(email=email, is_mentor=True))
+
+    prior_token = save(VerificationToken(token="1010", email_id=verification_email.id))
+
+    save(VerificationToken(token=token, email_id=verification_email.id))
+
+    response = client.post("/api/verify-token", json={"token": token})
+
+    assert response.status_code == HTTPStatus.OK.value
+
+    assert prior_token.logged_out
+
+
+def test_verification_token_takes_priority_over_session_cookie(client, auth):
+    """
+    If a user is already logged in and verifies a new token,
+    the new token should replace the old one.
+    """
+    session_verification_token = create_test_verification_token()
+
+    auth.login(session_verification_token.token)
+
+    new_verification_token = create_test_verification_token(
+        verification_email=session_verification_token.email
+    )
+
+    response = client.post(
+        "/api/verify-token", json={"token": new_verification_token.token}
+    )
+
+    assert response.status_code == HTTPStatus.OK.value
+
+    assert session_verification_token.logged_out

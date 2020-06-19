@@ -1,6 +1,6 @@
 // @flow
 import React, { Component } from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, type RouterHistory, type Location } from 'react-router-dom'
 import { Beforeunload } from 'react-beforeunload'
 
 import AppScreen from './AppScreen'
@@ -10,7 +10,10 @@ import { getProfiles, getSearchTags } from './api'
 import { makeOptions } from './options'
 import { partition } from './utils'
 
-type Props = Object
+type Props = {|
+  location: Location,
+  history: RouterHistory,
+|}
 type State = Object
 
 const originalState = {
@@ -33,12 +36,17 @@ class Browse extends Component<Props, State> {
   state = originalState
 
   async componentDidMount() {
-    const { token, location } = this.props
-    const { page } = this.state
+    const { history, location } = this.props
 
-    const { tags } = await getSearchTags(token)
+    if (location.state) {
+      this.loadProfilesFromHistory(location.state)
+      return
+    }
 
-    this.setState({
+    const { tags, profiles } = await this.loadInitialData()
+
+    const loadedState = {
+      results: profiles,
       searchableTags: makeOptions(
         [
           ...tags.clinical_specialties,
@@ -48,13 +56,11 @@ class Browse extends Component<Props, State> {
         ].sort()
       ),
       hospitalOptions: makeOptions(tags.hospital_affiliations),
-    })
-
-    if (location.state) {
-      this.loadProfilesFromHistory(location.state)
-    } else {
-      this.loadProfilesFromServer({ token, page })
+      loading: false,
     }
+
+    this.setState(loadedState)
+    history.replace('/browse', this.state)
   }
 
   onUnload = () => {
@@ -64,30 +70,14 @@ class Browse extends Component<Props, State> {
     history.replace(location.pathname, null)
   }
 
-  loadProfilesFromHistory = state => {
+  loadProfilesFromHistory = (state: Object) => {
     this.setState(state, () => {
       window.scrollTo(0, state.scrollY)
     })
   }
 
-  loadProfilesFromServer = async ({ token, page }) => {
-    const { history } = this.props
-    try {
-      this.setState({
-        results: await getProfiles({ token, page }),
-        loading: false,
-      })
-      history.replace('/browse', this.state)
-    } catch (err) {
-      // eslint-disable-next-line no-console
-      console.error(err)
-      this.setState({ error: 'Unable to load profiles. Try again later.' })
-      throw err
-    }
-  }
-
   handleSearch = async () => {
-    const { history, token } = this.props
+    const { history } = this.props
 
     this.setState({ loading: true })
 
@@ -116,7 +106,6 @@ class Browse extends Component<Props, State> {
     const searchAffiliations = affiliations === null ? [] : affiliations
 
     const newResults = await getProfiles({
-      token,
       query,
       tags: knownTags,
       page,
@@ -253,6 +242,25 @@ class Browse extends Component<Props, State> {
   nextPage = () => {
     const { page } = this.state
     this.setState({ page: page + 1 }, this.handleSearch)
+  }
+
+  loadInitialData = async (): Promise<{ tags: Object, profiles: Object }> => {
+    const { page } = this.state
+    try {
+      const tags = getSearchTags()
+      const profiles = getProfiles({ page })
+
+      return { tags: (await tags).tags, profiles: await profiles }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error(err)
+      if (err.status === 401) {
+        this.setState({ error: 'You are not logged in. Please log in.' })
+      } else {
+        this.setState({ error: 'Unable to load profiles. Try again later.' })
+      }
+      throw err
+    }
   }
 
   render() {
