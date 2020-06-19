@@ -70,7 +70,7 @@ section {
   background-size: cover;
 }
 .App-intro {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   padding: 3em;
   margin-top: 120px;
   max-width: 700px;
@@ -407,8 +407,19 @@ iframe.video {
 .error {
   background: #ffff0095;
 }
+.welcome-wrapper {
+  display: flex;
+  justify-content: center;
+}
 .welcome {
-  background: lightgreen;
+  position: absolute;
+  padding: 1em;
+  margin-top: 1.5em;
+  margin-left: auto;
+  margin-right: auto;
+  background: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  width: 400px;
 }
 .banner {
   margin: 0;
