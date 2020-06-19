@@ -20,13 +20,13 @@ def create_session(email):
         exit(1)
 
     token = generate_token()
-    save(
+    verification_token = save(
         VerificationToken(
             email=verification_email, token=token, is_personal_device=True
         )
     )
 
-    url = get_verification_url(token)
+    url = get_verification_url(verification_token)
     print(url)
 
 
