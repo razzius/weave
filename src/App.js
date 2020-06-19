@@ -131,7 +131,7 @@ class App extends Component<Props, State> {
 
               {loginAction}
 
-              {account && account.isMentor && (
+              {account && (
                 <div
                   data-tip
                   className="available-for-mentoring"
