@@ -72,7 +72,11 @@ export default ({
           <Button to="/peer-mentorship">View Student Mentor Profiles</Button>
         </div>
         <div>
-          <Button to="/create-profile">Create Student Mentor Profile</Button>
+          {profileId ? (
+            <Button to={`/profiles/${profileId}`}>View My Profile</Button>
+          ) : (
+            <Button to="/create-profile">Create Student Mentor Profile</Button>
+          )}
         </div>
         <p>
           <Link to="/help#how-do-i-create-a-profile">

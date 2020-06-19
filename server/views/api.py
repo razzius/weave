@@ -236,8 +236,10 @@ def get_profile(profile_id=None):
         raise UserError({"profile_id": ["Not found"]}, HTTPStatus.NOT_FOUND.value)
 
     profile, star_count = profile_and_star_list[0]
-    # TODO do this without mutating profile
+
+    # TODO do these without mutating profile
     profile.starred = star_count > 0
+    profile.is_faculty = profile.verification_email.is_mentor
 
     response = make_response(jsonify(profile_schema.dump(profile)))
 
