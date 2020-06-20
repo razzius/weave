@@ -178,7 +178,7 @@ class App extends Component<Props, State> {
                   Help
                 </Link>
 
-                {account && account.isMentor && (
+                {account && (
                   <Link
                     to={
                       account.profileId
