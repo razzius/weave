@@ -488,7 +488,7 @@ export default class ProfileForm extends Component<Props, State> {
                     checked={willingStudentGroup}
                     onChange={this.updateBoolean('willingStudentGroup')}
                   />
-                  Student interest group support or speaking at student events
+                  Student interest group support
                 </label>
               </div>
             </div>
