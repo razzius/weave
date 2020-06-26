@@ -19,7 +19,8 @@ def test_matching_profiles_starred_profile(db_session):
 
     save(
         ProfileStar(
-            from_verification_email_id=user_email.id, to_profile_id=other_profile.id
+            from_verification_email_id=user_email.id,
+            to_verification_email_id=other_profile.verification_email_id,
         )
     )
 
