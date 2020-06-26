@@ -37,7 +37,9 @@ const FacultyLanding = ({
       </div>
     )}
     <p>
-      <Link to="/help#create-profile">Read how to create a profile</Link>
+      <Link to="/help#how-do-i-create-a-profile">
+        Read how to create a profile
+      </Link>
     </p>
   </div>
 )
