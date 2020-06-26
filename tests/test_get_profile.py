@@ -44,7 +44,7 @@ def test_get_starred_profile(client, auth):
     save(
         ProfileStar(
             from_verification_email_id=verification_token.email_id,
-            to_profile_id=profile.id,
+            to_verification_email_id=profile.verification_email_id,
         )
     )
 
@@ -83,7 +83,7 @@ def test_get_profile_starred_by_other_user(client, auth):
     save(
         ProfileStar(
             from_verification_email_id=other_verification_token.email_id,
-            to_profile_id=profile.id,
+            to_verification_email_id=profile.verification_email_id,
         )
     )
 

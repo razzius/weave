@@ -171,8 +171,8 @@ def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
         .outerjoin(
             ProfileStar,
             and_(
-                ProfileStar.to_profile_id == Profile.id,
                 ProfileStar.from_verification_email_id == verification_email_id,
+                Profile.verification_email_id == ProfileStar.to_verification_email_id,
             ),
         )
         .group_by(Profile.id)
