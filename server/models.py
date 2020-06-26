@@ -177,8 +177,9 @@ class ProfileStar(db.Model):
     from_verification_email_id = db.Column(
         db.Integer, db.ForeignKey(VerificationEmail.id), primary_key=True
     )
-    to_profile_id = db.Column(db.String, db.ForeignKey(Profile.id), primary_key=True)
-    to_profile = relationship(Profile)
+    to_verification_email_id = db.Column(
+        db.Integer, db.ForeignKey(VerificationEmail.id), primary_key=True
+    )
 
 
 class VerificationToken(db.Model, IDMixin):
