@@ -13,10 +13,13 @@ const Home = ({ account }: { account: ?Account }) => {
 
   const welcomeMessage = welcomeParam !== null && account != null && (
     <div className="welcome-wrapper">
-      <p className="welcome">
-        Welcome, {account.email}. You have successfully logged in
-        {account.isMentor ? ' as faculty' : ' as a student'}.
-      </p>
+      <div className="welcome">
+        <div>Welcome, {account.email}.</div>
+        <div>
+          You have successfully logged in
+          {account.isMentor ? ' as faculty' : ' as a student'}.
+        </div>
+      </div>
     </div>
   )
 
