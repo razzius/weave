@@ -177,7 +177,6 @@ class StudentProfile(BaseProfile, db.Model):
 
     willing_advice_classes = db.Column(db.Boolean, default=False)
     willing_advice_clinical_rotations = db.Column(db.Boolean, default=False)
-    willing_student_life = db.Column(db.Boolean, default=False)
     willing_research = db.Column(db.Boolean, default=False)
     willing_residency = db.Column(db.Boolean, default=False)
 
