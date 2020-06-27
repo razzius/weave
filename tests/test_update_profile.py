@@ -2,7 +2,7 @@ import datetime
 import http
 
 from freezegun import freeze_time
-from server.models import Profile
+from server.models import FacultyProfile
 
 from .utils import create_test_profile
 
@@ -37,7 +37,7 @@ def test_update_profile(client, auth):
 
     assert expected_fields.items() <= response.json.items()
 
-    profile = Profile.query.first()
+    profile = FacultyProfile.query.first()
 
     assert profile.date_updated == MOCK_DATE
 

@@ -2,7 +2,7 @@ import datetime
 import uuid
 from typing import Optional
 
-from server.models import Profile, VerificationEmail, VerificationToken, save
+from server.models import FacultyProfile, VerificationEmail, VerificationToken, save
 
 
 def generate_test_email() -> str:
@@ -39,7 +39,7 @@ def create_test_profile(
     is_admin=False,
     available_for_mentoring=False,
     date_updated=datetime.date.today(),
-) -> Profile:
+) -> FacultyProfile:
     if token is None:
         token = str(uuid.uuid4())
 
@@ -53,7 +53,7 @@ def create_test_profile(
     )
 
     profile = save(
-        Profile(
+        FacultyProfile(
             name=name,
             verification_email_id=verification_email.id,
             contact_email=email,

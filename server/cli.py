@@ -4,7 +4,7 @@ from flask import Blueprint
 from server.emails import get_verification_url
 from server.views.api import generate_token
 
-from .models import Profile, VerificationEmail, VerificationToken, db, save
+from .models import FacultyProfile, VerificationEmail, VerificationToken, db, save
 from .queries import get_verification_email_by_email
 
 
@@ -49,7 +49,7 @@ def populate():
     )
 
     profiles = [
-        Profile(
+        FacultyProfile(
             name="Manatee",
             contact_email="mermaidofthesea@gmail.com",
             profile_image_url=f"{CLOUDINARY_PREFIX}/v1528666929/keonolml4mwgsixpprsh.png",
@@ -62,7 +62,7 @@ def populate():
             activities=[],
             cadence="monthly",
         ),
-        Profile(
+        FacultyProfile(
             name="Falcon!!",
             contact_email="F.alcon@birdsofprey.com",
             profile_image_url=f"{CLOUDINARY_PREFIX}/v1528666737/nbnszojbvgqaxxlv1izh.png",
@@ -80,7 +80,7 @@ def populate():
             willing_career_guidance=False,
             cadence="monthly",
         ),
-        Profile(
+        FacultyProfile(
             name="California Sea Lion",
             contact_email="sea.ze.theday@gmail.com",
             profile_image_url=f"{CLOUDINARY_PREFIX}/v1528667191/aqzz8rwsutgdx4bzpbbn.png",
@@ -99,7 +99,7 @@ def populate():
             willing_career_guidance=False,
             cadence="monthly",
         ),
-        Profile(
+        FacultyProfile(
             name="Cat",
             contact_email="hellokitty@gmail.com",
             profile_image_url=f"{CLOUDINARY_PREFIX}/v1528741344/eo4fleywh2ljmj27i89s.png",
@@ -116,7 +116,7 @@ def populate():
             willing_career_guidance=False,
             cadence="quarterly",
         ),
-        Profile(
+        FacultyProfile(
             name="Puppy",
             contact_email="happypuppy@gmail.com",
             profile_image_url=f"{CLOUDINARY_PREFIX}/v1528668241/q8k83ozecn81gjq1qpjp.png",
