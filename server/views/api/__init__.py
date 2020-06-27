@@ -39,7 +39,7 @@ from server.models import (
     HospitalAffiliationOption,
     PartsOfMeOption,
     ProfessionalInterestOption,
-    Profile,
+    FacultyProfile,
     VerificationEmail,
     VerificationToken,
     db,
@@ -105,19 +105,22 @@ def render_matching_profiles(profiles_queryset, verification_email_id):
 
     def get_ordering(sorting):
         last_name_sorting = func.split_part(
-            Profile.name,
+            FacultyProfile.name,
             " ",
             func.array_length(
-                func.string_to_array(Profile.name, " "),
+                func.string_to_array(FacultyProfile.name, " "),
                 1,  # Length in the 1st dimension
             ),
         )
 
         sort_options = {
-            "starred": [desc(text("profile_star_count")), desc(Profile.date_updated)],
+            "starred": [
+                desc(text("profile_star_count")),
+                desc(FacultyProfile.date_updated),
+            ],
             "last_name_alphabetical": [asc(last_name_sorting)],
             "last_name_reverse_alphabetical": [desc(last_name_sorting)],
-            "date_updated": [desc(Profile.date_updated)],
+            "date_updated": [desc(FacultyProfile.date_updated)],
         }
 
         if sorting not in sort_options:
@@ -127,7 +130,7 @@ def render_matching_profiles(profiles_queryset, verification_email_id):
 
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
-        Profile.verification_email_id != verification_email_id,
+        FacultyProfile.verification_email_id != verification_email_id,
         *get_ordering(sorting),
     ]
 
@@ -165,7 +168,10 @@ def get_profiles():
             affiliations,
             verification_email_id=verification_email_id,
         )
-        .join(VerificationEmail, Profile.verification_email_id == VerificationEmail.id)
+        .join(
+            VerificationEmail,
+            FacultyProfile.verification_email_id == VerificationEmail.id,
+        )
         .filter(VerificationEmail.is_mentor.is_(True))
     )
 
@@ -197,7 +203,10 @@ def peer_profiles():
             affiliations,
             verification_email_id=verification_email_id,
         )
-        .join(VerificationEmail, Profile.verification_email_id == VerificationEmail.id)
+        .join(
+            VerificationEmail,
+            FacultyProfile.verification_email_id == VerificationEmail.id,
+        )
         .filter(VerificationEmail.is_mentor.is_(False))
     )
     return render_matching_profiles(profiles_queryset, verification_email_id)
@@ -226,7 +235,7 @@ def get_profile(profile_id=None):
 
     profile_and_star_list = query_profiles_and_stars(
         verification_token.email_id
-    ).filter(Profile.id == profile_id)
+    ).filter(FacultyProfile.id == profile_id)
 
     if not profile_and_star_list.first():
         raise UserError({"profile_id": ["Not found"]}, HTTPStatus.NOT_FOUND.value)
@@ -332,7 +341,7 @@ def basic_profile_data(verification_token, schema):
 
 @api.route("/profile", methods=["POST"])
 @flask_login.login_required
-def create_profile():
+def create_faculty_profile():
     verification_token = flask_login.current_user
 
     try:
@@ -342,7 +351,7 @@ def create_profile():
         raise InvalidPayloadError(err.messages)
 
     if db.session.query(
-        exists().where(Profile.contact_email == schema["contact_email"])
+        exists().where(FacultyProfile.contact_email == schema["contact_email"])
     ).scalar():
         raise UserError({"email": ["This email already exists in the database"]})
 
@@ -351,7 +360,7 @@ def create_profile():
         **basic_profile_data(verification_token, schema),
     }
 
-    profile = Profile(**profile_data)
+    profile = FacultyProfile(**profile_data)
 
     db.session.add(profile)
     db.session.commit()
@@ -363,7 +372,7 @@ def create_profile():
 
 @api.route("/profiles/<profile_id>", methods=["PUT"])
 @flask_login.login_required
-def update_profile(profile_id=None):
+def update_faculty_profile(profile_id=None):
     try:
         schema = profile_schema.load(request.json)
     except ValidationError as err:
@@ -372,7 +381,7 @@ def update_profile(profile_id=None):
 
     verification_token = flask_login.current_user
 
-    profile = Profile.query.get(profile_id)
+    profile = FacultyProfile.query.get(profile_id)
 
     is_admin = VerificationEmail.query.filter(
         VerificationEmail.id == verification_token.email_id
@@ -713,7 +722,7 @@ def star_profile():
         )
 
     to_profile_id = request.json["profile_id"]
-    to_profile = Profile.query.get(to_profile_id)
+    to_profile = FacultyProfile.query.get(to_profile_id)
 
     if to_profile is None:
         return (
@@ -769,7 +778,7 @@ def unstar_profile():
         )
 
     to_profile_id = request.json["profile_id"]
-    to_profile = Profile.query.get(to_profile_id)
+    to_profile = FacultyProfile.query.get(to_profile_id)
 
     if to_profile is None:
         return (

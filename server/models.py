@@ -126,7 +126,7 @@ class BaseProfile:
         return f"<{self.__class__.__name__} id={self.id} name={self.name}>"
 
 
-class Profile(BaseProfile, db.Model):
+class FacultyProfile(BaseProfile, db.Model):
     degrees = relationship("FacultyProfileDegree", cascade="all, delete")
 
     # TODO rename to hospital_affiliations
@@ -193,11 +193,11 @@ class ProfileTagMixin(IDMixin):
 class FacultyProfileTagMixin(ProfileTagMixin):
     @declared_attr
     def profile_id(cls):
-        return db.Column(db.String, db.ForeignKey(Profile.id), nullable=False)
+        return db.Column(db.String, db.ForeignKey(FacultyProfile.id), nullable=False)
 
     @declared_attr
     def profile(cls):
-        return relationship(Profile)
+        return relationship(FacultyProfile)
 
 
 class StudentProfileTagMixin(ProfileTagMixin):

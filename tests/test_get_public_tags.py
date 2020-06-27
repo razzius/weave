@@ -2,7 +2,7 @@ from http import HTTPStatus
 
 from server.models import (
     ActivityOption,
-    Profile,
+    FacultyProfile,
     FacultyProfileActivity,
     VerificationEmail,
     VerificationToken,
@@ -49,7 +49,7 @@ def test_get_public_tags(client, auth):
     save(VerificationToken(token=token, email_id=verification_email.id))
 
     profile = save(
-        Profile(
+        FacultyProfile(
             verification_email=verification_email,
             name="Test User",
             cadence="monthly",

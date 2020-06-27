@@ -16,7 +16,7 @@ from .models import (
     PartsOfMeOption,
     FacultyProfessionalInterest,
     ProfessionalInterestOption,
-    Profile,
+    FacultyProfile,
     FacultyProfileActivity,
     FacultyProfileDegree,
     ProfileStar,
@@ -32,11 +32,13 @@ def get_verification_email_by_email(email: str) -> Optional[VerificationEmail]:
     ).one_or_none()
 
 
-def get_profile_by_token(verification_token: VerificationToken) -> Optional[Profile]:
+def get_profile_by_token(
+    verification_token: VerificationToken,
+) -> Optional[FacultyProfile]:
     verification_email = VerificationEmail.query.get(verification_token.email_id)
 
-    return Profile.query.filter(
-        Profile.verification_email_id == verification_email.id
+    return FacultyProfile.query.filter(
+        FacultyProfile.verification_email_id == verification_email.id
     ).one_or_none()
 
 
@@ -77,7 +79,7 @@ def _filter_query_on_degrees(degree_list: List[str], query: BaseQuery) -> BaseQu
     return (
         query.outerjoin(FacultyProfileDegree)
         .outerjoin(DegreeOption)
-        .group_by(Profile.id)
+        .group_by(FacultyProfile.id)
         .having(degree_filter)
     )
 
@@ -96,10 +98,10 @@ def _filter_query_on_affiliations(
     return (
         query.outerjoin(
             FacultyHospitalAffiliation,
-            Profile.id == FacultyHospitalAffiliation.profile_id,
+            FacultyProfile.id == FacultyHospitalAffiliation.profile_id,
         )
         .outerjoin(HospitalAffiliationOption)
-        .group_by(Profile.id)
+        .group_by(FacultyProfile.id)
         .having(affiliations_filters)
     )
 
@@ -111,7 +113,11 @@ def _filter_profiles(
     degree_list: List[str],
     affiliation_list: List[str],
 ) -> BaseQuery:
-    searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
+    searchable_fields = [
+        FacultyProfile.name,
+        FacultyProfile.additional_information,
+        FacultyProfile.cadence,
+    ]
 
     tag_fields = [
         (FacultyClinicalSpecialty, ClinicalSpecialtyOption),
@@ -158,25 +164,26 @@ def _filter_profiles(
 def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
     return (
         db.session.query(
-            Profile,
+            FacultyProfile,
             func.count(ProfileStar.from_verification_email_id).label(
                 "profile_star_count"
             ),
         )
         .filter(
             or_(
-                Profile.available_for_mentoring,
-                Profile.verification_email_id == verification_email_id,
+                FacultyProfile.available_for_mentoring,
+                FacultyProfile.verification_email_id == verification_email_id,
             )
         )
         .outerjoin(
             ProfileStar,
             and_(
                 ProfileStar.from_verification_email_id == verification_email_id,
-                Profile.verification_email_id == ProfileStar.to_verification_email_id,
+                FacultyProfile.verification_email_id
+                == ProfileStar.to_verification_email_id,
             ),
         )
-        .group_by(Profile.id)
+        .group_by(FacultyProfile.id)
     )
 
 
@@ -223,8 +230,8 @@ def query_tag_related_to_active_profile(tag_class, profile_relation_class, name)
         tag_class.query.join(
             profile_relation_class, tag_class.id == profile_relation_class.tag_id
         )
-        .join(Profile, profile_relation_class.profile_id == Profile.id)
-        .filter(Profile.available_for_mentoring.is_(True))
+        .join(FacultyProfile, profile_relation_class.profile_id == FacultyProfile.id)
+        .filter(FacultyProfile.available_for_mentoring.is_(True))
     )
 
     return query_value_with_option_type_label(query, tag_class, name)
