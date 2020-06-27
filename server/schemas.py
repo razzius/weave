@@ -1,7 +1,13 @@
-import pathlib
 import json
+import pathlib
 
 from marshmallow import Schema, ValidationError, fields, validates_schema
+
+from .models import (
+    StudentPCESiteOption,
+    StudentProgramOption,
+    StudentYearOption
+)
 
 
 class CustomTagSchema(Schema):
@@ -49,12 +55,26 @@ class FacultyProfileSchema(BaseProfileSchema):
     willing_career_guidance = fields.Boolean()
 
 
+class RelationOption(fields.Field):
+    def __init__(self, model, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.model = model
+
+    def _deserialize(self, value, *args, **kwargs):
+        return self.model.query.filter(self.model.value == value).first()
+
+    def _serialize(self, value, *args, **kwargs):
+        return value.value
+
+
 class StudentProfileSchema(BaseProfileSchema):
     program = fields.String()
 
     current_year = fields.String()
 
-    pce_site = fields.String()
+    program = RelationOption(StudentProgramOption)
+    current_year = RelationOption(StudentYearOption)
+    pce_site = RelationOption(StudentPCESiteOption)
 
     willing_advice_classes = fields.Boolean()
     willing_advice_clinical_rotations = fields.Boolean()

@@ -1,19 +1,54 @@
 import http
+
 import flask_login
 from flask import jsonify, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import exists
 
-from server.models import StudentProfile, db
+from server.models import (
+    ActivityOption,
+    ClinicalSpecialtyOption,
+    HospitalAffiliationOption,
+    PartsOfMeOption,
+    ProfessionalInterestOption,
+    StudentClinicalSpecialty,
+    StudentHospitalAffiliation,
+    StudentPartsOfMe,
+    StudentProfessionalInterest,
+    StudentProfile,
+    StudentProfileActivity,
+    db,
+    save,
+)
 from server.schemas import student_profile_schema
 
 from .blueprint import api
 from .exceptions import InvalidPayloadError, UserError
+from .utils import save_tags
 
 
 def save_student_tags(profile, schema):
-    pass
+    save_tags(
+        profile,
+        schema["affiliations"],
+        HospitalAffiliationOption,
+        StudentHospitalAffiliation,
+    )
+    save_tags(
+        profile,
+        schema["clinical_specialties"],
+        ClinicalSpecialtyOption,
+        StudentClinicalSpecialty,
+    )
+    save_tags(
+        profile,
+        schema["professional_interests"],
+        ProfessionalInterestOption,
+        StudentProfessionalInterest,
+    )
+    save_tags(profile, schema["parts_of_me"], PartsOfMeOption, StudentPartsOfMe)
+    save_tags(profile, schema["activities"], ActivityOption, StudentProfileActivity)
 
 
 def basic_student_profile_data(verification_token, schema):
@@ -21,6 +56,7 @@ def basic_student_profile_data(verification_token, schema):
         "name": schema["name"],
         "contact_email": schema["contact_email"],
         "cadence": schema["cadence"],
+        "other_cadence": schema["other_cadence"],
     }
 
 
@@ -42,13 +78,13 @@ def create_student_profile():
 
     profile_data = {
         "verification_email_id": verification_token.email_id,
+        "program_id": schema["program"].id,
+        "current_year_id": schema["current_year"].id,
+        "pce_site_id": schema["pce_site"].id,
         **basic_student_profile_data(verification_token, schema),
     }
 
-    profile = StudentProfile(**profile_data)
-
-    db.session.add(profile)
-    db.session.commit()
+    profile = save(StudentProfile(**profile_data))
 
     save_student_tags(profile, schema)
 

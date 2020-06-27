@@ -168,14 +168,17 @@ class StudentProfile(BaseProfile, db.Model):
     program_id = db.Column(
         db.Integer, db.ForeignKey(StudentProgramOption.id), nullable=True
     )
+    program = relationship(StudentProgramOption)
 
     current_year_id = db.Column(
         db.Integer, db.ForeignKey(StudentYearOption.id), nullable=True
     )
+    current_year = relationship(StudentYearOption)
 
     pce_site_id = db.Column(
         db.Integer, db.ForeignKey(StudentPCESiteOption.id), nullable=True
     )
+    pce_site = relationship(StudentPCESiteOption)
 
     willing_advice_classes = db.Column(db.Boolean, default=False)
     willing_advice_clinical_rotations = db.Column(db.Boolean, default=False)
