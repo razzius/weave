@@ -20,13 +20,13 @@ from server.queries import (
 )
 from server.session import token_expired
 
-from ..emails import (
+from server.emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
     send_student_registration_email,
 )
-from ..models import (
+from server.models import (
     ActivityOption,
     ClinicalSpecialtyOption,
     DegreeOption,
@@ -45,13 +45,13 @@ from ..models import (
     db,
     save,
 )
-from ..queries import (
+from server.queries import (
     get_profile_by_token,
     get_verification_email_by_email,
     matching_profiles,
 )
-from ..schemas import profile_schema, profiles_schema, valid_email_schema
-from .pagination import paginate
+from server.schemas import profile_schema, profiles_schema, valid_email_schema
+from server.views.pagination import paginate
 
 
 log = get_logger()
