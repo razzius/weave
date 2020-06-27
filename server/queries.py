@@ -7,18 +7,18 @@ from sqlalchemy import and_, func, or_, sql
 
 from .models import (
     ActivityOption,
-    ClinicalSpecialty,
+    FacultyClinicalSpecialty,
     ClinicalSpecialtyOption,
     DegreeOption,
-    HospitalAffiliation,
+    FacultyHospitalAffiliation,
     HospitalAffiliationOption,
-    PartsOfMe,
+    FacultyPartsOfMe,
     PartsOfMeOption,
-    ProfessionalInterest,
+    FacultyProfessionalInterest,
     ProfessionalInterestOption,
     Profile,
-    ProfileActivity,
-    ProfileDegree,
+    FacultyProfileActivity,
+    FacultyProfileDegree,
     ProfileStar,
     VerificationEmail,
     VerificationToken,
@@ -75,7 +75,7 @@ def _filter_query_on_degrees(degree_list: List[str], query: BaseQuery) -> BaseQu
 
     degree_filter = reduce(operator.and_, degree_filters)
     return (
-        query.outerjoin(ProfileDegree)
+        query.outerjoin(FacultyProfileDegree)
         .outerjoin(DegreeOption)
         .group_by(Profile.id)
         .having(degree_filter)
@@ -95,7 +95,8 @@ def _filter_query_on_affiliations(
 
     return (
         query.outerjoin(
-            HospitalAffiliation, Profile.id == HospitalAffiliation.profile_id
+            FacultyHospitalAffiliation,
+            Profile.id == FacultyHospitalAffiliation.profile_id,
         )
         .outerjoin(HospitalAffiliationOption)
         .group_by(Profile.id)
@@ -113,10 +114,10 @@ def _filter_profiles(
     searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
 
     tag_fields = [
-        (ClinicalSpecialty, ClinicalSpecialtyOption),
-        (ProfessionalInterest, ProfessionalInterestOption),
-        (PartsOfMe, PartsOfMeOption),
-        (ProfileActivity, ActivityOption),
+        (FacultyClinicalSpecialty, ClinicalSpecialtyOption),
+        (FacultyProfessionalInterest, ProfessionalInterestOption),
+        (FacultyPartsOfMe, PartsOfMeOption),
+        (FacultyProfileActivity, ActivityOption),
     ]
 
     search_filters = [
@@ -312,15 +313,23 @@ def query_profile_tags():
 
 def query_searchable_tags():
     config_tag_classes = [
-        (HospitalAffiliationOption, HospitalAffiliation, "hospital_affiliations"),
-        (DegreeOption, ProfileDegree, "degrees"),
+        (
+            HospitalAffiliationOption,
+            FacultyHospitalAffiliation,
+            "hospital_affiliations",
+        ),
+        (DegreeOption, FacultyProfileDegree, "degrees"),
     ]
 
     public_tag_classes = [
-        (ActivityOption, ProfileActivity, "activities"),
-        (ClinicalSpecialtyOption, ClinicalSpecialty, "clinical_specialties"),
-        (PartsOfMeOption, PartsOfMe, "parts_of_me"),
-        (ProfessionalInterestOption, ProfessionalInterest, "professional_interests"),
+        (ActivityOption, FacultyProfileActivity, "activities"),
+        (ClinicalSpecialtyOption, FacultyClinicalSpecialty, "clinical_specialties"),
+        (PartsOfMeOption, FacultyPartsOfMe, "parts_of_me"),
+        (
+            ProfessionalInterestOption,
+            FacultyProfessionalInterest,
+            "professional_interests",
+        ),
     ]
 
     return query_tags_with_active_profiles(config_tag_classes, public_tag_classes)

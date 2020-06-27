@@ -1,17 +1,17 @@
 from server.models import (
     ActivityOption,
-    ClinicalSpecialty,
     ClinicalSpecialtyOption,
     DegreeOption,
-    HospitalAffiliation,
+    FacultyClinicalSpecialty,
+    FacultyHospitalAffiliation,
+    FacultyPartsOfMe,
+    FacultyProfessionalInterest,
+    FacultyProfileActivity,
+    FacultyProfileDegree,
     HospitalAffiliationOption,
-    PartsOfMe,
     PartsOfMeOption,
-    ProfessionalInterest,
     ProfessionalInterestOption,
-    ProfileActivity,
-    ProfileDegree,
-    save,
+    save
 )
 from server.queries import query_profile_tags
 
@@ -45,12 +45,12 @@ def test_query_profile_tags(db_session):
     ]
 
     relation_classes = [
-        HospitalAffiliation,
-        ProfileDegree,
-        ProfileActivity,
-        ClinicalSpecialty,
-        PartsOfMe,
-        ProfessionalInterest,
+        FacultyHospitalAffiliation,
+        FacultyProfileDegree,
+        FacultyProfileActivity,
+        FacultyClinicalSpecialty,
+        FacultyPartsOfMe,
+        FacultyProfessionalInterest,
     ]
 
     for option in options:

@@ -3,7 +3,7 @@ from http import HTTPStatus
 from server.models import (
     ActivityOption,
     Profile,
-    ProfileActivity,
+    FacultyProfileActivity,
     VerificationEmail,
     VerificationToken,
     save,
@@ -59,7 +59,7 @@ def test_get_public_tags(client, auth):
 
     activity_option = save(ActivityOption(value="activity", public=True))
 
-    save(ProfileActivity(profile=profile, tag=activity_option))
+    save(FacultyProfileActivity(profile=profile, tag=activity_option))
 
     auth.login(token)
 
