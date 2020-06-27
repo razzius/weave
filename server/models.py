@@ -59,6 +59,18 @@ class HospitalAffiliationOption(TagValueMixin, db.Model):
     pass
 
 
+class StudentProgramOption(TagValueMixin, db.Model):
+    pass
+
+
+class StudentYearOption(TagValueMixin, db.Model):
+    pass
+
+
+class PCESiteOption(TagValueMixin, db.Model):
+    pass
+
+
 class DegreeOption(TagValueMixin, db.Model):
     pass
 
@@ -97,6 +109,9 @@ class BaseProfile:
 
     available_for_mentoring = db.Column(db.Boolean, default=True)
 
+    willing_discuss_personal = db.Column(db.Boolean, default=False)
+    willing_student_group = db.Column(db.Boolean, default=False)
+
     @declared_attr
     def verification_email_id(cls):
         return db.Column(
@@ -112,26 +127,70 @@ class BaseProfile:
 
 
 class Profile(BaseProfile, db.Model):
-    clinical_specialties = relationship("ClinicalSpecialty", cascade="all, delete")
-    affiliations = relationship("HospitalAffiliation", cascade="all, delete")
-    professional_interests = relationship("ProfessionalInterest", cascade="all, delete")
-    parts_of_me = relationship("PartsOfMe", cascade="all, delete")
-    activities = relationship("ProfileActivity", cascade="all, delete")
-    degrees = relationship("ProfileDegree", cascade="all, delete")
+    degrees = relationship("FacultyProfileDegree", cascade="all, delete")
+
+    # TODO rename to hospital_affiliations
+    affiliations = relationship("FacultyHospitalAffiliation", cascade="all, delete")
+
+    clinical_specialties = relationship(
+        "FacultyClinicalSpecialty", cascade="all, delete"
+    )
+
+    professional_interests = relationship(
+        "FacultyProfessionalInterest", cascade="all, delete"
+    )
+
+    parts_of_me = relationship("FacultyPartsOfMe", cascade="all, delete")
+
+    activities = relationship("FacultyProfileActivity", cascade="all, delete")
 
     willing_shadowing = db.Column(db.Boolean, default=False)
     willing_networking = db.Column(db.Boolean, default=False)
     willing_goal_setting = db.Column(db.Boolean, default=False)
-    willing_discuss_personal = db.Column(db.Boolean, default=False)
     willing_career_guidance = db.Column(db.Boolean, default=False)
-    willing_student_group = db.Column(db.Boolean, default=False)
 
 
 class StudentProfile(BaseProfile, db.Model):
-    pass
+    affiliations = relationship("StudentHospitalAffiliation", cascade="all, delete")
+
+    clinical_specialties = relationship(
+        "StudentClinicalSpecialty", cascade="all, delete"
+    )
+
+    professional_interests = relationship(
+        "StudentProfessionalInterest", cascade="all, delete"
+    )
+
+    parts_of_me = relationship("StudentPartsOfMe", cascade="all, delete")
+
+    activities = relationship("StudentProfileActivity", cascade="all, delete")
+
+    program_id = db.Column(
+        db.Integer, db.ForeignKey(StudentProgramOption.id), nullable=True
+    )
+
+    current_year = db.Column(
+        db.Integer, db.ForeignKey(StudentYearOption.id), nullable=True
+    )
+
+    pce_site = db.Column(db.Integer, db.ForeignKey(PCESiteOption.id), nullable=True)
+
+    willing_advice_classes = db.Column(db.Boolean, default=False)
+    willing_advice_clinical_rotations = db.Column(db.Boolean, default=False)
+    willing_student_life = db.Column(db.Boolean, default=False)
+    willing_research = db.Column(db.Boolean, default=False)
+    willing_residency = db.Column(db.Boolean, default=False)
 
 
 class ProfileTagMixin(IDMixin):
+    def __str__(self):
+        return self.tag.value
+
+    def __repr__(self):
+        return "<{}: {}>".format(self.__class__.__name__, self.tag.value)
+
+
+class FacultyProfileTagMixin(ProfileTagMixin):
     @declared_attr
     def profile_id(cls):
         return db.Column(db.String, db.ForeignKey(Profile.id), nullable=False)
@@ -140,47 +199,82 @@ class ProfileTagMixin(IDMixin):
     def profile(cls):
         return relationship(Profile)
 
-    def __str__(self):
-        return self.tag.value
 
-    def __repr__(self):
-        return "<{}: {}>".format(self.__class__.__name__, self.tag.value)
+class StudentProfileTagMixin(ProfileTagMixin):
+    @declared_attr
+    def profile_id(cls):
+        return db.Column(db.String, db.ForeignKey(StudentProfile.id), nullable=False)
+
+    @declared_attr
+    def profile(cls):
+        return relationship(StudentProfile)
 
 
-class HospitalAffiliation(ProfileTagMixin, db.Model):
+class FacultyHospitalAffiliation(FacultyProfileTagMixin, db.Model):
     tag_id = db.Column(
         db.Integer, db.ForeignKey(HospitalAffiliationOption.id), nullable=False
     )
     tag = relationship(HospitalAffiliationOption)
 
 
-class ClinicalSpecialty(ProfileTagMixin, db.Model):
+class FacultyClinicalSpecialty(FacultyProfileTagMixin, db.Model):
     tag_id = db.Column(
         db.Integer, db.ForeignKey(ClinicalSpecialtyOption.id), nullable=False
     )
     tag = relationship(ClinicalSpecialtyOption)
 
 
-class PartsOfMe(ProfileTagMixin, db.Model):
+class FacultyPartsOfMe(FacultyProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(PartsOfMeOption.id), nullable=False)
     tag = relationship(PartsOfMeOption)
 
 
-class ProfessionalInterest(ProfileTagMixin, db.Model):
+class FacultyProfessionalInterest(FacultyProfileTagMixin, db.Model):
     tag_id = db.Column(
         db.Integer, db.ForeignKey(ProfessionalInterestOption.id), nullable=False
     )
     tag = relationship(ProfessionalInterestOption)
 
 
-class ProfileActivity(ProfileTagMixin, db.Model):
+class FacultyProfileActivity(FacultyProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(ActivityOption.id), nullable=False)
     tag = relationship(ActivityOption)
 
 
-class ProfileDegree(ProfileTagMixin, db.Model):
+class FacultyProfileDegree(FacultyProfileTagMixin, db.Model):
     tag_id = db.Column(db.Integer, db.ForeignKey(DegreeOption.id), nullable=False)
     tag = relationship(DegreeOption)
+
+
+class StudentHospitalAffiliation(StudentProfileTagMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(HospitalAffiliationOption.id), nullable=False
+    )
+    tag = relationship(HospitalAffiliationOption)
+
+
+class StudentClinicalSpecialty(StudentProfileTagMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(ClinicalSpecialtyOption.id), nullable=False
+    )
+    tag = relationship(ClinicalSpecialtyOption)
+
+
+class StudentPartsOfMe(StudentProfileTagMixin, db.Model):
+    tag_id = db.Column(db.Integer, db.ForeignKey(PartsOfMeOption.id), nullable=False)
+    tag = relationship(PartsOfMeOption)
+
+
+class StudentProfessionalInterest(StudentProfileTagMixin, db.Model):
+    tag_id = db.Column(
+        db.Integer, db.ForeignKey(ProfessionalInterestOption.id), nullable=False
+    )
+    tag = relationship(ProfessionalInterestOption)
+
+
+class StudentProfileActivity(StudentProfileTagMixin, db.Model):
+    tag_id = db.Column(db.Integer, db.ForeignKey(ActivityOption.id), nullable=False)
+    tag = relationship(ActivityOption)
 
 
 class ProfileStar(db.Model):

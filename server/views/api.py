@@ -28,18 +28,18 @@ from ..emails import (
 )
 from ..models import (
     ActivityOption,
-    ClinicalSpecialty,
     ClinicalSpecialtyOption,
     DegreeOption,
-    HospitalAffiliation,
+    FacultyClinicalSpecialty,
+    FacultyHospitalAffiliation,
+    FacultyPartsOfMe,
+    FacultyProfessionalInterest,
+    FacultyProfileActivity,
+    FacultyProfileDegree,
     HospitalAffiliationOption,
-    PartsOfMe,
     PartsOfMeOption,
-    ProfessionalInterest,
     ProfessionalInterestOption,
     Profile,
-    ProfileActivity,
-    ProfileDegree,
     VerificationEmail,
     VerificationToken,
     db,
@@ -94,10 +94,6 @@ def handle_user_error(e):
     invalid_data = e.invalid_data
     status_code = e.status_code
     return jsonify(invalid_data), status_code
-
-
-def get_faculty_profiles(verification_email):
-    pass
 
 
 def render_matching_profiles(profiles_queryset, verification_email_id):
@@ -295,23 +291,26 @@ def save_tags(profile, tag_values, option_class, profile_relation_class):
 
 def save_all_tags(profile, schema):
     save_tags(
-        profile, schema["affiliations"], HospitalAffiliationOption, HospitalAffiliation
+        profile,
+        schema["affiliations"],
+        HospitalAffiliationOption,
+        FacultyHospitalAffiliation,
     )
     save_tags(
         profile,
         schema["clinical_specialties"],
         ClinicalSpecialtyOption,
-        ClinicalSpecialty,
+        FacultyClinicalSpecialty,
     )
     save_tags(
         profile,
         schema["professional_interests"],
         ProfessionalInterestOption,
-        ProfessionalInterest,
+        FacultyProfessionalInterest,
     )
-    save_tags(profile, schema["parts_of_me"], PartsOfMeOption, PartsOfMe)
-    save_tags(profile, schema["activities"], ActivityOption, ProfileActivity)
-    save_tags(profile, schema["degrees"], DegreeOption, ProfileDegree)
+    save_tags(profile, schema["parts_of_me"], PartsOfMeOption, FacultyPartsOfMe)
+    save_tags(profile, schema["activities"], ActivityOption, FacultyProfileActivity)
+    save_tags(profile, schema["degrees"], DegreeOption, FacultyProfileDegree)
 
 
 def basic_profile_data(verification_token, schema):
@@ -413,12 +412,12 @@ def update_profile(profile_id=None):
 
     # TODO rather than deleting all, delete only ones that haven't changed
     profile_relation_classes = {
-        ProfessionalInterest,
-        ProfileActivity,
-        HospitalAffiliation,
-        PartsOfMe,
-        ClinicalSpecialty,
-        ProfileDegree,
+        FacultyProfessionalInterest,
+        FacultyProfileActivity,
+        FacultyHospitalAffiliation,
+        FacultyPartsOfMe,
+        FacultyClinicalSpecialty,
+        FacultyProfileDegree,
     }
     for profile_relation_class in profile_relation_classes:
         profile_relation_class.query.filter(
