@@ -4,21 +4,12 @@ from http import HTTPStatus
 
 import flask_login
 from cloudinary import uploader
-from flask import Blueprint, jsonify, make_response, request
+from flask import jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import and_, asc, desc, exists, func, text
 from sqlalchemy.exc import IntegrityError
 from structlog import get_logger
-
-from server.models import ProfileStar
-from server.queries import (
-    add_stars_to_profiles,
-    query_profile_tags,
-    query_profiles_and_stars,
-    query_searchable_tags,
-)
-from server.session import token_expired
 
 from server.emails import (
     send_faculty_login_email,
@@ -34,66 +25,49 @@ from server.models import (
     FacultyHospitalAffiliation,
     FacultyPartsOfMe,
     FacultyProfessionalInterest,
+    FacultyProfile,
     FacultyProfileActivity,
     FacultyProfileDegree,
     HospitalAffiliationOption,
     PartsOfMeOption,
     ProfessionalInterestOption,
-    FacultyProfile,
+    ProfileStar,
     VerificationEmail,
     VerificationToken,
     db,
     save,
 )
 from server.queries import (
+    add_stars_to_profiles,
     get_profile_by_token,
     get_verification_email_by_email,
     matching_profiles,
+    query_profile_tags,
+    query_profiles_and_stars,
+    query_searchable_tags,
 )
-from server.schemas import profile_schema, profiles_schema, valid_email_schema
+from server.schemas import (
+    faculty_profile_schema,
+    faculty_profiles_schema,
+    valid_email_schema,
+)
+from server.session import token_expired
 from server.views.pagination import paginate
+
+from .blueprint import api
+from .exceptions import (
+    ForbiddenError,
+    InvalidPayloadError,
+    LoginTimeoutError,
+    UnauthorizedError,
+    UserError,
+)
+from . import student_profile
+
+__all__ = ["student_profile"]
 
 
 log = get_logger()
-
-# This is a non-standard http status, used by Microsoft's IIS, but it's useful
-# to disambiguate between unrecognized and expired tokens.
-LOGIN_TIMEOUT_STATUS = 440
-
-api = Blueprint("api", __name__, url_prefix="/api")
-
-
-class UserError(Exception):
-    status_code = HTTPStatus.BAD_REQUEST.value
-
-    def __init__(self, invalid_data, status_code=None):
-        self.invalid_data = invalid_data
-
-        if status_code is not None:
-            self.status_code = status_code
-
-
-class UnauthorizedError(UserError):
-    status_code = HTTPStatus.UNAUTHORIZED.value
-
-
-class ForbiddenError(UserError):
-    status_code = HTTPStatus.FORBIDDEN.value
-
-
-class InvalidPayloadError(UserError):
-    status_code = HTTPStatus.UNPROCESSABLE_ENTITY.value
-
-
-class LoginTimeoutError(UserError):
-    status_code = LOGIN_TIMEOUT_STATUS
-
-
-@api.errorhandler(UserError)
-def handle_user_error(e):
-    invalid_data = e.invalid_data
-    status_code = e.status_code
-    return jsonify(invalid_data), status_code
 
 
 def render_matching_profiles(profiles_queryset, verification_email_id):
@@ -143,7 +117,7 @@ def render_matching_profiles(profiles_queryset, verification_email_id):
     return jsonify(
         {
             "profile_count": profiles_queryset.count(),
-            "profiles": profiles_schema.dump(profiles_with_stars),
+            "profiles": faculty_profiles_schema.dump(profiles_with_stars),
         }
     )
 
@@ -246,7 +220,7 @@ def get_profile(profile_id=None):
     profile.starred = star_count > 0
     profile.is_faculty = profile.verification_email.is_mentor
 
-    response = make_response(jsonify(profile_schema.dump(profile)))
+    response = make_response(jsonify(faculty_profile_schema.dump(profile)))
 
     response.headers["Cache-Control"] = "public, max-age=0"
     response.headers["Pragma"] = "no-cache"
@@ -345,7 +319,7 @@ def create_faculty_profile():
     verification_token = flask_login.current_user
 
     try:
-        schema = profile_schema.load(request.json)
+        schema = faculty_profile_schema.load(request.json)
     except ValidationError as err:
         capture_exception(err)
         raise InvalidPayloadError(err.messages)
@@ -367,14 +341,14 @@ def create_faculty_profile():
 
     save_all_tags(profile, schema)
 
-    return jsonify(profile_schema.dump(profile)), HTTPStatus.CREATED.value
+    return jsonify(faculty_profile_schema.dump(profile)), HTTPStatus.CREATED.value
 
 
 @api.route("/profiles/<profile_id>", methods=["PUT"])
 @flask_login.login_required
 def update_faculty_profile(profile_id=None):
     try:
-        schema = profile_schema.load(request.json)
+        schema = faculty_profile_schema.load(request.json)
     except ValidationError as err:
         capture_exception(err)
         raise InvalidPayloadError(err.messages)
@@ -435,7 +409,7 @@ def update_faculty_profile(profile_id=None):
 
     save_all_tags(profile, schema)
 
-    return jsonify(profile_schema.dump(profile))
+    return jsonify(faculty_profile_schema.dump(profile))
 
 
 def generate_token():

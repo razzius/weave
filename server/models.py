@@ -67,7 +67,7 @@ class StudentYearOption(TagValueMixin, db.Model):
     pass
 
 
-class PCESiteOption(TagValueMixin, db.Model):
+class StudentPCESiteOption(TagValueMixin, db.Model):
     pass
 
 
@@ -169,11 +169,13 @@ class StudentProfile(BaseProfile, db.Model):
         db.Integer, db.ForeignKey(StudentProgramOption.id), nullable=True
     )
 
-    current_year = db.Column(
+    current_year_id = db.Column(
         db.Integer, db.ForeignKey(StudentYearOption.id), nullable=True
     )
 
-    pce_site = db.Column(db.Integer, db.ForeignKey(PCESiteOption.id), nullable=True)
+    pce_site_id = db.Column(
+        db.Integer, db.ForeignKey(StudentPCESiteOption.id), nullable=True
+    )
 
     willing_advice_classes = db.Column(db.Boolean, default=False)
     willing_advice_clinical_rotations = db.Column(db.Boolean, default=False)

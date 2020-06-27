@@ -94,6 +94,8 @@ function payloadToProfile(payload: ProfilePayload): Profile {
     otherCadence: payload.other_cadence,
 
     starred: payload.starred,
+
+    // gonna rework this to have separate stuff, rather than a flag
     isFaculty: payload.is_faculty,
   }
 }

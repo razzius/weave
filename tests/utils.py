@@ -22,12 +22,13 @@ def create_test_verification_token(
     token: Optional[str] = None,
     verification_email: Optional[VerificationEmail] = None,
     is_admin: bool = False,
+    is_mentor: bool = True,
 ) -> VerificationToken:
     if token is None:
         token = str(uuid.uuid4())
 
     if verification_email is None:
-        verification_email = create_test_verification_email()
+        verification_email = create_test_verification_email(is_mentor=is_mentor)
 
     return save(VerificationToken(token=token, email_id=verification_email.id))
 
