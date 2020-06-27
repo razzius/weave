@@ -30,11 +30,12 @@ def test_create_student_profile(client, auth):
     pce_site = save(StudentPCESiteOption(value="PCE Site"))
 
     affiliations = ["Brigham and Women's Hospital"]
-
     clinical_specialties = ["Endocrinology, Diabetes & Metabolism"]
     professional_interests = ["Advocacy"]
     parts_of_me = ["Part"]
     activities = ["Recycling"]
+
+    cadence = "monthly"
 
     profile = {
         "name": name,
@@ -47,9 +48,36 @@ def test_create_student_profile(client, auth):
         "professional_interests": professional_interests,
         "parts_of_me": parts_of_me,
         "activities": activities,
-        "cadence": "monthly",
+        "cadence": cadence,
+        "other_cadence": None,
     }
 
     response = client.post("/api/student-profile", json=profile)
 
     assert response.status_code == http.HTTPStatus.CREATED.value, response.json
+
+    assert response.json["program"] == program.value
+    assert response.json["current_year"] == current_year.value
+    assert response.json["pce_site"] == pce_site.value
+
+    assert response.json["affiliations"] == affiliations
+
+    assert response.json["affiliations"] == ["Brigham and Women's Hospital"]
+    assert response.json["clinical_specialties"] == [
+        "Endocrinology, Diabetes & Metabolism"
+    ]
+    assert response.json["professional_interests"] == ["Advocacy"]
+    assert response.json["parts_of_me"] == ["Part"]
+    assert response.json["activities"] == ["Recycling"]
+
+    assert response.json["cadence"] == cadence
+
+    assert response.json["other_cadence"] is None
+    assert response.json["profile_image_url"] is None
+
+    assert not response.json["willing_discuss_personal"]
+    assert not response.json["willing_student_group"]
+    assert not response.json["willing_advice_classes"]
+    assert not response.json["willing_advice_clinical_rotations"]
+    assert not response.json["willing_research"]
+    assert not response.json["willing_residency"]
