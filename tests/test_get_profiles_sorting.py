@@ -1,20 +1,20 @@
 import datetime
 import http
 
-from server.views.api import generate_token
 
-from .utils import create_test_profile
+from .utils import create_test_profile, create_test_verification_token
 
 
 def test_sort_profiles_by_date_updated(client, auth):
-    token = generate_token()
-
     own_profile = create_test_profile(
-        token=token,
         email="test@test.com",
         name="Own Profile",
         date_updated=datetime.datetime(2018, 1, 1),
         available_for_mentoring=True,
+    )
+
+    token = create_test_verification_token(
+        verification_email=own_profile.verification_email
     )
 
     recently_updated_profile = create_test_profile(
@@ -31,7 +31,7 @@ def test_sort_profiles_by_date_updated(client, auth):
         available_for_mentoring=True,
     )
 
-    auth.login(token)
+    auth.login(token.token)
 
     response = client.get("/api/profiles?sorting=date_updated")
 
