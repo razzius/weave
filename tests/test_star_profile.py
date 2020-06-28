@@ -12,11 +12,13 @@ def test_must_be_logged_in_to_star_profile(client):
 
 
 def test_must_specify_profile_to_be_starred(client, auth):
-    token = "1234"
+    profile = create_test_profile()
 
-    create_test_profile(token=token)
+    token = create_test_verification_token(
+        verification_email=profile.verification_email
+    )
 
-    auth.login(token)
+    auth.login(token.token)
 
     response = client.post("/api/star_profile", json={})
 
@@ -26,13 +28,15 @@ def test_must_specify_profile_to_be_starred(client, auth):
 
 
 def test_must_star_valid_profile_id(client, auth):
-    token = "1234"
+    profile = create_test_profile()
 
-    create_test_profile(token=token)
+    token = create_test_verification_token(
+        verification_email=profile.verification_email
+    )
 
     data = {"profile_id": "asdf"}
 
-    auth.login(token)
+    auth.login(token.token)
 
     response = client.post("/api/star_profile", json=data)
 
@@ -62,13 +66,15 @@ def test_star_profile(client, auth):
 
 
 def test_cannot_star_own_profile(client, auth):
-    token = "1234"
+    profile = create_test_profile()
 
-    profile = create_test_profile(token=token)
+    token = create_test_verification_token(
+        verification_email=profile.verification_email
+    )
 
     data = {"profile_id": profile.id}
 
-    auth.login(token)
+    auth.login(token.token)
 
     response = client.post("/api/star_profile", json=data)
 

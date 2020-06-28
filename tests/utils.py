@@ -34,24 +34,16 @@ def create_test_verification_token(
 
 
 def create_test_profile(
-    token: Optional[str] = None,
     email: Optional[str] = None,
     name="Test User",
     is_admin=False,
     available_for_mentoring=False,
     date_updated=datetime.date.today(),
 ) -> FacultyProfile:
-    if token is None:
-        token = str(uuid.uuid4())
-
     if email is None:
         email = generate_test_email()
 
     verification_email = create_test_verification_email(email, is_admin)
-
-    token = create_test_verification_token(
-        token, verification_email=verification_email, is_admin=False
-    )
 
     profile = save(
         FacultyProfile(

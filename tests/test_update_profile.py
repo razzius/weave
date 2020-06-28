@@ -2,9 +2,10 @@ import datetime
 import http
 
 from freezegun import freeze_time
+
 from server.models import FacultyProfile
 
-from .utils import create_test_profile
+from .utils import create_test_profile, create_test_verification_token
 
 
 MOCK_DATE = datetime.datetime(2019, 10, 21)
@@ -23,11 +24,13 @@ PROFILE_UPDATE = {
 
 @freeze_time(MOCK_DATE)
 def test_update_profile(client, auth):
-    token = "1234"
+    profile = create_test_profile()
 
-    profile = create_test_profile(token)
+    token = create_test_verification_token(
+        verification_email=profile.verification_email
+    )
 
-    auth.login(token)
+    auth.login(token.token)
 
     response = client.put(f"/api/profiles/{profile.id}", json=PROFILE_UPDATE)
 
@@ -43,14 +46,18 @@ def test_update_profile(client, auth):
 
 
 def test_admin_update_does_not_update_date(client, auth):
-    admin_token = "admin"
-    create_test_profile(admin_token, email="admin@test.com", is_admin=True)
+    admin_profile = create_test_profile(email="admin@test.com", is_admin=True)
 
-    profile = create_test_profile("abcd")
+    admin_token = create_test_verification_token(
+        verification_email=admin_profile.verification_email
+    )
+
+    profile = create_test_profile()
 
     original_profile_date_updated = profile.date_updated
 
-    auth.login(admin_token)
+    auth.login(admin_token.token)
+
     response = client.put(f"/api/profiles/{profile.id}", json=PROFILE_UPDATE,)
 
     assert response.status_code == http.HTTPStatus.OK.value
@@ -59,13 +66,16 @@ def test_admin_update_does_not_update_date(client, auth):
 
 
 def test_tags_cannot_have_trailing_spaces(client, auth):
-    token = "abcd"
-
     update = {**PROFILE_UPDATE, "clinical_specialties": ["Test "]}
 
-    profile = create_test_profile(token)
+    profile = create_test_profile()
 
-    auth.login(token)
+    token = create_test_verification_token(
+        verification_email=profile.verification_email
+    )
+
+    auth.login(token.token)
+
     response = client.put(f"/api/profiles/{profile.id}", json=update,)
 
     assert response.status_code == http.HTTPStatus.OK.value
