@@ -35,7 +35,10 @@ def test_create_student_profile(client, auth):
     parts_of_me = ["Part"]
     activities = ["Recycling"]
 
-    cadence = "monthly"
+    cadence = "other"
+    other_cadence = "Once in a while"
+
+    profile_image_url = "http://placehold.it/200"
 
     profile = {
         "name": name,
@@ -46,10 +49,17 @@ def test_create_student_profile(client, auth):
         "clinical_specialties": clinical_specialties,
         "affiliations": affiliations,
         "professional_interests": professional_interests,
+        "profile_image_url": profile_image_url,
         "parts_of_me": parts_of_me,
         "activities": activities,
         "cadence": cadence,
-        "other_cadence": None,
+        "other_cadence": other_cadence,
+        "willing_discuss_personal": True,
+        "willing_student_group": True,
+        "willing_advice_classes": True,
+        "willing_advice_clinical_rotations": True,
+        "willing_research": True,
+        "willing_residency": True,
     }
 
     response = client.post("/api/student-profile", json=profile)
@@ -72,12 +82,12 @@ def test_create_student_profile(client, auth):
 
     assert response.json["cadence"] == cadence
 
-    assert response.json["other_cadence"] is None
-    assert response.json["profile_image_url"] is None
+    assert response.json["other_cadence"] == other_cadence
+    assert response.json["profile_image_url"] == profile_image_url
 
-    assert not response.json["willing_discuss_personal"]
-    assert not response.json["willing_student_group"]
-    assert not response.json["willing_advice_classes"]
-    assert not response.json["willing_advice_clinical_rotations"]
-    assert not response.json["willing_research"]
-    assert not response.json["willing_residency"]
+    assert response.json["willing_discuss_personal"]
+    assert response.json["willing_student_group"]
+    assert response.json["willing_advice_classes"]
+    assert response.json["willing_advice_clinical_rotations"]
+    assert response.json["willing_research"]
+    assert response.json["willing_residency"]

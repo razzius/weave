@@ -5,6 +5,22 @@ def flat_values(values):
     return [tup[0] for tup in values]
 
 
+BASE_PROFILE_FIELDS = {
+    "name",
+    "contact_email",
+    "profile_image_url",
+    "additional_information",
+    "cadence",
+    "other_cadence",
+    "willing_discuss_personal",
+    "willing_student_group",
+}
+
+
+def get_base_fields(schema):
+    return {field: schema.get(field) for field in BASE_PROFILE_FIELDS}
+
+
 def save_tags(profile, tag_values, option_class, profile_relation_class):
     activity_values = [value["tag"]["value"].strip() for value in tag_values]
 
