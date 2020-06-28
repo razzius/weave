@@ -1,3 +1,4 @@
+import datetime
 import http
 
 import flask_login
@@ -5,6 +6,7 @@ from flask import jsonify, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import exists
+from structlog import get_logger
 
 from server.models import (
     ActivityOption,
@@ -18,6 +20,7 @@ from server.models import (
     StudentProfessionalInterest,
     StudentProfile,
     StudentProfileActivity,
+    VerificationEmail,
     db,
     save,
 )
@@ -26,6 +29,9 @@ from server.schemas import student_profile_schema
 from .blueprint import api
 from .exceptions import InvalidPayloadError, UserError
 from .utils import get_base_fields, save_tags
+
+
+log = get_logger()
 
 
 def save_student_tags(profile, schema):
@@ -51,7 +57,7 @@ def save_student_tags(profile, schema):
     save_tags(profile, schema["activities"], ActivityOption, StudentProfileActivity)
 
 
-def basic_student_profile_data(verification_token, schema):
+def basic_student_profile_data(schema):
     base_fields = get_base_fields(schema)
 
     return {
@@ -90,7 +96,7 @@ def create_student_profile():
         "program_id": schema["program"].id,
         "current_year_id": schema["current_year"].id,
         "pce_site_id": schema["pce_site"].id,
-        **basic_student_profile_data(verification_token, schema),
+        **basic_student_profile_data(schema),
     }
 
     profile = save(StudentProfile(**profile_data))
@@ -98,3 +104,62 @@ def create_student_profile():
     save_student_tags(profile, schema)
 
     return jsonify(student_profile_schema.dump(profile)), http.HTTPStatus.CREATED.value
+
+
+@api.route("/student-profiles/<profile_id>", methods=["PUT"])
+@flask_login.login_required
+def update_student_profile(profile_id=None):
+    try:
+        schema = student_profile_schema.load(request.json)
+    except ValidationError as err:
+        capture_exception(err)
+        raise InvalidPayloadError(err.messages)
+
+    verification_token = flask_login.current_user
+
+    profile = StudentProfile.query.get_or_404(profile_id)
+
+    is_admin = VerificationEmail.query.filter(
+        VerificationEmail.id == verification_token.email_id
+    ).value(VerificationEmail.is_admin)
+
+    log.info(
+        "Edit student profile",
+        profile_id=profile_id,
+        is_admin=is_admin,
+        token_id=verification_token.id,
+        email=verification_token.email.email,
+    )
+
+    assert is_admin or profile.verification_email_id == verification_token.email_id
+
+    profile_data = basic_student_profile_data(schema)
+
+    for key, value in profile_data.items():
+        setattr(profile, key, value)
+
+    editing_as_admin = (
+        is_admin and profile.verification_email_id != verification_token.email_id
+    )
+
+    if not editing_as_admin:
+        profile.date_updated = datetime.datetime.utcnow()
+
+    save(profile)
+
+    # TODO rather than deleting all, delete only ones that haven't changed
+    profile_relation_classes = {
+        StudentProfessionalInterest,
+        StudentProfileActivity,
+        StudentHospitalAffiliation,
+        StudentPartsOfMe,
+        StudentClinicalSpecialty,
+    }
+    for profile_relation_class in profile_relation_classes:
+        profile_relation_class.query.filter(
+            profile_relation_class.profile_id == profile.id
+        ).delete()
+
+    save_student_tags(profile, schema)
+
+    return student_profile_schema.dump(profile)

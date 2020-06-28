@@ -5,9 +5,9 @@ def flat_values(values):
     return [tup[0] for tup in values]
 
 
+TRIMMED_FIELDS = {"name", "contact_email"}
+
 BASE_PROFILE_FIELDS = {
-    "name",
-    "contact_email",
     "profile_image_url",
     "additional_information",
     "cadence",
@@ -18,7 +18,11 @@ BASE_PROFILE_FIELDS = {
 
 
 def get_base_fields(schema):
-    return {field: schema.get(field) for field in BASE_PROFILE_FIELDS}
+    base_fields = {field: schema.get(field) for field in BASE_PROFILE_FIELDS}
+
+    trimmed_fields = {field: schema[field].strip() for field in TRIMMED_FIELDS}
+
+    return {**base_fields, **trimmed_fields}
 
 
 def save_tags(profile, tag_values, option_class, profile_relation_class):

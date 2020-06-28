@@ -327,12 +327,7 @@ def update_faculty_profile(profile_id=None):
     profile_data = basic_faculty_profile_data(schema)
 
     for key, value in profile_data.items():
-
-        # TODO put this with the schema
-        if key in {"name", "contact_email"}:
-            setattr(profile, key, value.strip())
-        else:
-            setattr(profile, key, value)
+        setattr(profile, key, value)
 
     editing_as_admin = (
         is_admin and profile.verification_email_id != verification_token.email_id
