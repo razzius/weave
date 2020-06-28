@@ -2,7 +2,13 @@ import datetime
 import uuid
 from typing import Optional
 
-from server.models import FacultyProfile, VerificationEmail, VerificationToken, save
+from server.models import (
+    FacultyProfile,
+    StudentProfile,
+    VerificationEmail,
+    VerificationToken,
+    save,
+)
 
 
 def generate_test_email() -> str:
@@ -47,6 +53,32 @@ def create_test_profile(
 
     profile = save(
         FacultyProfile(
+            name=name,
+            verification_email_id=verification_email.id,
+            contact_email=email,
+            available_for_mentoring=available_for_mentoring,
+            date_updated=date_updated,
+            cadence="monthly",
+        )
+    )
+
+    return profile
+
+
+def create_test_student_profile(
+    email: Optional[str] = None,
+    name="Test User",
+    is_admin=False,
+    available_for_mentoring=False,
+    date_updated=datetime.date.today(),
+) -> StudentProfile:
+    if email is None:
+        email = generate_test_email()
+
+    verification_email = create_test_verification_email(email, is_admin)
+
+    profile = save(
+        StudentProfile(
             name=name,
             verification_email_id=verification_email.id,
             contact_email=email,

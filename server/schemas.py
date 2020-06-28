@@ -60,6 +60,9 @@ class RelationOption(fields.Field):
         return self.model.query.filter(self.model.value == value).first()
 
     def _serialize(self, value, *args, **kwargs):
+        if value is None:
+            return None
+
         return value.value
 
 
