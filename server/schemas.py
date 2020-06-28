@@ -3,11 +3,7 @@ import pathlib
 
 from marshmallow import Schema, ValidationError, fields, validates_schema
 
-from .models import (
-    StudentPCESiteOption,
-    StudentProgramOption,
-    StudentYearOption
-)
+from .models import StudentPCESiteOption, StudentProgramOption, StudentYearOption
 
 
 class CustomTagSchema(Schema):
@@ -39,7 +35,7 @@ class BaseProfileSchema(Schema):
     willing_discuss_personal = fields.Boolean()
     willing_student_group = fields.Boolean()
 
-    cadence = fields.String()
+    cadence = fields.String(missing="monthly")
     other_cadence = fields.String(allow_none=True)
 
     # This is assigned to profiles by mutation. TODO find a better way

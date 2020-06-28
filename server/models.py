@@ -94,7 +94,7 @@ class ActivityOption(UserEditableTagMixin, db.Model):
 class BaseProfile:
     id = db.Column(db.String, primary_key=True, default=generate_uuid)
     name = db.Column(db.String(255), nullable=False)
-    contact_email = db.Column(db.String(120), unique=True, nullable=False)
+    contact_email = db.Column(db.String(120), nullable=False)
 
     profile_image_url = db.Column(db.String(255))
 
@@ -127,8 +127,6 @@ class BaseProfile:
 
 
 class FacultyProfile(BaseProfile, db.Model):
-    degrees = relationship("FacultyProfileDegree", cascade="all, delete")
-
     # TODO rename to hospital_affiliations
     affiliations = relationship("FacultyHospitalAffiliation", cascade="all, delete")
 
@@ -143,6 +141,8 @@ class FacultyProfile(BaseProfile, db.Model):
     parts_of_me = relationship("FacultyPartsOfMe", cascade="all, delete")
 
     activities = relationship("FacultyProfileActivity", cascade="all, delete")
+
+    degrees = relationship("FacultyProfileDegree", cascade="all, delete")
 
     willing_shadowing = db.Column(db.Boolean, default=False)
     willing_networking = db.Column(db.Boolean, default=False)

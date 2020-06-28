@@ -8,7 +8,6 @@ from flask import jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import and_, asc, desc, exists, func, text
-from sqlalchemy.exc import IntegrityError
 from structlog import get_logger
 
 from server.emails import (
@@ -62,7 +61,7 @@ from .exceptions import (
     UnauthorizedError,
     UserError,
 )
-from .utils import save_tags
+from .utils import save_tags, get_base_fields
 from . import student_profile
 
 __all__ = ["student_profile"]
@@ -254,20 +253,19 @@ def save_all_tags(profile, schema):
     save_tags(profile, schema["degrees"], DegreeOption, FacultyProfileDegree)
 
 
-def basic_profile_data(verification_token, schema):
+def basic_faculty_profile_data(schema):
+    """
+Gets fields on the schema that are directly stored on the profile, as
+    opposed to many-to-many fields that are stored in other tables.
+    """
+    base_fields = get_base_fields(schema)
+
     return {
-        key: value
-        for key, value in schema.items()
-        if key
-        not in {
-            "affiliations",
-            "clinical_specialties",
-            "professional_interests",
-            "parts_of_me",
-            "activities",
-            "degrees"
-            # TODO should be `in` rather than `not in`
-        }
+        **base_fields,
+        "willing_shadowing": schema.get("willing_shadowing"),
+        "willing_networking": schema.get("willing_networking"),
+        "willing_goal_setting": schema.get("willing_goal_setting"),
+        "willing_career_guidance": schema.get("willing_career_guidance"),
     }
 
 
@@ -289,13 +287,10 @@ def create_faculty_profile():
 
     profile_data = {
         "verification_email_id": verification_token.email_id,
-        **basic_profile_data(verification_token, schema),
+        **basic_faculty_profile_data(schema),
     }
 
-    profile = FacultyProfile(**profile_data)
-
-    db.session.add(profile)
-    db.session.commit()
+    profile = save(FacultyProfile(**profile_data))
 
     save_all_tags(profile, schema)
 
@@ -320,7 +315,7 @@ def update_faculty_profile(profile_id=None):
     ).value(VerificationEmail.is_admin)
 
     log.info(
-        "Edit profile",
+        "Edit faculty profile",
         profile_id=profile_id,
         is_admin=is_admin,
         token_id=verification_token.id,
@@ -329,7 +324,7 @@ def update_faculty_profile(profile_id=None):
 
     assert is_admin or profile.verification_email_id == verification_token.email_id
 
-    profile_data = basic_profile_data(verification_token, schema)
+    profile_data = basic_faculty_profile_data(schema)
 
     for key, value in profile_data.items():
 
@@ -346,10 +341,7 @@ def update_faculty_profile(profile_id=None):
     if not editing_as_admin:
         profile.date_updated = datetime.datetime.utcnow()
 
-    try:
-        save(profile)
-    except IntegrityError:
-        raise UserError({"error": "Account with this contact email already exists"})
+    save(profile)
 
     # TODO rather than deleting all, delete only ones that haven't changed
     profile_relation_classes = {

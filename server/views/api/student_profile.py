@@ -25,7 +25,7 @@ from server.schemas import student_profile_schema
 
 from .blueprint import api
 from .exceptions import InvalidPayloadError, UserError
-from .utils import save_tags
+from .utils import get_base_fields, save_tags
 
 
 def save_student_tags(profile, schema):
@@ -52,11 +52,20 @@ def save_student_tags(profile, schema):
 
 
 def basic_student_profile_data(verification_token, schema):
+    base_fields = get_base_fields(schema)
+
     return {
-        "name": schema["name"],
-        "contact_email": schema["contact_email"],
-        "cadence": schema["cadence"],
-        "other_cadence": schema["other_cadence"],
+        **base_fields,
+        "program_id": schema.get("program_id"),
+        "program": schema.get("program"),
+        "current_year": schema.get("current_year"),
+        "pce_site": schema.get("pce_site"),
+        "willing_advice_classes": schema.get("willing_advice_classes"),
+        "willing_advice_clinical_rotations": schema.get(
+            "willing_advice_clinical_rotations"
+        ),
+        "willing_research": schema.get("willing_research"),
+        "willing_residency": schema.get("willing_residency"),
     }
 
 

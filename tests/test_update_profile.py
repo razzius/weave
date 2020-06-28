@@ -31,7 +31,7 @@ def test_update_profile(client, auth):
 
     response = client.put(f"/api/profiles/{profile.id}", json=PROFILE_UPDATE)
 
-    assert response.status_code == http.HTTPStatus.OK.value
+    assert response.status_code == http.HTTPStatus.OK.value, response.json
 
     expected_fields = {"contact_email": "new@test.com", "name": "New User"}
 
