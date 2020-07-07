@@ -121,7 +121,7 @@ export default class Profile extends Component<Props, State> {
       return null
     }
 
-    const { profileId, isAdmin } = account
+    const { profileId, isAdmin, isMentor } = account
 
     if (profile === null) {
       return null
@@ -135,6 +135,7 @@ export default class Profile extends Component<Props, State> {
       <AppScreen>
         <ProfileView
           isAdmin={isAdmin}
+          isMentor={isMentor}
           ownProfile={ownProfile}
           data={baseProfileData}
           profileId={id}

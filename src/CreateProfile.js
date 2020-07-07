@@ -4,7 +4,7 @@ import { type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
 import { createProfile, type Account } from './api'
-import ProfileForm from './ProfileForm'
+import FacultyProfileForm from './FacultyProfileForm'
 
 type Props = {
   setProfileId: string => void,
@@ -19,8 +19,8 @@ const CreateProfile = ({ setProfileId, account, history }: Props) => {
 
   return (
     <AppScreen>
-      <ProfileForm
-        firstTimePublish={false}
+      <FacultyProfileForm
+        firstTimePublish
         saveProfile={createProfile}
         setProfileId={setProfileId}
         history={history}
