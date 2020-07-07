@@ -13,7 +13,7 @@ import CadenceOption from './CadenceOption'
 import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
 import { getProfileTags, uploadPicture, type Profile } from './api'
-import { makeOptions, degreeOptions } from './options'
+import { makeOptions } from './options'
 import { arrayCaseInsensitiveContains, capitalize, last, when } from './utils'
 
 function scaleCanvas(canvas) {
@@ -48,10 +48,10 @@ type Props = {
   setProfileId: ?Function,
   history: RouterHistory,
   firstTimePublish: boolean,
+  RoleSpecificFields: Object,
 }
 
 type State = {
-  position: { x: number, y: number },
   scale: number,
   rotate: number,
   width: number,
@@ -97,7 +97,6 @@ export default class ProfileForm extends Component<Props, State> {
   editor: any = null
 
   state = {
-    position: { x: 0.5, y: 0.5 },
     scale: 1,
     rotate: 0,
     width: 200,
@@ -330,7 +329,7 @@ export default class ProfileForm extends Component<Props, State> {
       imageEdited,
     } = this.state
 
-    const { firstTimePublish } = this.props
+    const { firstTimePublish, RoleSpecificFields } = this.props
 
     if (preview) {
       return (
@@ -512,12 +511,10 @@ export default class ProfileForm extends Component<Props, State> {
               value={contactEmail}
               onChange={this.update('contactEmail')}
             />
-            <p>Academic Degrees</p>
-            <CreatableTagSelect
-              values={degrees}
-              options={degreeOptions}
-              handleChange={this.handleChange('degrees')}
-              handleAdd={this.handleCreate('degrees')}
+            <RoleSpecificFields
+              fields={{ degrees }}
+              handleChange={this.handleChange}
+              handleCreate={this.handleCreate}
             />
             <InstitutionalAffiliationsForm
               affiliations={makeOptions(affiliations)}

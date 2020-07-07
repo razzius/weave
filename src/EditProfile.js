@@ -5,7 +5,7 @@ import { type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
 import { getProfile, updateProfile, type Account } from './api'
-import ProfileForm from './ProfileForm'
+import FacultyProfileForm from './FacultyProfileForm'
 
 type Props = {
   account: Account | null,
@@ -35,7 +35,7 @@ const EditProfile = ({
 
   return (
     <AppScreen>
-      <ProfileForm
+      <FacultyProfileForm
         loadInitial={() => getProfile(profileId)}
         firstTimePublish={false}
         saveProfile={updateProfile}
