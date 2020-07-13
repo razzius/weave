@@ -13,6 +13,7 @@ import 'blueimp-canvas-to-blob'
 import './App.css'
 import BrowseFaculty from './BrowseFaculty'
 import CreateProfile from './CreateProfile'
+import CreatePeerProfile from './CreatePeerProfile'
 import EditProfile from './EditProfile'
 import Expectations from './Expectations'
 import FacultyExpectations from './FacultyExpectations'
@@ -23,6 +24,7 @@ import Logout from './Logout'
 import MenteeExpectations from './MenteeExpectations'
 import MentorExpectations from './MentorExpectations'
 import NotLoggedIn from './NotLoggedIn'
+import OwnProfileLink from './OwnProfileLink'
 import BrowsePeerMentorship from './BrowsePeerMentorship'
 import About from './About'
 import Profile from './Profile'
@@ -178,18 +180,7 @@ class App extends Component<Props, State> {
                   Help
                 </Link>
 
-                {account && (
-                  <Link
-                    to={
-                      account.profileId
-                        ? `/profiles/${account.profileId}`
-                        : '/create-profile'
-                    }
-                    className="App-title"
-                  >
-                    {account.profileId ? 'My Profile' : 'Create Profile'}
-                  </Link>
-                )}
+                {account && <OwnProfileLink account={account} />}
               </nav>
             </div>
           </header>
@@ -211,13 +202,31 @@ class App extends Component<Props, State> {
             />
             <Route
               path="/create-profile"
-              render={({ history }) => (
-                <CreateProfile
-                  account={account}
-                  setProfileId={this.setProfileId}
-                  history={history}
-                />
-              )}
+              render={() => {
+                if (account) {
+                  return (
+                    <CreateProfile
+                      account={account}
+                      setProfileId={this.setProfileId}
+                    />
+                  )
+                }
+                return loading ? null : <NotLoggedIn />
+              }}
+            />
+            <Route
+              path="/create-peer-profile"
+              render={() => {
+                if (account) {
+                  return (
+                    <CreatePeerProfile
+                      account={account}
+                      setProfileId={this.setProfileId}
+                    />
+                  )
+                }
+                return loading ? null : <NotLoggedIn />
+              }}
             />
             <Route
               path="/edit-profile"

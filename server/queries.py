@@ -7,22 +7,23 @@ from sqlalchemy import and_, func, or_, sql
 
 from .models import (
     ActivityOption,
-    FacultyClinicalSpecialty,
     ClinicalSpecialtyOption,
     DegreeOption,
+    FacultyClinicalSpecialty,
     FacultyHospitalAffiliation,
-    HospitalAffiliationOption,
     FacultyPartsOfMe,
-    PartsOfMeOption,
     FacultyProfessionalInterest,
-    ProfessionalInterestOption,
     FacultyProfile,
     FacultyProfileActivity,
     FacultyProfileDegree,
+    HospitalAffiliationOption,
+    PartsOfMeOption,
+    ProfessionalInterestOption,
     ProfileStar,
+    StudentProgramOption,
     VerificationEmail,
     VerificationToken,
-    db,
+    db
 )
 
 
@@ -307,6 +308,7 @@ def query_profile_tags():
     config_tag_classes = [
         (HospitalAffiliationOption, "hospital_affiliations"),
         (DegreeOption, "degrees"),
+        (StudentProgramOption, "programs"),
     ]
 
     public_tag_classes = [
