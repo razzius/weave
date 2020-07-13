@@ -69,6 +69,8 @@ type State = {
   professionalInterests: Array<string>,
   partsOfMe: Array<string>,
   activities: Array<string>,
+
+  program: string | null,
   degrees: Array<string>,
 
   additionalInformation: string,
@@ -89,6 +91,7 @@ type State = {
   clinicalSpecialtyOptions: Array<string>,
   activitiesIEnjoyOptions: Array<string>,
   professionalInterestOptions: Array<string>,
+  programOptions: Array<string>,
 }
 
 export default class ProfileForm extends Component<Props, State> {
@@ -114,6 +117,9 @@ export default class ProfileForm extends Component<Props, State> {
     professionalInterests: [],
     partsOfMe: [],
     activities: [],
+
+    program: null,
+
     degrees: [],
 
     additionalInformation: '',
@@ -134,6 +140,7 @@ export default class ProfileForm extends Component<Props, State> {
     clinicalSpecialtyOptions: [],
     activitiesIEnjoyOptions: [],
     professionalInterestOptions: [],
+    programOptions: [],
   }
 
   async componentDidMount() {
@@ -145,6 +152,7 @@ export default class ProfileForm extends Component<Props, State> {
 
     this.setState({
       ...initialData,
+      programOptions: tags.programs,
       hospitalOptions: tags.hospital_affiliations,
       clinicalSpecialtyOptions: tags.clinical_specialties,
       professionalInterestOptions: tags.professional_interests,
@@ -164,6 +172,10 @@ export default class ProfileForm extends Component<Props, State> {
     this.setState({
       [key]: [...current, capitalize(trimmed)],
     })
+  }
+
+  handleChangeField = (key: string) => ({ value }: Object) => {
+    this.setState({ [key]: value })
   }
 
   handleChange = (key: string) => (selected: ValueType, meta: Object) => {
@@ -312,6 +324,8 @@ export default class ProfileForm extends Component<Props, State> {
       name,
       otherCadence,
       partsOfMe,
+      program,
+      programOptions,
       preview,
       professionalInterestOptions,
       professionalInterests,
@@ -512,9 +526,10 @@ export default class ProfileForm extends Component<Props, State> {
               onChange={this.update('contactEmail')}
             />
             <RoleSpecificFields
-              fields={{ degrees }}
+              fields={{ degrees, program }}
+              options={{ programOptions: makeOptions(programOptions) }}
               handleChange={this.handleChange}
-              handleCreate={this.handleCreate}
+              handleChangeField={this.handleChangeField}
             />
             <InstitutionalAffiliationsForm
               affiliations={makeOptions(affiliations)}
@@ -543,9 +558,9 @@ export default class ProfileForm extends Component<Props, State> {
             <div className="user-tip">
               <p>
                 Please use this section to share parts of your identity. This is
-                where faculty may share optional demographic or personally
-                meaningful information that is viewable by students and faculty
-                on Weave. Please{' '}
+                where you may share optional demographic or personally
+                meaningful information that is viewable by students on Weave.
+                Please{' '}
                 <Link to="/help#how-do-i-create-my-own-tags" target="_blank">
                   create your own tags
                 </Link>{' '}

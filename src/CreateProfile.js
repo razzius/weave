@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { type RouterHistory } from 'react-router-dom'
+import { withRouter, type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
 import { createProfile, type Account } from './api'
@@ -29,4 +29,4 @@ const CreateProfile = ({ setProfileId, account, history }: Props) => {
   )
 }
 
-export default CreateProfile
+export default withRouter(CreateProfile)

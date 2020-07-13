@@ -247,7 +247,7 @@ const ProfileView = ({
   firstTimePublish?: boolean,
   editing?: boolean,
   isAdmin?: boolean,
-  isMentor: boolean,
+  isMentor?: boolean,
   location: Object,
   profileId?: ?string,
   dateUpdated?: Date,
@@ -270,7 +270,7 @@ const ProfileView = ({
       editing={editing}
       location={location}
       adminButton={adminButton}
-      isFaculty={isMentor}
+      isFaculty={Boolean(isMentor)}
     />
   )
   const avatar = (
