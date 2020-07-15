@@ -11,7 +11,7 @@ from server.models import (
     HospitalAffiliationOption,
     PartsOfMeOption,
     ProfessionalInterestOption,
-    save
+    save,
 )
 from server.queries import query_profile_tags
 
@@ -29,6 +29,9 @@ def test_query_profile_tags_not_related_to_profile(db_session):
         "degrees": [],
         "hospital_affiliations": ["Hospital"],
         "professional_interests": [],
+        "programs": [],
+        "pce_site_options": [],
+        "current_year_options": [],
     }
 
 
@@ -72,4 +75,7 @@ def test_query_profile_tags(db_session):
         "degrees": ["Degree"],
         "hospital_affiliations": ["Hospital"],
         "professional_interests": ["Interest"],
+        "programs": [],
+        "pce_site_options": [],
+        "current_year_options": [],
     }

@@ -7,7 +7,7 @@ def test_set_unavailable_to_mentor(client, auth):
     token = "123"
     email = "test@test.com"
 
-    verification_email = save(VerificationEmail(email=email))
+    verification_email = save(VerificationEmail(email=email, is_mentor=True))
 
     save(VerificationToken(token=token, email_id=verification_email.id))
 

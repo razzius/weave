@@ -1,4 +1,4 @@
-from server.models import ProfileStar, save
+from server.models import FacultyProfile, ProfileStar, save
 from server.queries import matching_profiles
 
 from .utils import create_test_profile, create_test_verification_email
@@ -15,6 +15,7 @@ def test_matching_profiles_starred_profile(db_session):
         degrees="",
         affiliations="",
         verification_email_id=user_email.id,
+        profile_class=FacultyProfile,
     )
 
     save(
@@ -42,6 +43,7 @@ def test_matching_profiles(db_session):
         degrees="",
         affiliations="",
         verification_email_id=user_email.id,
+        profile_class=FacultyProfile,
     )
 
     profile_result, starred = profiles[0]
@@ -57,6 +59,7 @@ def test_matching_profiles_empty(db_session):
         degrees="",
         affiliations="",
         verification_email_id=user_email.id,
+        profile_class=FacultyProfile,
     )
 
     assert list(profiles) == []

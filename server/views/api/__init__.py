@@ -14,7 +14,7 @@ from server.emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
-    send_student_registration_email
+    send_student_registration_email,
 )
 from server.models import (
     ActivityOption,
@@ -35,7 +35,7 @@ from server.models import (
     VerificationEmail,
     VerificationToken,
     db,
-    save
+    save,
 )
 from server.queries import (
     add_stars_to_profiles,
@@ -44,12 +44,12 @@ from server.queries import (
     matching_profiles,
     query_profile_tags,
     query_profiles_and_stars,
-    query_searchable_tags
+    query_searchable_tags,
 )
 from server.schemas import (
     faculty_profile_schema,
     faculty_profiles_schema,
-    valid_email_schema
+    valid_email_schema,
 )
 from server.session import token_expired
 from server.views.pagination import paginate
@@ -61,7 +61,7 @@ from .exceptions import (
     InvalidPayloadError,
     LoginTimeoutError,
     UnauthorizedError,
-    UserError
+    UserError,
 )
 from .utils import get_base_fields, save_tags
 
@@ -143,6 +143,7 @@ def get_profiles():
             degrees,
             affiliations,
             verification_email_id=verification_email_id,
+            profile_class=FacultyProfile,
         )
         .join(
             VerificationEmail,
@@ -211,7 +212,7 @@ def get_profile(profile_id=None):
     verification_token = flask_login.current_user
 
     profile_and_star_list = query_profiles_and_stars(
-        verification_token.email_id
+        verification_email_id=verification_token.email_id, profile_class=FacultyProfile,
     ).filter(FacultyProfile.id == profile_id)
 
     if not profile_and_star_list.first():
