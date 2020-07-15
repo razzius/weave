@@ -9,6 +9,9 @@ from .models import (
     DegreeOption,
     FacultyProfile,
     HospitalAffiliationOption,
+    StudentProgramOption,
+    StudentYearOption,
+    StudentPCESiteOption,
     PartsOfMeOption,
     ProfessionalInterestOption,
     StudentProfile,
@@ -88,6 +91,11 @@ admin.add_view(ModelViewSortedByValue(HospitalAffiliationOption, db.session))
 admin.add_view(ModelViewSortedByValue(ClinicalSpecialtyOption, db.session))
 admin.add_view(ModelViewSortedByValue(ProfessionalInterestOption, db.session))
 admin.add_view(ModelViewSortedByValue(PartsOfMeOption, db.session))
+admin.add_view(ModelViewSortedByValue(StudentProgramOption, db.session))
+admin.add_view(ModelViewSortedByValue(StudentYearOption, db.session))
+admin.add_view(
+    ModelViewSortedByValue(StudentPCESiteOption, db.session, name="PCE Site Options")
+)
 admin.add_view(
     ModelViewSortedByValue(ActivityOption, db.session, name="Activities I Enjoy")
 )

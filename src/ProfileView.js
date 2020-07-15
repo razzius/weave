@@ -17,6 +17,7 @@ const Buttons = ({
   location,
   adminButton,
   isFaculty,
+  editUrl,
 }: {
   ownProfile: boolean,
   firstTimePublish: boolean,
@@ -24,9 +25,10 @@ const Buttons = ({
   location: Object,
   adminButton: Node | null,
   isFaculty: boolean,
+  editUrl: string,
 }) => (
   <Fragment>
-    {ownProfile && <Button to="/edit-profile">Edit Profile</Button>}
+    {ownProfile && <Button to={editUrl}>Edit Profile</Button>}
     {adminButton}
     {!firstTimePublish && !editing && (
       <Button
@@ -83,6 +85,10 @@ export type BaseProfileData = {|
   willingDiscussPersonal: boolean,
   willingCareerGuidance: boolean,
   willingStudentGroup: boolean,
+
+  program?: ?string,
+  pceSite?: ?string,
+  currentYear?: ?string,
 
   cadence: string,
   otherCadence: ?string,
@@ -156,13 +162,6 @@ const HospitalAffiliations = ({ affiliations }: { affiliations: string }) => (
   </Fragment>
 )
 
-const AcademicDegrees = ({ degrees }: { degrees: string }) => (
-  <Fragment>
-    <h4 style={{ marginTop: '2em' }}>Academic Degrees</h4>
-    <p style={{ paddingBottom: '1em' }}>{degrees}</p>
-  </Fragment>
-)
-
 const ClinicalInterests = ({ interests }: { interests: string }) => (
   <div>
     <h4>Clinical Interests</h4>
@@ -178,10 +177,18 @@ const AboutInfo = ({
   partsOfMe,
   additionalInformation,
   activities,
+  program,
+  pceSite,
+  currentYear,
+  RoleSpecificProfileView,
 }: Object) => (
   <Fragment>
-    {degrees.length > 0 && <AcademicDegrees degrees={degrees.join(', ')} />}
-
+    <RoleSpecificProfileView
+      degrees={degrees}
+      program={program}
+      pceSite={pceSite}
+      currentYear={currentYear}
+    />
     <HospitalAffiliations affiliations={affiliations.join(', ')} />
     {clinicalSpecialties.length > 0 && (
       <ClinicalInterests interests={clinicalSpecialties.join(', ')} />
@@ -241,8 +248,11 @@ const ProfileView = ({
   dateUpdated,
   starred,
   history,
+  RoleSpecificProfileView,
+  editUrl,
+  adminEditBaseUrl,
 }: {
-  data: BaseProfileData,
+  data: Object,
   ownProfile?: boolean,
   firstTimePublish?: boolean,
   editing?: boolean,
@@ -253,12 +263,15 @@ const ProfileView = ({
   dateUpdated?: Date,
   starred?: ?boolean,
   history: RouterHistory,
+  RoleSpecificProfileView: Object,
+  editUrl?: string,
+  adminEditBaseUrl?: string,
 }) => {
   const [starredState, setStarred] = useState(Boolean(starred))
 
   const adminButton =
-    isAdmin && !ownProfile && profileId ? (
-      <Button to={`/admin-edit-profile/${profileId}`}>
+    isAdmin && !ownProfile && profileId && adminEditBaseUrl ? (
+      <Button to={`/${adminEditBaseUrl}/${profileId}`}>
         Edit profile as admin
       </Button>
     ) : null
@@ -271,6 +284,7 @@ const ProfileView = ({
       location={location}
       adminButton={adminButton}
       isFaculty={Boolean(isMentor)}
+      editUrl={editUrl}
     />
   )
   const avatar = (
@@ -281,6 +295,22 @@ const ProfileView = ({
     dateUpdated == null ? null : (
       <small>Profile last updated {dateUpdated.toLocaleDateString()}</small>
     )
+
+  const aboutInfo = (
+    <AboutInfo
+      degrees={data.degrees}
+      affiliations={data.affiliations}
+      clinicalSpecialties={data.clinicalSpecialties}
+      professionalInterests={data.professionalInterests}
+      partsOfMe={data.partsOfMe}
+      additionalInformation={data.additionalInformation}
+      activities={data.activities}
+      program={data.program}
+      pceSite={data.pceSite}
+      currentYear={data.currentYear}
+      RoleSpecificProfileView={RoleSpecificProfileView}
+    />
+  )
 
   return (
     <Fragment>
@@ -304,15 +334,8 @@ const ProfileView = ({
             willingCareerGuidance={data.willingCareerGuidance}
             willingStudentGroup={data.willingStudentGroup}
           />
-          <AboutInfo
-            degrees={data.degrees}
-            affiliations={data.affiliations}
-            clinicalSpecialties={data.clinicalSpecialties}
-            professionalInterests={data.professionalInterests}
-            partsOfMe={data.partsOfMe}
-            additionalInformation={data.additionalInformation}
-            activities={data.activities}
-          />
+          {aboutInfo}
+
           {lastUpdated}
         </div>
       </MediaQuery>
@@ -366,15 +389,8 @@ const ProfileView = ({
 
               <h1>{data.name}</h1>
 
-              <AboutInfo
-                degrees={data.degrees}
-                affiliations={data.affiliations}
-                clinicalSpecialties={data.clinicalSpecialties}
-                professionalInterests={data.professionalInterests}
-                partsOfMe={data.partsOfMe}
-                additionalInformation={data.additionalInformation}
-                activities={data.activities}
-              />
+              {aboutInfo}
+
               {lastUpdated}
             </div>
           </div>

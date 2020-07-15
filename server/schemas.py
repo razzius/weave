@@ -71,9 +71,9 @@ class StudentProfileSchema(BaseProfileSchema):
 
     current_year = fields.String()
 
-    program = RelationOption(StudentProgramOption)
-    current_year = RelationOption(StudentYearOption)
-    pce_site = RelationOption(StudentPCESiteOption)
+    program = RelationOption(StudentProgramOption, allow_none=True)
+    current_year = RelationOption(StudentYearOption, allow_none=True)
+    pce_site = RelationOption(StudentPCESiteOption, allow_none=True)
 
     willing_advice_classes = fields.Boolean()
     willing_advice_clinical_rotations = fields.Boolean()

@@ -3,7 +3,7 @@ import React from 'react'
 import { withRouter, type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
-import { createProfile } from './api'
+import { createStudentProfile } from './api'
 import StudentProfileForm from './StudentProfileForm'
 
 type Props = {
@@ -15,7 +15,7 @@ const CreatePeerProfile = ({ setProfileId, history }: Props) => (
   <AppScreen>
     <StudentProfileForm
       firstTimePublish
-      saveProfile={createProfile}
+      saveProfile={createStudentProfile}
       setProfileId={setProfileId}
       history={history}
     />

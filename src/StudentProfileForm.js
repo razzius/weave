@@ -1,23 +1,11 @@
 // @flow
 import React from 'react'
-import Select from 'react-select'
 import { type RouterHistory } from 'react-router-dom'
 
 import ProfileForm from './ProfileForm'
 import { type Profile } from './api'
-
-const RoleSpecificFields = ({ fields, options, handleChangeField }: Object) => (
-  <div>
-    <p>Program</p>
-    <Select
-      onChange={handleChangeField('program')}
-      options={options.programOptions}
-      value={{ label: fields.program, value: fields.program }}
-    />
-    <p>Current Year</p>
-    <p>PCE Site</p>
-  </div>
-)
+import RoleSpecificStudentProfileView from './RoleSpecificStudentProfileView'
+import RoleSpecificStudentFields from './RoleSpecificStudentFields'
 
 type Props = {
   loadInitial?: any => void,
@@ -38,13 +26,15 @@ const StudentProfileForm = ({
   firstTimePublish,
 }: Props) => (
   <ProfileForm
-    RoleSpecificFields={RoleSpecificFields}
+    RoleSpecificFields={RoleSpecificStudentFields}
+    RoleSpecificProfileView={RoleSpecificStudentProfileView}
     firstTimePublish={firstTimePublish}
     history={history}
     loadInitial={loadInitial}
     profileId={profileId}
     saveProfile={saveProfile}
     setProfileId={setProfileId}
+    profileBaseUrl="peer-profiles"
   />
 )
 
