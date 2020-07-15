@@ -2,7 +2,7 @@ import datetime
 import http
 
 import flask_login
-from flask import jsonify, request
+from flask import jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import exists
@@ -25,6 +25,7 @@ from server.models import (
     save,
 )
 from server.schemas import student_profile_schema
+from server.queries import query_profiles_and_stars
 
 from .blueprint import api
 from .exceptions import InvalidPayloadError, UserError
@@ -91,11 +92,15 @@ def create_student_profile():
     ).scalar():
         raise UserError({"email": ["This email already exists in the database"]})
 
+    program_id = schema["program"].id if schema["program"] else None
+    current_year_id = schema["current_year"].id if schema["current_year"] else None
+    pce_site_id = schema["pce_site"].id if schema["pce_site"] else None
+
     profile_data = {
         "verification_email_id": verification_token.email_id,
-        "program_id": schema["program"].id,
-        "current_year_id": schema["current_year"].id,
-        "pce_site_id": schema["pce_site"].id,
+        "program_id": program_id,
+        "current_year_id": current_year_id,
+        "pce_site_id": pce_site_id,
         **basic_student_profile_data(schema),
     }
 
@@ -104,6 +109,33 @@ def create_student_profile():
     save_student_tags(profile, schema)
 
     return jsonify(student_profile_schema.dump(profile)), http.HTTPStatus.CREATED.value
+
+
+@api.route("/student-profiles/<profile_id>")
+@flask_login.login_required
+def get_student_profile(profile_id=None):
+    verification_token = flask_login.current_user
+
+    profile_and_star_list = query_profiles_and_stars(
+        verification_email_id=verification_token.email_id, profile_class=StudentProfile
+    ).filter(StudentProfile.id == profile_id)
+
+    if not profile_and_star_list.first():
+        raise UserError({"profile_id": ["Not found"]}, http.HTTPStatus.NOT_FOUND.value)
+
+    profile, star_count = profile_and_star_list[0]
+
+    # TODO do these without mutating profile
+    profile.starred = star_count > 0
+    profile.is_faculty = profile.verification_email.is_mentor
+
+    response = make_response(jsonify(student_profile_schema.dump(profile)))
+
+    response.headers["Cache-Control"] = "public, max-age=0"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+
+    return response
 
 
 @api.route("/student-profiles/<profile_id>", methods=["PUT"])

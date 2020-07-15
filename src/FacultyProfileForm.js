@@ -3,21 +3,9 @@ import React from 'react'
 import { type RouterHistory } from 'react-router-dom'
 
 import ProfileForm from './ProfileForm'
-import CreatableTagSelect from './CreatableTagSelect'
-import { degreeOptions } from './options'
 import { type Profile } from './api'
-
-const RoleSpecificFields = ({ fields, handleChange, handleCreate }: Object) => (
-  <div>
-    <p>Academic Degrees</p>
-    <CreatableTagSelect
-      values={fields.degrees}
-      options={degreeOptions}
-      handleChange={handleChange('degrees')}
-      handleAdd={handleCreate('degrees')}
-    />
-  </div>
-)
+import RoleSpecificFacultyFields from './RoleSpecificFacultyFields'
+import RoleSpecificFacultyProfileView from './RoleSpecificFacultyProfileView'
 
 type Props = {
   loadInitial?: any => void,
@@ -38,13 +26,15 @@ const FacultyProfileForm = ({
   firstTimePublish,
 }: Props) => (
   <ProfileForm
-    RoleSpecificFields={RoleSpecificFields}
     firstTimePublish={firstTimePublish}
     history={history}
     loadInitial={loadInitial}
     profileId={profileId}
     saveProfile={saveProfile}
     setProfileId={setProfileId}
+    profileBaseUrl="profiles"
+    RoleSpecificFields={RoleSpecificFacultyFields}
+    RoleSpecificProfileView={RoleSpecificFacultyProfileView}
   />
 )
 

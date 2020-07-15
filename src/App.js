@@ -14,7 +14,6 @@ import './App.css'
 import BrowseFaculty from './BrowseFaculty'
 import CreateProfile from './CreateProfile'
 import CreatePeerProfile from './CreatePeerProfile'
-import EditProfile from './EditProfile'
 import Expectations from './Expectations'
 import FacultyExpectations from './FacultyExpectations'
 import Help from './Help'
@@ -27,10 +26,12 @@ import NotLoggedIn from './NotLoggedIn'
 import OwnProfileLink from './OwnProfileLink'
 import BrowsePeerMentorship from './BrowsePeerMentorship'
 import About from './About'
-import Profile from './Profile'
+import FacultyProfile from './FacultyProfile'
+import StudentProfile from './StudentProfile'
+import EditStudentProfile from './EditStudentProfile'
+import EditFacultyProfile from './EditFacultyProfile'
 import Resources from './Resources'
 import StudentExpectations from './StudentExpectations'
-
 import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
@@ -233,7 +234,25 @@ class App extends Component<Props, State> {
               render={({ history }) => {
                 if (account !== null) {
                   return (
-                    <EditProfile
+                    <EditFacultyProfile
+                      account={account}
+                      availableForMentoring={account.availableForMentoring}
+                      setProfileId={this.setProfileId}
+                      history={history}
+                      profileId={account.profileId}
+                    />
+                  )
+                }
+
+                return loading ? null : <NotLoggedIn />
+              }}
+            />
+            <Route
+              path="/edit-student-profile"
+              render={({ history }) => {
+                if (account !== null) {
+                  return (
+                    <EditStudentProfile
                       account={account}
                       availableForMentoring={account.availableForMentoring}
                       setProfileId={this.setProfileId}
@@ -251,7 +270,25 @@ class App extends Component<Props, State> {
               render={({ history, match }) => {
                 if (account !== null) {
                   return (
-                    <EditProfile
+                    <EditFacultyProfile
+                      account={account}
+                      isAdmin={account.isAdmin}
+                      history={history}
+                      profileId={match.params.id}
+                    />
+                  )
+                }
+
+                return loading ? null : <NotLoggedIn />
+              }}
+            />
+
+            <Route
+              path="/admin-edit-student-profile/:id"
+              render={({ history, match }) => {
+                if (account !== null) {
+                  return (
+                    <EditStudentProfile
                       account={account}
                       isAdmin={account.isAdmin}
                       history={history}
@@ -307,7 +344,13 @@ class App extends Component<Props, State> {
             <Route
               path="/profiles/:id"
               render={({ match }) => (
-                <Profile account={account} match={match} />
+                <FacultyProfile account={account} match={match} />
+              )}
+            />
+            <Route
+              path="/peer-profiles/:id"
+              render={({ match }) => (
+                <StudentProfile account={account} match={match} />
               )}
             />
             <Route component={() => <p>404 Not found</p>} />

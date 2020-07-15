@@ -7,6 +7,7 @@ from sqlalchemy import and_, func, or_, sql
 
 from .models import (
     ActivityOption,
+    BaseProfile,
     ClinicalSpecialtyOption,
     DegreeOption,
     FacultyClinicalSpecialty,
@@ -20,7 +21,14 @@ from .models import (
     PartsOfMeOption,
     ProfessionalInterestOption,
     ProfileStar,
+    StudentClinicalSpecialty,
+    StudentPartsOfMe,
+    StudentPCESiteOption,
+    StudentProfessionalInterest,
+    StudentProfile,
+    StudentProfileActivity,
     StudentProgramOption,
+    StudentYearOption,
     VerificationEmail,
     VerificationToken,
     db
@@ -38,8 +46,13 @@ def get_profile_by_token(
 ) -> Optional[FacultyProfile]:
     verification_email = VerificationEmail.query.get(verification_token.email_id)
 
-    return FacultyProfile.query.filter(
-        FacultyProfile.verification_email_id == verification_email.id
+    if verification_email.is_mentor:
+        return FacultyProfile.query.filter(
+            FacultyProfile.verification_email_id == verification_email.id
+        ).one_or_none()
+
+    return StudentProfile.query.filter(
+        StudentProfile.verification_email_id == verification_email.id
     ).one_or_none()
 
 
@@ -113,6 +126,7 @@ def _filter_profiles(
     tags: List[str],
     degree_list: List[str],
     affiliation_list: List[str],
+    profile_class: BaseProfile,
 ) -> BaseQuery:
     searchable_fields = [
         FacultyProfile.name,
@@ -120,12 +134,20 @@ def _filter_profiles(
         FacultyProfile.cadence,
     ]
 
-    tag_fields = [
-        (FacultyClinicalSpecialty, ClinicalSpecialtyOption),
-        (FacultyProfessionalInterest, ProfessionalInterestOption),
-        (FacultyPartsOfMe, PartsOfMeOption),
-        (FacultyProfileActivity, ActivityOption),
-    ]
+    if profile_class is FacultyProfile:
+        tag_fields = [
+            (FacultyClinicalSpecialty, ClinicalSpecialtyOption),
+            (FacultyProfessionalInterest, ProfessionalInterestOption),
+            (FacultyPartsOfMe, PartsOfMeOption),
+            (FacultyProfileActivity, ActivityOption),
+        ]
+    else:
+        tag_fields = [
+            (StudentClinicalSpecialty, ClinicalSpecialtyOption),
+            (StudentProfessionalInterest, ProfessionalInterestOption),
+            (StudentPartsOfMe, PartsOfMeOption),
+            (StudentProfileActivity, ActivityOption),
+        ]
 
     search_filters = [
         or_(
@@ -162,36 +184,45 @@ def _filter_profiles(
     return query
 
 
-def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
+def query_profiles_and_stars(
+    verification_email_id: int, profile_class: BaseProfile
+) -> BaseQuery:
     return (
         db.session.query(
-            FacultyProfile,
+            profile_class,
             func.count(ProfileStar.from_verification_email_id).label(
                 "profile_star_count"
             ),
         )
         .filter(
             or_(
-                FacultyProfile.available_for_mentoring,
-                FacultyProfile.verification_email_id == verification_email_id,
+                profile_class.available_for_mentoring,
+                profile_class.verification_email_id == verification_email_id,
             )
         )
         .outerjoin(
             ProfileStar,
             and_(
                 ProfileStar.from_verification_email_id == verification_email_id,
-                FacultyProfile.verification_email_id
+                profile_class.verification_email_id
                 == ProfileStar.to_verification_email_id,
             ),
         )
-        .group_by(FacultyProfile.id)
+        .group_by(profile_class.id)
     )
 
 
 def matching_profiles(
-    query: str, tags: str, degrees: str, affiliations: str, verification_email_id: int
+    query: str,
+    tags: str,
+    degrees: str,
+    affiliations: str,
+    verification_email_id: int,
+    profile_class: BaseProfile,
 ) -> BaseQuery:
-    profiles_and_stars = query_profiles_and_stars(verification_email_id)
+    profiles_and_stars = query_profiles_and_stars(
+        verification_email_id, profile_class=profile_class
+    )
 
     words = "".join(
         character if character.isalnum() else " " for character in query.lower()
@@ -202,7 +233,12 @@ def matching_profiles(
     affiliation_list = affiliations.lower().split(",") if affiliations else []
 
     filtered_profiles = _filter_profiles(
-        profiles_and_stars, words, tag_list, degree_list, affiliation_list
+        profiles_and_stars,
+        words,
+        tag_list,
+        degree_list,
+        affiliation_list,
+        profile_class=profile_class,
     )
 
     return filtered_profiles
@@ -289,7 +325,7 @@ def query_profile_tag_classes(config_tag_classes, public_tag_classes):
 
     queries = config_tag_queries + public_tag_queries
 
-    select = union_queries(queries)
+    select = union_queries(queries).order_by("value")
 
     cte = select.cte("tags")
 
@@ -309,6 +345,8 @@ def query_profile_tags():
         (HospitalAffiliationOption, "hospital_affiliations"),
         (DegreeOption, "degrees"),
         (StudentProgramOption, "programs"),
+        (StudentPCESiteOption, "pce_site_options"),
+        (StudentYearOption, "current_year_options"),
     ]
 
     public_tag_classes = [

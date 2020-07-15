@@ -31,6 +31,7 @@ from server.models import (
     PartsOfMeOption,
     ProfessionalInterestOption,
     ProfileStar,
+    StudentProfile,
     VerificationEmail,
     VerificationToken,
     db,
@@ -53,6 +54,7 @@ from server.schemas import (
 from server.session import token_expired
 from server.views.pagination import paginate
 
+from . import student_profile
 from .blueprint import api
 from .exceptions import (
     ForbiddenError,
@@ -61,8 +63,8 @@ from .exceptions import (
     UnauthorizedError,
     UserError,
 )
-from .utils import save_tags, get_base_fields
-from . import student_profile
+from .utils import get_base_fields, save_tags
+
 
 __all__ = ["student_profile"]
 
@@ -141,6 +143,7 @@ def get_profiles():
             degrees,
             affiliations,
             verification_email_id=verification_email_id,
+            profile_class=FacultyProfile,
         )
         .join(
             VerificationEmail,
@@ -176,6 +179,7 @@ def peer_profiles():
             degrees,
             affiliations,
             verification_email_id=verification_email_id,
+            profile_class=StudentProfile,
         )
         .join(
             VerificationEmail,
@@ -208,7 +212,7 @@ def get_profile(profile_id=None):
     verification_token = flask_login.current_user
 
     profile_and_star_list = query_profiles_and_stars(
-        verification_token.email_id
+        verification_email_id=verification_token.email_id, profile_class=FacultyProfile,
     ).filter(FacultyProfile.id == profile_id)
 
     if not profile_and_star_list.first():

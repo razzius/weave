@@ -49,6 +49,8 @@ type Props = {
   history: RouterHistory,
   firstTimePublish: boolean,
   RoleSpecificFields: Object,
+  RoleSpecificProfileView: Object,
+  profileBaseUrl: string,
 }
 
 type State = {
@@ -71,6 +73,8 @@ type State = {
   activities: Array<string>,
 
   program: string | null,
+  pceSite: string | null,
+  currentYear: string | null,
   degrees: Array<string>,
 
   additionalInformation: string,
@@ -92,6 +96,8 @@ type State = {
   activitiesIEnjoyOptions: Array<string>,
   professionalInterestOptions: Array<string>,
   programOptions: Array<string>,
+  pceSiteOptions: Array<string>,
+  currentYearOptions: Array<string>,
 }
 
 export default class ProfileForm extends Component<Props, State> {
@@ -118,7 +124,11 @@ export default class ProfileForm extends Component<Props, State> {
     partsOfMe: [],
     activities: [],
 
+    // TODO these fields are the superset of all student and faculty possible fields.
+    // Theoretically only the relevant fields for each role could be in state.
     program: null,
+    pceSite: null,
+    currentYear: null,
 
     degrees: [],
 
@@ -141,6 +151,8 @@ export default class ProfileForm extends Component<Props, State> {
     activitiesIEnjoyOptions: [],
     professionalInterestOptions: [],
     programOptions: [],
+    currentYearOptions: [],
+    pceSiteOptions: [],
   }
 
   async componentDidMount() {
@@ -153,6 +165,8 @@ export default class ProfileForm extends Component<Props, State> {
     this.setState({
       ...initialData,
       programOptions: tags.programs,
+      pceSiteOptions: tags.pce_site_options,
+      currentYearOptions: tags.current_year_options,
       hospitalOptions: tags.hospital_affiliations,
       clinicalSpecialtyOptions: tags.clinical_specialties,
       professionalInterestOptions: tags.professional_interests,
@@ -218,7 +232,13 @@ export default class ProfileForm extends Component<Props, State> {
   }
 
   submit = async () => {
-    const { saveProfile, profileId, setProfileId, history } = this.props
+    const {
+      saveProfile,
+      profileId,
+      setProfileId,
+      history,
+      profileBaseUrl,
+    } = this.props
     const { cadence } = this.state
 
     await when(
@@ -241,7 +261,7 @@ export default class ProfileForm extends Component<Props, State> {
     }
 
     this.setState({ saved: true }, () => {
-      history.push(`/profiles/${profile.id}`)
+      history.push(`/${profileBaseUrl}/${profile.id}`)
     })
   }
 
@@ -312,38 +332,46 @@ export default class ProfileForm extends Component<Props, State> {
     const {
       activities,
       activitiesIEnjoyOptions,
+      additionalInformation,
       affiliations,
       cadence,
       clinicalSpecialties,
       clinicalSpecialtyOptions,
       contactEmail,
+      currentYear,
+      currentYearOptions,
       degrees,
       hospitalOptions,
       image,
+      imageEdited,
+      imageSuccess,
       imageUrl,
       name,
       otherCadence,
       partsOfMe,
-      program,
-      programOptions,
+      pceSite,
+      pceSiteOptions,
       preview,
       professionalInterestOptions,
       professionalInterests,
+      program,
+      programOptions,
       rotate,
       scale,
+      uploadingImage,
       willingCareerGuidance,
       willingDiscussPersonal,
       willingGoalSetting,
       willingNetworking,
       willingShadowing,
       willingStudentGroup,
-      additionalInformation,
-      uploadingImage,
-      imageSuccess,
-      imageEdited,
     } = this.state
 
-    const { firstTimePublish, RoleSpecificFields } = this.props
+    const {
+      firstTimePublish,
+      RoleSpecificFields,
+      RoleSpecificProfileView,
+    } = this.props
 
     if (preview) {
       return (
@@ -367,7 +395,11 @@ export default class ProfileForm extends Component<Props, State> {
             willingShadowing,
             willingStudentGroup,
             additionalInformation,
+            program,
+            pceSite,
+            currentYear,
           }}
+          RoleSpecificProfileView={RoleSpecificProfileView}
           firstTimePublish={firstTimePublish}
           onEdit={this.unsetPreview}
           onPublish={this.submit}
@@ -526,8 +558,12 @@ export default class ProfileForm extends Component<Props, State> {
               onChange={this.update('contactEmail')}
             />
             <RoleSpecificFields
-              fields={{ degrees, program }}
-              options={{ programOptions: makeOptions(programOptions) }}
+              fields={{ degrees, program, pceSite, currentYear }}
+              options={{
+                programOptions: makeOptions(programOptions),
+                pceSiteOptions: makeOptions(pceSiteOptions),
+                currentYearOptions: makeOptions(currentYearOptions),
+              }}
               handleChange={this.handleChange}
               handleChangeField={this.handleChangeField}
             />

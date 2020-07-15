@@ -68,7 +68,7 @@ type ProfilePayload = Object
 function payloadToProfile(payload: ProfilePayload): Profile {
   return {
     id: payload.id,
-    dateUpdated: payload.date_updated,
+    dateUpdated: new Date(payload.date_updated),
 
     name: payload.name,
     contactEmail: payload.contact_email,
@@ -94,9 +94,41 @@ function payloadToProfile(payload: ProfilePayload): Profile {
     otherCadence: payload.other_cadence,
 
     starred: payload.starred,
+  }
+}
 
-    // gonna rework this to have separate stuff, rather than a flag
-    isFaculty: payload.is_faculty,
+function payloadToStudentProfile(payload: Object): Object {
+  return {
+    id: payload.id,
+    dateUpdated: new Date(payload.date_updated),
+
+    name: payload.name,
+    contactEmail: payload.contact_email,
+    imageUrl: payload.profile_image_url,
+
+    affiliations: payload.affiliations,
+    clinicalSpecialties: payload.clinical_specialties,
+    professionalInterests: payload.professional_interests,
+    partsOfMe: payload.parts_of_me,
+    activities: payload.activities,
+
+    program: payload.program,
+    pceSite: payload.pce_site,
+    currentYear: payload.current_year,
+
+    additionalInformation: payload.additional_information,
+
+    willingShadowing: payload.willing_shadowing,
+    willingNetworking: payload.willing_networking,
+    willingGoalSetting: payload.willing_goal_setting,
+    willingDiscussPersonal: payload.willing_discuss_personal,
+    willingCareerGuidance: payload.willing_career_guidance,
+    willingStudentGroup: payload.willing_student_group,
+
+    cadence: payload.cadence,
+    otherCadence: payload.other_cadence,
+
+    starred: payload.starred,
   }
 }
 
@@ -161,9 +193,15 @@ export async function getPeerProfiles({
     profiles: results.profiles.map(payloadToProfile),
   }
 }
-export async function getProfile(id: string): Profile {
+
+export async function getFacultyProfile(id: string): Profile {
   const profile = await get(`profiles/${id}`)
   return payloadToProfile(profile)
+}
+
+export async function getStudentProfile(id: string): Profile {
+  const profile = await get(`student-profiles/${id}`)
+  return payloadToStudentProfile(profile)
 }
 
 export function profileToPayload(profile: Profile): ProfilePayload {
@@ -193,16 +231,57 @@ export function profileToPayload(profile: Profile): ProfilePayload {
   }
 }
 
+export function profileToStudentPayload(profile: Object): Object {
+  return {
+    name: profile.name,
+    contact_email: profile.contactEmail,
+    profile_image_url: profile.imageUrl,
+
+    affiliations: profile.affiliations,
+    clinical_specialties: profile.clinicalSpecialties,
+    professional_interests: profile.professionalInterests,
+    parts_of_me: profile.partsOfMe,
+    activities: profile.activities,
+
+    program: profile.program,
+    pce_site: profile.pceSite,
+    current_year: profile.currentYear,
+
+    additional_information: profile.additionalInformation,
+
+    willing_discuss_personal: profile.willingDiscussPersonal,
+    willing_student_group: profile.willingStudentGroup,
+
+    cadence: profile.cadence,
+    other_cadence: profile.otherCadence,
+  }
+}
+
 export async function createProfile(profile: Profile) {
   const payload = profileToPayload(profile)
 
   return post('profile', payload)
 }
 
-export async function updateProfile(profile: Profile, profileId: string) {
+export async function createStudentProfile(profile: Profile) {
+  const payload = profileToStudentPayload(profile)
+
+  return post('student-profile', payload)
+}
+
+export async function updateFacultyProfile(
+  profile: Profile,
+  profileId: string
+) {
   const payload = profileToPayload(profile)
 
   return put(`profiles/${profileId}`, payload)
+}
+
+export async function updateStudentProfile(profile: Object, profileId: string) {
+  const payload = profileToStudentPayload(profile)
+
+  return put(`student-profiles/${profileId}`, payload)
 }
 
 export async function sendFacultyVerificationEmail({

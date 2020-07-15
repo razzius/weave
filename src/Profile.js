@@ -3,11 +3,11 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router'
 
 import AppScreen from './AppScreen'
-import { getProfile, type Account } from './api'
+import { type Account } from './api'
 import ProfileView, { type BaseProfileData } from './ProfileView'
 
 type ProfileData = {|
-  id: string,
+  profileId: string,
   dateUpdated: Date,
   starred?: ?boolean,
   ...BaseProfileData,
@@ -47,11 +47,11 @@ type State = {
 
 type Props = {
   account: Account | null,
-  match: {
-    params: {
-      [key: string]: ?string,
-    },
-  },
+  profileId: string,
+  getProfile: Function,
+  RoleSpecificProfileView: Object,
+  editUrl: string,
+  adminEditBaseUrl: string,
 }
 
 export default class Profile extends Component<Props, State> {
@@ -61,23 +61,15 @@ export default class Profile extends Component<Props, State> {
   }
 
   async componentDidMount() {
-    const {
-      match: {
-        params: { id },
-      },
-    } = this.props
+    const { profileId, getProfile } = this.props
 
-    if (id == null) {
+    if (profileId == null) {
       return
     }
 
     try {
-      const data = await getProfile(id)
+      const profile = await getProfile(profileId)
 
-      const profile = {
-        ...data,
-        dateUpdated: new Date(data.dateUpdated),
-      }
       this.setState({ profile })
     } catch (error) {
       if (error.message === 'Failed to fetch') {
@@ -101,13 +93,14 @@ export default class Profile extends Component<Props, State> {
   render() {
     const {
       account,
-      match: {
-        params: { id },
-      },
+      profileId,
+      RoleSpecificProfileView,
+      editUrl,
+      adminEditBaseUrl,
     } = this.props
 
-    if (id === null) {
-      return 'There is no profile id in the URL. Navigate to a profile.'
+    if (profileId === null) {
+      return 'There is no profile profileId in the URL. Navigate to a profile.'
     }
 
     const { profile, error } = this.state
@@ -121,13 +114,13 @@ export default class Profile extends Component<Props, State> {
       return null
     }
 
-    const { profileId, isAdmin, isMentor } = account
-
     if (profile === null) {
       return null
     }
 
-    const ownProfile = profileId === profile.id
+    const { isAdmin, isMentor } = account
+
+    const ownProfile = account.profileId === profileId
 
     const { dateUpdated, starred, ...baseProfileData } = profile
 
@@ -138,9 +131,12 @@ export default class Profile extends Component<Props, State> {
           isMentor={isMentor}
           ownProfile={ownProfile}
           data={baseProfileData}
-          profileId={id}
+          profileId={profileId}
           dateUpdated={dateUpdated}
           starred={starred}
+          RoleSpecificProfileView={RoleSpecificProfileView}
+          editUrl={editUrl}
+          adminEditBaseUrl={adminEditBaseUrl}
         />
       </AppScreen>
     )
