@@ -22,6 +22,7 @@ type Props = {
   nextPage: Event => void,
   resetSearch: Event => void,
   savedState: Object,
+  profileBaseUrl: string,
 }
 
 const ResultsView = ({
@@ -32,6 +33,7 @@ const ResultsView = ({
   nextPage,
   resetSearch,
   savedState,
+  profileBaseUrl,
 }: Props) => {
   if (error) {
     return <p>{error}</p>
@@ -64,7 +66,12 @@ const ResultsView = ({
     </div>
   )
   const profileElements = results.profiles.map(result => (
-    <ProfileResult key={result.id} browseState={savedState} result={result} />
+    <ProfileResult
+      key={result.id}
+      browseState={savedState}
+      result={result}
+      profileBaseUrl={profileBaseUrl}
+    />
   ))
 
   return (

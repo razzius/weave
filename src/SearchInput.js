@@ -29,6 +29,7 @@ type Props = {
   onBlur: Function,
   searchableOptions: Array<string>,
   hospitalOptions: Array<OptionType>,
+  DegreeSelect?: Object,
 }
 
 type KeyboardEvent = SyntheticKeyboardEvent<HTMLElement>
@@ -58,6 +59,7 @@ export default class SearchInput extends Component<Props> {
       onBlur,
       searchableOptions,
       hospitalOptions,
+      DegreeSelect,
     } = this.props
 
     return (
@@ -95,25 +97,24 @@ export default class SearchInput extends Component<Props> {
             Submit
           </button>
         </div>
-        <div style={{ display: 'inline-block', marginTop: '6px' }}>
-          <Select
-            styles={{
-              control: base => ({
-                ...base,
-                width: '250px',
-                backgroundColor: 'white',
-              }),
-              multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
+
+        {DegreeSelect && (
+          <div
+            style={{
+              display: 'inline-block',
+              marginTop: '6px',
+              marginRight: '6px',
             }}
-            onChange={onChangeDegrees}
-            value={labelValues(degrees)}
-            isMulti
-            noOptionsMessage={() => null}
-            options={displayDegreeOptions}
-            placeholder="Filter by degree"
-          />
-        </div>
-        <div style={{ display: 'inline-block', marginLeft: '6px' }}>
+          >
+            <DegreeSelect
+              onChange={onChangeDegrees}
+              value={labelValues(degrees)}
+              displayDegreeOptions={displayDegreeOptions}
+            />
+          </div>
+        )}
+
+        <div style={{ display: 'inline-block' }}>
           <Select
             styles={{
               control: base => ({

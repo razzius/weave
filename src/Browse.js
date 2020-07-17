@@ -14,6 +14,8 @@ type Props = {|
   location: Location,
   history: RouterHistory,
   getProfiles: Function,
+  profileBaseUrl: string,
+  DegreeSelect?: Object,
 |}
 type State = Object
 
@@ -266,6 +268,7 @@ class Browse extends Component<Props, State> {
   }
 
   render() {
+    const { profileBaseUrl, DegreeSelect } = this.props
     const {
       error,
       loading,
@@ -303,6 +306,7 @@ class Browse extends Component<Props, State> {
             onSubmit={() => {
               this.setState({ queried: true }, this.handleSearch)
             }}
+            DegreeSelect={DegreeSelect}
           />
           <div style={{ padding: '1em 0' }}>
             <ResultsView
@@ -313,6 +317,7 @@ class Browse extends Component<Props, State> {
               error={error}
               nextPage={this.nextPage}
               savedState={this.state}
+              profileBaseUrl={profileBaseUrl}
             />
           </div>
         </AppScreen>

@@ -25,7 +25,7 @@ from server.models import (
     save,
 )
 from server.schemas import student_profile_schema
-from server.queries import query_profiles_and_stars
+from server.queries import query_student_profiles_and_stars
 
 from .blueprint import api
 from .exceptions import InvalidPayloadError, UserError
@@ -116,8 +116,8 @@ def create_student_profile():
 def get_student_profile(profile_id=None):
     verification_token = flask_login.current_user
 
-    profile_and_star_list = query_profiles_and_stars(
-        verification_email_id=verification_token.email_id, profile_class=StudentProfile
+    profile_and_star_list = query_student_profiles_and_stars(
+        verification_email_id=verification_token.email_id
     ).filter(StudentProfile.id == profile_id)
 
     if not profile_and_star_list.first():

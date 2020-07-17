@@ -73,6 +73,7 @@ type Props = {
     starred: boolean,
   },
   browseState: Object,
+  profileBaseUrl: string,
 }
 
 type State = {
@@ -91,7 +92,7 @@ class ProfileResult extends Component<Props, State> {
         affiliations,
         imageUrl,
         name,
-        degrees,
+        degrees = [],
         clinicalSpecialties,
         professionalInterests,
         cadence,
@@ -104,6 +105,7 @@ class ProfileResult extends Component<Props, State> {
         starred,
       },
       browseState, // for history
+      profileBaseUrl,
     } = this.props
 
     const { scrollY } = this.state
@@ -129,7 +131,7 @@ class ProfileResult extends Component<Props, State> {
           <Link
             className="profile-result-link"
             to={{
-              pathname: `/profiles/${id}`,
+              pathname: `/${profileBaseUrl}/${id}`,
               state: { ...browseState, scrollY },
             }}
             onMouseOver={() => {
