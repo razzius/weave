@@ -565,6 +565,7 @@ export default class ProfileForm extends Component<Props, State> {
                 currentYearOptions: makeOptions(currentYearOptions),
               }}
               handleChange={this.handleChange}
+              handleCreate={this.handleCreate}
               handleChangeField={this.handleChangeField}
             />
             <InstitutionalAffiliationsForm
