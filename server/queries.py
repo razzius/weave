@@ -1,6 +1,6 @@
 import operator
 from functools import reduce
-from typing import List, Optional
+from typing import List, Optional, Type
 
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy import and_, func, or_, sql
@@ -22,6 +22,7 @@ from .models import (
     ProfessionalInterestOption,
     ProfileStar,
     StudentClinicalSpecialty,
+    StudentHospitalAffiliation,
     StudentPartsOfMe,
     StudentPCESiteOption,
     StudentProfessionalInterest,
@@ -31,7 +32,7 @@ from .models import (
     StudentYearOption,
     VerificationEmail,
     VerificationToken,
-    db
+    db,
 )
 
 
@@ -98,7 +99,7 @@ def _filter_query_on_degrees(degree_list: List[str], query: BaseQuery) -> BaseQu
     )
 
 
-def _filter_query_on_affiliations(
+def _filter_faculty_query_on_affiliations(
     affiliation_list: List[str], query: BaseQuery
 ) -> BaseQuery:
     affiliations_filters = reduce(
@@ -120,13 +121,82 @@ def _filter_query_on_affiliations(
     )
 
 
-def _filter_profiles(
+def _filter_student_query_on_affiliations(
+    affiliation_list: List[str], query: BaseQuery
+) -> BaseQuery:
+    affiliations_filters = reduce(
+        operator.and_,
+        [
+            func.bool_or(func.lower(HospitalAffiliationOption.value) == affilation)
+            for affilation in affiliation_list
+        ],
+    )
+
+    return (
+        query.outerjoin(
+            StudentHospitalAffiliation,
+            StudentProfile.id == StudentHospitalAffiliation.profile_id,
+        )
+        .outerjoin(HospitalAffiliationOption)
+        .group_by(StudentProfile.id)
+        .having(affiliations_filters)
+    )
+
+
+def _filter_student_profiles(
+    available_profiles: BaseQuery,
+    words: List[str],
+    tags: List[str],
+    affiliation_list: List[str],
+) -> BaseQuery:
+    searchable_fields = [
+        StudentProfile.name,
+        StudentProfile.additional_information,
+        StudentProfile.cadence,
+    ]
+
+    tag_fields = [
+        (StudentClinicalSpecialty, ClinicalSpecialtyOption),
+        (StudentProfessionalInterest, ProfessionalInterestOption),
+        (StudentPartsOfMe, PartsOfMeOption),
+        (StudentProfileActivity, ActivityOption),
+    ]
+
+    query = available_profiles
+
+    for relation, option_class in tag_fields:
+        query = query.outerjoin(relation).outerjoin(option_class)
+
+    search_filters = [
+        or_(
+            *[func.lower(field).contains(word) for field in searchable_fields]
+            + [
+                func.lower(option_class.value).contains(word)
+                for _, option_class in tag_fields
+            ]
+        )
+        for word in words
+    ]
+
+    tag_filters = [
+        or_(func.lower(option_class.value) == tag for _, option_class in tag_fields)
+        for tag in tags
+    ]
+
+    query = query.filter(*search_filters, *tag_filters)
+
+    if affiliation_list:
+        query = _filter_student_query_on_affiliations(affiliation_list, query)
+
+    return query
+
+
+def _filter_faculty_profiles(
     available_profiles: BaseQuery,
     words: List[str],
     tags: List[str],
     degree_list: List[str],
     affiliation_list: List[str],
-    profile_class: BaseProfile,
 ) -> BaseQuery:
     searchable_fields = [
         FacultyProfile.name,
@@ -134,20 +204,12 @@ def _filter_profiles(
         FacultyProfile.cadence,
     ]
 
-    if profile_class is FacultyProfile:
-        tag_fields = [
-            (FacultyClinicalSpecialty, ClinicalSpecialtyOption),
-            (FacultyProfessionalInterest, ProfessionalInterestOption),
-            (FacultyPartsOfMe, PartsOfMeOption),
-            (FacultyProfileActivity, ActivityOption),
-        ]
-    else:
-        tag_fields = [
-            (StudentClinicalSpecialty, ClinicalSpecialtyOption),
-            (StudentProfessionalInterest, ProfessionalInterestOption),
-            (StudentPartsOfMe, PartsOfMeOption),
-            (StudentProfileActivity, ActivityOption),
-        ]
+    tag_fields = [
+        (FacultyClinicalSpecialty, ClinicalSpecialtyOption),
+        (FacultyProfessionalInterest, ProfessionalInterestOption),
+        (FacultyPartsOfMe, PartsOfMeOption),
+        (FacultyProfileActivity, ActivityOption),
+    ]
 
     search_filters = [
         or_(
@@ -179,13 +241,21 @@ def _filter_profiles(
     # Mentees are unlikely to be looking for a mentor affiliated with more than
     # 1 specific institution.
     if affiliation_list:
-        query = _filter_query_on_affiliations(affiliation_list, query)
+        query = _filter_faculty_query_on_affiliations(affiliation_list, query)
 
     return query
 
 
+def query_faculty_profiles_and_stars(verification_email_id: int):
+    return query_profiles_and_stars(verification_email_id, profile_class=FacultyProfile)
+
+
+def query_student_profiles_and_stars(verification_email_id: int):
+    return query_profiles_and_stars(verification_email_id, profile_class=StudentProfile)
+
+
 def query_profiles_and_stars(
-    verification_email_id: int, profile_class: BaseProfile
+    verification_email_id: int, profile_class: Type[BaseProfile]
 ) -> BaseQuery:
     return (
         db.session.query(
@@ -212,17 +282,29 @@ def query_profiles_and_stars(
     )
 
 
-def matching_profiles(
-    query: str,
-    tags: str,
-    degrees: str,
-    affiliations: str,
-    verification_email_id: int,
-    profile_class: BaseProfile,
+def matching_student_profiles(
+    query: str, tags: str, affiliations: str, verification_email_id: int,
 ) -> BaseQuery:
-    profiles_and_stars = query_profiles_and_stars(
-        verification_email_id, profile_class=profile_class
+    profiles_and_stars = query_student_profiles_and_stars(verification_email_id)
+
+    words = "".join(
+        character if character.isalnum() else " " for character in query.lower()
+    ).split()
+
+    tag_list = tags.lower().split(",") if tags else []
+    affiliation_list = affiliations.lower().split(",") if affiliations else []
+
+    filtered_profiles = _filter_student_profiles(
+        profiles_and_stars, words, tag_list, affiliation_list,
     )
+
+    return filtered_profiles
+
+
+def matching_faculty_profiles(
+    query: str, tags: str, degrees: str, affiliations: str, verification_email_id: int,
+) -> BaseQuery:
+    profiles_and_stars = query_faculty_profiles_and_stars(verification_email_id)
 
     words = "".join(
         character if character.isalnum() else " " for character in query.lower()
@@ -232,13 +314,8 @@ def matching_profiles(
     degree_list = degrees.lower().split(",") if degrees else []
     affiliation_list = affiliations.lower().split(",") if affiliations else []
 
-    filtered_profiles = _filter_profiles(
-        profiles_and_stars,
-        words,
-        tag_list,
-        degree_list,
-        affiliation_list,
-        profile_class=profile_class,
+    filtered_profiles = _filter_faculty_profiles(
+        profiles_and_stars, words, tag_list, degree_list, affiliation_list,
     )
 
     return filtered_profiles

@@ -25,10 +25,10 @@ const Buttons = ({
   location: Object,
   adminButton: Node | null,
   isFaculty: boolean,
-  editUrl: string,
+  editUrl?: string,
 }) => (
   <Fragment>
-    {ownProfile && <Button to={editUrl}>Edit Profile</Button>}
+    {ownProfile && editUrl && <Button to={editUrl}>Edit Profile</Button>}
     {adminButton}
     {!firstTimePublish && !editing && (
       <Button

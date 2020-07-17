@@ -41,9 +41,10 @@ from server.queries import (
     add_stars_to_profiles,
     get_profile_by_token,
     get_verification_email_by_email,
-    matching_profiles,
+    matching_faculty_profiles,
+    matching_student_profiles,
+    query_faculty_profiles_and_stars,
     query_profile_tags,
-    query_profiles_and_stars,
     query_searchable_tags,
 )
 from server.schemas import (
@@ -72,7 +73,7 @@ __all__ = ["student_profile"]
 log = get_logger()
 
 
-def render_matching_profiles(profiles_queryset, verification_email_id):
+def render_matching_profiles(profiles_queryset, verification_email_id, profile_class):
     page = int(request.args.get("page", 1))
 
     sorting = request.args.get("sorting", "starred")
@@ -81,10 +82,10 @@ def render_matching_profiles(profiles_queryset, verification_email_id):
 
     def get_ordering(sorting):
         last_name_sorting = func.split_part(
-            FacultyProfile.name,
+            profile_class.name,
             " ",
             func.array_length(
-                func.string_to_array(FacultyProfile.name, " "),
+                func.string_to_array(profile_class.name, " "),
                 1,  # Length in the 1st dimension
             ),
         )
@@ -92,11 +93,11 @@ def render_matching_profiles(profiles_queryset, verification_email_id):
         sort_options = {
             "starred": [
                 desc(text("profile_star_count")),
-                desc(FacultyProfile.date_updated),
+                desc(profile_class.date_updated),
             ],
             "last_name_alphabetical": [asc(last_name_sorting)],
             "last_name_reverse_alphabetical": [desc(last_name_sorting)],
-            "date_updated": [desc(FacultyProfile.date_updated)],
+            "date_updated": [desc(profile_class.date_updated)],
         }
 
         if sorting not in sort_options:
@@ -106,7 +107,7 @@ def render_matching_profiles(profiles_queryset, verification_email_id):
 
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
-        FacultyProfile.verification_email_id != verification_email_id,
+        profile_class.verification_email_id != verification_email_id,
         *get_ordering(sorting),
     ]
 
@@ -137,13 +138,12 @@ def get_profiles():
     verification_email_id = verification_token.email_id
 
     profiles_queryset = (
-        matching_profiles(
+        matching_faculty_profiles(
             query,
             tags,
             degrees,
             affiliations,
             verification_email_id=verification_email_id,
-            profile_class=FacultyProfile,
         )
         .join(
             VerificationEmail,
@@ -152,7 +152,9 @@ def get_profiles():
         .filter(VerificationEmail.is_mentor.is_(True))
     )
 
-    return render_matching_profiles(profiles_queryset, verification_email_id)
+    return render_matching_profiles(
+        profiles_queryset, verification_email_id, profile_class=FacultyProfile
+    )
 
 
 @api.route("/peer-profiles")
@@ -167,27 +169,23 @@ def peer_profiles():
 
     query = request.args.get("query", "")
     tags = request.args.get("tags", "")
-    degrees = request.args.get("degrees", "")
     affiliations = request.args.get("affiliations", "")
 
     verification_email_id = verification_token.email_id
 
     profiles_queryset = (
-        matching_profiles(
-            query,
-            tags,
-            degrees,
-            affiliations,
-            verification_email_id=verification_email_id,
-            profile_class=StudentProfile,
+        matching_student_profiles(
+            query, tags, affiliations, verification_email_id=verification_email_id,
         )
         .join(
             VerificationEmail,
-            FacultyProfile.verification_email_id == VerificationEmail.id,
+            StudentProfile.verification_email_id == VerificationEmail.id,
         )
         .filter(VerificationEmail.is_mentor.is_(False))
     )
-    return render_matching_profiles(profiles_queryset, verification_email_id)
+    return render_matching_profiles(
+        profiles_queryset, verification_email_id, profile_class=StudentProfile
+    )
 
 
 @api.route("/profile-tags")
@@ -211,8 +209,8 @@ def get_search_tags():
 def get_profile(profile_id=None):
     verification_token = flask_login.current_user
 
-    profile_and_star_list = query_profiles_and_stars(
-        verification_email_id=verification_token.email_id, profile_class=FacultyProfile,
+    profile_and_star_list = query_faculty_profiles_and_stars(
+        verification_email_id=verification_token.email_id
     ).filter(FacultyProfile.id == profile_id)
 
     if not profile_and_star_list.first():
