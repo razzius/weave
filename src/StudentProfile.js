@@ -13,6 +13,7 @@ const StudentProfile = ({ account, match }: Object) => (
     getProfile={getStudentProfile}
     RoleSpecificProfileView={RoleSpecificStudentProfileView}
     RoleSpecificFields={RoleSpecificStudentFields}
+    browseUrl="/peer-mentorship"
     editUrl="/edit-student-profile"
     adminEditBaseUrl="admin-edit-student-profile"
   />

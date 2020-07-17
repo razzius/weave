@@ -50,6 +50,7 @@ type Props = {
   profileId: string,
   getProfile: Function,
   RoleSpecificProfileView: Object,
+  browseUrl: string,
   editUrl: string,
   adminEditBaseUrl: string,
 }
@@ -95,6 +96,7 @@ export default class Profile extends Component<Props, State> {
       account,
       profileId,
       RoleSpecificProfileView,
+      browseUrl,
       editUrl,
       adminEditBaseUrl,
     } = this.props
@@ -135,6 +137,7 @@ export default class Profile extends Component<Props, State> {
           dateUpdated={dateUpdated}
           starred={starred}
           RoleSpecificProfileView={RoleSpecificProfileView}
+          browseUrl={browseUrl}
           editUrl={editUrl}
           adminEditBaseUrl={adminEditBaseUrl}
         />

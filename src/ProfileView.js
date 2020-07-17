@@ -16,7 +16,7 @@ const Buttons = ({
   editing,
   location,
   adminButton,
-  isFaculty,
+  browseUrl,
   editUrl,
 }: {
   ownProfile: boolean,
@@ -24,7 +24,7 @@ const Buttons = ({
   editing: boolean,
   location: Object,
   adminButton: Node | null,
-  isFaculty: boolean,
+  browseUrl: string,
   editUrl?: string,
 }) => (
   <Fragment>
@@ -33,7 +33,7 @@ const Buttons = ({
     {!firstTimePublish && !editing && (
       <Button
         to={{
-          pathname: isFaculty ? '/browse' : '/peer-mentorship',
+          pathname: browseUrl,
           state: location.state,
         }}
       >
@@ -242,13 +242,13 @@ const ProfileView = ({
   firstTimePublish = false,
   editing = false,
   isAdmin,
-  isMentor,
   location,
   profileId,
   dateUpdated,
   starred,
   history,
   RoleSpecificProfileView,
+  browseUrl,
   editUrl,
   adminEditBaseUrl,
 }: {
@@ -257,13 +257,13 @@ const ProfileView = ({
   firstTimePublish?: boolean,
   editing?: boolean,
   isAdmin?: boolean,
-  isMentor?: boolean,
   location: Object,
   profileId?: ?string,
   dateUpdated?: Date,
   starred?: ?boolean,
   history: RouterHistory,
   RoleSpecificProfileView: Object,
+  browseUrl: string,
   editUrl?: string,
   adminEditBaseUrl?: string,
 }) => {
@@ -283,7 +283,7 @@ const ProfileView = ({
       editing={editing}
       location={location}
       adminButton={adminButton}
-      isFaculty={Boolean(isMentor)}
+      browseUrl={browseUrl}
       editUrl={editUrl}
     />
   )

@@ -13,6 +13,7 @@ const FacultyProfile = ({ account, match }: Object) => (
     getProfile={getFacultyProfile}
     RoleSpecificProfileView={RoleSpecificFacultyProfileView}
     RoleSpecificFields={RoleSpecificFacultyFields}
+    browseUrl="/browse"
     editUrl="/edit-profile"
     adminEditBaseUrl="admin-edit-profile"
   />
