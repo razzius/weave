@@ -18,7 +18,7 @@ def test_get_account(client, auth):
 
     assert response.json == {
         "email": verification_token.email.email,
-        "is_mentor": verification_email.is_mentor,
+        "is_faculty": verification_email.is_faculty,
         "is_admin": verification_email.is_admin,
         "profile_id": None,
         "available_for_mentoring": None,
