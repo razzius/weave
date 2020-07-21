@@ -6,6 +6,8 @@ import ProfileForm from './ProfileForm'
 import { type Profile } from './api'
 import RoleSpecificFacultyFields from './RoleSpecificFacultyFields'
 import RoleSpecificFacultyProfileView from './RoleSpecificFacultyProfileView'
+import RoleSpecificFacultyCheckboxes from './RoleSpecificFacultyCheckboxes'
+import RoleSpecificFacultyExpectations from './RoleSpecificFacultyExpectations'
 
 type Props = {
   loadInitial?: any => void,
@@ -35,6 +37,8 @@ const FacultyProfileForm = ({
     profileBaseUrl="profiles"
     RoleSpecificFields={RoleSpecificFacultyFields}
     RoleSpecificProfileView={RoleSpecificFacultyProfileView}
+    RoleSpecificCheckboxes={RoleSpecificFacultyCheckboxes}
+    RoleSpecificExpectations={RoleSpecificFacultyExpectations}
   />
 )
 

@@ -17,6 +17,8 @@ type Props = {
   updateProfile: Function,
   RoleSpecificFields: Object,
   RoleSpecificProfileView: Object,
+  RoleSpecificCheckboxes: Object,
+  RoleSpecificExpectations: Object,
   profileBaseUrl: string,
 }
 
@@ -30,6 +32,8 @@ const EditProfile = ({
   updateProfile,
   RoleSpecificFields,
   RoleSpecificProfileView,
+  RoleSpecificCheckboxes,
+  RoleSpecificExpectations,
   profileBaseUrl,
 }: Props) => {
   const unchangedWarning = 'Your changes to your profile have not been saved.'
@@ -55,6 +59,8 @@ const EditProfile = ({
         isAdmin={isAdmin}
         RoleSpecificFields={RoleSpecificFields}
         RoleSpecificProfileView={RoleSpecificProfileView}
+        RoleSpecificCheckboxes={RoleSpecificCheckboxes}
+        RoleSpecificExpectations={RoleSpecificExpectations}
         profileBaseUrl={profileBaseUrl}
       />
     </AppScreen>

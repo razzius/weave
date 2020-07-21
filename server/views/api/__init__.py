@@ -218,9 +218,8 @@ def get_profile(profile_id=None):
 
     profile, star_count = profile_and_star_list[0]
 
-    # TODO do these without mutating profile
+    # TODO do this without mutating profile
     profile.starred = star_count > 0
-    profile.is_faculty = profile.verification_email.is_mentor
 
     response = make_response(jsonify(faculty_profile_schema.dump(profile)))
 

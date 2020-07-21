@@ -50,6 +50,8 @@ type Props = {
   firstTimePublish: boolean,
   RoleSpecificFields: Object,
   RoleSpecificProfileView: Object,
+  RoleSpecificCheckboxes: Object,
+  RoleSpecificExpectations: Object,
   profileBaseUrl: string,
 }
 
@@ -79,12 +81,21 @@ type State = {
 
   additionalInformation: string,
 
+  // Shared checkboxes
+  willingDiscussPersonal: boolean,
+  willingStudentGroup: boolean,
+
+  // Faculty checkboxes
   willingShadowing: boolean,
   willingNetworking: boolean,
   willingGoalSetting: boolean,
-  willingDiscussPersonal: boolean,
   willingCareerGuidance: boolean,
-  willingStudentGroup: boolean,
+
+  // Student checkboxes
+  willingAdviceClasses: boolean,
+  willingAdviceClinicalRotations: boolean,
+  willingResearch: boolean,
+  willingResidency: boolean,
 
   cadence: string,
   otherCadence: string,
@@ -134,12 +145,21 @@ export default class ProfileForm extends Component<Props, State> {
 
     additionalInformation: '',
 
+    // Shared checkboxes
+    willingDiscussPersonal: false,
+    willingStudentGroup: false,
+
+    // Faculty
     willingShadowing: false,
     willingNetworking: false,
     willingGoalSetting: false,
-    willingDiscussPersonal: false,
     willingCareerGuidance: false,
-    willingStudentGroup: false,
+
+    // Student
+    willingAdviceClasses: false,
+    willingAdviceClinicalRotations: false,
+    willingResearch: false,
+    willingResidency: false,
 
     cadence: 'monthly',
     otherCadence: '',
@@ -365,12 +385,18 @@ export default class ProfileForm extends Component<Props, State> {
       willingNetworking,
       willingShadowing,
       willingStudentGroup,
+      willingAdviceClasses,
+      willingAdviceClinicalRotations,
+      willingResearch,
+      willingResidency,
     } = this.state
 
     const {
       firstTimePublish,
       RoleSpecificFields,
       RoleSpecificProfileView,
+      RoleSpecificCheckboxes,
+      RoleSpecificExpectations,
     } = this.props
 
     if (preview) {
@@ -394,12 +420,17 @@ export default class ProfileForm extends Component<Props, State> {
             willingNetworking,
             willingShadowing,
             willingStudentGroup,
+            willingAdviceClasses,
+            willingAdviceClinicalRotations,
+            willingResearch,
+            willingResidency,
             additionalInformation,
             program,
             pceSite,
             currentYear,
           }}
           RoleSpecificProfileView={RoleSpecificProfileView}
+          RoleSpecificExpectations={RoleSpecificExpectations}
           firstTimePublish={firstTimePublish}
           onEdit={this.unsetPreview}
           onPublish={this.submit}
@@ -465,77 +496,19 @@ export default class ProfileForm extends Component<Props, State> {
             <div className="expectations">
               <h3>I am available to mentor in the following ways:</h3>
 
-              <div className="expectation">
-                <label htmlFor="willing-shadowing">
-                  <input
-                    id="willing-shadowing"
-                    type="checkbox"
-                    checked={willingShadowing}
-                    onChange={this.updateBoolean('willingShadowing')}
-                  />
-                  Clinical shadowing opportunities
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-networking">
-                  <input
-                    id="willing-networking"
-                    type="checkbox"
-                    checked={willingNetworking}
-                    onChange={this.updateBoolean('willingNetworking')}
-                  />
-                  Networking
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-goal-setting">
-                  <input
-                    id="willing-goal-setting"
-                    type="checkbox"
-                    checked={willingGoalSetting}
-                    onChange={this.updateBoolean('willingGoalSetting')}
-                  />
-                  Goal setting
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-discuss-personal">
-                  <input
-                    id="willing-discuss-personal"
-                    type="checkbox"
-                    checked={willingDiscussPersonal}
-                    onChange={this.updateBoolean('willingDiscussPersonal')}
-                  />
-                  Discussing personal as well as professional life
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-career-guidance">
-                  <input
-                    id="willing-career-guidance"
-                    type="checkbox"
-                    checked={willingCareerGuidance}
-                    onChange={this.updateBoolean('willingCareerGuidance')}
-                  />
-                  Career guidance
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-student-group">
-                  <input
-                    id="willing-student-group"
-                    type="checkbox"
-                    checked={willingStudentGroup}
-                    onChange={this.updateBoolean('willingStudentGroup')}
-                  />
-                  Student interest group support
-                </label>
-              </div>
+              <RoleSpecificCheckboxes
+                updateBoolean={this.updateBoolean}
+                willingDiscussPersonal={willingDiscussPersonal}
+                willingStudentGroup={willingStudentGroup}
+                willingShadowing={willingShadowing}
+                willingNetworking={willingNetworking}
+                willingGoalSetting={willingGoalSetting}
+                willingCareerGuidance={willingCareerGuidance}
+                willingAdviceClasses={willingAdviceClasses}
+                willingAdviceClinicalRotations={willingAdviceClinicalRotations}
+                willingResearch={willingResearch}
+                willingResidency={willingResidency}
+              />
             </div>
           </div>
 

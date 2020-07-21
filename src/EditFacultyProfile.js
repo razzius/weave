@@ -5,6 +5,8 @@ import EditProfile from './EditProfile'
 import { getFacultyProfile, updateFacultyProfile } from './api'
 import RoleSpecificFacultyFields from './RoleSpecificFacultyFields'
 import RoleSpecificFacultyProfileView from './RoleSpecificFacultyProfileView'
+import RoleSpecificFacultyCheckboxes from './RoleSpecificFacultyCheckboxes'
+import RoleSpecificFacultyExpectations from './RoleSpecificFacultyExpectations'
 
 const EditFacultyProfile = ({
   account,
@@ -23,6 +25,8 @@ const EditFacultyProfile = ({
     updateProfile={updateFacultyProfile}
     RoleSpecificFields={RoleSpecificFacultyFields}
     RoleSpecificProfileView={RoleSpecificFacultyProfileView}
+    RoleSpecificCheckboxes={RoleSpecificFacultyCheckboxes}
+    RoleSpecificExpectations={RoleSpecificFacultyExpectations}
     profileBaseUrl="profiles"
   />
 )

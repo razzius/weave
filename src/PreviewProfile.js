@@ -10,6 +10,7 @@ type Props = {
   onEdit: any => void,
   onPublish: any => any,
   RoleSpecificProfileView: Object,
+  RoleSpecificExpectations: Object,
 }
 
 const PreviewProfile = (props: Props) => {
@@ -19,6 +20,7 @@ const PreviewProfile = (props: Props) => {
     onEdit,
     onPublish,
     RoleSpecificProfileView,
+    RoleSpecificExpectations,
   } = props
 
   return (
@@ -28,6 +30,7 @@ const PreviewProfile = (props: Props) => {
         editing
         firstTimePublish={firstTimePublish}
         RoleSpecificProfileView={RoleSpecificProfileView}
+        RoleSpecificExpectations={RoleSpecificExpectations}
       />
       <div>
         <button type="button" className="button" onClick={onEdit}>

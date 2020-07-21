@@ -1,0 +1,23 @@
+// @flow
+import React from 'react'
+
+const ExpectationDisplay = ({
+  name,
+  value,
+}: {
+  name: string,
+  value: boolean,
+}) => {
+  const id = name.split().join('-')
+
+  return (
+    <div className="expectation">
+      <label htmlFor={id} className={!value ? 'grayed-out' : ''}>
+        <input id={id} type="checkbox" disabled checked={value} />
+        {name}
+      </label>
+    </div>
+  )
+}
+
+export default ExpectationDisplay

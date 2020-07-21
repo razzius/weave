@@ -6,6 +6,8 @@ import ProfileForm from './ProfileForm'
 import { type Profile } from './api'
 import RoleSpecificStudentProfileView from './RoleSpecificStudentProfileView'
 import RoleSpecificStudentFields from './RoleSpecificStudentFields'
+import RoleSpecificStudentCheckboxes from './RoleSpecificStudentCheckboxes'
+import RoleSpecificStudentExpectations from './RoleSpecificStudentExpectations'
 
 type Props = {
   loadInitial?: any => void,
@@ -28,6 +30,8 @@ const StudentProfileForm = ({
   <ProfileForm
     RoleSpecificFields={RoleSpecificStudentFields}
     RoleSpecificProfileView={RoleSpecificStudentProfileView}
+    RoleSpecificCheckboxes={RoleSpecificStudentCheckboxes}
+    RoleSpecificExpectations={RoleSpecificStudentExpectations}
     firstTimePublish={firstTimePublish}
     history={history}
     loadInitial={loadInitial}

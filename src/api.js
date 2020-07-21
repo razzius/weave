@@ -118,11 +118,11 @@ function payloadToStudentProfile(payload: Object): Object {
 
     additionalInformation: payload.additional_information,
 
-    willingShadowing: payload.willing_shadowing,
-    willingNetworking: payload.willing_networking,
-    willingGoalSetting: payload.willing_goal_setting,
+    willingAdviceClasses: payload.willing_advice_classes,
+    willingAdviceClinicalRotations: payload.willing_advice_clinical_rotations,
     willingDiscussPersonal: payload.willing_discuss_personal,
-    willingCareerGuidance: payload.willing_career_guidance,
+    willingResearch: payload.willing_research,
+    willingResidency: payload.willing_residency,
     willingStudentGroup: payload.willing_student_group,
 
     cadence: payload.cadence,
@@ -249,7 +249,11 @@ export function profileToStudentPayload(profile: Object): Object {
 
     additional_information: profile.additionalInformation,
 
+    willing_advice_classes: profile.willingAdviceClasses,
+    willing_advice_clinical_rotations: profile.willingAdviceClinicalRotations,
     willing_discuss_personal: profile.willingDiscussPersonal,
+    willing_research: profile.willingResearch,
+    willing_residency: profile.willingResidency,
     willing_student_group: profile.willingStudentGroup,
 
     cadence: profile.cadence,

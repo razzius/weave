@@ -24,7 +24,7 @@ const Buttons = ({
   editing: boolean,
   location: Object,
   adminButton: Node | null,
-  browseUrl: string,
+  browseUrl?: string,
   editUrl?: string,
 }) => (
   <Fragment>
@@ -43,25 +43,6 @@ const Buttons = ({
   </Fragment>
 )
 
-const ExpectationDisplay = ({
-  name,
-  value,
-}: {
-  name: string,
-  value: boolean,
-}) => {
-  const id = name.split().join('-')
-
-  return (
-    <div className="expectation">
-      <label htmlFor={id} className={!value ? 'grayed-out' : ''}>
-        <input id={id} type="checkbox" disabled checked={value} />
-        {name}
-      </label>
-    </div>
-  )
-}
-
 export type BaseProfileData = {|
   id?: ?string,
   isFaculty?: boolean,
@@ -79,12 +60,18 @@ export type BaseProfileData = {|
 
   additionalInformation: string,
 
-  willingShadowing: boolean,
-  willingNetworking: boolean,
-  willingGoalSetting: boolean,
-  willingDiscussPersonal: boolean,
-  willingCareerGuidance: boolean,
   willingStudentGroup: boolean,
+  willingDiscussPersonal: boolean,
+
+  willingShadowing?: boolean,
+  willingNetworking?: boolean,
+  willingGoalSetting?: boolean,
+  willingCareerGuidance?: boolean,
+
+  willingAdviceClasses?: boolean,
+  willingAdviceClinicalRotations?: boolean,
+  willingResearch?: boolean,
+  willingResidency?: boolean,
 
   program?: ?string,
   pceSite?: ?string,
@@ -93,46 +80,6 @@ export type BaseProfileData = {|
   cadence: string,
   otherCadence: ?string,
 |}
-
-const Expectations = ({
-  willingShadowing,
-  willingNetworking,
-  willingGoalSetting,
-  willingDiscussPersonal,
-  willingCareerGuidance,
-  willingStudentGroup,
-}: {
-  willingShadowing: boolean,
-  willingNetworking: boolean,
-  willingGoalSetting: boolean,
-  willingDiscussPersonal: boolean,
-  willingCareerGuidance: boolean,
-  willingStudentGroup: boolean,
-}) => (
-  <Fragment>
-    <h4>I am available to help in the following ways:</h4>
-
-    <ExpectationDisplay
-      name="Clinical shadowing opportunities"
-      value={willingShadowing}
-    />
-
-    <ExpectationDisplay name="Networking" value={willingNetworking} />
-
-    <ExpectationDisplay name="Goal setting" value={willingGoalSetting} />
-
-    <ExpectationDisplay
-      name="Discussing personal as well as professional life"
-      value={willingDiscussPersonal}
-    />
-
-    <ExpectationDisplay name="Career guidance" value={willingCareerGuidance} />
-    <ExpectationDisplay
-      name="Student interest group support or speaking at student events"
-      value={willingStudentGroup}
-    />
-  </Fragment>
-)
 
 function displayCadence(cadence: string, otherCadence: ?string) {
   if (cadence === 'other') {
@@ -251,6 +198,7 @@ const ProfileView = ({
   browseUrl,
   editUrl,
   adminEditBaseUrl,
+  RoleSpecificExpectations,
 }: {
   data: Object,
   ownProfile?: boolean,
@@ -263,9 +211,10 @@ const ProfileView = ({
   starred?: ?boolean,
   history: RouterHistory,
   RoleSpecificProfileView: Object,
-  browseUrl: string,
+  browseUrl?: string,
   editUrl?: string,
   adminEditBaseUrl?: string,
+  RoleSpecificExpectations: Object,
 }) => {
   const [starredState, setStarred] = useState(Boolean(starred))
 
@@ -312,6 +261,21 @@ const ProfileView = ({
     />
   )
 
+  const roleSpecificExpecations = (
+    <RoleSpecificExpectations
+      willingShadowing={data.willingShadowing}
+      willingNetworking={data.willingNetworking}
+      willingGoalSetting={data.willingGoalSetting}
+      willingDiscussPersonal={data.willingDiscussPersonal}
+      willingCareerGuidance={data.willingCareerGuidance}
+      willingStudentGroup={data.willingStudentGroup}
+      willingAdviceClasses={data.willingAdviceClasses}
+      willingAdviceClinicalRotations={data.willingAdviceClinicalRotations}
+      willingResearch={data.willingResearch}
+      willingResidency={data.willingResidency}
+    />
+  )
+
   return (
     <Fragment>
       <MediaQuery query="(max-device-width: 750px)">
@@ -326,14 +290,8 @@ const ProfileView = ({
 
           <Cadence cadence={data.cadence} otherCadence={data.otherCadence} />
 
-          <Expectations
-            willingShadowing={data.willingShadowing}
-            willingNetworking={data.willingNetworking}
-            willingGoalSetting={data.willingGoalSetting}
-            willingDiscussPersonal={data.willingDiscussPersonal}
-            willingCareerGuidance={data.willingCareerGuidance}
-            willingStudentGroup={data.willingStudentGroup}
-          />
+          {roleSpecificExpecations}
+
           {aboutInfo}
 
           {lastUpdated}
@@ -375,14 +333,7 @@ const ProfileView = ({
                 otherCadence={data.otherCadence}
               />
 
-              <Expectations
-                willingShadowing={data.willingShadowing}
-                willingNetworking={data.willingNetworking}
-                willingGoalSetting={data.willingGoalSetting}
-                willingDiscussPersonal={data.willingDiscussPersonal}
-                willingCareerGuidance={data.willingCareerGuidance}
-                willingStudentGroup={data.willingStudentGroup}
-              />
+              {roleSpecificExpecations}
             </div>
             <div className="about">
               {buttons}
