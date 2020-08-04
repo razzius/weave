@@ -344,8 +344,16 @@ def query_tag_related_to_active_profile(tag_class, profile_relation_class, name)
         tag_class.query.join(
             profile_relation_class, tag_class.id == profile_relation_class.tag_id
         )
-        .join(FacultyProfile, profile_relation_class.profile_id == FacultyProfile.id)
-        .filter(FacultyProfile.available_for_mentoring.is_(True))
+        .outerjoin(
+            FacultyProfile, profile_relation_class.profile_id == FacultyProfile.id,
+        )
+        .outerjoin(
+            StudentProfile, profile_relation_class.profile_id == StudentProfile.id,
+        )
+        .filter(
+            FacultyProfile.available_for_mentoring.is_(True)
+            | StudentProfile.available_for_mentoring.is_(True)
+        )
     )
 
     return query_value_with_option_type_label(query, tag_class, name)
@@ -440,6 +448,11 @@ def query_searchable_tags():
         (
             HospitalAffiliationOption,
             FacultyHospitalAffiliation,
+            "hospital_affiliations",
+        ),
+        (
+            HospitalAffiliationOption,
+            StudentHospitalAffiliation,
             "hospital_affiliations",
         ),
         (DegreeOption, FacultyProfileDegree, "degrees"),
