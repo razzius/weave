@@ -3,9 +3,11 @@ import React from 'react'
 
 import CreatableTagSelect from './CreatableTagSelect'
 import { degreeOptions } from './options'
+import FacultyInstitutionalAffiliationsForm from './FacultyInstitutionalAffiliationsForm'
 
 const RoleSpecificFacultyFields = ({
   fields,
+  options,
   handleChange,
   handleCreate,
 }: Object) => (
@@ -16,6 +18,11 @@ const RoleSpecificFacultyFields = ({
       options={degreeOptions}
       handleChange={handleChange('degrees')}
       handleAdd={handleCreate('degrees')}
+    />
+    <FacultyInstitutionalAffiliationsForm
+      affiliations={fields.affiliations}
+      hospitalOptions={options.hospitalOptions}
+      handleChange={handleChange('affiliations')}
     />
   </div>
 )

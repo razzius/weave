@@ -23,7 +23,7 @@ const RoleSpecificStudentExpectations = ({
 
     <ExpectationDisplay
       value={willingDiscussPersonal}
-      name="Discuss personal as well as professional life"
+      name="Discuss personal and professional identities / interests"
     />
 
     <ExpectationDisplay

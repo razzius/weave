@@ -2,9 +2,12 @@
 import React from 'react'
 import Select from 'react-select'
 
+import StudentInstitutionalAffiliationsForm from './StudentInstitutionalAffiliationsForm'
+
 const RoleSpecificStudentFields = ({
   fields,
   options,
+  handleChange,
   handleChangeField,
 }: Object) => (
   <div>
@@ -25,6 +28,11 @@ const RoleSpecificStudentFields = ({
       onChange={handleChangeField('pceSite')}
       options={options.pceSiteOptions}
       value={{ label: fields.pceSite, value: fields.pceSite }}
+    />
+    <StudentInstitutionalAffiliationsForm
+      affiliations={fields.affiliations}
+      hospitalOptions={options.hospitalOptions}
+      handleChange={handleChange('affiliations')}
     />
   </div>
 )

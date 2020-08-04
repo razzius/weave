@@ -8,9 +8,15 @@ const AcademicDegrees = ({ degrees }: { degrees: string }) => (
   </Fragment>
 )
 
-const RoleSpecificFacultyProfileView = ({ degrees }: Object) => (
+const RoleSpecificFacultyProfileView = ({ affiliations, degrees }: Object) => (
   <div>
     {degrees.length > 0 && <AcademicDegrees degrees={degrees.join(', ')} />}
+    {affiliations.length > 0 && (
+      <>
+        <h4>Institutional Affiliations</h4>
+        <p>{affiliations.join(', ')}</p>
+      </>
+    )}
   </div>
 )
 

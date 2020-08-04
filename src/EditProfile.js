@@ -20,6 +20,7 @@ type Props = {
   RoleSpecificCheckboxes: Object,
   RoleSpecificExpectations: Object,
   profileBaseUrl: string,
+  isStudent: boolean,
 }
 
 const EditProfile = ({
@@ -35,6 +36,7 @@ const EditProfile = ({
   RoleSpecificCheckboxes,
   RoleSpecificExpectations,
   profileBaseUrl,
+  isStudent,
 }: Props) => {
   const unchangedWarning = 'Your changes to your profile have not been saved.'
   useBeforeunload(() => unchangedWarning)
@@ -62,6 +64,7 @@ const EditProfile = ({
         RoleSpecificCheckboxes={RoleSpecificCheckboxes}
         RoleSpecificExpectations={RoleSpecificExpectations}
         profileBaseUrl={profileBaseUrl}
+        isStudent={isStudent}
       />
     </AppScreen>
   )

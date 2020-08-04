@@ -102,13 +102,6 @@ const Cadence = ({
   </div>
 )
 
-const HospitalAffiliations = ({ affiliations }: { affiliations: string }) => (
-  <Fragment>
-    <h4>Institutional Affiliations</h4>
-    <p style={{ paddingBottom: '1em' }}>{affiliations}</p>
-  </Fragment>
-)
-
 const ClinicalInterests = ({ interests }: { interests: string }) => (
   <div>
     <h4>Clinical Interests</h4>
@@ -135,8 +128,8 @@ const AboutInfo = ({
       program={program}
       pceSite={pceSite}
       currentYear={currentYear}
+      affiliations={affiliations}
     />
-    <HospitalAffiliations affiliations={affiliations.join(', ')} />
     {clinicalSpecialties.length > 0 && (
       <ClinicalInterests interests={clinicalSpecialties.join(', ')} />
     )}

@@ -28,6 +28,7 @@ const EditFacultyProfile = ({
     RoleSpecificCheckboxes={RoleSpecificFacultyCheckboxes}
     RoleSpecificExpectations={RoleSpecificFacultyExpectations}
     profileBaseUrl="profiles"
+    isStudent={false}
   />
 )
 

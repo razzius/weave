@@ -9,6 +9,12 @@ const RoleSpecificStudentProfileView = (data: Object) => (
     <p>{data.currentYear}</p>
     <h4>PCE Site</h4>
     <p>{data.pceSite}</p>
+    {data.affiliations.length > 0 && (
+      <>
+        <h4>Hospitals Where I Have Completed Rotations</h4>
+        <p>{data.affiliations.join(', ')}</p>
+      </>
+    )}
   </div>
 )
 

@@ -26,7 +26,7 @@ const RoleSpecificStudentCheckboxes = ({
       value={willingDiscussPersonal}
       onChange={updateBoolean('willingDiscussPersonal')}
     >
-      Discuss personal as well as professional life
+      Discuss personal and professional identities / interests
     </ExpectationCheckbox>
 
     <ExpectationCheckbox

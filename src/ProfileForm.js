@@ -10,7 +10,6 @@ import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
 import PreviewProfile from './PreviewProfile'
 import CadenceOption from './CadenceOption'
-import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
 import { getProfileTags, uploadPicture, type Profile } from './api'
 import { makeOptions } from './options'
@@ -53,6 +52,7 @@ type Props = {
   RoleSpecificCheckboxes: Object,
   RoleSpecificExpectations: Object,
   profileBaseUrl: string,
+  isStudent: boolean,
 }
 
 type State = {
@@ -397,6 +397,7 @@ export default class ProfileForm extends Component<Props, State> {
       RoleSpecificProfileView,
       RoleSpecificCheckboxes,
       RoleSpecificExpectations,
+      isStudent,
     } = this.props
 
     if (preview) {
@@ -536,15 +537,11 @@ export default class ProfileForm extends Component<Props, State> {
                 programOptions: makeOptions(programOptions),
                 pceSiteOptions: makeOptions(pceSiteOptions),
                 currentYearOptions: makeOptions(currentYearOptions),
+                hospitalOptions: makeOptions(hospitalOptions),
               }}
               handleChange={this.handleChange}
               handleCreate={this.handleCreate}
               handleChangeField={this.handleChangeField}
-            />
-            <InstitutionalAffiliationsForm
-              affiliations={makeOptions(affiliations)}
-              hospitalOptions={hospitalOptions}
-              handleChange={this.handleChange('affiliations')}
             />
             <div className="user-tip">
               In the following sections, in addition to choosing from the tags
@@ -569,8 +566,8 @@ export default class ProfileForm extends Component<Props, State> {
               <p>
                 Please use this section to share parts of your identity. This is
                 where you may share optional demographic or personally
-                meaningful information that is viewable by students on Weave.
-                Please{' '}
+                meaningful information that is viewable by{' '}
+                {isStudent && 'other '}students on Weave. Please{' '}
                 <Link to="/help#how-do-i-create-my-own-tags" target="_blank">
                   create your own tags
                 </Link>{' '}

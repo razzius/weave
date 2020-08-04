@@ -28,6 +28,7 @@ const EditStudentProfile = ({
     RoleSpecificCheckboxes={RoleSpecificStudentCheckboxes}
     RoleSpecificExpectations={RoleSpecificStudentExpectations}
     profileBaseUrl="peer-profiles"
+    isStudent
   />
 )
 
