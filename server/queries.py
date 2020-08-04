@@ -339,7 +339,9 @@ def query_value_with_option_type_label(query, tag_class, name):
     )
 
 
-def query_tag_related_to_active_profile(tag_class, profile_relation_class, name):
+def query_tag_related_to_active_profile(
+    tag_class, profile_relation_class, name, profile_class
+):
     query = (
         tag_class.query.join(
             profile_relation_class, tag_class.id == profile_relation_class.tag_id
@@ -350,10 +352,7 @@ def query_tag_related_to_active_profile(tag_class, profile_relation_class, name)
         .outerjoin(
             StudentProfile, profile_relation_class.profile_id == StudentProfile.id,
         )
-        .filter(
-            FacultyProfile.available_for_mentoring.is_(True)
-            | StudentProfile.available_for_mentoring.is_(True)
-        )
+        .filter(profile_class.available_for_mentoring.is_(True))
     )
 
     return query_value_with_option_type_label(query, tag_class, name)
@@ -363,15 +362,19 @@ def union_queries(queries):
     return queries[0].union(*queries[1:])
 
 
-def query_tags_with_active_profiles(config_tag_classes, public_tag_classes):
+def query_tags_with_active_profiles(
+    config_tag_classes, public_tag_classes, profile_class
+):
     config_tag_queries = [
-        query_tag_related_to_active_profile(tag_class, profile_relation_class, name)
+        query_tag_related_to_active_profile(
+            tag_class, profile_relation_class, name, profile_class
+        )
         for tag_class, profile_relation_class, name in config_tag_classes
     ]
 
     public_tag_queries = [
         query_tag_related_to_active_profile(
-            tag_class, profile_relation_class, name
+            tag_class, profile_relation_class, name, profile_class,
         ).filter(tag_class.public.is_(True))
         for tag_class, profile_relation_class, name in public_tag_classes
     ]
@@ -443,16 +446,11 @@ def query_profile_tags():
     return query_profile_tag_classes(config_tag_classes, public_tag_classes)
 
 
-def query_searchable_tags():
+def query_faculty_searchable_tags():
     config_tag_classes = [
         (
             HospitalAffiliationOption,
             FacultyHospitalAffiliation,
-            "hospital_affiliations",
-        ),
-        (
-            HospitalAffiliationOption,
-            StudentHospitalAffiliation,
             "hospital_affiliations",
         ),
         (DegreeOption, FacultyProfileDegree, "degrees"),
@@ -469,4 +467,31 @@ def query_searchable_tags():
         ),
     ]
 
-    return query_tags_with_active_profiles(config_tag_classes, public_tag_classes)
+    return query_tags_with_active_profiles(
+        config_tag_classes, public_tag_classes, profile_class=FacultyProfile
+    )
+
+
+def query_student_searchable_tags():
+    config_tag_classes = [
+        (
+            HospitalAffiliationOption,
+            StudentHospitalAffiliation,
+            "hospital_affiliations",
+        ),
+    ]
+
+    public_tag_classes = [
+        (ActivityOption, StudentProfileActivity, "activities"),
+        (ClinicalSpecialtyOption, StudentClinicalSpecialty, "clinical_specialties"),
+        (PartsOfMeOption, StudentPartsOfMe, "parts_of_me"),
+        (
+            ProfessionalInterestOption,
+            StudentProfessionalInterest,
+            "professional_interests",
+        ),
+    ]
+
+    return query_tags_with_active_profiles(
+        config_tag_classes, public_tag_classes, profile_class=StudentProfile
+    )

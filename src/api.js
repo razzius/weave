@@ -383,8 +383,12 @@ export async function uploadPicture(file: File) {
   })
 }
 
-export async function getSearchTags() {
-  return get('search-tags')
+export async function getFacultySearchTags() {
+  return get('faculty-search-tags')
+}
+
+export async function getStudentSearchTags() {
+  return get('student-search-tags')
 }
 
 export async function getProfileTags() {

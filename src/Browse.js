@@ -5,7 +5,6 @@ import { Beforeunload } from 'react-beforeunload'
 
 import AppScreen from './AppScreen'
 import SearchInput from './SearchInput'
-import { getSearchTags } from './api'
 import { makeOptions } from './options'
 import { partition } from './utils'
 
@@ -16,6 +15,7 @@ type Props = {|
   profileBaseUrl: string,
   DegreeSelect?: Object,
   RoleSpecificResultsView: Object,
+  getSearchTags: Function,
 |}
 type State = Object
 
@@ -248,7 +248,7 @@ class Browse extends Component<Props, State> {
   }
 
   loadInitialData = async (): Promise<{ tags: Object, profiles: Object }> => {
-    const { getProfiles } = this.props
+    const { getProfiles, getSearchTags } = this.props
     const { page } = this.state
     try {
       const tags = getSearchTags()

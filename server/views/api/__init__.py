@@ -45,7 +45,8 @@ from server.queries import (
     matching_student_profiles,
     query_faculty_profiles_and_stars,
     query_profile_tags,
-    query_searchable_tags,
+    query_faculty_searchable_tags,
+    query_student_searchable_tags,
 )
 from server.schemas import (
     faculty_profile_schema,
@@ -208,10 +209,18 @@ def get_profile_tags():
     return {"tags": tags}
 
 
-@api.route("/search-tags")
+@api.route("/faculty-search-tags")
 @flask_login.login_required
-def get_search_tags():
-    tags = query_searchable_tags()
+def get_faculty_search_tags():
+    tags = query_faculty_searchable_tags()
+
+    return {"tags": tags}
+
+
+@api.route("/student-search-tags")
+@flask_login.login_required
+def get_student_search_tags():
+    tags = query_student_searchable_tags()
 
     return {"tags": tags}
 

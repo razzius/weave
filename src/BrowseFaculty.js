@@ -3,7 +3,7 @@ import React from 'react'
 import Select from 'react-select'
 
 import Browse from './Browse'
-import { getProfiles } from './api'
+import { getProfiles, getFacultySearchTags } from './api'
 
 import FacultyResultsView from './FacultyResultsView'
 
@@ -29,6 +29,7 @@ const DegreeSelect = ({ onChange, value, displayDegreeOptions }: Object) => (
 const BrowseFaculty = () => (
   <Browse
     getProfiles={getProfiles}
+    getSearchTags={getFacultySearchTags}
     profileBaseUrl="profiles"
     DegreeSelect={DegreeSelect}
     RoleSpecificResultsView={FacultyResultsView}
