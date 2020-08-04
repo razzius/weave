@@ -350,8 +350,11 @@ input::-webkit-contacts-auto-fill-button {
     margin-top: 0;
   }
   .profile-result-right {
-    text-align: right;
     padding: 10px;
+    flex-basis: 200px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    text-align: left;
   }
   .profile-result-link:hover,
   .profile-result-link:focus {
@@ -369,6 +372,12 @@ input::-webkit-contacts-auto-fill-button {
     padding-top: 30px;
     padding-bottom: 30px;
   }
+}
+
+.profile-result-left {
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 400px;
 }
 
 nav {

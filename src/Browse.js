@@ -4,7 +4,6 @@ import { withRouter, type RouterHistory, type Location } from 'react-router-dom'
 import { Beforeunload } from 'react-beforeunload'
 
 import AppScreen from './AppScreen'
-import ResultsView from './ResultsView'
 import SearchInput from './SearchInput'
 import { getSearchTags } from './api'
 import { makeOptions } from './options'
@@ -16,6 +15,7 @@ type Props = {|
   getProfiles: Function,
   profileBaseUrl: string,
   DegreeSelect?: Object,
+  RoleSpecificResultsView: Object,
 |}
 type State = Object
 
@@ -268,7 +268,7 @@ class Browse extends Component<Props, State> {
   }
 
   render() {
-    const { profileBaseUrl, DegreeSelect } = this.props
+    const { profileBaseUrl, DegreeSelect, RoleSpecificResultsView } = this.props
     const {
       error,
       loading,
@@ -309,16 +309,17 @@ class Browse extends Component<Props, State> {
             DegreeSelect={DegreeSelect}
           />
           <div style={{ padding: '1em 0' }}>
-            <ResultsView
-              queried={queried}
-              resetSearch={this.resetSearch}
-              loading={loading}
-              results={results}
-              error={error}
-              nextPage={this.nextPage}
-              savedState={this.state}
-              profileBaseUrl={profileBaseUrl}
-            />
+            {error || (
+              <RoleSpecificResultsView
+                queried={queried}
+                resetSearch={this.resetSearch}
+                loading={loading}
+                results={results}
+                nextPage={this.nextPage}
+                savedState={this.state}
+                profileBaseUrl={profileBaseUrl}
+              />
+            )}
           </div>
         </AppScreen>
       </Beforeunload>

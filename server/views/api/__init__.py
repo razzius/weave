@@ -50,6 +50,7 @@ from server.queries import (
 from server.schemas import (
     faculty_profile_schema,
     faculty_profiles_schema,
+    student_profiles_schema,
     valid_email_schema,
 )
 from server.session import token_expired
@@ -73,7 +74,12 @@ __all__ = ["student_profile"]
 log = get_logger()
 
 
-def render_matching_profiles(profiles_queryset, verification_email_id, profile_class):
+def render_matching_profiles(
+    profiles_queryset,
+    verification_email_id,
+    profile_class,
+    role_specific_profiles_schema,
+):
     page = int(request.args.get("page", 1))
 
     sorting = request.args.get("sorting", "starred")
@@ -120,7 +126,7 @@ def render_matching_profiles(profiles_queryset, verification_email_id, profile_c
     return jsonify(
         {
             "profile_count": profiles_queryset.count(),
-            "profiles": faculty_profiles_schema.dump(profiles_with_stars),
+            "profiles": role_specific_profiles_schema.dump(profiles_with_stars),
         }
     )
 
@@ -153,7 +159,10 @@ def get_profiles():
     )
 
     return render_matching_profiles(
-        profiles_queryset, verification_email_id, profile_class=FacultyProfile
+        profiles_queryset,
+        verification_email_id,
+        profile_class=FacultyProfile,
+        role_specific_profiles_schema=faculty_profiles_schema,
     )
 
 
@@ -184,7 +193,10 @@ def peer_profiles():
         .filter(VerificationEmail.is_mentor.is_(False))
     )
     return render_matching_profiles(
-        profiles_queryset, verification_email_id, profile_class=StudentProfile
+        profiles_queryset,
+        verification_email_id,
+        profile_class=StudentProfile,
+        role_specific_profiles_schema=student_profiles_schema,
     )
 
 

@@ -11,8 +11,7 @@ function pluralizeResults(length) {
   return 'results'
 }
 
-type Props = {
-  error: string | null,
+export type Props = {
   results: {
     profile_count: number,
     profiles: Array<Object>,
@@ -23,10 +22,10 @@ type Props = {
   resetSearch: Event => void,
   savedState: Object,
   profileBaseUrl: string,
+  RoleSpecificProfileResult: Object,
 }
 
 const ResultsView = ({
-  error,
   results,
   queried,
   loading,
@@ -34,11 +33,8 @@ const ResultsView = ({
   resetSearch,
   savedState,
   profileBaseUrl,
+  RoleSpecificProfileResult,
 }: Props) => {
-  if (error) {
-    return <p>{error}</p>
-  }
-
   if (results === null) {
     return <p>Loading...</p>
   }
@@ -71,6 +67,7 @@ const ResultsView = ({
       browseState={savedState}
       result={result}
       profileBaseUrl={profileBaseUrl}
+      RoleSpecificProfileResult={RoleSpecificProfileResult}
     />
   ))
 

@@ -190,7 +190,7 @@ export async function getPeerProfiles({
 
   return {
     ...results,
-    profiles: results.profiles.map(payloadToProfile),
+    profiles: results.profiles.map(payloadToStudentProfile),
   }
 }
 

@@ -22,7 +22,7 @@ const RoleSpecificStudentCheckboxes = ({
 }) => (
   <>
     <ExpectationCheckbox
-      id="willing-shadowing"
+      id="willing-discuss-personal"
       value={willingDiscussPersonal}
       onChange={updateBoolean('willingDiscussPersonal')}
     >

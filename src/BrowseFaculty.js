@@ -5,6 +5,8 @@ import Select from 'react-select'
 import Browse from './Browse'
 import { getProfiles } from './api'
 
+import FacultyResultsView from './FacultyResultsView'
+
 const DegreeSelect = ({ onChange, value, displayDegreeOptions }: Object) => (
   <Select
     styles={{
@@ -29,6 +31,7 @@ const BrowseFaculty = () => (
     getProfiles={getProfiles}
     profileBaseUrl="profiles"
     DegreeSelect={DegreeSelect}
+    RoleSpecificResultsView={FacultyResultsView}
   />
 )
 
