@@ -413,6 +413,16 @@ iframe.video {
   border: none;
 }
 
+.expectation label {
+  display: block;
+  margin-left: 24px;
+  text-indent: -27px;
+}
+
+.expectation label input {
+  margin-right: 10px;
+}
+
 .error {
   background: #ffff0095;
 }
