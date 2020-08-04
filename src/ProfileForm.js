@@ -532,7 +532,13 @@ export default class ProfileForm extends Component<Props, State> {
               onChange={this.update('contactEmail')}
             />
             <RoleSpecificFields
-              fields={{ degrees, program, pceSite, currentYear }}
+              fields={{
+                degrees,
+                program,
+                pceSite,
+                currentYear,
+                affiliations: makeOptions(affiliations),
+              }}
               options={{
                 programOptions: makeOptions(programOptions),
                 pceSiteOptions: makeOptions(pceSiteOptions),
