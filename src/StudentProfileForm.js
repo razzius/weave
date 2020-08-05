@@ -39,6 +39,7 @@ const StudentProfileForm = ({
     saveProfile={saveProfile}
     setProfileId={setProfileId}
     profileBaseUrl="peer-profiles"
+    isStudent
   />
 )
 

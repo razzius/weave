@@ -2,7 +2,6 @@
 import React from 'react'
 
 import Select from 'react-select'
-import { makeOptions } from './options'
 
 export type InstitutionalAffiliationsFormProps = {
   hospitalOptions: any,

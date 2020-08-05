@@ -39,6 +39,7 @@ const FacultyProfileForm = ({
     RoleSpecificProfileView={RoleSpecificFacultyProfileView}
     RoleSpecificCheckboxes={RoleSpecificFacultyCheckboxes}
     RoleSpecificExpectations={RoleSpecificFacultyExpectations}
+    isStudent={false}
   />
 )
 

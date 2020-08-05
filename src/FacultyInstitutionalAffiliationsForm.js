@@ -5,7 +5,7 @@ import InstitutionalAffiliationsForm, {
   type InstitutionalAffiliationsFormProps,
 } from './InstitutionalAffiliationsForm'
 
-export default (props: Props) => (
+export default (props: InstitutionalAffiliationsFormProps) => (
   <InstitutionalAffiliationsForm
     {...props}
     fieldName="Institutional Affiliations"
