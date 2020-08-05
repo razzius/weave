@@ -11,7 +11,7 @@ from server.models import (
 
 
 def test_get_public_tags_needs_authorization(client):
-    response = client.get("/api/search-tags")
+    response = client.get("/api/faculty-search-tags")
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED.value
 
@@ -26,7 +26,7 @@ def test_get_empty_public_tags(client, auth):
 
     auth.login(verification_token.token)
 
-    response = client.get("/api/search-tags")
+    response = client.get("/api/faculty-search-tags")
 
     assert response.status_code == HTTPStatus.OK.value
 
@@ -63,7 +63,7 @@ def test_get_public_tags(client, auth):
 
     auth.login(token)
 
-    response = client.get("/api/search-tags")
+    response = client.get("/api/faculty-search-tags")
 
     assert response.status_code == HTTPStatus.OK.value
 
