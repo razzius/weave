@@ -156,7 +156,7 @@ def get_profiles():
             VerificationEmail,
             FacultyProfile.verification_email_id == VerificationEmail.id,
         )
-        .filter(VerificationEmail.is_mentor.is_(True))
+        .filter(VerificationEmail.is_faculty.is_(True))
     )
 
     return render_matching_profiles(
@@ -172,7 +172,7 @@ def get_profiles():
 def peer_profiles():
     verification_token = flask_login.current_user
 
-    if verification_token.email.is_mentor:
+    if verification_token.email.is_faculty:
         raise ForbiddenError(
             {"error": ["Peer to peer mentorship is only available for students"]}
         )
@@ -191,7 +191,7 @@ def peer_profiles():
             VerificationEmail,
             StudentProfile.verification_email_id == VerificationEmail.id,
         )
-        .filter(VerificationEmail.is_mentor.is_(False))
+        .filter(VerificationEmail.is_faculty.is_(False))
     )
     return render_matching_profiles(
         profiles_queryset,

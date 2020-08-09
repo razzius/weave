@@ -10,7 +10,7 @@ MOCK_DATE = datetime.datetime(2020, 7, 15, tzinfo=datetime.timezone.utc)
 
 @freeze_time(MOCK_DATE)
 def test_create_minimal_student_profile(client, auth):
-    token = create_test_verification_token(is_mentor=False)
+    token = create_test_verification_token(is_faculty=False)
 
     auth.login(token.token)
 

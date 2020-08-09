@@ -9,7 +9,7 @@ def test_update_student_profile(client, auth):
     profile = create_test_student_profile()
 
     token = create_test_verification_token(
-        is_mentor=False, verification_email=profile.verification_email
+        is_faculty=False, verification_email=profile.verification_email
     )
 
     auth.login(token.token)
