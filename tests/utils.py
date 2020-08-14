@@ -16,25 +16,25 @@ def generate_test_email() -> str:
 
 
 def create_test_verification_email(
-    email: Optional[str] = None, is_admin: bool = False, is_mentor: bool = True
+    email: Optional[str] = None, is_admin: bool = False, is_faculty: bool = True
 ) -> VerificationEmail:
     if email is None:
         email = generate_test_email()
 
-    return save(VerificationEmail(email=email, is_admin=is_admin, is_mentor=is_mentor))
+    return save(VerificationEmail(email=email, is_admin=is_admin, is_faculty=is_faculty))
 
 
 def create_test_verification_token(
     token: Optional[str] = None,
     verification_email: Optional[VerificationEmail] = None,
     is_admin: bool = False,
-    is_mentor: bool = True,
+    is_faculty: bool = True,
 ) -> VerificationToken:
     if token is None:
         token = str(uuid.uuid4())
 
     if verification_email is None:
-        verification_email = create_test_verification_email(is_mentor=is_mentor)
+        verification_email = create_test_verification_email(is_faculty=is_faculty)
 
     return save(VerificationToken(token=token, email_id=verification_email.id))
 

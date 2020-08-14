@@ -156,7 +156,7 @@ def get_profiles():
             VerificationEmail,
             FacultyProfile.verification_email_id == VerificationEmail.id,
         )
-        .filter(VerificationEmail.is_mentor.is_(True))
+        .filter(VerificationEmail.is_faculty.is_(True))
     )
 
     return render_matching_profiles(
@@ -172,7 +172,7 @@ def get_profiles():
 def peer_profiles():
     verification_token = flask_login.current_user
 
-    if verification_token.email.is_mentor:
+    if verification_token.email.is_faculty:
         raise ForbiddenError(
             {"error": ["Peer to peer mentorship is only available for students"]}
         )
@@ -191,7 +191,7 @@ def peer_profiles():
             VerificationEmail,
             StudentProfile.verification_email_id == VerificationEmail.id,
         )
-        .filter(VerificationEmail.is_mentor.is_(False))
+        .filter(VerificationEmail.is_faculty.is_(False))
     )
     return render_matching_profiles(
         profiles_queryset,
@@ -398,13 +398,13 @@ def upload_image():
     return jsonify({"image_url": response["eager"][0]["secure_url"]})
 
 
-def get_or_create_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
+def get_or_create_verification_email(email: str, is_faculty: bool) -> VerificationEmail:
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:
         return existing_email
 
-    verification_email = VerificationEmail(email=email, is_mentor=is_mentor)
+    verification_email = VerificationEmail(email=email, is_faculty=is_faculty)
 
     save(verification_email)
 
@@ -435,10 +435,10 @@ def send_token(verification_email, email_function, is_personal_device):
     return save(verification_token)
 
 
-def process_send_verification_email(is_mentor):
+def process_send_verification_email(is_faculty):
     email_function = (
         send_faculty_registration_email
-        if is_mentor
+        if is_faculty
         else send_student_registration_email
     )
 
@@ -457,7 +457,7 @@ def process_send_verification_email(is_mentor):
     if existing_email:
         raise UserError({"email": ["claimed"]})
 
-    verification_email = get_or_create_verification_email(email, is_mentor=is_mentor)
+    verification_email = get_or_create_verification_email(email, is_faculty=is_faculty)
 
     send_token(
         verification_email,
@@ -470,12 +470,12 @@ def process_send_verification_email(is_mentor):
 
 @api.route("/send-faculty-verification-email", methods=["POST"])
 def send_faculty_verification_email():
-    return process_send_verification_email(is_mentor=True)
+    return process_send_verification_email(is_faculty=True)
 
 
 @api.route("/send-student-verification-email", methods=["POST"])
 def send_student_verification_email():
-    return process_send_verification_email(is_mentor=False)
+    return process_send_verification_email(is_faculty=False)
 
 
 @api.route("/login", methods=["POST"])
@@ -498,7 +498,7 @@ def login():
 
     email_function = (
         send_faculty_login_email
-        if verification_email.is_mentor
+        if verification_email.is_faculty
         else send_student_login_email
     )
 
@@ -587,7 +587,7 @@ def render_verification_token_account(verification_token):
     return jsonify(
         {
             "email": verification_email.email,
-            "is_mentor": verification_email.is_mentor,
+            "is_faculty": verification_email.is_faculty,
             "is_admin": verification_email.is_admin,
             "profile_id": profile_id,
             "available_for_mentoring": available_for_mentoring,

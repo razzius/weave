@@ -4,7 +4,7 @@ from .utils import create_test_verification_email
 
 
 def test_save_student_profile(db_session):
-    verification_email = create_test_verification_email(is_mentor=False)
+    verification_email = create_test_verification_email(is_faculty=False)
 
     profile = save(
         StudentProfile(

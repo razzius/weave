@@ -47,7 +47,7 @@ def get_profile_by_token(
 ) -> Optional[FacultyProfile]:
     verification_email = VerificationEmail.query.get(verification_token.email_id)
 
-    if verification_email.is_mentor:
+    if verification_email.is_faculty:
         return FacultyProfile.query.filter(
             FacultyProfile.verification_email_id == verification_email.id
         ).one_or_none()

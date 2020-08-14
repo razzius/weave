@@ -39,7 +39,7 @@ def reset_db():
 @blueprint.cli.command()
 @click.argument("email")
 def create_admin(email):
-    save(VerificationEmail(email=email, is_admin=True, is_mentor=True))
+    save(VerificationEmail(email=email, is_admin=True, is_faculty=True))
 
 
 @blueprint.cli.command()
@@ -136,7 +136,7 @@ def populate():
     ]
 
     for index, profile in enumerate(profiles):
-        email = VerificationEmail(email=f"animal{index}@gmail.com", is_mentor=True)
+        email = VerificationEmail(email=f"animal{index}@gmail.com", is_faculty=True)
 
         save(email)
 
