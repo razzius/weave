@@ -334,7 +334,7 @@ export type Account = {|
 
 function accountResponseToAccount(response): Account {
   return {
-    isMentor: response.is_mentor,
+    isMentor: response.is_faculty,
     isAdmin: response.is_admin,
     profileId: response.profile_id,
     email: response.email,
