@@ -79,7 +79,7 @@ export default class SearchInput extends Component<Props> {
             isMulti
             menuIsOpen={menuOpen}
             options={searchableOptions}
-            placeholder="Search"
+            placeholder="Search by tags or type any text and press enter"
             noOptionsMessage={() => null}
             onFocus={onFocus}
             onBlur={onBlur}
