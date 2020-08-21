@@ -92,7 +92,7 @@ type State = {
   willingCareerGuidance: boolean,
 
   // Student checkboxes
-  willingAdviceClasses: boolean,
+  willingDualDegrees: boolean,
   willingAdviceClinicalRotations: boolean,
   willingResearch: boolean,
   willingResidency: boolean,
@@ -156,7 +156,7 @@ export default class ProfileForm extends Component<Props, State> {
     willingCareerGuidance: false,
 
     // Student
-    willingAdviceClasses: false,
+    willingDualDegrees: false,
     willingAdviceClinicalRotations: false,
     willingResearch: false,
     willingResidency: false,
@@ -385,7 +385,7 @@ export default class ProfileForm extends Component<Props, State> {
       willingNetworking,
       willingShadowing,
       willingStudentGroup,
-      willingAdviceClasses,
+      willingDualDegrees,
       willingAdviceClinicalRotations,
       willingResearch,
       willingResidency,
@@ -421,7 +421,7 @@ export default class ProfileForm extends Component<Props, State> {
             willingNetworking,
             willingShadowing,
             willingStudentGroup,
-            willingAdviceClasses,
+            willingDualDegrees,
             willingAdviceClinicalRotations,
             willingResearch,
             willingResidency,
@@ -505,7 +505,7 @@ export default class ProfileForm extends Component<Props, State> {
                 willingNetworking={willingNetworking}
                 willingGoalSetting={willingGoalSetting}
                 willingCareerGuidance={willingCareerGuidance}
-                willingAdviceClasses={willingAdviceClasses}
+                willingDualDegrees={willingDualDegrees}
                 willingAdviceClinicalRotations={willingAdviceClinicalRotations}
                 willingResearch={willingResearch}
                 willingResidency={willingResidency}

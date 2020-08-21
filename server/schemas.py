@@ -75,7 +75,7 @@ class StudentProfileSchema(BaseProfileSchema):
     current_year = RelationOption(StudentYearOption, allow_none=True)
     pce_site = RelationOption(StudentPCESiteOption, allow_none=True)
 
-    willing_advice_classes = fields.Boolean()
+    willing_dual_degrees = fields.Boolean()
     willing_advice_clinical_rotations = fields.Boolean()
     willing_research = fields.Boolean()
     willing_residency = fields.Boolean()

@@ -8,7 +8,7 @@ const StudentProfileResult = ({ result }: { result: Object }) => {
   const {
     willingDiscussPersonal,
     willingAdviceClinicalRotations,
-    willingAdviceClasses,
+    willingDualDegrees,
     willingResearch,
     willingResidency,
     willingStudentGroup,
@@ -45,18 +45,15 @@ const StudentProfileResult = ({ result }: { result: Object }) => {
           checked={willingDiscussPersonal}
         />
         <CheckboxIndicator
-          title="Clinical rotations advice"
+          title="Classes / rotations advice"
           checked={willingAdviceClinicalRotations}
-        />
-        <CheckboxIndicator
-          title="Advice about classes"
-          checked={willingAdviceClasses}
         />
         <CheckboxIndicator title="Research" checked={willingResearch} />
         <CheckboxIndicator
           title="Residency applications"
           checked={willingResidency}
         />
+        <CheckboxIndicator title="Dual degrees" checked={willingDualDegrees} />
         <CheckboxIndicator
           title="Student group support"
           checked={willingStudentGroup}

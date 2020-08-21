@@ -56,7 +56,7 @@ def test_create_student_profile(client, auth):
         "other_cadence": other_cadence,
         "willing_discuss_personal": True,
         "willing_student_group": True,
-        "willing_advice_classes": True,
+        "willing_dual_degrees": True,
         "willing_advice_clinical_rotations": True,
         "willing_research": True,
         "willing_residency": True,
@@ -87,7 +87,7 @@ def test_create_student_profile(client, auth):
 
     assert response.json["willing_discuss_personal"]
     assert response.json["willing_student_group"]
-    assert response.json["willing_advice_classes"]
+    assert response.json["willing_dual_degrees"]
     assert response.json["willing_advice_clinical_rotations"]
     assert response.json["willing_research"]
     assert response.json["willing_residency"]

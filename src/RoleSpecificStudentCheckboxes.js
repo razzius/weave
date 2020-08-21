@@ -6,7 +6,7 @@ import ExpectationCheckbox from './ExpectationCheckbox'
 const RoleSpecificStudentCheckboxes = ({
   willingDiscussPersonal,
   willingAdviceClinicalRotations,
-  willingAdviceClasses,
+  willingDualDegrees,
   willingResearch,
   willingResidency,
   willingStudentGroup,
@@ -14,7 +14,7 @@ const RoleSpecificStudentCheckboxes = ({
 }: {
   willingDiscussPersonal: boolean,
   willingAdviceClinicalRotations: boolean,
-  willingAdviceClasses: boolean,
+  willingDualDegrees: boolean,
   willingResearch: boolean,
   willingResidency: boolean,
   willingStudentGroup: boolean,
@@ -34,15 +34,7 @@ const RoleSpecificStudentCheckboxes = ({
       value={willingAdviceClinicalRotations}
       onChange={updateBoolean('willingAdviceClinicalRotations')}
     >
-      Give advice about clinical rotations
-    </ExpectationCheckbox>
-
-    <ExpectationCheckbox
-      id="willing-advice-classes"
-      value={willingAdviceClasses}
-      onChange={updateBoolean('willingAdviceClasses')}
-    >
-      Give advice about classes
+      Advice about classes / clinical rotations
     </ExpectationCheckbox>
 
     <ExpectationCheckbox
@@ -58,7 +50,15 @@ const RoleSpecificStudentCheckboxes = ({
       value={willingResidency}
       onChange={updateBoolean('willingResidency')}
     >
-      Residency applications
+      Specialty selection / residency applications
+    </ExpectationCheckbox>
+
+    <ExpectationCheckbox
+      id="willing-dual-degrees"
+      value={willingDualDegrees}
+      onChange={updateBoolean('willingDualDegrees')}
+    >
+      Fifth year / dual degrees
     </ExpectationCheckbox>
 
     <ExpectationCheckbox

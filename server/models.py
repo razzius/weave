@@ -180,7 +180,7 @@ class StudentProfile(BaseProfile, db.Model):
     )
     pce_site = relationship(StudentPCESiteOption)
 
-    willing_advice_classes = db.Column(db.Boolean, default=False)
+    willing_dual_degrees = db.Column(db.Boolean, default=False)
     willing_advice_clinical_rotations = db.Column(db.Boolean, default=False)
     willing_research = db.Column(db.Boolean, default=False)
     willing_residency = db.Column(db.Boolean, default=False)

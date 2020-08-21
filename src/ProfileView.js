@@ -68,7 +68,7 @@ export type BaseProfileData = {|
   willingGoalSetting?: boolean,
   willingCareerGuidance?: boolean,
 
-  willingAdviceClasses?: boolean,
+  willingDualDegrees?: boolean,
   willingAdviceClinicalRotations?: boolean,
   willingResearch?: boolean,
   willingResidency?: boolean,
@@ -262,7 +262,7 @@ const ProfileView = ({
       willingDiscussPersonal={data.willingDiscussPersonal}
       willingCareerGuidance={data.willingCareerGuidance}
       willingStudentGroup={data.willingStudentGroup}
-      willingAdviceClasses={data.willingAdviceClasses}
+      willingDualDegrees={data.willingDualDegrees}
       willingAdviceClinicalRotations={data.willingAdviceClinicalRotations}
       willingResearch={data.willingResearch}
       willingResidency={data.willingResidency}

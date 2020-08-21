@@ -67,7 +67,7 @@ def basic_student_profile_data(schema):
         "program": schema.get("program"),
         "current_year": schema.get("current_year"),
         "pce_site": schema.get("pce_site"),
-        "willing_advice_classes": schema.get("willing_advice_classes"),
+        "willing_dual_degrees": schema.get("willing_dual_degrees"),
         "willing_advice_clinical_rotations": schema.get(
             "willing_advice_clinical_rotations"
         ),

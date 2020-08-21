@@ -118,7 +118,7 @@ function payloadToStudentProfile(payload: Object): Object {
 
     additionalInformation: payload.additional_information,
 
-    willingAdviceClasses: payload.willing_advice_classes,
+    willingDualDegrees: payload.willing_dual_degrees,
     willingAdviceClinicalRotations: payload.willing_advice_clinical_rotations,
     willingDiscussPersonal: payload.willing_discuss_personal,
     willingResearch: payload.willing_research,
@@ -249,7 +249,7 @@ export function profileToStudentPayload(profile: Object): Object {
 
     additional_information: profile.additionalInformation,
 
-    willing_advice_classes: profile.willingAdviceClasses,
+    willing_dual_degrees: profile.willingDualDegrees,
     willing_advice_clinical_rotations: profile.willingAdviceClinicalRotations,
     willing_discuss_personal: profile.willingDiscussPersonal,
     willing_research: profile.willingResearch,
