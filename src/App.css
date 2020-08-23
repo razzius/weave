@@ -450,3 +450,7 @@ iframe.video {
   position: absolute;
   width: 40px;
 }
+
+.ways-to-use-weave em {
+  font-weight: bold;
+}
