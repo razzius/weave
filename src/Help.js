@@ -29,7 +29,7 @@ const Help = () => (
       <Link to="/about">About</Link> page.
     </p>
     <h3>What are different ways that I can use Weave?</h3>
-    <ul className="ways-to-use-weave">
+    <ul>
       <li>
         Find <em>individual mentorship on a specific topic</em> (i.e. career
         advising, well-being, networking in a specialty field)
