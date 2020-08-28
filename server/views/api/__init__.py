@@ -4,131 +4,107 @@ from http import HTTPStatus
 
 import flask_login
 from cloudinary import uploader
-from flask import Blueprint, jsonify, make_response, request
+from flask import jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import and_, asc, desc, exists, func, text
-from sqlalchemy.exc import IntegrityError
 from structlog import get_logger
 
-from server.models import ProfileStar
-from server.queries import (
-    add_stars_to_profiles,
-    query_profile_tags,
-    query_profiles_and_stars,
-    query_searchable_tags,
-)
-from server.session import token_expired
-
-from ..emails import (
+from server.emails import (
     send_faculty_login_email,
     send_faculty_registration_email,
     send_student_login_email,
     send_student_registration_email,
 )
-from ..models import (
+from server.models import (
     ActivityOption,
-    ClinicalSpecialty,
     ClinicalSpecialtyOption,
     DegreeOption,
-    HospitalAffiliation,
+    FacultyClinicalSpecialty,
+    FacultyHospitalAffiliation,
+    FacultyPartsOfMe,
+    FacultyProfessionalInterest,
+    FacultyProfile,
+    FacultyProfileActivity,
+    FacultyProfileDegree,
     HospitalAffiliationOption,
-    PartsOfMe,
     PartsOfMeOption,
-    ProfessionalInterest,
     ProfessionalInterestOption,
-    Profile,
-    ProfileActivity,
-    ProfileDegree,
+    ProfileStar,
+    StudentProfile,
     VerificationEmail,
     VerificationToken,
     db,
     save,
 )
-from ..queries import (
+from server.queries import (
+    add_stars_to_profiles,
     get_profile_by_token,
     get_verification_email_by_email,
-    matching_profiles,
+    matching_faculty_profiles,
+    matching_student_profiles,
+    query_faculty_profiles_and_stars,
+    query_profile_tags,
+    query_faculty_searchable_tags,
+    query_student_searchable_tags,
 )
-from ..schemas import profile_schema, profiles_schema, valid_email_schema
-from .pagination import paginate
+from server.schemas import (
+    faculty_profile_schema,
+    faculty_profiles_schema,
+    student_profiles_schema,
+    valid_email_schema,
+)
+from server.session import token_expired
+from server.views.pagination import paginate
+
+from . import student_profile
+from .blueprint import api
+from .exceptions import (
+    ForbiddenError,
+    InvalidPayloadError,
+    LoginTimeoutError,
+    UnauthorizedError,
+    UserError,
+)
+from .utils import get_base_fields, save_tags
+
+
+__all__ = ["student_profile"]
 
 
 log = get_logger()
 
-# This is a non-standard http status, used by Microsoft's IIS, but it's useful
-# to disambiguate between unrecognized and expired tokens.
-LOGIN_TIMEOUT_STATUS = 440
 
-api = Blueprint("api", __name__, url_prefix="/api")
-
-
-class UserError(Exception):
-    status_code = HTTPStatus.BAD_REQUEST.value
-
-    def __init__(self, invalid_data, status_code=None):
-        self.invalid_data = invalid_data
-
-        if status_code is not None:
-            self.status_code = status_code
-
-
-class UnauthorizedError(UserError):
-    status_code = HTTPStatus.UNAUTHORIZED.value
-
-
-class InvalidPayloadError(UserError):
-    status_code = HTTPStatus.UNPROCESSABLE_ENTITY.value
-
-
-class LoginTimeoutError(UserError):
-    status_code = LOGIN_TIMEOUT_STATUS
-
-
-@api.errorhandler(UserError)
-def handle_user_error(e):
-    invalid_data = e.invalid_data
-    status_code = e.status_code
-    return jsonify(invalid_data), status_code
-
-
-@api.route("/profiles")
-@flask_login.login_required
-def get_profiles():
-    verification_token = flask_login.current_user
-
-    query = request.args.get("query", "")
-    tags = request.args.get("tags", "")
-    degrees = request.args.get("degrees", "")
-    affiliations = request.args.get("affiliations", "")
-
+def render_matching_profiles(
+    profiles_queryset,
+    verification_email_id,
+    profile_class,
+    role_specific_profiles_schema,
+):
     page = int(request.args.get("page", 1))
 
     sorting = request.args.get("sorting", "starred")
 
     start, end = paginate(page)
 
-    verification_email_id = verification_token.email_id
-
-    profiles_queryset = matching_profiles(
-        query, tags, degrees, affiliations, verification_email_id=verification_email_id
-    )
-
     def get_ordering(sorting):
         last_name_sorting = func.split_part(
-            Profile.name,
+            profile_class.name,
             " ",
             func.array_length(
-                func.string_to_array(Profile.name, " "),
+                func.string_to_array(profile_class.name, " "),
                 1,  # Length in the 1st dimension
             ),
         )
 
         sort_options = {
-            "starred": [desc(text("profile_star_count")), desc(Profile.date_updated)],
+            "starred": [
+                desc(text("profile_star_count")),
+                desc(profile_class.date_updated),
+            ],
             "last_name_alphabetical": [asc(last_name_sorting)],
             "last_name_reverse_alphabetical": [desc(last_name_sorting)],
-            "date_updated": [desc(Profile.date_updated)],
+            "date_updated": [desc(profile_class.date_updated)],
         }
 
         if sorting not in sort_options:
@@ -138,7 +114,7 @@ def get_profiles():
 
     ordering = [
         # Is this the logged-in user's profile? If so, return it first (false)
-        Profile.verification_email_id != verification_email_id,
+        profile_class.verification_email_id != verification_email_id,
         *get_ordering(sorting),
     ]
 
@@ -151,8 +127,77 @@ def get_profiles():
     return jsonify(
         {
             "profile_count": profiles_queryset.count(),
-            "profiles": profiles_schema.dump(profiles_with_stars),
+            "profiles": role_specific_profiles_schema.dump(profiles_with_stars),
         }
+    )
+
+
+@api.route("/profiles")
+@flask_login.login_required
+def get_profiles():
+    verification_token = flask_login.current_user
+
+    query = request.args.get("query", "")
+    tags = request.args.get("tags", "")
+    degrees = request.args.get("degrees", "")
+    affiliations = request.args.get("affiliations", "")
+
+    verification_email_id = verification_token.email_id
+
+    profiles_queryset = (
+        matching_faculty_profiles(
+            query,
+            tags,
+            degrees,
+            affiliations,
+            verification_email_id=verification_email_id,
+        )
+        .join(
+            VerificationEmail,
+            FacultyProfile.verification_email_id == VerificationEmail.id,
+        )
+        .filter(VerificationEmail.is_faculty.is_(True))
+    )
+
+    return render_matching_profiles(
+        profiles_queryset,
+        verification_email_id,
+        profile_class=FacultyProfile,
+        role_specific_profiles_schema=faculty_profiles_schema,
+    )
+
+
+@api.route("/peer-profiles")
+@flask_login.login_required
+def peer_profiles():
+    verification_token = flask_login.current_user
+
+    if verification_token.email.is_faculty:
+        raise ForbiddenError(
+            {"error": ["Peer to peer mentorship is only available for students"]}
+        )
+
+    query = request.args.get("query", "")
+    tags = request.args.get("tags", "")
+    affiliations = request.args.get("affiliations", "")
+
+    verification_email_id = verification_token.email_id
+
+    profiles_queryset = (
+        matching_student_profiles(
+            query, tags, affiliations, verification_email_id=verification_email_id,
+        )
+        .join(
+            VerificationEmail,
+            StudentProfile.verification_email_id == VerificationEmail.id,
+        )
+        .filter(VerificationEmail.is_faculty.is_(False))
+    )
+    return render_matching_profiles(
+        profiles_queryset,
+        verification_email_id,
+        profile_class=StudentProfile,
+        role_specific_profiles_schema=student_profiles_schema,
     )
 
 
@@ -164,10 +209,18 @@ def get_profile_tags():
     return {"tags": tags}
 
 
-@api.route("/search-tags")
+@api.route("/faculty-search-tags")
 @flask_login.login_required
-def get_search_tags():
-    tags = query_searchable_tags()
+def get_faculty_search_tags():
+    tags = query_faculty_searchable_tags()
+
+    return {"tags": tags}
+
+
+@api.route("/student-search-tags")
+@flask_login.login_required
+def get_student_search_tags():
+    tags = query_student_searchable_tags()
 
     return {"tags": tags}
 
@@ -177,18 +230,19 @@ def get_search_tags():
 def get_profile(profile_id=None):
     verification_token = flask_login.current_user
 
-    profile_and_star_list = query_profiles_and_stars(
-        verification_token.email_id
-    ).filter(Profile.id == profile_id)
+    profile_and_star_list = query_faculty_profiles_and_stars(
+        verification_email_id=verification_token.email_id
+    ).filter(FacultyProfile.id == profile_id)
 
     if not profile_and_star_list.first():
         raise UserError({"profile_id": ["Not found"]}, HTTPStatus.NOT_FOUND.value)
 
     profile, star_count = profile_and_star_list[0]
+
     # TODO do this without mutating profile
     profile.starred = star_count > 0
 
-    response = make_response(jsonify(profile_schema.dump(profile)))
+    response = make_response(jsonify(faculty_profile_schema.dump(profile)))
 
     response.headers["Cache-Control"] = "public, max-age=0"
     response.headers["Pragma"] = "no-cache"
@@ -197,137 +251,93 @@ def get_profile(profile_id=None):
     return response
 
 
-def flat_values(values):
-    return [tup[0] for tup in values]
-
-
-def save_tags(profile, tag_values, option_class, profile_relation_class):
-    activity_values = [value["tag"]["value"].strip() for value in tag_values]
-
-    existing_activity_options = option_class.query.filter(
-        option_class.value.in_(activity_values)
-    )
-
-    existing_activity_values = flat_values(
-        existing_activity_options.values(option_class.value)
-    )
-
-    new_activity_values = [
-        value for value in activity_values if value not in existing_activity_values
-    ]
-
-    new_activities = [option_class(value=value) for value in new_activity_values]
-
-    db.session.add_all(new_activities)
-    db.session.commit()
-
-    existing_profile_relation_tag_ids = flat_values(
-        profile_relation_class.query.filter(
-            profile_relation_class.tag_id.in_(
-                flat_values(existing_activity_options.values(profile_relation_class.id))
-            ),
-            profile_relation_class.profile_id == profile.id,
-        ).values(profile_relation_class.tag_id)
-    )
-
-    new_profile_relations = [
-        profile_relation_class(tag_id=activity.id, profile_id=profile.id)
-        for activity in existing_activity_options  # All activities exist by this point
-        if activity.id not in existing_profile_relation_tag_ids
-    ]
-
-    db.session.add_all(new_profile_relations)
-    db.session.commit()
-
-
 def save_all_tags(profile, schema):
     save_tags(
-        profile, schema["affiliations"], HospitalAffiliationOption, HospitalAffiliation
+        profile,
+        schema["affiliations"],
+        HospitalAffiliationOption,
+        FacultyHospitalAffiliation,
     )
     save_tags(
         profile,
         schema["clinical_specialties"],
         ClinicalSpecialtyOption,
-        ClinicalSpecialty,
+        FacultyClinicalSpecialty,
     )
     save_tags(
         profile,
         schema["professional_interests"],
         ProfessionalInterestOption,
-        ProfessionalInterest,
+        FacultyProfessionalInterest,
     )
-    save_tags(profile, schema["parts_of_me"], PartsOfMeOption, PartsOfMe)
-    save_tags(profile, schema["activities"], ActivityOption, ProfileActivity)
-    save_tags(profile, schema["degrees"], DegreeOption, ProfileDegree)
+    save_tags(profile, schema["parts_of_me"], PartsOfMeOption, FacultyPartsOfMe)
+    save_tags(profile, schema["activities"], ActivityOption, FacultyProfileActivity)
+    save_tags(profile, schema["degrees"], DegreeOption, FacultyProfileDegree)
 
 
-def basic_profile_data(verification_token, schema):
+def basic_faculty_profile_data(schema):
+    """
+Gets fields on the schema that are directly stored on the profile, as
+    opposed to many-to-many fields that are stored in other tables.
+    """
+    base_fields = get_base_fields(schema)
+
     return {
-        key: value
-        for key, value in schema.items()
-        if key
-        not in {
-            "affiliations",
-            "clinical_specialties",
-            "professional_interests",
-            "parts_of_me",
-            "activities",
-            "degrees"
-            # TODO should be `in` rather than `not in`
-        }
+        **base_fields,
+        "willing_shadowing": schema.get("willing_shadowing"),
+        "willing_networking": schema.get("willing_networking"),
+        "willing_goal_setting": schema.get("willing_goal_setting"),
+        "willing_career_guidance": schema.get("willing_career_guidance"),
     }
 
 
 @api.route("/profile", methods=["POST"])
 @flask_login.login_required
-def create_profile():
+def create_faculty_profile():
     verification_token = flask_login.current_user
 
     try:
-        schema = profile_schema.load(request.json)
+        schema = faculty_profile_schema.load(request.json)
     except ValidationError as err:
         capture_exception(err)
         raise InvalidPayloadError(err.messages)
 
     if db.session.query(
-        exists().where(Profile.contact_email == schema["contact_email"])
+        exists().where(FacultyProfile.contact_email == schema["contact_email"])
     ).scalar():
         raise UserError({"email": ["This email already exists in the database"]})
 
     profile_data = {
         "verification_email_id": verification_token.email_id,
-        **basic_profile_data(verification_token, schema),
+        **basic_faculty_profile_data(schema),
     }
 
-    profile = Profile(**profile_data)
-
-    db.session.add(profile)
-    db.session.commit()
+    profile = save(FacultyProfile(**profile_data))
 
     save_all_tags(profile, schema)
 
-    return jsonify(profile_schema.dump(profile)), HTTPStatus.CREATED.value
+    return jsonify(faculty_profile_schema.dump(profile)), HTTPStatus.CREATED.value
 
 
 @api.route("/profiles/<profile_id>", methods=["PUT"])
 @flask_login.login_required
-def update_profile(profile_id=None):
+def update_faculty_profile(profile_id=None):
     try:
-        schema = profile_schema.load(request.json)
+        schema = faculty_profile_schema.load(request.json)
     except ValidationError as err:
         capture_exception(err)
         raise InvalidPayloadError(err.messages)
 
     verification_token = flask_login.current_user
 
-    profile = Profile.query.get(profile_id)
+    profile = FacultyProfile.query.get(profile_id)
 
     is_admin = VerificationEmail.query.filter(
         VerificationEmail.id == verification_token.email_id
     ).value(VerificationEmail.is_admin)
 
     log.info(
-        "Edit profile",
+        "Edit faculty profile",
         profile_id=profile_id,
         is_admin=is_admin,
         token_id=verification_token.id,
@@ -336,15 +346,10 @@ def update_profile(profile_id=None):
 
     assert is_admin or profile.verification_email_id == verification_token.email_id
 
-    profile_data = basic_profile_data(verification_token, schema)
+    profile_data = basic_faculty_profile_data(schema)
 
     for key, value in profile_data.items():
-
-        # TODO put this with the schema
-        if key in {"name", "contact_email"}:
-            setattr(profile, key, value.strip())
-        else:
-            setattr(profile, key, value)
+        setattr(profile, key, value)
 
     editing_as_admin = (
         is_admin and profile.verification_email_id != verification_token.email_id
@@ -353,19 +358,16 @@ def update_profile(profile_id=None):
     if not editing_as_admin:
         profile.date_updated = datetime.datetime.utcnow()
 
-    try:
-        save(profile)
-    except IntegrityError:
-        raise UserError({"error": "Account with this contact email already exists"})
+    save(profile)
 
     # TODO rather than deleting all, delete only ones that haven't changed
     profile_relation_classes = {
-        ProfessionalInterest,
-        ProfileActivity,
-        HospitalAffiliation,
-        PartsOfMe,
-        ClinicalSpecialty,
-        ProfileDegree,
+        FacultyProfessionalInterest,
+        FacultyProfileActivity,
+        FacultyHospitalAffiliation,
+        FacultyPartsOfMe,
+        FacultyClinicalSpecialty,
+        FacultyProfileDegree,
     }
     for profile_relation_class in profile_relation_classes:
         profile_relation_class.query.filter(
@@ -374,7 +376,7 @@ def update_profile(profile_id=None):
 
     save_all_tags(profile, schema)
 
-    return jsonify(profile_schema.dump(profile))
+    return jsonify(faculty_profile_schema.dump(profile))
 
 
 def generate_token():
@@ -396,13 +398,13 @@ def upload_image():
     return jsonify({"image_url": response["eager"][0]["secure_url"]})
 
 
-def get_or_create_verification_email(email: str, is_mentor: bool) -> VerificationEmail:
+def get_or_create_verification_email(email: str, is_faculty: bool) -> VerificationEmail:
     existing_email = get_verification_email_by_email(email)
 
     if existing_email:
         return existing_email
 
-    verification_email = VerificationEmail(email=email, is_mentor=is_mentor)
+    verification_email = VerificationEmail(email=email, is_faculty=is_faculty)
 
     save(verification_email)
 
@@ -433,10 +435,10 @@ def send_token(verification_email, email_function, is_personal_device):
     return save(verification_token)
 
 
-def process_send_verification_email(is_mentor):
+def process_send_verification_email(is_faculty):
     email_function = (
         send_faculty_registration_email
-        if is_mentor
+        if is_faculty
         else send_student_registration_email
     )
 
@@ -455,7 +457,7 @@ def process_send_verification_email(is_mentor):
     if existing_email:
         raise UserError({"email": ["claimed"]})
 
-    verification_email = get_or_create_verification_email(email, is_mentor=is_mentor)
+    verification_email = get_or_create_verification_email(email, is_faculty=is_faculty)
 
     send_token(
         verification_email,
@@ -468,12 +470,12 @@ def process_send_verification_email(is_mentor):
 
 @api.route("/send-faculty-verification-email", methods=["POST"])
 def send_faculty_verification_email():
-    return process_send_verification_email(is_mentor=True)
+    return process_send_verification_email(is_faculty=True)
 
 
 @api.route("/send-student-verification-email", methods=["POST"])
 def send_student_verification_email():
-    return process_send_verification_email(is_mentor=False)
+    return process_send_verification_email(is_faculty=False)
 
 
 @api.route("/login", methods=["POST"])
@@ -496,7 +498,7 @@ def login():
 
     email_function = (
         send_faculty_login_email
-        if verification_email.is_mentor
+        if verification_email.is_faculty
         else send_student_login_email
     )
 
@@ -585,7 +587,7 @@ def render_verification_token_account(verification_token):
     return jsonify(
         {
             "email": verification_email.email,
-            "is_mentor": verification_email.is_mentor,
+            "is_faculty": verification_email.is_faculty,
             "is_admin": verification_email.is_admin,
             "profile_id": profile_id,
             "available_for_mentoring": available_for_mentoring,
@@ -661,7 +663,7 @@ def star_profile():
         )
 
     to_profile_id = request.json["profile_id"]
-    to_profile = Profile.query.get(to_profile_id)
+    to_profile = FacultyProfile.query.get(to_profile_id) or StudentProfile.query.get(to_profile_id)
 
     if to_profile is None:
         return (
@@ -669,14 +671,16 @@ def star_profile():
             HTTPStatus.UNPROCESSABLE_ENTITY.value,
         )
 
-    if to_profile.verification_email.id == from_email_id:
+    to_verification_email_id = to_profile.verification_email.id
+    if to_verification_email_id == from_email_id:
         return (
             jsonify({"profile_id": ["Cannot star own profile"]}),
             HTTPStatus.UNPROCESSABLE_ENTITY.value,
         )
 
     profile_star = ProfileStar(
-        from_verification_email_id=from_email_id, to_profile_id=to_profile_id
+        from_verification_email_id=from_email_id,
+        to_verification_email_id=to_verification_email_id,
     )
 
     preexisting_star = db.session.query(
@@ -684,7 +688,8 @@ def star_profile():
             and_(
                 ProfileStar.from_verification_email_id
                 == profile_star.from_verification_email_id,
-                ProfileStar.to_profile_id == profile_star.to_profile_id,
+                ProfileStar.to_verification_email_id
+                == profile_star.to_verification_email_id,
             )
         )
     ).scalar()
@@ -714,7 +719,7 @@ def unstar_profile():
         )
 
     to_profile_id = request.json["profile_id"]
-    to_profile = Profile.query.get(to_profile_id)
+    to_profile = FacultyProfile.query.get(to_profile_id)
 
     if to_profile is None:
         return (

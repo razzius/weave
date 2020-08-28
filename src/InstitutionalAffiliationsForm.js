@@ -2,19 +2,25 @@
 import React from 'react'
 
 import Select from 'react-select'
-import { makeOptions } from './options'
+
+export type InstitutionalAffiliationsFormProps = {
+  hospitalOptions: any,
+  affiliations: any,
+  handleChange: Function,
+}
+
+type Props = InstitutionalAffiliationsFormProps & {
+  fieldName: string,
+}
 
 export default ({
   hospitalOptions,
   affiliations,
   handleChange,
-}: {
-  hospitalOptions: any,
-  affiliations: any,
-  handleChange: Function,
-}) => (
+  fieldName,
+}: Props) => (
   <>
-    <p>Institutional Affiliations</p>
+    <p>{fieldName}</p>
     <Select
       styles={{
         control: base => ({ ...base, backgroundColor: 'white' }),
@@ -25,7 +31,7 @@ export default ({
       }}
       className="column"
       isMulti
-      options={makeOptions(hospitalOptions)}
+      options={hospitalOptions}
       value={affiliations}
       onChange={handleChange}
     />

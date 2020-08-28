@@ -1,5 +1,5 @@
 from server.models import ProfileStar, save
-from server.queries import matching_profiles
+from server.queries import matching_faculty_profiles
 
 from .utils import create_test_profile, create_test_verification_email
 
@@ -9,7 +9,7 @@ def test_matching_profiles_starred_profile(db_session):
 
     other_profile = create_test_profile(available_for_mentoring=True)
 
-    profiles = matching_profiles(
+    profiles = matching_faculty_profiles(
         query="",
         tags="",
         degrees="",
@@ -19,7 +19,8 @@ def test_matching_profiles_starred_profile(db_session):
 
     save(
         ProfileStar(
-            from_verification_email_id=user_email.id, to_profile_id=other_profile.id
+            from_verification_email_id=user_email.id,
+            to_verification_email_id=other_profile.verification_email_id,
         )
     )
 
@@ -34,8 +35,9 @@ def test_matching_profiles(db_session):
 
     profile = create_test_profile(available_for_mentoring=True)
 
-    # TODO pluralized arguments to matching_profiles should be arrays; query should be Optional[str]
-    profiles = matching_profiles(
+    # TODO pluralized arguments to matching_faculty_profiles should be
+    # arrays; query should be Optional[str]
+    profiles = matching_faculty_profiles(
         query="",
         tags="",
         degrees="",
@@ -50,7 +52,7 @@ def test_matching_profiles(db_session):
 def test_matching_profiles_empty(db_session):
     user_email = create_test_verification_email()
 
-    profiles = matching_profiles(
+    profiles = matching_faculty_profiles(
         query="",
         tags="",
         degrees="",

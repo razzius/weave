@@ -1,21 +1,25 @@
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_basicauth import BasicAuth
-
 from structlog import get_logger
 
 from .models import (
     ActivityOption,
     ClinicalSpecialtyOption,
     DegreeOption,
+    FacultyProfile,
     HospitalAffiliationOption,
+    StudentProgramOption,
+    StudentYearOption,
+    StudentPCESiteOption,
     PartsOfMeOption,
     ProfessionalInterestOption,
-    Profile,
+    StudentProfile,
     VerificationEmail,
     VerificationToken,
     db,
 )
+
 
 log = get_logger()
 
@@ -80,12 +84,18 @@ class ProfileModelView(BasicAuthExportableModelView):
 
 
 admin = Admin(index_view=BasicAuthAdminView())
-admin.add_view(ProfileModelView(Profile, db.session))
+admin.add_view(ProfileModelView(FacultyProfile, db.session))
+admin.add_view(ProfileModelView(StudentProfile, db.session))
 admin.add_view(ModelViewSortedByValue(DegreeOption, db.session))
 admin.add_view(ModelViewSortedByValue(HospitalAffiliationOption, db.session))
 admin.add_view(ModelViewSortedByValue(ClinicalSpecialtyOption, db.session))
 admin.add_view(ModelViewSortedByValue(ProfessionalInterestOption, db.session))
 admin.add_view(ModelViewSortedByValue(PartsOfMeOption, db.session))
+admin.add_view(ModelViewSortedByValue(StudentProgramOption, db.session))
+admin.add_view(ModelViewSortedByValue(StudentYearOption, db.session))
+admin.add_view(
+    ModelViewSortedByValue(StudentPCESiteOption, db.session, name="PCE Site Options")
+)
 admin.add_view(
     ModelViewSortedByValue(ActivityOption, db.session, name="Activities I Enjoy")
 )
@@ -95,12 +105,13 @@ admin.add_view(VerificationEmailModelView(VerificationEmail, db.session))
 
 def init_admin(app):
     if (
-        app.config.get("BASIC_AUTH_USERNAME") is not None
-        and app.config.get("BASIC_AUTH_PASSWORD") is not None
+        app.config.get("BASIC_AUTH_USERNAME") is None
+        and app.config.get("BASIC_AUTH_PASSWORD") is None
     ):
-        basic_auth.init_app(app)
-        admin.init_app(app)
-    else:
         log.warning(
             "Not configuring admin because BASIC_AUTH_USERNAME and BASIC_AUTH_PASSWORD are not set."
         )
+        return
+
+    basic_auth.init_app(app)
+    admin.init_app(app)

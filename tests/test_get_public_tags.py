@@ -2,8 +2,8 @@ from http import HTTPStatus
 
 from server.models import (
     ActivityOption,
-    Profile,
-    ProfileActivity,
+    FacultyProfile,
+    FacultyProfileActivity,
     VerificationEmail,
     VerificationToken,
     save,
@@ -11,7 +11,7 @@ from server.models import (
 
 
 def test_get_public_tags_needs_authorization(client):
-    response = client.get("/api/search-tags")
+    response = client.get("/api/faculty-search-tags")
 
     assert response.status_code == HTTPStatus.UNAUTHORIZED.value
 
@@ -26,7 +26,7 @@ def test_get_empty_public_tags(client, auth):
 
     auth.login(verification_token.token)
 
-    response = client.get("/api/search-tags")
+    response = client.get("/api/faculty-search-tags")
 
     assert response.status_code == HTTPStatus.OK.value
 
@@ -49,7 +49,7 @@ def test_get_public_tags(client, auth):
     save(VerificationToken(token=token, email_id=verification_email.id))
 
     profile = save(
-        Profile(
+        FacultyProfile(
             verification_email=verification_email,
             name="Test User",
             cadence="monthly",
@@ -59,11 +59,11 @@ def test_get_public_tags(client, auth):
 
     activity_option = save(ActivityOption(value="activity", public=True))
 
-    save(ProfileActivity(profile=profile, tag=activity_option))
+    save(FacultyProfileActivity(profile=profile, tag=activity_option))
 
     auth.login(token)
 
-    response = client.get("/api/search-tags")
+    response = client.get("/api/faculty-search-tags")
 
     assert response.status_code == HTTPStatus.OK.value
 

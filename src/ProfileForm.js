@@ -10,10 +10,9 @@ import CreatableInputOnly from './CreatableInputOnly'
 import CreatableTagSelect from './CreatableTagSelect'
 import PreviewProfile from './PreviewProfile'
 import CadenceOption from './CadenceOption'
-import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
 import { getProfileTags, uploadPicture, type Profile } from './api'
-import { makeOptions, degreeOptions } from './options'
+import { makeOptions } from './options'
 import { arrayCaseInsensitiveContains, capitalize, last, when } from './utils'
 
 function scaleCanvas(canvas) {
@@ -48,10 +47,15 @@ type Props = {
   setProfileId: ?Function,
   history: RouterHistory,
   firstTimePublish: boolean,
+  RoleSpecificFields: Object,
+  RoleSpecificProfileView: Object,
+  RoleSpecificCheckboxes: Object,
+  RoleSpecificExpectations: Object,
+  profileBaseUrl: string,
+  isStudent: boolean,
 }
 
 type State = {
-  position: { x: number, y: number },
   scale: number,
   rotate: number,
   width: number,
@@ -69,16 +73,29 @@ type State = {
   professionalInterests: Array<string>,
   partsOfMe: Array<string>,
   activities: Array<string>,
+
+  program: string | null,
+  pceSite: string | null,
+  currentYear: string | null,
   degrees: Array<string>,
 
   additionalInformation: string,
 
+  // Shared checkboxes
+  willingDiscussPersonal: boolean,
+  willingStudentGroup: boolean,
+
+  // Faculty checkboxes
   willingShadowing: boolean,
   willingNetworking: boolean,
   willingGoalSetting: boolean,
-  willingDiscussPersonal: boolean,
   willingCareerGuidance: boolean,
-  willingStudentGroup: boolean,
+
+  // Student checkboxes
+  willingDualDegrees: boolean,
+  willingAdviceClinicalRotations: boolean,
+  willingResearch: boolean,
+  willingResidency: boolean,
 
   cadence: string,
   otherCadence: string,
@@ -89,6 +106,9 @@ type State = {
   clinicalSpecialtyOptions: Array<string>,
   activitiesIEnjoyOptions: Array<string>,
   professionalInterestOptions: Array<string>,
+  programOptions: Array<string>,
+  pceSiteOptions: Array<string>,
+  currentYearOptions: Array<string>,
 }
 
 export default class ProfileForm extends Component<Props, State> {
@@ -97,7 +117,6 @@ export default class ProfileForm extends Component<Props, State> {
   editor: any = null
 
   state = {
-    position: { x: 0.5, y: 0.5 },
     scale: 1,
     rotate: 0,
     width: 200,
@@ -115,16 +134,32 @@ export default class ProfileForm extends Component<Props, State> {
     professionalInterests: [],
     partsOfMe: [],
     activities: [],
+
+    // TODO these fields are the superset of all student and faculty possible fields.
+    // Theoretically only the relevant fields for each role could be in state.
+    program: null,
+    pceSite: null,
+    currentYear: null,
+
     degrees: [],
 
     additionalInformation: '',
 
+    // Shared checkboxes
+    willingDiscussPersonal: false,
+    willingStudentGroup: false,
+
+    // Faculty
     willingShadowing: false,
     willingNetworking: false,
     willingGoalSetting: false,
-    willingDiscussPersonal: false,
     willingCareerGuidance: false,
-    willingStudentGroup: false,
+
+    // Student
+    willingDualDegrees: false,
+    willingAdviceClinicalRotations: false,
+    willingResearch: false,
+    willingResidency: false,
 
     cadence: 'monthly',
     otherCadence: '',
@@ -135,6 +170,9 @@ export default class ProfileForm extends Component<Props, State> {
     clinicalSpecialtyOptions: [],
     activitiesIEnjoyOptions: [],
     professionalInterestOptions: [],
+    programOptions: [],
+    currentYearOptions: [],
+    pceSiteOptions: [],
   }
 
   async componentDidMount() {
@@ -146,6 +184,9 @@ export default class ProfileForm extends Component<Props, State> {
 
     this.setState({
       ...initialData,
+      programOptions: tags.programs,
+      pceSiteOptions: tags.pce_site_options,
+      currentYearOptions: tags.current_year_options,
       hospitalOptions: tags.hospital_affiliations,
       clinicalSpecialtyOptions: tags.clinical_specialties,
       professionalInterestOptions: tags.professional_interests,
@@ -165,6 +206,10 @@ export default class ProfileForm extends Component<Props, State> {
     this.setState({
       [key]: [...current, capitalize(trimmed)],
     })
+  }
+
+  handleChangeField = (key: string) => ({ value }: Object) => {
+    this.setState({ [key]: value })
   }
 
   handleChange = (key: string) => (selected: ValueType, meta: Object) => {
@@ -207,7 +252,13 @@ export default class ProfileForm extends Component<Props, State> {
   }
 
   submit = async () => {
-    const { saveProfile, profileId, setProfileId, history } = this.props
+    const {
+      saveProfile,
+      profileId,
+      setProfileId,
+      history,
+      profileBaseUrl,
+    } = this.props
     const { cadence } = this.state
 
     await when(
@@ -230,7 +281,7 @@ export default class ProfileForm extends Component<Props, State> {
     }
 
     this.setState({ saved: true }, () => {
-      history.push(`/profiles/${profile.id}`)
+      history.push(`/${profileBaseUrl}/${profile.id}`)
     })
   }
 
@@ -301,36 +352,53 @@ export default class ProfileForm extends Component<Props, State> {
     const {
       activities,
       activitiesIEnjoyOptions,
+      additionalInformation,
       affiliations,
       cadence,
       clinicalSpecialties,
       clinicalSpecialtyOptions,
       contactEmail,
+      currentYear,
+      currentYearOptions,
       degrees,
       hospitalOptions,
       image,
+      imageEdited,
+      imageSuccess,
       imageUrl,
       name,
       otherCadence,
       partsOfMe,
+      pceSite,
+      pceSiteOptions,
       preview,
       professionalInterestOptions,
       professionalInterests,
+      program,
+      programOptions,
       rotate,
       scale,
+      uploadingImage,
       willingCareerGuidance,
       willingDiscussPersonal,
       willingGoalSetting,
       willingNetworking,
       willingShadowing,
       willingStudentGroup,
-      additionalInformation,
-      uploadingImage,
-      imageSuccess,
-      imageEdited,
+      willingDualDegrees,
+      willingAdviceClinicalRotations,
+      willingResearch,
+      willingResidency,
     } = this.state
 
-    const { firstTimePublish } = this.props
+    const {
+      firstTimePublish,
+      RoleSpecificFields,
+      RoleSpecificProfileView,
+      RoleSpecificCheckboxes,
+      RoleSpecificExpectations,
+      isStudent,
+    } = this.props
 
     if (preview) {
       return (
@@ -353,8 +421,17 @@ export default class ProfileForm extends Component<Props, State> {
             willingNetworking,
             willingShadowing,
             willingStudentGroup,
+            willingDualDegrees,
+            willingAdviceClinicalRotations,
+            willingResearch,
+            willingResidency,
             additionalInformation,
+            program,
+            pceSite,
+            currentYear,
           }}
+          RoleSpecificProfileView={RoleSpecificProfileView}
+          RoleSpecificExpectations={RoleSpecificExpectations}
           firstTimePublish={firstTimePublish}
           onEdit={this.unsetPreview}
           onPublish={this.submit}
@@ -420,77 +497,19 @@ export default class ProfileForm extends Component<Props, State> {
             <div className="expectations">
               <h3>I am available to mentor in the following ways:</h3>
 
-              <div className="expectation">
-                <label htmlFor="willing-shadowing">
-                  <input
-                    id="willing-shadowing"
-                    type="checkbox"
-                    checked={willingShadowing}
-                    onChange={this.updateBoolean('willingShadowing')}
-                  />
-                  Clinical shadowing opportunities
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-networking">
-                  <input
-                    id="willing-networking"
-                    type="checkbox"
-                    checked={willingNetworking}
-                    onChange={this.updateBoolean('willingNetworking')}
-                  />
-                  Networking
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-goal-setting">
-                  <input
-                    id="willing-goal-setting"
-                    type="checkbox"
-                    checked={willingGoalSetting}
-                    onChange={this.updateBoolean('willingGoalSetting')}
-                  />
-                  Goal setting
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-discuss-personal">
-                  <input
-                    id="willing-discuss-personal"
-                    type="checkbox"
-                    checked={willingDiscussPersonal}
-                    onChange={this.updateBoolean('willingDiscussPersonal')}
-                  />
-                  Discussing personal as well as professional life
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-career-guidance">
-                  <input
-                    id="willing-career-guidance"
-                    type="checkbox"
-                    checked={willingCareerGuidance}
-                    onChange={this.updateBoolean('willingCareerGuidance')}
-                  />
-                  Career guidance
-                </label>
-              </div>
-
-              <div className="expectation">
-                <label htmlFor="willing-student-group">
-                  <input
-                    id="willing-student-group"
-                    type="checkbox"
-                    checked={willingStudentGroup}
-                    onChange={this.updateBoolean('willingStudentGroup')}
-                  />
-                  Student interest group support or speaking at student events
-                </label>
-              </div>
+              <RoleSpecificCheckboxes
+                updateBoolean={this.updateBoolean}
+                willingDiscussPersonal={willingDiscussPersonal}
+                willingStudentGroup={willingStudentGroup}
+                willingShadowing={willingShadowing}
+                willingNetworking={willingNetworking}
+                willingGoalSetting={willingGoalSetting}
+                willingCareerGuidance={willingCareerGuidance}
+                willingDualDegrees={willingDualDegrees}
+                willingAdviceClinicalRotations={willingAdviceClinicalRotations}
+                willingResearch={willingResearch}
+                willingResidency={willingResidency}
+              />
             </div>
           </div>
 
@@ -512,17 +531,23 @@ export default class ProfileForm extends Component<Props, State> {
               value={contactEmail}
               onChange={this.update('contactEmail')}
             />
-            <p>Academic Degrees</p>
-            <CreatableTagSelect
-              values={degrees}
-              options={degreeOptions}
-              handleChange={this.handleChange('degrees')}
-              handleAdd={this.handleCreate('degrees')}
-            />
-            <InstitutionalAffiliationsForm
-              affiliations={makeOptions(affiliations)}
-              hospitalOptions={hospitalOptions}
-              handleChange={this.handleChange('affiliations')}
+            <RoleSpecificFields
+              fields={{
+                degrees,
+                program,
+                pceSite,
+                currentYear,
+                affiliations: makeOptions(affiliations),
+              }}
+              options={{
+                programOptions: makeOptions(programOptions),
+                pceSiteOptions: makeOptions(pceSiteOptions),
+                currentYearOptions: makeOptions(currentYearOptions),
+                hospitalOptions: makeOptions(hospitalOptions),
+              }}
+              handleChange={this.handleChange}
+              handleCreate={this.handleCreate}
+              handleChangeField={this.handleChangeField}
             />
             <div className="user-tip">
               In the following sections, in addition to choosing from the tags
@@ -546,9 +571,9 @@ export default class ProfileForm extends Component<Props, State> {
             <div className="user-tip">
               <p>
                 Please use this section to share parts of your identity. This is
-                where faculty may share optional demographic or personally
-                meaningful information that is viewable by students and faculty
-                on Weave. Please{' '}
+                where you may share optional demographic or personally
+                meaningful information that is viewable by{' '}
+                {isStudent && 'other '}students on Weave. Please{' '}
                 <Link to="/help#how-do-i-create-my-own-tags" target="_blank">
                   create your own tags
                 </Link>{' '}

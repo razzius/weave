@@ -70,13 +70,16 @@ section {
   background-size: cover;
 }
 .App-intro {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
   padding: 3em;
   margin-top: 120px;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
   text-align: center;
+}
+.App-intro hr {
+  width: 230px;
 }
 .App-header {
   border-bottom: 3px solid #9c2b1c;
@@ -347,8 +350,11 @@ input::-webkit-contacts-auto-fill-button {
     margin-top: 0;
   }
   .profile-result-right {
-    text-align: right;
     padding: 10px;
+    flex-basis: 200px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    text-align: left;
   }
   .profile-result-link:hover,
   .profile-result-link:focus {
@@ -366,6 +372,12 @@ input::-webkit-contacts-auto-fill-button {
     padding-top: 30px;
     padding-bottom: 30px;
   }
+}
+
+.profile-result-left {
+  flex-grow: 0;
+  flex-shrink: 0;
+  width: 400px;
 }
 
 nav {
@@ -401,13 +413,36 @@ iframe.video {
   border: none;
 }
 
+.expectation label {
+  display: block;
+  margin-left: 24px;
+  text-indent: -27px;
+}
+
+.expectation label input {
+  margin-right: 10px;
+}
+
 .error {
-  margin: 1em 0;
-  padding: 1em;
   background: #ffff0095;
+}
+.welcome-wrapper {
+  display: flex;
+  justify-content: center;
+}
+.welcome {
+  position: absolute;
+  padding: 1em;
+  margin-top: 1.5em;
+  margin-left: auto;
+  margin-right: auto;
+  background: rgba(255, 255, 255, 0.85);
+  text-align: center;
+  width: 400px;
 }
 .banner {
   margin: 0;
+  padding: 1em;
   text-align: center;
 }
 

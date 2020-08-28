@@ -27,7 +27,7 @@ def test_verify_valid_token(client):
     token = "123"
     email = "test@test.com"
 
-    verification_email = save(VerificationEmail(email=email, is_mentor=True))
+    verification_email = save(VerificationEmail(email=email, is_faculty=True))
 
     save(VerificationToken(token=token, email_id=verification_email.id))
 
@@ -40,7 +40,7 @@ def test_verify_valid_token(client):
         "email": "test@test.com",
         "is_admin": None,
         "profile_id": None,
-        "is_mentor": True,
+        "is_faculty": True,
     }
 
 
@@ -48,7 +48,7 @@ def test_verify_token_logs_out_other_tokens(client):
     token = "123"
     email = "test@test.com"
 
-    verification_email = save(VerificationEmail(email=email, is_mentor=True))
+    verification_email = save(VerificationEmail(email=email, is_faculty=True))
 
     prior_token = save(VerificationToken(token="1010", email_id=verification_email.id))
 

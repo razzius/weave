@@ -4,7 +4,7 @@ import { useBeforeunload } from 'react-beforeunload'
 import { type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
-import { getProfile, updateProfile, type Account } from './api'
+import { type Account } from './api'
 import ProfileForm from './ProfileForm'
 
 type Props = {
@@ -13,6 +13,14 @@ type Props = {
   isAdmin?: boolean,
   setProfileId?: string => void,
   history: RouterHistory,
+  getProfile: Function,
+  updateProfile: Function,
+  RoleSpecificFields: Object,
+  RoleSpecificProfileView: Object,
+  RoleSpecificCheckboxes: Object,
+  RoleSpecificExpectations: Object,
+  profileBaseUrl: string,
+  isStudent: boolean,
 }
 
 const EditProfile = ({
@@ -21,6 +29,14 @@ const EditProfile = ({
   setProfileId,
   profileId,
   isAdmin = false,
+  getProfile,
+  updateProfile,
+  RoleSpecificFields,
+  RoleSpecificProfileView,
+  RoleSpecificCheckboxes,
+  RoleSpecificExpectations,
+  profileBaseUrl,
+  isStudent,
 }: Props) => {
   const unchangedWarning = 'Your changes to your profile have not been saved.'
   useBeforeunload(() => unchangedWarning)
@@ -43,6 +59,12 @@ const EditProfile = ({
         setProfileId={setProfileId}
         profileId={profileId}
         isAdmin={isAdmin}
+        RoleSpecificFields={RoleSpecificFields}
+        RoleSpecificProfileView={RoleSpecificProfileView}
+        RoleSpecificCheckboxes={RoleSpecificCheckboxes}
+        RoleSpecificExpectations={RoleSpecificExpectations}
+        profileBaseUrl={profileBaseUrl}
+        isStudent={isStudent}
       />
     </AppScreen>
   )

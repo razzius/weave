@@ -4,7 +4,7 @@ import http
 from freezegun import freeze_time
 from server.models import (
     ActivityOption,
-    Profile,
+    FacultyProfile,
     VerificationEmail,
     VerificationToken,
     save,
@@ -51,7 +51,7 @@ def test_create_profile_with_custom_tag(client, auth):
 
     assert response.status_code == http.HTTPStatus.CREATED.value
 
-    profile_id = Profile.query.all()[0].id
+    profile_id = FacultyProfile.query.all()[0].id
 
     expected_fields = {
         "id": profile_id,

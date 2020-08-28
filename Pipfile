@@ -54,7 +54,7 @@ start = "env FLASK_ENV=development flask run --host=0.0.0.0"
 test = "pytest"
 shell = "flask shell"
 resetdb = "flask resetdb"
-lint = "flake8 server tests && mypy server tests"
+lint = "sh -c \"flake8 server tests && mypy --ignore-missing-imports --follow-imports=silent server tests\""
 
 [pipenv]
 allow_prereleases = true

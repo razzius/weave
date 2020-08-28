@@ -1,25 +1,35 @@
 import operator
 from functools import reduce
-from typing import List, Optional
+from typing import List, Optional, Type
 
 from flask_sqlalchemy import BaseQuery
 from sqlalchemy import and_, func, or_, sql
 
 from .models import (
     ActivityOption,
-    ClinicalSpecialty,
+    BaseProfile,
     ClinicalSpecialtyOption,
     DegreeOption,
-    HospitalAffiliation,
+    FacultyClinicalSpecialty,
+    FacultyHospitalAffiliation,
+    FacultyPartsOfMe,
+    FacultyProfessionalInterest,
+    FacultyProfile,
+    FacultyProfileActivity,
+    FacultyProfileDegree,
     HospitalAffiliationOption,
-    PartsOfMe,
     PartsOfMeOption,
-    ProfessionalInterest,
     ProfessionalInterestOption,
-    Profile,
-    ProfileActivity,
-    ProfileDegree,
     ProfileStar,
+    StudentClinicalSpecialty,
+    StudentHospitalAffiliation,
+    StudentPartsOfMe,
+    StudentPCESiteOption,
+    StudentProfessionalInterest,
+    StudentProfile,
+    StudentProfileActivity,
+    StudentProgramOption,
+    StudentYearOption,
     VerificationEmail,
     VerificationToken,
     db,
@@ -32,11 +42,18 @@ def get_verification_email_by_email(email: str) -> Optional[VerificationEmail]:
     ).one_or_none()
 
 
-def get_profile_by_token(verification_token: VerificationToken) -> Optional[Profile]:
+def get_profile_by_token(
+    verification_token: VerificationToken,
+) -> Optional[FacultyProfile]:
     verification_email = VerificationEmail.query.get(verification_token.email_id)
 
-    return Profile.query.filter(
-        Profile.verification_email_id == verification_email.id
+    if verification_email.is_faculty:
+        return FacultyProfile.query.filter(
+            FacultyProfile.verification_email_id == verification_email.id
+        ).one_or_none()
+
+    return StudentProfile.query.filter(
+        StudentProfile.verification_email_id == verification_email.id
     ).one_or_none()
 
 
@@ -75,14 +92,14 @@ def _filter_query_on_degrees(degree_list: List[str], query: BaseQuery) -> BaseQu
 
     degree_filter = reduce(operator.and_, degree_filters)
     return (
-        query.outerjoin(ProfileDegree)
+        query.outerjoin(FacultyProfileDegree)
         .outerjoin(DegreeOption)
-        .group_by(Profile.id)
+        .group_by(FacultyProfile.id)
         .having(degree_filter)
     )
 
 
-def _filter_query_on_affiliations(
+def _filter_faculty_query_on_affiliations(
     affiliation_list: List[str], query: BaseQuery
 ) -> BaseQuery:
     affiliations_filters = reduce(
@@ -95,28 +112,103 @@ def _filter_query_on_affiliations(
 
     return (
         query.outerjoin(
-            HospitalAffiliation, Profile.id == HospitalAffiliation.profile_id
+            FacultyHospitalAffiliation,
+            FacultyProfile.id == FacultyHospitalAffiliation.profile_id,
         )
         .outerjoin(HospitalAffiliationOption)
-        .group_by(Profile.id)
+        .group_by(FacultyProfile.id)
         .having(affiliations_filters)
     )
 
 
-def _filter_profiles(
+def _filter_student_query_on_affiliations(
+    affiliation_list: List[str], query: BaseQuery
+) -> BaseQuery:
+    affiliations_filters = reduce(
+        operator.and_,
+        [
+            func.bool_or(func.lower(HospitalAffiliationOption.value) == affilation)
+            for affilation in affiliation_list
+        ],
+    )
+
+    return (
+        query.outerjoin(
+            StudentHospitalAffiliation,
+            StudentProfile.id == StudentHospitalAffiliation.profile_id,
+        )
+        .outerjoin(HospitalAffiliationOption)
+        .group_by(StudentProfile.id)
+        .having(affiliations_filters)
+    )
+
+
+def _filter_student_profiles(
+    available_profiles: BaseQuery,
+    words: List[str],
+    tags: List[str],
+    affiliation_list: List[str],
+) -> BaseQuery:
+    searchable_fields = [
+        StudentProfile.name,
+        StudentProfile.additional_information,
+        StudentProfile.cadence,
+    ]
+
+    tag_fields = [
+        (StudentClinicalSpecialty, ClinicalSpecialtyOption),
+        (StudentProfessionalInterest, ProfessionalInterestOption),
+        (StudentPartsOfMe, PartsOfMeOption),
+        (StudentProfileActivity, ActivityOption),
+    ]
+
+    query = available_profiles
+
+    for relation, option_class in tag_fields:
+        query = query.outerjoin(relation).outerjoin(option_class)
+
+    search_filters = [
+        or_(
+            *[func.lower(field).contains(word) for field in searchable_fields]
+            + [
+                func.lower(option_class.value).contains(word)
+                for _, option_class in tag_fields
+            ]
+        )
+        for word in words
+    ]
+
+    tag_filters = [
+        or_(func.lower(option_class.value) == tag for _, option_class in tag_fields)
+        for tag in tags
+    ]
+
+    query = query.filter(*search_filters, *tag_filters)
+
+    if affiliation_list:
+        query = _filter_student_query_on_affiliations(affiliation_list, query)
+
+    return query
+
+
+def _filter_faculty_profiles(
     available_profiles: BaseQuery,
     words: List[str],
     tags: List[str],
     degree_list: List[str],
     affiliation_list: List[str],
 ) -> BaseQuery:
-    searchable_fields = [Profile.name, Profile.additional_information, Profile.cadence]
+    searchable_fields = [
+        FacultyProfile.name,
+        FacultyProfile.additional_information,
+        FacultyProfile.cadence,
+    ]
 
     tag_fields = [
-        (ClinicalSpecialty, ClinicalSpecialtyOption),
-        (ProfessionalInterest, ProfessionalInterestOption),
-        (PartsOfMe, PartsOfMeOption),
-        (ProfileActivity, ActivityOption),
+        (FacultyClinicalSpecialty, ClinicalSpecialtyOption),
+        (FacultyProfessionalInterest, ProfessionalInterestOption),
+        (FacultyPartsOfMe, PartsOfMeOption),
+        (FacultyProfileActivity, ActivityOption),
     ]
 
     search_filters = [
@@ -149,40 +241,70 @@ def _filter_profiles(
     # Mentees are unlikely to be looking for a mentor affiliated with more than
     # 1 specific institution.
     if affiliation_list:
-        query = _filter_query_on_affiliations(affiliation_list, query)
+        query = _filter_faculty_query_on_affiliations(affiliation_list, query)
 
     return query
 
 
-def query_profiles_and_stars(verification_email_id: int) -> BaseQuery:
+def query_faculty_profiles_and_stars(verification_email_id: int):
+    return query_profiles_and_stars(verification_email_id, profile_class=FacultyProfile)
+
+
+def query_student_profiles_and_stars(verification_email_id: int):
+    return query_profiles_and_stars(verification_email_id, profile_class=StudentProfile)
+
+
+def query_profiles_and_stars(
+    verification_email_id: int, profile_class: Type[BaseProfile]
+) -> BaseQuery:
     return (
         db.session.query(
-            Profile,
+            profile_class,
             func.count(ProfileStar.from_verification_email_id).label(
                 "profile_star_count"
             ),
         )
         .filter(
             or_(
-                Profile.available_for_mentoring,
-                Profile.verification_email_id == verification_email_id,
+                profile_class.available_for_mentoring,
+                profile_class.verification_email_id == verification_email_id,
             )
         )
         .outerjoin(
             ProfileStar,
             and_(
-                ProfileStar.to_profile_id == Profile.id,
                 ProfileStar.from_verification_email_id == verification_email_id,
+                profile_class.verification_email_id
+                == ProfileStar.to_verification_email_id,
             ),
         )
-        .group_by(Profile.id)
+        .group_by(profile_class.id)
     )
 
 
-def matching_profiles(
-    query: str, tags: str, degrees: str, affiliations: str, verification_email_id: int
+def matching_student_profiles(
+    query: str, tags: str, affiliations: str, verification_email_id: int,
 ) -> BaseQuery:
-    profiles_and_stars = query_profiles_and_stars(verification_email_id)
+    profiles_and_stars = query_student_profiles_and_stars(verification_email_id)
+
+    words = "".join(
+        character if character.isalnum() else " " for character in query.lower()
+    ).split()
+
+    tag_list = tags.lower().split(",") if tags else []
+    affiliation_list = affiliations.lower().split(",") if affiliations else []
+
+    filtered_profiles = _filter_student_profiles(
+        profiles_and_stars, words, tag_list, affiliation_list,
+    )
+
+    return filtered_profiles
+
+
+def matching_faculty_profiles(
+    query: str, tags: str, degrees: str, affiliations: str, verification_email_id: int,
+) -> BaseQuery:
+    profiles_and_stars = query_faculty_profiles_and_stars(verification_email_id)
 
     words = "".join(
         character if character.isalnum() else " " for character in query.lower()
@@ -192,8 +314,8 @@ def matching_profiles(
     degree_list = degrees.lower().split(",") if degrees else []
     affiliation_list = affiliations.lower().split(",") if affiliations else []
 
-    filtered_profiles = _filter_profiles(
-        profiles_and_stars, words, tag_list, degree_list, affiliation_list
+    filtered_profiles = _filter_faculty_profiles(
+        profiles_and_stars, words, tag_list, degree_list, affiliation_list,
     )
 
     return filtered_profiles
@@ -217,13 +339,20 @@ def query_value_with_option_type_label(query, tag_class, name):
     )
 
 
-def query_tag_related_to_active_profile(tag_class, profile_relation_class, name):
+def query_tag_related_to_active_profile(
+    tag_class, profile_relation_class, name, profile_class
+):
     query = (
         tag_class.query.join(
             profile_relation_class, tag_class.id == profile_relation_class.tag_id
         )
-        .join(Profile, profile_relation_class.profile_id == Profile.id)
-        .filter(Profile.available_for_mentoring.is_(True))
+        .outerjoin(
+            FacultyProfile, profile_relation_class.profile_id == FacultyProfile.id,
+        )
+        .outerjoin(
+            StudentProfile, profile_relation_class.profile_id == StudentProfile.id,
+        )
+        .filter(profile_class.available_for_mentoring.is_(True))
     )
 
     return query_value_with_option_type_label(query, tag_class, name)
@@ -233,15 +362,19 @@ def union_queries(queries):
     return queries[0].union(*queries[1:])
 
 
-def query_tags_with_active_profiles(config_tag_classes, public_tag_classes):
+def query_tags_with_active_profiles(
+    config_tag_classes, public_tag_classes, profile_class
+):
     config_tag_queries = [
-        query_tag_related_to_active_profile(tag_class, profile_relation_class, name)
+        query_tag_related_to_active_profile(
+            tag_class, profile_relation_class, name, profile_class
+        )
         for tag_class, profile_relation_class, name in config_tag_classes
     ]
 
     public_tag_queries = [
         query_tag_related_to_active_profile(
-            tag_class, profile_relation_class, name
+            tag_class, profile_relation_class, name, profile_class,
         ).filter(tag_class.public.is_(True))
         for tag_class, profile_relation_class, name in public_tag_classes
     ]
@@ -280,7 +413,7 @@ def query_profile_tag_classes(config_tag_classes, public_tag_classes):
 
     queries = config_tag_queries + public_tag_queries
 
-    select = union_queries(queries)
+    select = union_queries(queries).order_by("value")
 
     cte = select.cte("tags")
 
@@ -299,6 +432,9 @@ def query_profile_tags():
     config_tag_classes = [
         (HospitalAffiliationOption, "hospital_affiliations"),
         (DegreeOption, "degrees"),
+        (StudentProgramOption, "programs"),
+        (StudentPCESiteOption, "pce_site_options"),
+        (StudentYearOption, "current_year_options"),
     ]
 
     public_tag_classes = [
@@ -310,17 +446,52 @@ def query_profile_tags():
     return query_profile_tag_classes(config_tag_classes, public_tag_classes)
 
 
-def query_searchable_tags():
+def query_faculty_searchable_tags():
     config_tag_classes = [
-        (HospitalAffiliationOption, HospitalAffiliation, "hospital_affiliations"),
-        (DegreeOption, ProfileDegree, "degrees"),
+        (
+            HospitalAffiliationOption,
+            FacultyHospitalAffiliation,
+            "hospital_affiliations",
+        ),
+        (DegreeOption, FacultyProfileDegree, "degrees"),
     ]
 
     public_tag_classes = [
-        (ActivityOption, ProfileActivity, "activities"),
-        (ClinicalSpecialtyOption, ClinicalSpecialty, "clinical_specialties"),
-        (PartsOfMeOption, PartsOfMe, "parts_of_me"),
-        (ProfessionalInterestOption, ProfessionalInterest, "professional_interests"),
+        (ActivityOption, FacultyProfileActivity, "activities"),
+        (ClinicalSpecialtyOption, FacultyClinicalSpecialty, "clinical_specialties"),
+        (PartsOfMeOption, FacultyPartsOfMe, "parts_of_me"),
+        (
+            ProfessionalInterestOption,
+            FacultyProfessionalInterest,
+            "professional_interests",
+        ),
     ]
 
-    return query_tags_with_active_profiles(config_tag_classes, public_tag_classes)
+    return query_tags_with_active_profiles(
+        config_tag_classes, public_tag_classes, profile_class=FacultyProfile
+    )
+
+
+def query_student_searchable_tags():
+    config_tag_classes = [
+        (
+            HospitalAffiliationOption,
+            StudentHospitalAffiliation,
+            "hospital_affiliations",
+        ),
+    ]
+
+    public_tag_classes = [
+        (ActivityOption, StudentProfileActivity, "activities"),
+        (ClinicalSpecialtyOption, StudentClinicalSpecialty, "clinical_specialties"),
+        (PartsOfMeOption, StudentPartsOfMe, "parts_of_me"),
+        (
+            ProfessionalInterestOption,
+            StudentProfessionalInterest,
+            "professional_interests",
+        ),
+    ]
+
+    return query_tags_with_active_profiles(
+        config_tag_classes, public_tag_classes, profile_class=StudentProfile
+    )
