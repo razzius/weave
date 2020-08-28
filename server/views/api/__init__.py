@@ -663,7 +663,7 @@ def star_profile():
         )
 
     to_profile_id = request.json["profile_id"]
-    to_profile = FacultyProfile.query.get(to_profile_id)
+    to_profile = FacultyProfile.query.get(to_profile_id) or StudentProfile.query.get(to_profile_id)
 
     if to_profile is None:
         return (
