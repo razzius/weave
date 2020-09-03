@@ -16,6 +16,10 @@ const FacultyProfileResult = ({ result }: { result: Object }) => {
     </p>
   )
 
+  const degreesView = result.degrees.length ? (
+    <span className="resultDegrees">{`, ${result.degrees.join(', ')}`}</span>
+  ) : null
+
   const {
     willingShadowing,
     willingNetworking,
@@ -28,7 +32,10 @@ const FacultyProfileResult = ({ result }: { result: Object }) => {
   return (
     <>
       <div className="profile-result-left">
-        <h2>{result.name}</h2>
+        <h2>
+          {result.name}
+          {degreesView}
+        </h2>
         {formattedAffiliations}
         <p className="clinical-interests">
           {result.clinicalSpecialties.map(interest => (
