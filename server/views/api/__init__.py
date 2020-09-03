@@ -719,7 +719,7 @@ def unstar_profile():
         )
 
     to_profile_id = request.json["profile_id"]
-    to_profile = FacultyProfile.query.get(to_profile_id)
+    to_profile = FacultyProfile.query.get(to_profile_id) or StudentProfile.query.get(to_profile_id)
 
     if to_profile is None:
         return (
@@ -730,7 +730,7 @@ def unstar_profile():
     # TODO inconsistenly idempotent; allows repeating whereas starring does not
     ProfileStar.query.filter(
         ProfileStar.from_verification_email_id == from_email_id,
-        ProfileStar.to_profile_id == to_profile.id,
+        ProfileStar.to_verification_email_id == to_profile.verification_email_id,
     ).delete()
 
     db.session.commit()
