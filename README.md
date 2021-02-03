@@ -166,6 +166,20 @@ $ pipenv run shell
 $ gunicorn server:app -b 0.0.0.0:5000
 ```
 
+### SAML Integration
+
+SAML is configured using the following environment variables:
+
+- `SAML_SP_CERT`
+- `SAML_SP_KEY`
+- `SAML_SSO_URL`
+- `SAML_ENTITY_ID`
+- `WEAVE_SERVER_NAME`
+
+See `server/app.py` for low-level usage. More documentation to be added.
+
+The integration metadata will be hosted at `/saml/metadata.xml`.
+
 ### Running in `docker`
 
 Docker as of now is only supported in development.
