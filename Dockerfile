@@ -40,7 +40,7 @@ RUN pipenv install --ignore-pipfile --deploy
 
 COPY server /app/server
 
-## Build the frontend
+## Install frontend system dependencies
 
 RUN asdf plugin add nodejs
 RUN asdf install nodejs 13.12.0
@@ -50,13 +50,18 @@ RUN asdf plugin add yarn
 RUN asdf install yarn 1.22.4
 RUN asdf global yarn 1.22.4
 
+## Install frontend dependencies
+
+COPY package.json yarn.lock /app/
+RUN yarn install --frozen-lockfile
+
 COPY src /app/src
 COPY public /app/public
-COPY package.json yarn.lock /app/
+
+## Build the frontend
 
 WORKDIR /app/src
 
-RUN yarn install --frozen-lockfile
 RUN yarn build
 
 ENV FLASK_ENV 'development'
