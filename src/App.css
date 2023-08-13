@@ -24,7 +24,7 @@ section {
   margin: 1em;
 }
 #background {
-  background: url('assets/harvard-campus.png');
+  background: url('assets/duke-college.jpg');
   background-size: cover;
   width: 100%;
   overflow: auto;
@@ -82,8 +82,8 @@ section {
   width: 230px;
 }
 .App-header {
-  border-bottom: 3px solid #9c2b1c;
-  background: #9c2b1c;
+  border-bottom: 3px solid rgb(6, 25, 77);
+  background: rgb(8, 34, 101);
   width: 100%;
 }
 
