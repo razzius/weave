@@ -26,6 +26,7 @@ section {
 #background {
   background: url('assets/duke-college.jpg');
   background-size: cover;
+  background-position: center;
   width: 100%;
   overflow: auto;
   z-index: -1;
