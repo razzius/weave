@@ -3,9 +3,11 @@ from urllib.parse import urlparse
 
 import psycopg2
 import pytest
-from pytest_postgresql.factories import DatabaseJanitor
-from server.app import create_app
+from sqlalchemy.orm import scoped_session, sessionmaker
+from pytest_postgresql.janitor import DatabaseJanitor
 from server.models import db
+
+from app import create_app
 
 
 PG_VERSION = 12.2
@@ -74,12 +76,30 @@ class AuthActions:
         self.client = client
 
     def login(self, token: str):
+        response = self.client.post("/api/verify-token", json={"token": token})
+
         assert (
-            self.client.post("/api/verify-token", json={"token": token}).status_code
-            == 200
+            response.status_code == 200
         )
 
 
 @pytest.fixture
 def auth(client):
     return AuthActions(client)
+
+
+@pytest.fixture(scope="function")
+def db_session(_db, request):
+    """Creates a new database session for a test."""
+    connection = db.engine.connect()
+    transaction = connection.begin()
+
+    db.session = scoped_session(session_factory=sessionmaker(bind=connection))
+
+    def teardown():
+        transaction.rollback()
+        connection.close()
+        db.session.remove()
+
+    request.addfinalizer(teardown)
+    return db.session

@@ -5,7 +5,7 @@ from server.models import StudentProfile
 from .utils import create_test_student_profile, create_test_verification_token
 
 
-def test_update_student_profile(client, auth):
+def test_update_student_profile(client, auth, db_session):
     profile = create_test_student_profile()
 
     token = create_test_verification_token(
@@ -36,7 +36,7 @@ def test_update_student_profile(client, auth):
 
     assert response.status_code == http.HTTPStatus.OK.value, response.json
 
-    updated_profile = StudentProfile.query.get(profile.id)
+    updated_profile = StudentProfile.get_by_id(profile.id)
 
     assert updated_profile.name == new_name
     assert updated_profile.contact_email == new_email

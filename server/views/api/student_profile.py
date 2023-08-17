@@ -1,8 +1,7 @@
-import datetime
 import http
 
 import flask_login
-from flask import jsonify, make_response, request
+from flask import abort, jsonify, make_response, request
 from marshmallow import ValidationError
 from sentry_sdk import capture_exception
 from sqlalchemy import exists
@@ -26,6 +25,7 @@ from server.models import (
 )
 from server.schemas import student_profile_schema
 from server.queries import query_student_profiles_and_stars
+from server.current_time import get_current_time
 
 from .blueprint import api
 from .exceptions import InvalidPayloadError, UserError
@@ -148,11 +148,14 @@ def update_student_profile(profile_id=None):
 
     verification_token = flask_login.current_user
 
-    profile = StudentProfile.query.get_or_404(profile_id)
+    profile = StudentProfile.get_by_id(profile_id)
+
+    if profile is None:
+        abort(404)
 
     is_admin = VerificationEmail.query.filter(
         VerificationEmail.id == verification_token.email_id
-    ).value(VerificationEmail.is_admin)
+    ).with_entities(VerificationEmail.is_admin)
 
     log.info(
         "Edit student profile",
@@ -162,7 +165,8 @@ def update_student_profile(profile_id=None):
         email=verification_token.email.email,
     )
 
-    assert is_admin or profile.verification_email_id == verification_token.email_id
+    if not is_admin:
+        assert profile.verification_email_id == verification_token.email_id
 
     profile_data = basic_student_profile_data(schema)
 
@@ -174,7 +178,7 @@ def update_student_profile(profile_id=None):
     )
 
     if not editing_as_admin:
-        profile.date_updated = datetime.datetime.utcnow()
+        profile.date_updated = get_current_time()
 
     save(profile)
 

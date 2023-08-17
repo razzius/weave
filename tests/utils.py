@@ -1,4 +1,3 @@
-import datetime
 import uuid
 from typing import Optional
 
@@ -9,6 +8,8 @@ from server.models import (
     VerificationToken,
     save,
 )
+
+from server.current_time import get_current_time
 
 
 def generate_test_email() -> str:
@@ -21,7 +22,9 @@ def create_test_verification_email(
     if email is None:
         email = generate_test_email()
 
-    return save(VerificationEmail(email=email, is_admin=is_admin, is_faculty=is_faculty))
+    return save(
+        VerificationEmail(email=email, is_admin=is_admin, is_faculty=is_faculty)
+    )
 
 
 def create_test_verification_token(
@@ -44,10 +47,13 @@ def create_test_profile(
     name="Test User",
     is_admin=False,
     available_for_mentoring=False,
-    date_updated=datetime.date.today(),
+    date_updated=None,
 ) -> FacultyProfile:
     if email is None:
         email = generate_test_email()
+
+    if date_updated is None:
+        date_updated = get_current_time()
 
     verification_email = create_test_verification_email(email, is_admin)
 
@@ -57,8 +63,9 @@ def create_test_profile(
             verification_email_id=verification_email.id,
             contact_email=email,
             available_for_mentoring=available_for_mentoring,
-            date_updated=date_updated,
             cadence="monthly",
+            additional_information="",
+            date_updated=date_updated
         )
     )
 
@@ -70,7 +77,6 @@ def create_test_student_profile(
     name="Test User",
     is_admin=False,
     available_for_mentoring=False,
-    date_updated=datetime.date.today(),
 ) -> StudentProfile:
     if email is None:
         email = generate_test_email()
@@ -83,8 +89,8 @@ def create_test_student_profile(
             verification_email_id=verification_email.id,
             contact_email=email,
             available_for_mentoring=available_for_mentoring,
-            date_updated=date_updated,
             cadence="monthly",
+            additional_information="",
         )
     )
 

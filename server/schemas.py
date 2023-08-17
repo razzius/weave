@@ -1,5 +1,4 @@
-import json
-import pathlib
+from flask import current_app as app
 
 from marshmallow import Schema, ValidationError, fields, validates_schema
 
@@ -9,16 +8,15 @@ from .models import (
 
 
 class CustomTagSchema(Schema):
-
     value = fields.String()
 
 
 class CustomTagList(Schema):
-    tag = fields.Nested(CustomTagSchema, only=["value"])
+    tag = fields.Pluck(CustomTagSchema, "value")
 
 
-nested_tag_list = fields.Nested(
-    CustomTagList, only=["tag"], many=True, required=True
+nested_tag_list = fields.Pluck(
+    CustomTagList, "tag", many=True, required=True
 )
 
 
@@ -35,12 +33,12 @@ class BaseProfileSchema(Schema):
     parts_of_me = nested_tag_list
     activities = nested_tag_list
 
-    additional_information = fields.String()
+    additional_information = fields.String(load_default="")
 
     willing_discuss_personal = fields.Boolean()
     willing_student_group = fields.Boolean()
 
-    cadence = fields.String(missing="monthly")
+    cadence = fields.String(load_default="monthly")
     other_cadence = fields.String(allow_none=True)
 
     # This is assigned to profiles by mutation. TODO find a better way
@@ -86,20 +84,18 @@ class StudentProfileSchema(BaseProfileSchema):
     willing_residency = fields.Boolean()
 
 
-PROJECT_ROOT = pathlib.Path(__file__).parent.parent
-VALID_DOMAINS = json.load(open(PROJECT_ROOT / "src" / "valid_domains.json"))
-
-
 class ValidEmailSchema(Schema):
     email = fields.String(required=True)
 
-    is_personal_device = fields.Boolean(missing=False)
+    is_personal_device = fields.Boolean(load_default=False)
 
     @validates_schema
     def validate_schema(self, in_data, **kwargs):
         email = in_data.get("email", "").lower()
 
-        if not any(email.endswith(domain) for domain in VALID_DOMAINS):
+        valid_domains = app.config['VALID_DOMAINS']
+
+        if not any(email.endswith(domain) for domain in valid_domains):
             raise ValidationError(
                 "Email must end with harvard.edu or partners.org", "email"
             )

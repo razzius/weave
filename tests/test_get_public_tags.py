@@ -16,7 +16,7 @@ def test_get_public_tags_needs_authorization(client):
     assert response.status_code == HTTPStatus.UNAUTHORIZED.value
 
 
-def test_get_empty_public_tags(client, auth):
+def test_get_empty_public_tags(client, auth, db_session):
     token = "1234"
     verification_email = save(VerificationEmail(email="test@test.com"))
 
@@ -42,7 +42,7 @@ def test_get_empty_public_tags(client, auth):
     }
 
 
-def test_get_public_tags(client, auth):
+def test_get_public_tags(client, auth, db_session):
     token = "1234"
     verification_email = save(VerificationEmail(email="test@test.com"))
 

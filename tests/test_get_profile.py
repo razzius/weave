@@ -5,7 +5,7 @@ from server.models import ProfileStar, save
 from .utils import create_test_profile, create_test_verification_token
 
 
-def test_get_profile(client, auth):
+def test_get_profile(client, auth, db_session):
     verification_token = create_test_verification_token()
 
     profile = create_test_profile(available_for_mentoring=True)
@@ -19,7 +19,7 @@ def test_get_profile(client, auth):
     assert not response.json["starred"]
 
 
-def test_get_unavailable_profile(client, auth):
+def test_get_unavailable_profile(client, auth, db_session):
     verification_token = create_test_verification_token()
 
     profile = create_test_profile(available_for_mentoring=False)
@@ -31,7 +31,7 @@ def test_get_unavailable_profile(client, auth):
     assert response.status_code == HTTPStatus.NOT_FOUND.value
 
 
-def test_get_starred_profile(client, auth):
+def test_get_starred_profile(client, auth, db_session):
     verification_token = create_test_verification_token()
 
     profile = create_test_profile(available_for_mentoring=True)
@@ -73,7 +73,7 @@ def test_get_starred_profile(client, auth):
     # assert len(qs) == 1
 
 
-def test_get_profile_starred_by_other_user(client, auth):
+def test_get_profile_starred_by_other_user(client, auth, db_session):
     verification_token = create_test_verification_token()
 
     other_verification_token = create_test_verification_token()

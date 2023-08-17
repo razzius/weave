@@ -56,6 +56,7 @@ from server.schemas import (
 )
 from server.session import token_expired
 from server.views.pagination import paginate
+from server.current_time import get_current_time
 
 from . import student_profile
 from .blueprint import api
@@ -330,11 +331,12 @@ def update_faculty_profile(profile_id=None):
 
     verification_token = flask_login.current_user
 
-    profile = FacultyProfile.query.get(profile_id)
+    # TODO error handling for profile not found
+    profile = FacultyProfile.get_by_id(profile_id)
 
     is_admin = VerificationEmail.query.filter(
         VerificationEmail.id == verification_token.email_id
-    ).value(VerificationEmail.is_admin)
+    ).with_entities(VerificationEmail.is_admin)
 
     log.info(
         "Edit faculty profile",
@@ -356,7 +358,7 @@ def update_faculty_profile(profile_id=None):
     )
 
     if not editing_as_admin:
-        profile.date_updated = datetime.datetime.utcnow()
+        profile.date_updated = get_current_time()
 
     save(profile)
 
@@ -642,7 +644,7 @@ def availability():
     available = request.json["available"]
 
     profile.available_for_mentoring = available
-    profile.date_updated = datetime.datetime.utcnow()
+    profile.date_updated = get_current_time()
 
     save(profile)
 
@@ -663,7 +665,9 @@ def star_profile():
         )
 
     to_profile_id = request.json["profile_id"]
-    to_profile = FacultyProfile.query.get(to_profile_id) or StudentProfile.query.get(to_profile_id)
+    student_profile = StudentProfile.get_by_id(to_profile_id)
+    faculty_profile = FacultyProfile.get_by_id(to_profile_id)
+    to_profile = student_profile or faculty_profile
 
     if to_profile is None:
         return (

@@ -11,7 +11,7 @@ def test_must_be_logged_in_to_star_profile(client):
     assert response.status_code == HTTPStatus.UNAUTHORIZED.value
 
 
-def test_must_specify_profile_to_be_starred(client, auth):
+def test_must_specify_profile_to_be_starred(client, auth, db_session):
     profile = create_test_profile()
 
     token = create_test_verification_token(
@@ -27,7 +27,7 @@ def test_must_specify_profile_to_be_starred(client, auth):
     assert response.json["profile_id"] == ["`profile_id` missing from request"]
 
 
-def test_must_star_valid_profile_id(client, auth):
+def test_must_star_valid_profile_id(client, auth, db_session):
     profile = create_test_profile()
 
     token = create_test_verification_token(
@@ -45,7 +45,7 @@ def test_must_star_valid_profile_id(client, auth):
     assert response.json["profile_id"] == ["`profile_id` invalid"]
 
 
-def test_star_profile(client, auth):
+def test_star_profile(client, auth, db_session):
     verification_token = create_test_verification_token()
     other_profile = create_test_profile()
 
@@ -65,7 +65,7 @@ def test_star_profile(client, auth):
     assert star.to_verification_email_id == other_profile.verification_email_id
 
 
-def test_cannot_star_own_profile(client, auth):
+def test_cannot_star_own_profile(client, auth, db_session):
     profile = create_test_profile()
 
     token = create_test_verification_token(
@@ -85,7 +85,7 @@ def test_cannot_star_own_profile(client, auth):
     assert star is None
 
 
-def test_cannot_star_profile_twice(client, auth):
+def test_cannot_star_profile_twice(client, auth, db_session):
     verification_token = create_test_verification_token()
 
     profile = create_test_profile()
@@ -101,12 +101,15 @@ def test_cannot_star_profile_twice(client, auth):
 
     auth.login(verification_token.token)
 
-    response = client.post("/api/star_profile", json=data,)
+    response = client.post(
+        "/api/star_profile",
+        json=data,
+    )
 
     assert response.status_code == HTTPStatus.UNPROCESSABLE_ENTITY.value
 
 
-def test_only_one_profile_starred(client, auth):
+def test_only_one_profile_starred(client, auth, db_session):
     verification_token = create_test_verification_token()
 
     to_star_profile = create_test_profile(available_for_mentoring=True)

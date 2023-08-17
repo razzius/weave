@@ -3,7 +3,7 @@ from http import HTTPStatus
 from server.models import FacultyProfile, VerificationEmail, VerificationToken, save
 
 
-def test_set_unavailable_to_mentor(client, auth):
+def test_set_unavailable_to_mentor(client, auth, db_session):
     token = "123"
     email = "test@test.com"
 

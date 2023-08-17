@@ -2,7 +2,7 @@ import operator
 from functools import reduce
 from typing import List, Optional, Type
 
-from flask_sqlalchemy import BaseQuery
+from flask_sqlalchemy.query import Query
 from sqlalchemy import and_, func, or_, sql
 
 from .models import (
@@ -45,7 +45,9 @@ def get_verification_email_by_email(email: str) -> Optional[VerificationEmail]:
 def get_profile_by_token(
     verification_token: VerificationToken,
 ) -> Optional[FacultyProfile]:
-    verification_email = VerificationEmail.query.get(verification_token.email_id)
+    verification_email = VerificationEmail.get_by_id(
+        verification_token.email_id
+    )
 
     if verification_email.is_faculty:
         return FacultyProfile.query.filter(
@@ -57,7 +59,7 @@ def get_profile_by_token(
     ).one_or_none()
 
 
-def _filter_query_on_degrees(degree_list: List[str], query: BaseQuery) -> BaseQuery:
+def _filter_query_on_degrees(degree_list: List[str], query: Query) -> Query:
     regular_degree_filters = [
         degree for degree in degree_list if degree not in ["dmd / dds", "md / do"]
     ]
@@ -100,8 +102,8 @@ def _filter_query_on_degrees(degree_list: List[str], query: BaseQuery) -> BaseQu
 
 
 def _filter_faculty_query_on_affiliations(
-    affiliation_list: List[str], query: BaseQuery
-) -> BaseQuery:
+    affiliation_list: List[str], query: Query
+) -> Query:
     affiliations_filters = reduce(
         operator.and_,
         [
@@ -122,8 +124,8 @@ def _filter_faculty_query_on_affiliations(
 
 
 def _filter_student_query_on_affiliations(
-    affiliation_list: List[str], query: BaseQuery
-) -> BaseQuery:
+    affiliation_list: List[str], query: Query
+) -> Query:
     affiliations_filters = reduce(
         operator.and_,
         [
@@ -144,11 +146,11 @@ def _filter_student_query_on_affiliations(
 
 
 def _filter_student_profiles(
-    available_profiles: BaseQuery,
+    available_profiles: Query,
     words: List[str],
     tags: List[str],
     affiliation_list: List[str],
-) -> BaseQuery:
+) -> Query:
     searchable_fields = [
         StudentProfile.name,
         StudentProfile.additional_information,
@@ -192,12 +194,12 @@ def _filter_student_profiles(
 
 
 def _filter_faculty_profiles(
-    available_profiles: BaseQuery,
+    available_profiles: Query,
     words: List[str],
     tags: List[str],
     degree_list: List[str],
     affiliation_list: List[str],
-) -> BaseQuery:
+) -> Query:
     searchable_fields = [
         FacultyProfile.name,
         FacultyProfile.additional_information,
@@ -256,7 +258,7 @@ def query_student_profiles_and_stars(verification_email_id: int):
 
 def query_profiles_and_stars(
     verification_email_id: int, profile_class: Type[BaseProfile]
-) -> BaseQuery:
+) -> Query:
     return (
         db.session.query(
             profile_class,
@@ -284,7 +286,7 @@ def query_profiles_and_stars(
 
 def matching_student_profiles(
     query: str, tags: str, affiliations: str, verification_email_id: int,
-) -> BaseQuery:
+) -> Query:
     profiles_and_stars = query_student_profiles_and_stars(verification_email_id)
 
     words = "".join(
@@ -303,7 +305,7 @@ def matching_student_profiles(
 
 def matching_faculty_profiles(
     query: str, tags: str, degrees: str, affiliations: str, verification_email_id: int,
-) -> BaseQuery:
+) -> Query:
     profiles_and_stars = query_faculty_profiles_and_stars(verification_email_id)
 
     words = "".join(

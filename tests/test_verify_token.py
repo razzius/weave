@@ -5,13 +5,13 @@ from server.models import VerificationEmail, VerificationToken, save
 from .utils import create_test_verification_token
 
 
-def test_verify_invalid_token(client):
+def test_verify_invalid_token(client, db_session):
     response = client.post("/api/verify-token", json={"token": "123"})
     assert response.status_code == HTTPStatus.UNAUTHORIZED.value
     assert response.json == {"token": ["not recognized"]}
 
 
-def test_does_not_verify_logged_out_token(client):
+def test_does_not_verify_logged_out_token(client, db_session):
     verification_token = create_test_verification_token()
     verification_token.logged_out = True
     save(verification_token)
@@ -23,7 +23,7 @@ def test_does_not_verify_logged_out_token(client):
     assert response.json == {"token": ["logged out"]}
 
 
-def test_verify_valid_token(client):
+def test_verify_valid_token(client, db_session):
     token = "123"
     email = "test@test.com"
 
@@ -44,7 +44,7 @@ def test_verify_valid_token(client):
     }
 
 
-def test_verify_token_logs_out_other_tokens(client):
+def test_verify_token_logs_out_other_tokens(client, db_session):
     token = "123"
     email = "test@test.com"
 
@@ -61,7 +61,7 @@ def test_verify_token_logs_out_other_tokens(client):
     assert prior_token.logged_out
 
 
-def test_verification_token_takes_priority_over_session_cookie(client, auth):
+def test_verification_token_takes_priority_over_session_cookie(client, auth, db_session):
     """
     If a user is already logged in and verifies a new token,
     the new token should replace the old one.

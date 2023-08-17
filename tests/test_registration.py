@@ -5,8 +5,10 @@ from server.models import VerificationEmail
 from structlog.testing import capture_logs
 
 
-def test_faculty_registration_email(client, requests_mock):
-    email = "test@hms.harvard.edu"
+def test_faculty_registration_email(client, requests_mock, app, db_session):
+    app.config['VALID_DOMAINS'] = ['university.edu']
+
+    email = "test@university.edu"
 
     requests_mock.post(
         "https://api.sparkpost.com/api/v1/transmissions", {}, reason="OK"
@@ -25,7 +27,7 @@ def test_faculty_registration_email(client, requests_mock):
 
     verification_email_id = response.json["id"]
 
-    verification_email = VerificationEmail.query.get(verification_email_id)
+    verification_email = VerificationEmail.get_by_id(verification_email_id)
 
     assert verification_email.email == email
 

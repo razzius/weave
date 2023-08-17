@@ -5,6 +5,8 @@ from flask import current_app
 
 from structlog import get_logger
 
+from .current_time import get_current_time
+
 
 logger = get_logger()
 
@@ -29,7 +31,7 @@ def token_expired(verification_token):
         hours=hours_until_expiry
     )
 
-    current_time = datetime.datetime.utcnow()
+    current_time = get_current_time()
 
     expired = current_time > expire_time
 

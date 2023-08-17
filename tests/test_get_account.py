@@ -5,7 +5,7 @@ from server.models import save
 from .utils import create_test_verification_token
 
 
-def test_get_account(client, auth):
+def test_get_account(client, auth, db_session):
     verification_token = create_test_verification_token()
 
     auth.login(verification_token.token)
@@ -25,12 +25,12 @@ def test_get_account(client, auth):
     }
 
 
-def test_get_expired_account(client, auth):
+def test_get_expired_account(client, auth, db_session):
     verification_token = create_test_verification_token()
 
     auth.login(verification_token.token)
 
-    verification_token.date_created = datetime.datetime(2000, 1, 1)
+    verification_token.date_created = datetime.datetime(2000, 1, 1, tzinfo=datetime.timezone.utc)
     save(verification_token)
 
     response = client.get("/api/account")

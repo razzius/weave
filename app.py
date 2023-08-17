@@ -1,3 +1,4 @@
+import json
 import os
 
 from flask import Flask
@@ -41,6 +42,7 @@ def create_app():
     app.config["BASIC_AUTH_USERNAME"] = os.environ.get("BASIC_AUTH_USERNAME")
     app.config["BASIC_AUTH_PASSWORD"] = os.environ.get("BASIC_AUTH_PASSWORD")
     app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+    app.config["VALID_DOMAINS"] = json.load(open("src/valid_domains.json"))
 
     app.config["TOKEN_EXPIRY_AGE_HOURS"] = int(
         os.environ.get("REACT_APP_TOKEN_EXPIRY_AGE_HOURS", 1)

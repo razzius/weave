@@ -1,7 +1,7 @@
 import datetime
 import http
 
-from freezegun import freeze_time
+import time_machine
 from server.models import (
     ActivityOption,
     FacultyProfile,
@@ -14,8 +14,8 @@ from server.models import (
 MOCK_DATE = datetime.datetime(2019, 12, 18, tzinfo=datetime.timezone.utc)
 
 
-@freeze_time(MOCK_DATE)
-def test_create_profile_with_custom_tag(client, auth):
+@time_machine.travel(MOCK_DATE, tick=False)
+def test_create_profile_with_custom_tag(client, auth, db_session):
     token = "1234"
 
     name = "New User"
@@ -25,9 +25,8 @@ def test_create_profile_with_custom_tag(client, auth):
 
     save(VerificationToken(token=token, email_id=verification_email.id))
 
-    clinical_specialties = ["Endocrinology, Diabetes & Metabolism"]
     affiliations = ["Brigham and Women's Hospital"]
-
+    clinical_specialties = ["Endocrinology, Diabetes & Metabolism"]
     professional_interests = ["Advocacy"]
     parts_of_me = ["African American"]
     activities = ["Surfing the web"]
@@ -36,8 +35,8 @@ def test_create_profile_with_custom_tag(client, auth):
     profile = {
         "name": name,
         "contact_email": email,
-        "clinical_specialties": clinical_specialties,
         "affiliations": affiliations,
+        "clinical_specialties": clinical_specialties,
         "professional_interests": professional_interests,
         "parts_of_me": parts_of_me,
         "activities": activities,

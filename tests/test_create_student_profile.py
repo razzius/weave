@@ -1,7 +1,7 @@
 import http
 import datetime
 
-from freezegun import freeze_time
+import time_machine
 
 from server.models import (
     StudentPCESiteOption,
@@ -16,8 +16,8 @@ from .utils import create_test_verification_token
 MOCK_DATE = datetime.datetime(2020, 6, 27, tzinfo=datetime.timezone.utc)
 
 
-@freeze_time(MOCK_DATE)
-def test_create_student_profile(client, auth):
+@time_machine.travel(MOCK_DATE)
+def test_create_student_profile(client, auth, db_session):
     token = create_test_verification_token(is_faculty=False)
 
     auth.login(token.token)
