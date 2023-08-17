@@ -9,7 +9,7 @@ import { sendLoginEmail } from './api'
 const instructions = (
   <div>
     <p>
-      Enter your Harvard or hospital-affiliated email and we will confirm your
+      Enter your Duke or hospital-affiliated email and we will confirm your
       account by sending a verification email.
     </p>
     <p>

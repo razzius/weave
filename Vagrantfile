@@ -50,7 +50,7 @@ cd /vagrant
 PIPENV_NOSPIN=1 pipenv install --dev --ignore-pipfile
 
 # Install database schema
-pipenv run python -m server.scripts.resetdb
+pipenv run flask reset-db
 
 # Install javascript dependencies
 yarn install

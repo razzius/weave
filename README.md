@@ -90,7 +90,7 @@ $ createdb weave
 # The following is the default DATABASE_URL (see server/app.py).
 $ export DATABASE_URL='postgresql:///weave'
 # Whatever database is at DATABASE_URL will be cleared by the following command, so be careful!
-$ pipenv run python -m server.scripts.resetdb
+$ flask reset-db
 ```
 
 ### Running Python tests
@@ -105,6 +105,8 @@ In development mode, there is both a `python` process to serve the API and a `no
 Both are configured to automatically reload.
 
 ```sh
+# Reset the db to install the schema (drops and reacreates base schema)
+$ flask reset-db
 # Run backend
 $ pipenv run start
 # In another shell, start frontend with:

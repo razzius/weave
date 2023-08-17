@@ -126,10 +126,8 @@ class App extends Component<Props, State> {
         <div className="App">
           <header className="App-header">
             <div className="header-inner">
-              <Link to="/" className="App-title left">
-                <img src="/assets/hms-crest.svg" alt="HMS crest" />
-                <img src="/assets/hsdm-crest.svg" alt="HSDM crest" />
-                <h1>Weave</h1>
+              <Link to="/" className="App-title left App-logo">
+                <img src="/assets/duke_health_logo.png" alt="Duke Health logo"/>
               </Link>
 
               {loginAction}
@@ -166,7 +164,7 @@ class App extends Component<Props, State> {
 
               <nav>
                 <Link to="/about" className="App-title">
-                  About
+                  About Weave
                 </Link>
 
                 <Link to="/expectations" className="App-title">

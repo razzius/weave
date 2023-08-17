@@ -82,16 +82,16 @@ const Help = () => (
     <p>
       For your security and to protect your account information, we have
       generated email-authenticated tokens that expire after 1 hour. After you
-      enter your Harvard or hospital-affiliated email address to login, please
+      enter your Duke or hospital-affiliated email address to login, please
       visit your email account to verify access. If you visit the website more
       than 1 hour after your earlier visit, you will have to authenticate again.
       If you are using a personal device and wish to stay logged in for longer,
       you may check the personal device option to stay logged in for 2 weeks.{' '}
     </p>
     <p>
-      While you may enter a non-Harvard or hospital email address as your
+      While you may enter a non-Duke or hospital email address as your
       preferred email address for communication with students, login requires a
-      primary Harvard or hospital-affiliated email address, such as:
+      primary Duke or hospital-affiliated email address, such as:
       @hms.harvard.edu, @hsdm.harvard.edu, @post.harvard.edu, @tch.harvard.edu,
       @gse.harvard.edu, @bidmc.harvard.edu, @bwh.harvard.edu, @mgh.harvard.edu,
       @childrens.harvard.edu, @dfci.harvard.edu, @mah.harvard.edu,
@@ -103,7 +103,7 @@ const Help = () => (
       account. Why is that?
     </h3>
     <p>
-      Login is restricted to a Harvard or hospital-affiliated account. Please
+      Login is restricted to a Duke or hospital-affiliated account. Please
       try logging in with an email address that ends in one of the options
       above.
     </p>
@@ -117,7 +117,7 @@ const Help = () => (
     <p>
       To begin the sign up process, navigate to the home page and click on
       “Register as a student.” After clicking through the Expectations carousel,
-      you will be asked to enter your Harvard or hospital-affiliated email
+      you will be asked to enter your Duke or hospital-affiliated email
       address. Click on “Send Verification Email” and check your email address
       for an email from admin@hmsweave.com. The email will provide a link
       through which you may authenticate your account. Once your account is
@@ -183,16 +183,6 @@ const Help = () => (
     </p>
     <h3>How do I create a student mentor profile?</h3>
 
-    <iframe
-      src="https://player.vimeo.com/video/450576557"
-      width="640"
-      height="360"
-      frameBorder="0"
-      allow="fullscreen"
-      title="Weave Peer Mentor Tutorial"
-      allowFullScreen
-    />
-
     <p>
       For additional information on creating tags, returning to your already
       created mentor profile, changing your availability for mentoring, or for
@@ -204,7 +194,7 @@ const Help = () => (
     <p>
       To begin the sign up process, navigate to the home page and click on
       “Register as a mentor.” After clicking through the Expectations carousel,
-      you will be asked to enter your Harvard or hospital-affiliated email
+      you will be asked to enter your Duke or hospital-affiliated email
       address. Click on “Send Verification Email” and check your email address
       for an email from admin@hmsweave.com. The email will provide a link
       through which you may authenticate your account. Once your account is
@@ -265,7 +255,7 @@ const Help = () => (
     </h3>
     <p>
       Click the “Login” button in the upper right hand corner of the home page
-      and follow the instructions to input your Harvard or hospital-affiliated
+      and follow the instructions to input your Duke or hospital-affiliated
       email address to login.
     </p>
 

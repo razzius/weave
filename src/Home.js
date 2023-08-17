@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 
-import { LiteralLink, getParam } from './utils'
+import { getParam } from './utils'
 import { type Account } from './api'
 import HomeActions from './HomeActions'
 

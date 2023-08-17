@@ -98,7 +98,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
               />
             </p>
             <ReactTooltip place="bottom" id="emailTooltip">
-              Please enter your Harvard or hospital-affiliated email
+              Please enter your Duke or hospital-affiliated email
             </ReactTooltip>
 
             {error && <p className="error">{error}</p>}

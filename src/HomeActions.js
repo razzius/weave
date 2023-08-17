@@ -56,8 +56,8 @@ export default ({
   if (account === null) {
     return (
       <div>
-        <h1>Students</h1>
-        <Button to="/student-expectations">Register as a student</Button>
+        <h1>Trainees</h1>
+        <Button to="/student-expectations">Register as a trainee</Button>
         <h1>Faculty</h1>
         <Button to="/faculty-expectations">Register as a faculty member</Button>
       </div>
@@ -67,7 +67,7 @@ export default ({
   if (!isMentor) {
     return (
       <div>
-        <h1>Students</h1>
+        <h1>Trainees</h1>
         <Button to="/browse">View Faculty Mentor Profiles</Button>
         <hr />
         <div>

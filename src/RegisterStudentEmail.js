@@ -10,7 +10,7 @@ const RegisterStudentEmail = ({ history }: { history: RouterHistory }) => (
   <AppScreen>
     <SubmitEmailForm
       header="Register Email"
-      instructions="Please enter your Harvard or hospital-affiliated email and we will send you a verification email."
+      instructions="Please enter your Duke or hospital-affiliated email and we will send you a verification email."
       history={history}
       successMessage="Please check your email to continue registration. You may close this page."
       sendEmail={sendStudentVerificationEmail}

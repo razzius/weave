@@ -4,7 +4,9 @@ from flask import Blueprint
 from server.emails import get_verification_url
 from server.views.api import generate_token
 
-from .models import FacultyProfile, VerificationEmail, VerificationToken, db, save
+from .models import (
+    FacultyProfile, VerificationEmail, VerificationToken, db, save
+)
 from .queries import get_verification_email_by_email
 
 

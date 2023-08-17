@@ -3,18 +3,23 @@ import pathlib
 
 from marshmallow import Schema, ValidationError, fields, validates_schema
 
-from .models import StudentPCESiteOption, StudentProgramOption, StudentYearOption
+from .models import (
+    StudentPCESiteOption, StudentProgramOption, StudentYearOption
+)
 
 
 class CustomTagSchema(Schema):
+
     value = fields.String()
 
 
 class CustomTagList(Schema):
-    tag = fields.Nested(CustomTagSchema, only="value")
+    tag = fields.Nested(CustomTagSchema, only=["value"])
 
 
-nested_tag_list = fields.Nested(CustomTagList, only="tag", many=True, required=True)
+nested_tag_list = fields.Nested(
+    CustomTagList, only=["tag"], many=True, required=True
+)
 
 
 class BaseProfileSchema(Schema):
@@ -91,7 +96,7 @@ class ValidEmailSchema(Schema):
     is_personal_device = fields.Boolean(missing=False)
 
     @validates_schema
-    def validate_email(self, in_data):
+    def validate_schema(self, in_data, **kwargs):
         email = in_data.get("email", "").lower()
 
         if not any(email.endswith(domain) for domain in VALID_DOMAINS):
