@@ -20,10 +20,10 @@ requests = "^2.31.0"
 requests-toolbelt = "^1.0.0"
 cloudinary = "^1.34.0"
 marshmallow = "^3.20.1"
-psycopg2 = "^2.9.7"
 pytz = "^2023.3"
 flask-admin = {git = "https://github.com/razzius/flask-admin"}
 gunicorn = "^21.2.0"
+psycopg = "^3.1.10"
 
 [tool.poetry.group.dev.dependencies]
 ipython = "^8.14.0"

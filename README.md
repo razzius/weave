@@ -60,7 +60,7 @@ Note that this drops your local database to start from a clean state.
 $ createdb weave
 # If you use a different database, change the DATABASE_URL accordingly.
 # The following is the default DATABASE_URL (see app.py).
-$ export DATABASE_URL='postgresql:///weave'
+$ export DATABASE_URL='postgresql+psycopg:///weave'
 # Whatever database is at DATABASE_URL will be cleared by the following command, so be careful!
 $ poetry run flask reset-db
 ```
@@ -185,7 +185,7 @@ localhost and enables the admin with `local` as username and password.
 
 ```sh
 $ docker run -it -p 5000:5000 \
-  -e DATABASE_URL=postgresql://$USER@host.containers.internal:5432/weave \
+  -e DATABASE_URL=postgresql+psycopg://$USER@host.containers.internal:5432/weave \
   -e BASIC_AUTH_USERNAME=local \
   -e BASIC_AUTH_PASSWORD=local \
     $(docker build -q .)

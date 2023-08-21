@@ -1,7 +1,7 @@
 import os
 from urllib.parse import urlparse
 
-import psycopg2
+import psycopg
 import pytest
 from sqlalchemy.orm import scoped_session, sessionmaker
 from pytest_postgresql.janitor import DatabaseJanitor
@@ -12,7 +12,7 @@ from app import create_app
 
 PG_VERSION = 15.3
 
-TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "postgresql:///weave_test")
+TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "postgresql+psycopg:///weave_test")
 
 os.environ["FLASK_ENV"] = "development"
 
@@ -41,7 +41,7 @@ def database():
 
     try:
         janitor.init()
-    except psycopg2.errors.DuplicateDatabase:
+    except psycopg.errors.DuplicateDatabase:
         print("`database` fixture: Database already created")
 
     yield
