@@ -1,8 +1,7 @@
 // @flow
 import React, { Component } from 'react'
-import { Link, Prompt, type RouterHistory } from 'react-router-dom'
+import { Link, Prompt } from 'react-router-dom'
 import AvatarEditor from 'react-avatar-editor'
-import { type ValueType } from 'react-select/src/types'
 import Dropzone from 'react-dropzone'
 import Promise from 'promise-polyfill'
 
@@ -11,7 +10,7 @@ import CreatableTagSelect from './CreatableTagSelect'
 import PreviewProfile from './PreviewProfile'
 import CadenceOption from './CadenceOption'
 
-import { getProfileTags, uploadPicture, type Profile } from './api'
+import { getProfileTags, uploadPicture } from './api'
 import { makeOptions } from './options'
 import { arrayCaseInsensitiveContains, capitalize, last, when } from './utils'
 
@@ -39,82 +38,10 @@ function displayError({ name, email }: { name: string, email: string }) {
   return <p>Before previewing profile, please enter your {missing}.</p>
 }
 
-type Props = {
-  loadInitial?: (any) => void,
-  // TODO profileId is passed in updateProfile but not in createProfile. Can't seem to get types to support this without `any`
-  saveProfile: (profile: Profile, profileId: any) => Object,
-  profileId?: string,
-  setProfileId: ?Function,
-  history: RouterHistory,
-  firstTimePublish: boolean,
-  RoleSpecificFields: Object,
-  RoleSpecificProfileView: Object,
-  RoleSpecificCheckboxes: Object,
-  RoleSpecificExpectations: Object,
-  profileBaseUrl: string,
-  isStudent: boolean,
-}
+export default class ProfileForm extends Component {
+  otherCadenceInput = null
 
-type State = {
-  scale: number,
-  rotate: number,
-  width: number,
-  height: number,
-  name: string,
-  contactEmail: string,
-  image: ?File,
-  imageUrl: ?string,
-  imageSuccess: boolean,
-  uploadingImage: boolean,
-  imageEdited: boolean,
-
-  affiliations: Array<string>,
-  clinicalSpecialties: Array<string>,
-  professionalInterests: Array<string>,
-  partsOfMe: Array<string>,
-  activities: Array<string>,
-
-  program: string | null,
-  pceSite: string | null,
-  currentYear: string | null,
-  degrees: Array<string>,
-
-  additionalInformation: string,
-
-  // Shared checkboxes
-  willingDiscussPersonal: boolean,
-  willingStudentGroup: boolean,
-
-  // Faculty checkboxes
-  willingShadowing: boolean,
-  willingNetworking: boolean,
-  willingGoalSetting: boolean,
-  willingCareerGuidance: boolean,
-
-  // Student checkboxes
-  willingDualDegrees: boolean,
-  willingAdviceClinicalRotations: boolean,
-  willingResearch: boolean,
-  willingResidency: boolean,
-
-  cadence: string,
-  otherCadence: string,
-  preview: boolean,
-  saved: boolean,
-
-  hospitalOptions: Array<string>,
-  clinicalSpecialtyOptions: Array<string>,
-  activitiesIEnjoyOptions: Array<string>,
-  professionalInterestOptions: Array<string>,
-  programOptions: Array<string>,
-  pceSiteOptions: Array<string>,
-  currentYearOptions: Array<string>,
-}
-
-export default class ProfileForm extends Component<Props, State> {
-  otherCadenceInput: ?HTMLInputElement = null
-
-  editor: any = null
+  editor = null
 
   state = {
     scale: 1,
@@ -214,7 +141,7 @@ export default class ProfileForm extends Component<Props, State> {
       this.setState({ [key]: value })
     }
 
-  handleChange = (key: string) => (selected: ValueType, meta: Object) => {
+  handleChange = (key) => (selected, meta) => {
     if (selected == null) {
       this.setState({ [key]: [] })
       return
@@ -249,7 +176,7 @@ export default class ProfileForm extends Component<Props, State> {
 
   updateBoolean =
     (field: string) =>
-    ({ target }: { target: HTMLInputElement }) => {
+    ({ target }) => {
       this.setState({ [field]: target.checked })
     }
 
@@ -286,11 +213,11 @@ export default class ProfileForm extends Component<Props, State> {
     this.setState({ image: acceptedFiles[0], imageEdited: true })
   }
 
-  handleNewImage = (e: { target: { files: Array<File> } }) => {
+  handleNewImage = (e) => {
     this.setState({ image: e.target.files[0], imageEdited: true })
   }
 
-  handleScale = (e: { target: { value: string } }) => {
+  handleScale = (e) => {
     const scale = parseFloat(e.target.value)
     this.setState({ scale, imageEdited: true })
   }
@@ -316,12 +243,12 @@ export default class ProfileForm extends Component<Props, State> {
             },
             () => resolve(response)
           )
-        }: any)
+        })
       ) // The callback returns a Promise but toBlob expects it to return undefined
     })
   }
 
-  setEditorRef = (editor: HTMLElement | null) => {
+  setEditorRef = (editor) => {
     this.editor = editor
   }
 

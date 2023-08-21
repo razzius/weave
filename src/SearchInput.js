@@ -2,7 +2,6 @@
 import React, { Component } from 'react'
 import Select from 'react-select'
 import CreatableSelect from 'react-select/creatable'
-import { type OptionType } from 'react-select/src/types'
 import { displayDegreeOptions } from './options'
 
 function labelValues(values) {
@@ -12,27 +11,7 @@ function labelValues(values) {
   return values.map((value) => ({ label: value, value }))
 }
 
-type Props = {
-  onChange: Function,
-  onInputChange: Function,
-  onSubmit: Function,
-  onKeyDown: Function,
-  onChangeDegrees: Function,
-  onChangeAffiliations: Function,
-  onChangeSorting: Function,
-  values: Array<string>,
-  inputValue: string,
-  degrees: Array<string>,
-  affiliations: Array<string>,
-  menuOpen: boolean,
-  onFocus: Function,
-  onBlur: Function,
-  searchableOptions: Array<string>,
-  hospitalOptions: Array<OptionType>,
-  DegreeSelect?: Object,
-}
-
-export default class SearchInput extends Component<Props> {
+export default class SearchInput extends Component {
   handleSubmit = (e: KeyboardEvent) => {
     const { onSubmit } = this.props
 
@@ -63,7 +42,6 @@ export default class SearchInput extends Component<Props> {
     return (
       <form className="search" onSubmit={this.handleSubmit}>
         <div style={{ display: 'flex', maxWidth: '700px' }}>
-          {/* $FlowFixMe CreatableSelect props are not typechecking as expected */}
           <CreatableSelect
             className="fullWidth"
             styles={{

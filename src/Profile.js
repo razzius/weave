@@ -3,26 +3,9 @@ import React, { Component } from 'react'
 import { Redirect } from 'react-router'
 
 import AppScreen from './AppScreen'
-import { type Account } from './api'
-import ProfileView, { type BaseProfileData } from './ProfileView'
+import ProfileView from './ProfileView'
 
-type ProfileData = {|
-  profileId: string,
-  dateUpdated: Date,
-  starred?: ?boolean,
-  ...BaseProfileData,
-|}
-
-type ClientError =
-  | {
-      profile_id: Array<string>,
-    }
-  | {
-      token: Array<string>,
-    }
-  | string
-
-function errorView(error: string | ClientError) {
+function errorView(error) {
   if (typeof error === 'string') {
     return error
   }
@@ -40,23 +23,7 @@ function errorView(error: string | ClientError) {
   return String(error)
 }
 
-type State = {
-  profile: ProfileData | null,
-  error: ClientError | null,
-}
-
-type Props = {
-  account: Account | null,
-  profileId: string,
-  getProfile: Function,
-  RoleSpecificProfileView: Object,
-  RoleSpecificExpectations: Object,
-  browseUrl: string,
-  editUrl: string,
-  adminEditBaseUrl: string,
-}
-
-export default class Profile extends Component<Props, State> {
+export default class Profile extends Component {
   state = {
     profile: null,
     error: null,

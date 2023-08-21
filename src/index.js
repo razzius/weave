@@ -4,7 +4,7 @@ import 'core-js/es/set'
 import 'weakmap-polyfill'
 import 'polyfill-array-includes'
 import React from 'react'
-import ReactDOM from 'react-dom'
+import { createRoot } from 'react-dom/client'
 import 'url-polyfill'
 import { init } from '@sentry/browser'
 
@@ -17,4 +17,5 @@ if (window.location.hostname !== 'localhost') {
   })
 }
 
-ReactDOM.render(<App />, document.getElementById('root'))
+const root = createRoot(document.getElementById('root'))
+root.render(<App />)

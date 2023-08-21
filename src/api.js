@@ -62,10 +62,7 @@ async function put(path: string, payload) {
   })
 }
 
-export type Profile = Object
-type ProfilePayload = Object
-
-function payloadToProfile(payload: ProfilePayload): Profile {
+function payloadToProfile(payload) {
   return {
     id: payload.id,
     dateUpdated: new Date(payload.date_updated),
@@ -97,7 +94,7 @@ function payloadToProfile(payload: ProfilePayload): Profile {
   }
 }
 
-function payloadToStudentProfile(payload: Object): Object {
+function payloadToStudentProfile(payload) {
   return {
     id: payload.id,
     dateUpdated: new Date(payload.date_updated),
@@ -139,13 +136,6 @@ export async function getProfiles({
   affiliations = [],
   page = 1,
   sorting = 'starred',
-}: {
-  query?: string,
-  tags?: Array<string>,
-  degrees?: Array<string>,
-  affiliations?: Array<string>,
-  page: number,
-  sorting?: string,
 }) {
   const params = {
     page,
@@ -170,13 +160,6 @@ export async function getPeerProfiles({
   affiliations = [],
   page = 1,
   sorting = 'starred',
-}: {
-  query?: string,
-  tags?: Array<string>,
-  degrees?: Array<string>,
-  affiliations?: Array<string>,
-  page: number,
-  sorting?: string,
 }) {
   const params = {
     page,
@@ -194,17 +177,17 @@ export async function getPeerProfiles({
   }
 }
 
-export async function getFacultyProfile(id: string): Profile {
+export async function getFacultyProfile(id) {
   const profile = await get(`profiles/${id}`)
   return payloadToProfile(profile)
 }
 
-export async function getStudentProfile(id: string): Profile {
+export async function getStudentProfile(id) {
   const profile = await get(`student-profiles/${id}`)
   return payloadToStudentProfile(profile)
 }
 
-export function profileToPayload(profile: Profile): ProfilePayload {
+export function profileToPayload(profile) {
   return {
     name: profile.name,
     contact_email: profile.contactEmail,
@@ -261,28 +244,25 @@ export function profileToStudentPayload(profile: Object): Object {
   }
 }
 
-export async function createProfile(profile: Profile) {
+export async function createProfile(profile) {
   const payload = profileToPayload(profile)
 
   return post('profile', payload)
 }
 
-export async function createStudentProfile(profile: Profile) {
+export async function createStudentProfile(profile) {
   const payload = profileToStudentPayload(profile)
 
   return post('student-profile', payload)
 }
 
-export async function updateFacultyProfile(
-  profile: Profile,
-  profileId: string
-) {
+export async function updateFacultyProfile( profile, profileId) {
   const payload = profileToPayload(profile)
 
   return put(`profiles/${profileId}`, payload)
 }
 
-export async function updateStudentProfile(profile: Object, profileId: string) {
+export async function updateStudentProfile(profile, profileId) {
   const payload = profileToStudentPayload(profile)
 
   return put(`student-profiles/${profileId}`, payload)
@@ -291,10 +271,7 @@ export async function updateStudentProfile(profile: Object, profileId: string) {
 export async function sendFacultyVerificationEmail({
   email,
   isPersonalDevice,
-}: {|
-  +email: string,
-  +isPersonalDevice: boolean,
-|}) {
+}) {
   return post('send-faculty-verification-email', {
     email,
     is_personal_device: isPersonalDevice,
@@ -304,10 +281,7 @@ export async function sendFacultyVerificationEmail({
 export async function sendStudentVerificationEmail({
   email,
   isPersonalDevice,
-}: {|
-  +email: string,
-  +isPersonalDevice: boolean,
-|}) {
+}) {
   return post('send-student-verification-email', {
     email,
     is_personal_device: isPersonalDevice,
@@ -317,22 +291,11 @@ export async function sendStudentVerificationEmail({
 export async function sendLoginEmail({
   email,
   isPersonalDevice,
-}: {|
-  +email: string,
-  +isPersonalDevice: boolean,
-|}) {
+}) {
   return post('login', { email, is_personal_device: isPersonalDevice })
 }
 
-export type Account = {|
-  +isMentor: boolean,
-  +isAdmin: boolean,
-  +profileId: string,
-  +email: string,
-  +availableForMentoring: boolean,
-|}
-
-function accountResponseToAccount(response): Account {
+function accountResponseToAccount(response) {
   return {
     isMentor: response.is_faculty,
     isAdmin: response.is_admin,
@@ -344,7 +307,7 @@ function accountResponseToAccount(response): Account {
   }
 }
 
-export async function getAccount(): Promise<Account | null> {
+export async function getAccount() {
   try {
     const response = await get('account')
 
@@ -359,7 +322,7 @@ export async function getAccount(): Promise<Account | null> {
   }
 }
 
-export async function verifyToken(token?: ?string): Promise<Account> {
+export async function verifyToken(token) {
   const response = await post('verify-token', { token })
 
   return accountResponseToAccount(response)
@@ -369,11 +332,11 @@ export async function logout() {
   return post('logout')
 }
 
-export async function setAvailabilityForMentoring(available: boolean) {
+export async function setAvailabilityForMentoring(available) {
   return post('availability', { available })
 }
 
-export async function uploadPicture(file: File) {
+export async function uploadPicture(file) {
   const url = buildURL('api/upload-image')
 
   return http(url, {
@@ -394,10 +357,10 @@ export async function getProfileTags() {
   return get('profile-tags')
 }
 
-export async function starProfile(profileId: string) {
+export async function starProfile(profileId) {
   return post('star_profile', { profile_id: profileId })
 }
 
-export async function unstarProfile(profileId: string) {
+export async function unstarProfile(profileId) {
   return post('unstar_profile', { profile_id: profileId })
 }

@@ -1,16 +1,9 @@
 // @flow
 import React from 'react'
-import { type OptionType } from 'react-select/src/types'
 
 import CreatableTagSelect from './CreatableTagSelect'
 
-type Props = {
-  handleAdd: (string) => void,
-  handleChange: (OptionType) => void,
-  values: Array<string>,
-}
-
-const CreatableInputOnly = ({ handleAdd, handleChange, values }: Props) => (
+const CreatableInputOnly = ({ handleAdd, handleChange, values }) => (
   <CreatableTagSelect
     components={{ DropdownIndicator: null }}
     isClearable

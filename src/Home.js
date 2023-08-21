@@ -1,11 +1,9 @@
-// @flow
 import React from 'react'
 
 import { getParam } from './utils'
-import { type Account } from './api'
 import HomeActions from './HomeActions'
 
-const Home = ({ account }: { account: ?Account }) => {
+const Home = ({ account }) => {
   const isMentor = Boolean(account && account.isMentor)
   const profileId = account && account.profileId
 

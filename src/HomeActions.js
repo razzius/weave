@@ -4,14 +4,13 @@ import React from 'react'
 import { HashLink as Link } from 'react-router-hash-link'
 
 import Button from './Button'
-import { type Account } from './api'
 
 function getFacultyLink(profileId) {
   if (profileId == null) return '/create-profile'
   return `/profiles/${profileId}`
 }
 
-function getFacultyText(account: ?Account, profileId) {
+function getFacultyText(account, profileId) {
   if (account === null) return 'Register as a faculty member'
   if (profileId === null) return 'Create profile'
   return 'View my profile'
@@ -21,10 +20,6 @@ const FacultyLanding = ({
   account,
   profileId,
   isMentor,
-}: {
-  account: ?Account,
-  profileId: ?string,
-  isMentor: boolean,
 }) => (
   <div>
     <h1>Faculty</h1>
@@ -48,10 +43,6 @@ export default ({
   account,
   isMentor,
   profileId,
-}: {
-  account: ?Account,
-  isMentor: boolean,
-  profileId: ?string,
 }) => {
   if (account === null) {
     return (

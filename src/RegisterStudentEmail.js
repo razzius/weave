@@ -1,12 +1,11 @@
 // @flow
 import React from 'react'
-import { type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
 import SubmitEmailForm from './SubmitEmailForm'
 import { sendStudentVerificationEmail } from './api'
 
-const RegisterStudentEmail = ({ history }: { history: RouterHistory }) => (
+const RegisterStudentEmail = ({ history }) => (
   <AppScreen>
     <SubmitEmailForm
       header="Register Email"

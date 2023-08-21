@@ -1,27 +1,8 @@
-// @flow
 import React from 'react'
-import { useBeforeunload } from 'react-beforeunload' // @flow: ignore
-import { type RouterHistory } from 'react-router-dom'
+import { useBeforeunload } from 'react-beforeunload'
 
 import AppScreen from './AppScreen'
-import { type Account } from './api'
 import ProfileForm from './ProfileForm'
-
-type Props = {
-  account: Account | null,
-  profileId?: ?string,
-  isAdmin?: boolean,
-  setProfileId?: (string) => void,
-  history: RouterHistory,
-  getProfile: Function,
-  updateProfile: Function,
-  RoleSpecificFields: Object,
-  RoleSpecificProfileView: Object,
-  RoleSpecificCheckboxes: Object,
-  RoleSpecificExpectations: Object,
-  profileBaseUrl: string,
-  isStudent: boolean,
-}
 
 const EditProfile = ({
   account,
@@ -37,7 +18,7 @@ const EditProfile = ({
   RoleSpecificExpectations,
   profileBaseUrl,
   isStudent,
-}: Props) => {
+}) => {
   const unchangedWarning = 'Your changes to your profile have not been saved.'
   useBeforeunload(() => unchangedWarning)
 

@@ -3,7 +3,6 @@ module.exports = {
   extends: [
     'airbnb',
     'prettier',
-    'prettier/react',
   ],
   rules: {
     semi: 0,

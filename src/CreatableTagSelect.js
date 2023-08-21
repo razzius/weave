@@ -1,25 +1,10 @@
 // @flow
 import React, { Component } from 'react'
 import CreatableSelect from 'react-select/creatable'
-import { type OptionsType } from 'react-select/src/types'
 
 import { capitalize, caseInsensitiveFind } from './utils'
 
-type Props = {
-  options?: OptionsType,
-  values: Array<string>,
-  handleChange: (any, Object) => void,
-  placeholder?: string,
-  handleAdd: (any) => void,
-  noOptionsMessage?: ({ inputValue: string }) => string | null,
-}
-
-type State = {
-  inputValue: string,
-  menuOpen: boolean,
-}
-
-export default class CreatableTagSelect extends Component<Props, State> {
+export default class CreatableTagSelect extends Component {
   static defaultProps = {
     options: [],
     placeholder: 'Select or type something and press enter...',
@@ -61,7 +46,6 @@ export default class CreatableTagSelect extends Component<Props, State> {
         inputValue: '',
       })
 
-      // $FlowFixMe unresolved issue; defaultProps should always make values defined
       const values = options.map(({ value }) => value)
       const caseInsensitiveMatch = caseInsensitiveFind(inputValue, values)
 
