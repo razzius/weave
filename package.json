@@ -16,6 +16,7 @@
     "blueimp-canvas-to-blob": "^3.29.0",
     "core-js": "^3.32.1",
     "date-fns": "^2.30.0",
+    "nth-check": "^2.1.1",
     "polyfill-array-includes": "^2.0.0",
     "promise-polyfill": "^8.3.0",
     "react": "^18.2.0",
