@@ -27,9 +27,17 @@ def database():
     pg_host = parsed_url.hostname
     pg_port = parsed_url.port
     pg_user = parsed_url.username
+    pg_password = parsed_url.password
     pg_db = parsed_url.path[1:]
 
-    janitor = DatabaseJanitor(pg_user, pg_host, pg_port, pg_db, PG_VERSION)
+    janitor = DatabaseJanitor(
+        pg_user,
+        pg_host,
+        pg_port,
+        pg_db,
+        PG_VERSION,
+        password=pg_password
+    )
 
     try:
         janitor.init()
