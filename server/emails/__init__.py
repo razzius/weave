@@ -6,7 +6,6 @@ from structlog import get_logger
 from server.models import VerificationToken
 
 from .console_email_backend import ConsoleEmailBackend
-from .email_backend import EmailBackend
 from .sparkpost_email_backend import SparkPostEmailBackend
 
 
@@ -20,8 +19,6 @@ SPARKPOST_API_KEY = os.environ.get("SPARKPOST_API_KEY")
 
 
 def init_email(app):
-    email_backend: EmailBackend
-
     if SPARKPOST_API_KEY is None:
         log.warning(
             "Configuring email to log to console because SPARKPOST_API_KEY is not set."
