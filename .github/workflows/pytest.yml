@@ -39,6 +39,7 @@ jobs:
           poetry run pytest
         env:
           TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/weave_test
+          DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/weave_test
           REACT_APP_SERVER_URL: http://localhost:5000
           SECRET_KEY: test
           FLASK_DEBUG: '1'
