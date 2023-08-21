@@ -17,11 +17,9 @@ TEST_DATABASE_URL = os.environ.get(
     "postgresql+psycopg:///weave_test"
 )
 
-os.environ["FLASK_ENV"] = "development"
-
 
 @pytest.fixture(scope="session")
-def database():
+def database(app):
     """
     Create a Postgres database for the tests,
     and drop it when the tests are done.
@@ -48,20 +46,17 @@ def database():
     except psycopg.errors.DuplicateDatabase:
         print("`database` fixture: Database already created")
 
-    yield psycopg.connect(
-        dbname=pg_db,
-        user=pg_user,
-        password=pg_password,
-        host=pg_host,
-        port=pg_port,
-    )
+    yield
 
     janitor.drop()
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def app():
     app = create_app()
+
+    app.config["SQLALCHEMY_DATABASE_URI"] = TEST_DATABASE_URL
+
     app.config["TESTING"] = True
     app.config["ENV"] = "development"
     return app
@@ -74,8 +69,6 @@ def _db(database, app):
     to the database via a Flask-SQLAlchemy
     database connection.
     """
-    app.config["SQLALCHEMY_DATABASE_URI"] = TEST_DATABASE_URL
-
     with app.app_context():
         db.create_all()
 
