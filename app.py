@@ -67,3 +67,6 @@ def create_app():
     # init_saml(app)
 
     return app
+
+
+application = create_app()

@@ -6,18 +6,14 @@ ENV["PORT"] ||= "3000"
 $provision = <<SCRIPT
 DISTRO="$(lsb_release -s -c)"
 
-# Add postgresql repository
-curl -sS https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-echo "deb http://apt.postgresql.org/pub/repos/apt/ $DISTRO-pgdg main" | sudo tee /etc/apt/sources.list.d/postgresql.list
-
 sudo apt-get update
 
 sudo apt-get install -y \
   python-minimal \
   python-pip \
   python3-distutils \
-  python3.7 \
-  postgresql-10
+  python3.11 \
+  postgresql-15
 
 # Install nodejs
 TEMPDIR=$(mktemp -d)
@@ -25,8 +21,8 @@ curl -sL https://deb.nodesource.com/node_13.x/pool/main/n/nodejs/nodejs_13.10.0-
 sudo dpkg -i $TEMPDIR/node.deb
 rm -r $TEMPDIR
 
-# Install pipenv
-sudo -H pip install pipenv
+# Install poetry
+sudo -H pip install poetry
 
 # Install yarn
 TEMPDIR=$(mktemp -d)
@@ -47,10 +43,10 @@ sudo apt-get install -y iptables-persistent
 cd /vagrant
 
 # Install python dependencies
-PIPENV_NOSPIN=1 pipenv install --dev --ignore-pipfile
+poetry install
 
 # Install database schema
-pipenv run flask reset-db
+poetry run flask reset-db
 
 # Install javascript dependencies
 yarn install
@@ -68,7 +64,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = "ubuntu/bionic64"
+  config.vm.box = "debian/bookworm64"
 
   # Forward localhost:3000 for the frontend
   config.vm.network "forwarded_port", guest: 3000, host: 3000

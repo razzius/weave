@@ -97,7 +97,7 @@ class ValidEmailSchema(Schema):
 
         if not any(email.endswith(domain) for domain in valid_domains):
             raise ValidationError(
-                "Email must end with harvard.edu or partners.org", "email"
+                "Email must belong to an allowed domain", "email"
             )
 
 

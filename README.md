@@ -1,7 +1,7 @@
 # Weave
 
 Weave is a mentorship application designed for connecting faculty with medical and dental students.
-Currently it is somewhat specific to Harvard Medical School and Harvard School of Dental Medicine,
+Currently it is somewhat specific to Duke Medical School,
 but it is intended to be configurable to the needs of different medical schools.
 
 ## Tech Stack
@@ -11,10 +11,10 @@ but it is intended to be configurable to the needs of different medical schools.
 
 ### Requirements
 
-- [Python](https://www.python.org/) [(version)](Pipfile#L7)
+- [Python](https://www.python.org/) 3.11.4
 - [Node](https://nodejs.org/) [(version)](package.json#L4)
 - [Postgresql](https://www.postgresql.org/) [(version)](tests/conftest.py#L11)
-- [pipenv](https://github.com/pypa/pipenv#installation) [(version)](Pipfile#L8)
+- [poetry](https://python-poetry.org/) 1.6.0
 - [yarn](https://yarnpkg.com/en/docs/install) [(version)](package.json#L5)
 
 ### Developing with `vagrant`
@@ -76,7 +76,7 @@ $ yarn install
 ### Install the backend requirements
 
 ```sh
-$ pipenv install --dev --ignore-pipfile
+$ poetry install
 ```
 
 ### Create the database
@@ -87,16 +87,16 @@ Note that this drops your local database to start from a clean state.
 # You can call your database however you'd like; I use "weave"
 $ createdb weave
 # If you use a different database, change the DATABASE_URL accordingly.
-# The following is the default DATABASE_URL (see server/app.py).
+# The following is the default DATABASE_URL (see app.py).
 $ export DATABASE_URL='postgresql:///weave'
 # Whatever database is at DATABASE_URL will be cleared by the following command, so be careful!
-$ flask reset-db
+$ poetry run flask reset-db
 ```
 
 ### Running Python tests
 
 ```sh
-$ pipenv run test
+$ poetry run pytest
 ```
 
 ### Run the app in development mode
@@ -108,7 +108,7 @@ Both are configured to automatically reload.
 # Reset the db to install the schema (drops and reacreates base schema)
 $ flask reset-db
 # Run backend
-$ pipenv run start
+$ poetry run flask run
 # In another shell, start frontend with:
 $ yarn start
 ```
@@ -138,8 +138,7 @@ $ open http://localhost:5000/admin
 If, in development, you do not have an account on an authorized domain, you can use the `create-session` script to create a login link for yourself. Usage:
 
 ```sh
-$ pipenv run flask create-session you@domain.com
-Loading .env environment variables…
+$ poetry run flask create-session you@domain.com
 http://weave.localhost:3000/verify?token=...
 ```
 
@@ -164,8 +163,8 @@ Gunicorn is the production application server. The usual configuration is to use
 to terminate ssl and forward requests from port 443 to port 5000.
 
 ```sh
-$ pipenv run shell
-$ gunicorn server:app -b 0.0.0.0:5000
+$ poetry shell
+$ gunicorn app -b 0.0.0.0:5000
 ```
 
 ### SAML Integration
@@ -178,7 +177,7 @@ SAML is configured using the following environment variables:
 - `SAML_ENTITY_ID`
 - `WEAVE_SERVER_NAME`
 
-See `server/app.py` for low-level usage. More documentation to be added.
+See `app.py` for low-level usage. More documentation to be added.
 
 The integration metadata will be hosted at `/saml/metadata.xml`.
 
@@ -214,7 +213,7 @@ localhost and enables the admin with `local` as username and password.
 
 ```sh
 $ docker run -it -p 5000:5000 \
-  -e DATABASE_URL=postgresql://$USER@host.docker.internal:5432/hms \
+  -e DATABASE_URL=postgresql://$USER@host.containers.internal:5432/weave \
   -e BASIC_AUTH_USERNAME=local \
   -e BASIC_AUTH_PASSWORD=local \
     $(docker build -q .)

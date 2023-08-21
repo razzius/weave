@@ -7,6 +7,7 @@ RUN apt-get update -y && apt-get install -y \
   libbz2-dev \
   libffi-dev \
   liblzma-dev \
+  libpq-dev \
   libreadline-dev \
   libsqlite3-dev \
   libssl-dev \
@@ -21,24 +22,27 @@ WORKDIR /root
 ## Install backend system dependencies
 
 RUN asdf plugin add python
-RUN asdf install python 3.7.6
-RUN asdf global python 3.7.6
+RUN asdf install python 3.11.4
+RUN asdf global python 3.11.4
 
 ## Build the backend
 
-COPY Pipfile Pipfile.lock /app/
+COPY pyproject.toml poetry.lock /app/
 
 WORKDIR /app
 
 env PATH="$PATH:/root/.asdf/shims"
 
-RUN python3 -m pip install pipenv
+env PATH=/root/.asdf/installs/python/3.11.4/bin/:$PATH
 
-env PATH=/root/.asdf/installs/python/3.7.6/bin/:$PATH
+RUN asdf plugin add poetry
+RUN asdf install poetry 1.6.0
+RUN asdf global poetry 1.6.0
 
-RUN pipenv install --ignore-pipfile --deploy
+RUN poetry install
 
 COPY server /app/server
+COPY app.py /app/
 
 ## Install frontend system dependencies
 
@@ -75,6 +79,4 @@ WORKDIR /app
 
 EXPOSE 5000
 
-# ENTRYPOINT [ "pipenv" ]
-
-# CMD ["run", "gunicorn", "server:app", "-b", "0.0.0.0:5000"]
+# CMD ["poetry", "run", "gunicorn", "app", "-b", "0.0.0.0:5000"]
