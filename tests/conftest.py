@@ -5,14 +5,17 @@ import psycopg
 import pytest
 from sqlalchemy.orm import scoped_session, sessionmaker
 from pytest_postgresql.janitor import DatabaseJanitor
-from server.models import db
 
+from server.models import db
 from app import create_app
 
 
 PG_VERSION = 15.3
 
-TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "postgresql+psycopg:///weave_test")
+TEST_DATABASE_URL = os.environ.get(
+    "TEST_DATABASE_URL",
+    "postgresql+psycopg:///weave_test"
+)
 
 os.environ["FLASK_ENV"] = "development"
 
@@ -107,15 +110,15 @@ def auth(client):
 @pytest.fixture(scope="function")
 def db_session(_db, request):
     """Creates a new database session for a test."""
-    connection = db.engine.connect()
+    connection = _db.engine.connect()
     transaction = connection.begin()
 
-    db.session = scoped_session(session_factory=sessionmaker(bind=connection))
+    _db.session = scoped_session(session_factory=sessionmaker(bind=connection))
 
     def teardown():
         transaction.rollback()
         connection.close()
-        db.session.remove()
+        _db.session.remove()
 
     request.addfinalizer(teardown)
-    return db.session
+    return _db.session
