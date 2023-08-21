@@ -5,7 +5,7 @@ repos:
     name: flake8
     stages: [commit]
     language: system
-    entry: pipenv run flake8
+    entry: poetry run flake8
     types: [python]
   - id: eslint
     name: eslint
@@ -18,5 +18,5 @@ repos:
     name: pytest
     stages: [manual]
     language: system
-    entry: pipenv run test
+    entry: poetry run pytest
     types: [python]

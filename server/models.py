@@ -43,7 +43,7 @@ class TimeStamp(sqlalchemy.types.TypeDecorator):
     impl = sqlalchemy.types.DateTime
     cache_ok = True
 
-    def process_bind_param(self, value: datetime, _dialect):
+    def process_bind_param(self, value, _dialect):
         return value.astimezone(datetime.timezone.utc)
 
     def process_result_value(self, value, _dialect):

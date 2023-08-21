@@ -529,13 +529,13 @@ def validate_verification_token(verification_token):
         raise UnauthorizedError({"token": ["unknown error"]})
 
 
-def get_token_from_parameters() -> VerificationToken:
+def get_token_from_parameters(request_data: dict) -> VerificationToken:
     """
     Once a user is logged in, they will be stored in the session cookie.
 
     On the first login, they will pass the token as a json parameter.
     """
-    token = request.json.get("token")
+    token = request_data.get("token")
 
     if token is None:
         log.info("POST token not set")
@@ -598,7 +598,14 @@ def render_verification_token_account(verification_token):
 
 @api.route("/verify-token", methods=["POST"])
 def verify_token():
-    verification_token = get_token_from_parameters()
+    request_json = request.json
+    if request_json is None:
+        return (
+            jsonify({"error": ["No request json data"]}),
+            HTTPStatus.UNPROCESSABLE_ENTITY.value,
+        )
+
+    verification_token = get_token_from_parameters(request_json)
 
     verification_email = verification_token.email
 

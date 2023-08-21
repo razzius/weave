@@ -70,10 +70,6 @@ class RelationOption(fields.Field):
 
 
 class StudentProfileSchema(BaseProfileSchema):
-    program = fields.String()
-
-    current_year = fields.String()
-
     program = RelationOption(StudentProgramOption, allow_none=True)
     current_year = RelationOption(StudentYearOption, allow_none=True)
     pce_site = RelationOption(StudentPCESiteOption, allow_none=True)

@@ -73,7 +73,9 @@ def send_faculty_registration_email(email: str, token: VerificationToken) -> str
     {EMAIL_CLOSING}
     """
 
-    return current_app.email_backend.send_email(
+    email_backend = current_app.email_backend  # type: ignore[attr-defined]
+
+    return email_backend.send_email(
         email, "Weave Faculty Registration", html
     )
 
@@ -105,7 +107,9 @@ def send_student_registration_email(email: str, token: VerificationToken) -> str
     {EMAIL_CLOSING}
     """
 
-    return current_app.email_backend.send_email(
+    email_backend = current_app.email_backend  # type: ignore[attr-defined]
+
+    return email_backend.send_email(
         email, "Weave Student Registration", html
     )
 

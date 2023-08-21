@@ -181,7 +181,10 @@ def _filter_student_profiles(
     ]
 
     tag_filters = [
-        or_(func.lower(option_class.value) == tag for _, option_class in tag_fields)
+        or_(
+            func.lower(option_class.value) == tag
+            for _, option_class in tag_fields
+        )  # type: ignore[arg-type]
         for tag in tags
     ]
 
@@ -225,7 +228,10 @@ def _filter_faculty_profiles(
     ]
 
     tag_filters = [
-        or_(func.lower(option_class.value) == tag for _, option_class in tag_fields)
+        or_(
+            func.lower(option_class.value) == tag
+            for _, option_class in tag_fields
+        )  # type: ignore[arg-type]
         for tag in tags
     ]
 
