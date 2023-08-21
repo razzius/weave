@@ -47,8 +47,8 @@ COPY app.py /app/
 ## Install frontend system dependencies
 
 RUN asdf plugin add nodejs
-RUN asdf install nodejs 13.12.0
-RUN asdf global nodejs 13.12.0
+RUN asdf install nodejs 16.20.2
+RUN asdf global nodejs 16.20.2
 
 RUN asdf plugin add yarn
 RUN asdf install yarn 1.22.19
