@@ -10,7 +10,7 @@ from server.models import db
 from app import create_app
 
 
-PG_VERSION = 15.1
+PG_VERSION = 15.3
 
 TEST_DATABASE_URL = os.environ.get("TEST_DATABASE_URL", "postgresql:///weave_test")
 
