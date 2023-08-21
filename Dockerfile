@@ -51,8 +51,8 @@ RUN asdf install nodejs 13.12.0
 RUN asdf global nodejs 13.12.0
 
 RUN asdf plugin add yarn
-RUN asdf install yarn 1.22.4
-RUN asdf global yarn 1.22.4
+RUN asdf install yarn 1.22.19
+RUN asdf global yarn 1.22.19
 
 ## Install frontend dependencies
 

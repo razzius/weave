@@ -1,7 +1,6 @@
 // TODO use core-js ponyfill style instead
 import 'core-js/es/map'
 import 'core-js/es/set'
-import 'react-app-polyfill/ie9'
 import 'weakmap-polyfill'
 import 'polyfill-array-includes'
 import React from 'react'

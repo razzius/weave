@@ -26,7 +26,7 @@ sudo -H pip install poetry
 
 # Install yarn
 TEMPDIR=$(mktemp -d)
-curl -sL https://github.com/yarnpkg/yarn/releases/download/v1.22.4/yarn_1.22.0_all.deb > $TEMPDIR/yarn.deb
+curl -sL https://github.com/yarnpkg/yarn/releases/download/v1.22.19/yarn_1.22.0_all.deb > $TEMPDIR/yarn.deb
 sudo dpkg -i $TEMPDIR/yarn.deb
 rm -r $TEMPDIR
 
