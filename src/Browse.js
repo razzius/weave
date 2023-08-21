@@ -200,7 +200,7 @@ class Browse extends Component<Props, State> {
     this.setState({ search: value, page: 1 })
   }
 
-  handleKeyDown = (e: SyntheticKeyboardEvent<HTMLElement>) => {
+  handleKeyDown = (e) => {
     if ([',', ';'].includes(e.key)) {
       e.preventDefault()
 

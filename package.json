@@ -6,11 +6,10 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "deploy": "gh-pages -d build",
     "build": "REACT_APP_GIT_SHA=$SOURCE_VERSION react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint src && flow"
+    "lint": "eslint src"
   },
   "dependencies": {
     "@sentry/browser": "5.10.2",
@@ -45,11 +44,9 @@
     "eslint": "^6.7.2",
     "eslint-config-airbnb": "^18.0.1",
     "eslint-config-prettier": "^2.9.0",
-    "eslint-plugin-flowtype": "^3.2.0",
     "eslint-plugin-import": "^2.13.0",
     "eslint-plugin-jsx-a11y": "^6.1.2",
-    "eslint-plugin-react": "^7.10.0",
-    "flow-bin": "0.92.0"
+    "eslint-plugin-react": "^7.10.0"
   },
   "prettier": {
     "trailingComma": "es5",

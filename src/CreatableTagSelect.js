@@ -46,9 +46,9 @@ export default class CreatableTagSelect extends Component<Props, State> {
     this.setState({ menuOpen: false })
   }
 
-  handleKeyDown = (event: SyntheticKeyboardEvent<HTMLElement>) => {
-    if ([',', ';'].includes(event.key)) {
-      event.preventDefault()
+  handleKeyDown = (e) => {
+    if ([',', ';'].includes(e.key)) {
+      e.preventDefault()
 
       const { inputValue } = this.state
       const { options } = this.props
@@ -75,7 +75,7 @@ export default class CreatableTagSelect extends Component<Props, State> {
       this.setState({ menuOpen: false })
       return
     }
-    if (!event.key.startsWith('Arrow')) {
+    if (!e.key.startsWith('Arrow')) {
       this.setState({ menuOpen: true })
     }
   }

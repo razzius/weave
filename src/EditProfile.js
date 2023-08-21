@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import { useBeforeunload } from 'react-beforeunload'
+import { useBeforeunload } from 'react-beforeunload' // @flow: ignore
 import { type RouterHistory } from 'react-router-dom'
 
 import AppScreen from './AppScreen'

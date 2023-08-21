@@ -10,13 +10,6 @@ const RoleSpecificStudentExpectations = ({
   willingResearch,
   willingResidency,
   willingStudentGroup,
-}: {
-  willingDiscussPersonal: boolean,
-  willingAdviceClinicalRotations: boolean,
-  willingDualDegrees: boolean,
-  willingResearch: boolean,
-  willingResidency: boolean,
-  willingStudentGroup: boolean,
 }) => (
   <Fragment>
     <h4>I am available to help in the following ways:</h4>

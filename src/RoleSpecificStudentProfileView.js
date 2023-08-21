@@ -1,18 +1,30 @@
 // @flow
 import React from 'react'
 
-const RoleSpecificStudentProfileView = (data: Object) => (
+type Arguments = {
+  program: string,
+  currentYear: string,
+  pceSite: string,
+  affiliations: Array<string>,
+}
+
+const RoleSpecificStudentProfileView = ({
+  program,
+  currentYear,
+  pceSite,
+  affiliations,
+}: Arguments) => (
   <div>
     <h4>Program</h4>
-    <p>{data.program}</p>
+    <p>{program}</p>
     <h4>Current Year</h4>
-    <p>{data.currentYear}</p>
+    <p>{currentYear}</p>
     <h4>PCE Site</h4>
-    <p>{data.pceSite}</p>
-    {data.affiliations.length > 0 && (
+    <p>{pceSite}</p>
+    {affiliations.length > 0 && (
       <>
         <h4>Hospitals Where I Have Completed Rotations</h4>
-        <p>{data.affiliations.join(', ')}</p>
+        <p>{affiliations.join(', ')}</p>
       </>
     )}
   </div>

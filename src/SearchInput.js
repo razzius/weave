@@ -32,8 +32,6 @@ type Props = {
   DegreeSelect?: Object,
 }
 
-type KeyboardEvent = SyntheticKeyboardEvent<HTMLElement>
-
 export default class SearchInput extends Component<Props> {
   handleSubmit = (e: KeyboardEvent) => {
     const { onSubmit } = this.props

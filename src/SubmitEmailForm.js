@@ -1,5 +1,4 @@
-// @flow
-import React, { Component, type Node } from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import ReactTooltip from 'react-tooltip'
 
@@ -30,23 +29,7 @@ async function displayError(error, email) {
   return `Unknown error: ${error}`
 }
 
-type Props = {
-  sendEmail: ({| +email: string, +isPersonalDevice: boolean |}) => Object,
-  header: string,
-  instructions: Node,
-  successMessage: string,
-}
-
-type State = {
-  email: string,
-  isPersonalDevice: boolean,
-  success: boolean,
-  error: Object | null,
-}
-
-type ReactEvent = SyntheticInputEvent<HTMLInputElement>
-
-export default class SubmitEmailForm extends Component<Props, State> {
+export default class SubmitEmailForm extends Component {
   state = {
     email: getParam('email') || '',
     isPersonalDevice: false,
@@ -54,7 +37,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
     error: null,
   }
 
-  submitEmail = async (e: Event) => {
+  submitEmail = async (e) => {
     e.preventDefault()
     const { email, isPersonalDevice } = this.state
     const { sendEmail } = this.props
@@ -70,7 +53,7 @@ export default class SubmitEmailForm extends Component<Props, State> {
     }
   }
 
-  updateEmail = (e: ReactEvent) => {
+  updateEmail = (e) => {
     this.setState({ email: e.target.value })
   }
 

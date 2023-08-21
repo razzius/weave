@@ -2,11 +2,9 @@ module.exports = {
   parser: 'babel-eslint',
   extends: [
     'airbnb',
-    'plugin:flowtype/recommended',
     'prettier',
     'prettier/react',
   ],
-  plugins: ['flowtype'],
   rules: {
     semi: 0,
     'react/jsx-filename-extension': 0,
@@ -23,6 +21,9 @@ module.exports = {
 
     // Logs are useful
     'no-console': 0,
+
+    // Not interested in writing types for all props
+    'react/prop-types': 'off'
   },
   env: { browser: true },
 }
