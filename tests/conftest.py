@@ -20,7 +20,8 @@ os.environ["FLASK_ENV"] = "development"
 @pytest.fixture(scope="session")
 def database():
     """
-    Create a Postgres database for the tests, and drop it when the tests are done.
+    Create a Postgres database for the tests,
+    and drop it when the tests are done.
     """
     parsed_url = urlparse(TEST_DATABASE_URL)
 
@@ -44,7 +45,13 @@ def database():
     except psycopg.errors.DuplicateDatabase:
         print("`database` fixture: Database already created")
 
-    yield
+    yield psycopg.connect(
+        dbname=pg_db,
+        user=pg_user,
+        password=pg_password,
+        host=pg_host,
+        port=pg_port,
+    )
 
     janitor.drop()
 
@@ -60,7 +67,8 @@ def app():
 @pytest.fixture(scope="function")
 def _db(database, app):
     """
-    Provide the transactional fixtures with access to the database via a Flask-SQLAlchemy
+    Provide the transactional fixtures with access
+    to the database via a Flask-SQLAlchemy
     database connection.
     """
     app.config["SQLALCHEMY_DATABASE_URI"] = TEST_DATABASE_URL
