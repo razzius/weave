@@ -20,46 +20,18 @@ but it is intended to be configurable to the needs of different medical schools.
 ### Developing with `vagrant`
 
 A `Vagrantfile` is provided which allows developing in the same
-Ubuntu 18.04 environment that is supported in production.
+Debian 12 environment that is supported in production.
 Here are the officially-supported Vagrant and VirtualBox versions:
 
 ```sh
 $ vagrant --version
-Vagrant 2.2.7
-$ VBoxManage -version
-6.1.2r135662
-# Optionally add vagrant-hostsupdater using:
-$ vagrant plugin install vagrant-hostsupdater
-# This will allow accessing the virtual machine at http://weave.local.
-$ vagrant plugin list
-vagrant-hostsupdater (1.1.1.160, global)
+Vagrant 2.3.4
+$ virsh --version
+9.0.0
 ```
 
 Running `vagrant up` will install the dependencies and create a database,
-and print out the instructions to start the development servers:
-
-```sh
-$ vagrant ssh -c "/vagrant/server/scripts/servers.sh"
-```
-
-Once the backend outputs:
-
-```
-* Running on http://0.0.0.0:5000/ (Press CTRL+C to quit)
-```
-
-And the frontend outputs:
-
-```
-Starting the development server...
-
-Compiled successfully!
-
-You can now view weave-mentorship in the browser.
-```
-
-You can access http://weave.local if you are using the vagrant-hostsupdater plugin,
-and http://192.168.50.4 otherwise.
+and print out the instructions to start the development servers.
 
 ## Manual Development Setup
 
