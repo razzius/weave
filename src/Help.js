@@ -89,11 +89,11 @@ const Help = () => (
       you may check the personal device option to stay logged in for 2 weeks.{' '}
     </p>
     <p>
-      While you may enter a non-Duke or hospital email address as your
-      preferred email address for communication with students, login requires a
-      primary Duke or hospital-affiliated email address, such as:
-      @hms.harvard.edu, @hsdm.harvard.edu, @post.harvard.edu, @tch.harvard.edu,
-      @gse.harvard.edu, @bidmc.harvard.edu, @bwh.harvard.edu, @mgh.harvard.edu,
+      While you may enter a non-Duke or hospital email address as your preferred
+      email address for communication with students, login requires a primary
+      Duke or hospital-affiliated email address, such as: @hms.harvard.edu,
+      @hsdm.harvard.edu, @post.harvard.edu, @tch.harvard.edu, @gse.harvard.edu,
+      @bidmc.harvard.edu, @bwh.harvard.edu, @mgh.harvard.edu,
       @childrens.harvard.edu, @dfci.harvard.edu, @mah.harvard.edu,
       @meei.harvard.edu, @joslin.harvard.edu, @partners.org, @hphc.org, @va.gov,
       @atriushealth.org, @challiance.org, or @forsyth.org.
@@ -103,9 +103,8 @@ const Help = () => (
       account. Why is that?
     </h3>
     <p>
-      Login is restricted to a Duke or hospital-affiliated account. Please
-      try logging in with an email address that ends in one of the options
-      above.
+      Login is restricted to a Duke or hospital-affiliated account. Please try
+      logging in with an email address that ends in one of the options above.
     </p>
     <h3>
       I have a question that was not answered here. How do I contact the Weave
@@ -117,12 +116,12 @@ const Help = () => (
     <p>
       To begin the sign up process, navigate to the home page and click on
       “Register as a student.” After clicking through the Expectations carousel,
-      you will be asked to enter your Duke or hospital-affiliated email
-      address. Click on “Send Verification Email” and check your email address
-      for an email from admin@hmsweave.com. The email will provide a link
-      through which you may authenticate your account. Once your account is
-      authenticated, you will be able to view faculty and student mentor
-      profiles. Please see below if you wish to create a student mentor profile.
+      you will be asked to enter your Duke or hospital-affiliated email address.
+      Click on “Send Verification Email” and check your email address for an
+      email from admin@hmsweave.com. The email will provide a link through which
+      you may authenticate your account. Once your account is authenticated, you
+      will be able to view faculty and student mentor profiles. Please see below
+      if you wish to create a student mentor profile.
     </p>
     <h3>How do I view all faculty mentor profiles?</h3>
     <p>
@@ -194,13 +193,12 @@ const Help = () => (
     <p>
       To begin the sign up process, navigate to the home page and click on
       “Register as a mentor.” After clicking through the Expectations carousel,
-      you will be asked to enter your Duke or hospital-affiliated email
-      address. Click on “Send Verification Email” and check your email address
-      for an email from admin@hmsweave.com. The email will provide a link
-      through which you may authenticate your account. Once your account is
-      authenticated, you will be able to create your mentor profile, and
-      customize the tags and information that you would like to share with
-      students.
+      you will be asked to enter your Duke or hospital-affiliated email address.
+      Click on “Send Verification Email” and check your email address for an
+      email from admin@hmsweave.com. The email will provide a link through which
+      you may authenticate your account. Once your account is authenticated, you
+      will be able to create your mentor profile, and customize the tags and
+      information that you would like to share with students.
     </p>
 
     <h3 id="how-do-i-create-a-profile">

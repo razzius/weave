@@ -10,7 +10,7 @@ import RoleSpecificFacultyCheckboxes from './RoleSpecificFacultyCheckboxes'
 import RoleSpecificFacultyExpectations from './RoleSpecificFacultyExpectations'
 
 type Props = {
-  loadInitial?: any => void,
+  loadInitial?: (any) => void,
   // TODO profileId is passed in updateProfile but not in createProfile. Can't seem to get types to support this without `any`
   saveProfile: (profile: Profile, profileId: any) => Object,
   profileId?: string,

@@ -7,7 +7,7 @@ import { createProfile, type Account } from './api'
 import FacultyProfileForm from './FacultyProfileForm'
 
 type Props = {
-  setProfileId: string => void,
+  setProfileId: (string) => void,
   account: Account | null,
   history: RouterHistory,
 }

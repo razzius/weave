@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import MediaQuery from 'react-responsive'
-import ReactTooltip from 'react-tooltip'
+import { Tooltip } from 'react-tooltip'
 
 const CheckboxIndicator = ({
   title,
@@ -35,9 +35,9 @@ const CheckboxIndicator = ({
       <MediaQuery query="(max-device-width: 750px)">
         <button
           type="button"
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
-            ReactTooltip.show()
+            Tooltip.show()
           }}
           data-tip={title}
           data-for="indicator"

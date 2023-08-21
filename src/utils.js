@@ -27,7 +27,7 @@ export function caseInsensitiveFind(
   values: Array<string>
 ): ?string {
   const lowercaseSearch = search.toLowerCase()
-  return values.find(value => value.toLowerCase() === lowercaseSearch)
+  return values.find((value) => value.toLowerCase() === lowercaseSearch)
 }
 
 export function availableForMentoringFromVerifyTokenResponse(
@@ -62,7 +62,7 @@ export function partition<T>(
 ): Array<Array<T>> {
   const satisfies = []
   const fails = []
-  values.forEach(value => {
+  values.forEach((value) => {
     if (predicate(value)) {
       satisfies.push(value)
     } else {
@@ -77,5 +77,5 @@ export function arrayCaseInsensitiveContains(
   array: Array<string>,
   value: string
 ) {
-  return array.map(item => item.toLowerCase()).includes(value.toLowerCase())
+  return array.map((item) => item.toLowerCase()).includes(value.toLowerCase())
 }

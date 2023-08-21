@@ -7,8 +7,8 @@ type Props = {
   data: Object,
   RoleSpecificProfileView: Object,
   firstTimePublish: boolean,
-  onEdit: any => void,
-  onPublish: any => any,
+  onEdit: (any) => void,
+  onPublish: (any) => any,
   RoleSpecificProfileView: Object,
   RoleSpecificExpectations: Object,
 }

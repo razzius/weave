@@ -2,7 +2,7 @@
 import React, { Fragment, useState, type Node } from 'react'
 import MediaQuery from 'react-responsive'
 import { withRouter, type RouterHistory } from 'react-router-dom'
-import ReactTooltip from 'react-tooltip'
+import { Tooltip } from 'react-tooltip'
 
 import { starProfile, unstarProfile } from './api'
 import Button from './Button'
@@ -297,10 +297,10 @@ const ProfileView = ({
             <div className="column contact">
               {profileId != null && !ownProfile && (
                 <div data-tip data-for="starTooltip">
-                  <ReactTooltip id="starTooltip" place="top">
+                  <Tooltip id="starTooltip" place="top">
                     Click here to{' '}
                     {starredState ? 'remove star' : 'mark profile as starred'}
-                  </ReactTooltip>
+                  </Tooltip>
                   <ProfileStar
                     active={starredState}
                     onClick={() => {

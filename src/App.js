@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 
 import Toggle from 'react-toggle-switch'
-import ReactTooltip from 'react-tooltip'
+import { Tooltip } from 'react-tooltip'
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
@@ -127,7 +127,10 @@ class App extends Component<Props, State> {
           <header className="App-header">
             <div className="header-inner">
               <Link to="/" className="App-title left App-logo">
-                <img src="/assets/duke_health_logo.png" alt="Duke Health logo"/>
+                <img
+                  src="/assets/duke_health_logo.png"
+                  alt="Duke Health logo"
+                />
               </Link>
 
               {loginAction}
@@ -139,11 +142,11 @@ class App extends Component<Props, State> {
                   data-for="toggleTooltip"
                 >
                   Available for mentoring:
-                  <ReactTooltip id="toggleTooltip" place="bottom">
+                  <Tooltip id="toggleTooltip" place="bottom">
                     Controls whether your profile will be visible to mentees.
                     {account.profileId === null &&
                       ' You have not yet created a profile.'}
-                  </ReactTooltip>
+                  </Tooltip>
                   <Toggle
                     enabled={Boolean(account.profileId)}
                     on={account.availableForMentoring}

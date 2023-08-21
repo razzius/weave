@@ -10,12 +10,12 @@ import FacultyResultsView from './FacultyResultsView'
 const DegreeSelect = ({ onChange, value, displayDegreeOptions }: Object) => (
   <Select
     styles={{
-      control: base => ({
+      control: (base) => ({
         ...base,
         width: '250px',
         backgroundColor: 'white',
       }),
-      multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
+      multiValue: (styles) => ({ ...styles, backgroundColor: '#edf4fe' }),
     }}
     onChange={onChange}
     value={value}

@@ -23,8 +23,8 @@ export default ({
     <p>{fieldName}</p>
     <Select
       styles={{
-        control: base => ({ ...base, backgroundColor: 'white' }),
-        multiValue: styles => ({
+        control: (base) => ({ ...base, backgroundColor: 'white' }),
+        multiValue: (styles) => ({
           ...styles,
           backgroundColor: '#edf4fe',
         }),

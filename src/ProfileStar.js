@@ -12,7 +12,7 @@ export default ({
     type="image"
     alt="Star"
     className={`profile-star ${active ? 'active' : ''}`}
-    src={active ? "/assets/star-active.svg" : '/assets/star-inactive.svg'}
+    src={active ? '/assets/star-active.svg' : '/assets/star-inactive.svg'}
     onClick={onClick}
   />
 )

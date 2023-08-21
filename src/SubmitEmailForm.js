@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import ReactTooltip from 'react-tooltip'
+import { Tooltip } from 'react-tooltip'
 
 import { any, getParam } from './utils'
 import VALID_DOMAINS from './valid_domains.json'
@@ -64,7 +64,7 @@ export default class SubmitEmailForm extends Component {
       const { error, isPersonalDevice } = this.state
 
       const emailValid = any(
-        VALID_DOMAINS.map(domain => email.toLowerCase().endsWith(domain))
+        VALID_DOMAINS.map((domain) => email.toLowerCase().endsWith(domain))
       )
 
       return (
@@ -80,9 +80,9 @@ export default class SubmitEmailForm extends Component {
                 value={email}
               />
             </p>
-            <ReactTooltip place="bottom" id="emailTooltip">
+            <Tooltip place="bottom" id="emailTooltip">
               Please enter your Duke or hospital-affiliated email
-            </ReactTooltip>
+            </Tooltip>
 
             {error && <p className="error">{error}</p>}
             <div>
@@ -115,7 +115,7 @@ export default class SubmitEmailForm extends Component {
             </p>
             <p>The following are the allowed email domains:</p>
 
-            {VALID_DOMAINS.map(domain => (
+            {VALID_DOMAINS.map((domain) => (
               <div key={domain}>{domain.replace('@', '')}</div>
             ))}
             <p>

@@ -10,7 +10,7 @@ type Props = {
   values: Array<string>,
   handleChange: (any, Object) => void,
   placeholder?: string,
-  handleAdd: any => void,
+  handleAdd: (any) => void,
   noOptionsMessage?: ({ inputValue: string }) => string | null,
 }
 
@@ -87,20 +87,15 @@ export default class CreatableTagSelect extends Component<Props, State> {
 
   render() {
     const { inputValue, menuOpen } = this.state
-    const {
-      handleChange,
-      values,
-      options,
-      placeholder,
-      noOptionsMessage,
-    } = this.props
+    const { handleChange, values, options, placeholder, noOptionsMessage } =
+      this.props
     return (
       <CreatableSelect
         styles={{
-          control: base => ({ ...base, backgroundColor: 'white' }),
-          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
+          control: (base) => ({ ...base, backgroundColor: 'white' }),
+          multiValue: (styles) => ({ ...styles, backgroundColor: '#edf4fe' }),
         }}
-        value={values.map(value => ({ label: value, value }))}
+        value={values.map((value) => ({ label: value, value }))}
         onInputChange={this.handleInputChange}
         menuIsOpen={menuOpen}
         inputValue={inputValue}

@@ -11,7 +11,7 @@ type Props = {
   account: Account | null,
   profileId?: ?string,
   isAdmin?: boolean,
-  setProfileId?: string => void,
+  setProfileId?: (string) => void,
   history: RouterHistory,
   getProfile: Function,
   updateProfile: Function,

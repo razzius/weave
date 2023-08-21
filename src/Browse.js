@@ -96,14 +96,11 @@ class Browse extends Component<Props, State> {
     } = this.state
 
     const [knownTags, userTags] = partition(
-      tag => searchableTags.includes(tag),
+      (tag) => searchableTags.includes(tag),
       searchTerms
     )
     const searchArray = search === '' ? [] : [search]
-    const query = userTags
-      .concat(searchArray)
-      .join(' ')
-      .toLowerCase()
+    const query = userTags.concat(searchArray).join(' ').toLowerCase()
 
     const searchDegrees = degrees === null ? [] : degrees
     const searchAffiliations = affiliations === null ? [] : affiliations
@@ -139,8 +136,8 @@ class Browse extends Component<Props, State> {
     history.replace(window.location.pathname, this.state)
   }
 
-  handleChange = tags => {
-    const searchTerms = tags !== null ? tags.map(tag => tag.value) : []
+  handleChange = (tags) => {
+    const searchTerms = tags !== null ? tags.map((tag) => tag.value) : []
 
     this.setState(
       {
@@ -153,8 +150,8 @@ class Browse extends Component<Props, State> {
     )
   }
 
-  handleChangeDegrees = tags => {
-    const degrees = tags === null ? null : tags.map(tag => tag.value)
+  handleChangeDegrees = (tags) => {
+    const degrees = tags === null ? null : tags.map((tag) => tag.value)
     this.setState(
       {
         queried: true,
@@ -165,7 +162,7 @@ class Browse extends Component<Props, State> {
     )
   }
 
-  handleChangeAffiliations = tag => {
+  handleChangeAffiliations = (tag) => {
     this.setState(
       {
         queried: true,
@@ -176,7 +173,7 @@ class Browse extends Component<Props, State> {
     )
   }
 
-  handleChangeSorting = option => {
+  handleChangeSorting = (option) => {
     const sorting = option.value
 
     this.setState(

@@ -40,7 +40,7 @@ function displayError({ name, email }: { name: string, email: string }) {
 }
 
 type Props = {
-  loadInitial?: any => void,
+  loadInitial?: (any) => void,
   // TODO profileId is passed in updateProfile but not in createProfile. Can't seem to get types to support this without `any`
   saveProfile: (profile: Profile, profileId: any) => Object,
   profileId?: string,
@@ -208,9 +208,11 @@ export default class ProfileForm extends Component<Props, State> {
     })
   }
 
-  handleChangeField = (key: string) => ({ value }: Object) => {
-    this.setState({ [key]: value })
-  }
+  handleChangeField =
+    (key: string) =>
+    ({ value }: Object) => {
+      this.setState({ [key]: value })
+    }
 
   handleChange = (key: string) => (selected: ValueType, meta: Object) => {
     if (selected == null) {
@@ -239,32 +241,27 @@ export default class ProfileForm extends Component<Props, State> {
     this.setState({ [key]: values })
   }
 
-  update = (field: string) => ({ target }: { target: HTMLInputElement }) => {
-    this.setState({ [field]: target.value })
-  }
+  update =
+    (field: string) =>
+    ({ target }: { target: HTMLInputElement }) => {
+      this.setState({ [field]: target.value })
+    }
 
-  updateBoolean = (field: string) => ({
-    target,
-  }: {
-    target: HTMLInputElement,
-  }) => {
-    this.setState({ [field]: target.checked })
-  }
+  updateBoolean =
+    (field: string) =>
+    ({ target }: { target: HTMLInputElement }) => {
+      this.setState({ [field]: target.checked })
+    }
 
   submit = async () => {
-    const {
-      saveProfile,
-      profileId,
-      setProfileId,
-      history,
-      profileBaseUrl,
-    } = this.props
+    const { saveProfile, profileId, setProfileId, history, profileBaseUrl } =
+      this.props
     const { cadence } = this.state
 
     await when(
       cadence !== 'other',
       () =>
-        new Promise(resolve => {
+        new Promise((resolve) => {
           this.setState(
             {
               otherCadence: '',
@@ -305,9 +302,9 @@ export default class ProfileForm extends Component<Props, State> {
 
     const scaled = scaleCanvas(canvas)
 
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       scaled.toBlob(
-        (async blob => {
+        (async (blob) => {
           const response = await uploadPicture(blob)
 
           this.setState(
@@ -645,7 +642,7 @@ export default class ProfileForm extends Component<Props, State> {
                 checked={cadence === 'other'}
                 type="radio"
                 value="other"
-                ref={el => {
+                ref={(el) => {
                   this.otherCadenceInput = el
                 }}
               />

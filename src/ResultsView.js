@@ -1,6 +1,6 @@
 // @flow
 import React from 'react'
-import ReactTooltip from 'react-tooltip'
+import { Tooltip } from 'react-tooltip'
 import ProfileResult from './ProfileResult'
 import Button from './Button'
 
@@ -18,8 +18,8 @@ export type Props = {
   } | null,
   queried: boolean,
   loading: boolean,
-  nextPage: Event => void,
-  resetSearch: Event => void,
+  nextPage: (Event) => void,
+  resetSearch: (Event) => void,
   savedState: Object,
   profileBaseUrl: string,
   RoleSpecificProfileResult: Object,
@@ -61,7 +61,7 @@ const ResultsView = ({
       {nextButton} {scrollToTopButton}
     </div>
   )
-  const profileElements = results.profiles.map(result => (
+  const profileElements = results.profiles.map((result) => (
     <ProfileResult
       key={result.id}
       browseState={savedState}
@@ -83,7 +83,7 @@ const ResultsView = ({
           </button>
         )}
       </p>
-      <ReactTooltip id="indicator" place="bottom" />
+      <Tooltip id="indicator" place="bottom" />
       <div>{profileElements}</div>
       {navigationButtons}
     </div>
