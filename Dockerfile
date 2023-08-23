@@ -64,8 +64,6 @@ COPY public /app/public
 
 ## Build the frontend
 
-WORKDIR /app/src
-
 RUN yarn build
 
 ENV FLASK_ENV 'development'
