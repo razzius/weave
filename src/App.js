@@ -133,8 +133,6 @@ class App extends Component<Props, State> {
                 />
               </Link>
 
-              {loginAction}
-
               {account && (
                 <div
                   data-tip
@@ -183,6 +181,8 @@ class App extends Component<Props, State> {
                 </Link>
 
                 {account && <OwnProfileLink account={account} />}
+
+                {loginAction}
               </nav>
             </div>
           </header>
