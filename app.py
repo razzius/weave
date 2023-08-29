@@ -41,7 +41,16 @@ def create_app():
     app.config["SQLALCHEMY_ECHO"] = bool(os.environ.get("SQLALCHEMY_ECHO"))
     app.config["BASIC_AUTH_USERNAME"] = os.environ.get("BASIC_AUTH_USERNAME")
     app.config["BASIC_AUTH_PASSWORD"] = os.environ.get("BASIC_AUTH_PASSWORD")
-    app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY")
+
+    app.config["SESSION_COOKIE_DOMAIN"] = os.environ.get("SESSION_COOKIE_DOMAIN")
+
+    secret_key = os.environ.get("SECRET_KEY")
+
+    app.config["SECRET_KEY"] = secret_key
+
+    if secret_key is None:
+        log.warning('Sessions will not work because SECRET_KEY is not set')
+
     app.config["VALID_DOMAINS"] = json.load(open("src/valid_domains.json"))
 
     app.config["TOKEN_EXPIRY_AGE_HOURS"] = int(
