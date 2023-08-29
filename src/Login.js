@@ -22,16 +22,18 @@ const instructions = (
   </div>
 )
 
-const Login = ({ history }) => (
-  <AppScreen>
-    <SubmitEmailForm
-      header="Login"
-      history={history}
-      instructions={instructions}
-      successMessage="Please check your email and follow the link from there to log in."
-      sendEmail={sendLoginEmail}
-    />
-  </AppScreen>
-)
+function Login({ history }) {
+  return (
+    <AppScreen>
+      <SubmitEmailForm
+        header="Login"
+        history={history}
+        instructions={instructions}
+        successMessage="Please check your email and follow the link from there to log in."
+        sendEmail={sendLoginEmail}
+      />
+    </AppScreen>
+  )
+}
 
 export default Login

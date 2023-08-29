@@ -3,7 +3,7 @@ import React from 'react'
 import { capitalize } from './utils'
 import CheckboxIndicator from './CheckboxIndicator'
 
-const StudentProfileResult = ({ result }) => {
+function StudentProfileResult({ result }) {
   const {
     willingDiscussPersonal,
     willingAdviceClinicalRotations,
@@ -18,7 +18,7 @@ const StudentProfileResult = ({ result }) => {
       <div className="profile-result-left">
         <h2>{result.name}</h2>
         <p className="clinical-interests">
-          {result.clinicalSpecialties.map(interest => (
+          {result.clinicalSpecialties.map((interest) => (
             <span key={interest} className="clinical interest">
               {' '}
               {interest}{' '}
@@ -26,7 +26,7 @@ const StudentProfileResult = ({ result }) => {
           ))}
         </p>
         <p>
-          {result.professionalInterests.map(interest => (
+          {result.professionalInterests.map((interest) => (
             <span key={interest} className="professional interest">
               {' '}
               {interest}{' '}

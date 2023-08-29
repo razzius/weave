@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-const Button = ({ to, onClick, children, style, disabled }) => {
+function Button({ to, onClick, children, style, disabled }) {
   if (to) {
     return (
       <Link className="button" to={to}>

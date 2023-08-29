@@ -15,7 +15,7 @@ export default class CreatableTagSelect extends Component {
     menuOpen: false,
   }
 
-  handleInputChange = (inputValue: string) => {
+  handleInputChange = (inputValue) => {
     this.setState({
       inputValue: inputValue.slice(0, 50),
     })
@@ -30,7 +30,7 @@ export default class CreatableTagSelect extends Component {
     this.setState({ menuOpen: false })
   }
 
-  handleKeyDown = e => {
+  handleKeyDown = (e) => {
     if ([',', ';'].includes(e.key)) {
       e.preventDefault()
 
@@ -63,27 +63,22 @@ export default class CreatableTagSelect extends Component {
     }
   }
 
-  handleAdd = (selected: string) => {
+  handleAdd = (selected) => {
     const { handleAdd } = this.props
     handleAdd(selected)
   }
 
   render() {
     const { inputValue, menuOpen } = this.state
-    const {
-      handleChange,
-      values,
-      options,
-      placeholder,
-      noOptionsMessage,
-    } = this.props
+    const { handleChange, values, options, placeholder, noOptionsMessage } =
+      this.props
     return (
       <CreatableSelect
         styles={{
-          control: base => ({ ...base, backgroundColor: 'white' }),
-          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
+          control: (base) => ({ ...base, backgroundColor: 'white' }),
+          multiValue: (styles) => ({ ...styles, backgroundColor: '#edf4fe' }),
         }}
-        value={values.map(value => ({ label: value, value }))}
+        value={values.map((value) => ({ label: value, value }))}
         onInputChange={this.handleInputChange}
         menuIsOpen={menuOpen}
         inputValue={inputValue}

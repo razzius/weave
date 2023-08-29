@@ -5,7 +5,7 @@ import AppScreen from './AppScreen'
 import { createProfile } from './api'
 import FacultyProfileForm from './FacultyProfileForm'
 
-const CreateProfile = ({ setProfileId, account, history }) => {
+function CreateProfile({ setProfileId, account, history }) {
   if (account === null) {
     return 'You are not logged in. Click "Login" above to log in.'
   }

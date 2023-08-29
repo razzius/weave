@@ -17,25 +17,22 @@ export function when(condition, promiseCallable) {
   return Promise.resolve(true)
 }
 
-export function caseInsensitiveFind(
-  search: string,
-  values: Array<string>
-): ?string {
+export function caseInsensitiveFind(search, values) {
   const lowercaseSearch = search.toLowerCase()
-  return values.find(value => value.toLowerCase() === lowercaseSearch)
+  return values.find((value) => value.toLowerCase() === lowercaseSearch)
 }
 
-export function availableForMentoringFromVerifyTokenResponse(
-  response: Object
-): boolean {
+export function availableForMentoringFromVerifyTokenResponse(response) {
   return response.profile_id !== null && response.available_for_mentoring
 }
 
-export const ExternalLink = ({ href, children }) => (
-  <a href={href} target="_blank" rel="noopener noreferrer">
-    {children}
-  </a>
-)
+export function ExternalLink({ href, children }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+    </a>
+  )
+}
 
 export function LiteralLink({ href }) {
   return <ExternalLink href={href}>{href}</ExternalLink>
@@ -48,7 +45,7 @@ export function last(values) {
 export function partition(predicate, values) {
   const satisfies = []
   const fails = []
-  values.forEach(value => {
+  values.forEach((value) => {
     if (predicate(value)) {
       satisfies.push(value)
     } else {
@@ -60,5 +57,5 @@ export function partition(predicate, values) {
 }
 
 export function arrayCaseInsensitiveContains(array, value) {
-  return array.map(item => item.toLowerCase()).includes(value.toLowerCase())
+  return array.map((item) => item.toLowerCase()).includes(value.toLowerCase())
 }

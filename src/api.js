@@ -3,7 +3,7 @@ import { availableForMentoringFromVerifyTokenResponse } from './utils'
 
 // -_-
 function addQueryString(url, params) {
-  return Object.keys(params).forEach(key => {
+  return Object.keys(params).forEach((key) => {
     url.searchParams.append(key, String(params[key]))
   })
 }
@@ -298,9 +298,8 @@ function accountResponseToAccount(response) {
     profileId: response.profile_id,
     email: response.email,
 
-    availableForMentoring: availableForMentoringFromVerifyTokenResponse(
-      response
-    ),
+    availableForMentoring:
+      availableForMentoringFromVerifyTokenResponse(response),
   }
 }
 

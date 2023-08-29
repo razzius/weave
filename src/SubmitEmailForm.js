@@ -37,7 +37,7 @@ export default class SubmitEmailForm extends Component {
     error: null,
   }
 
-  submitEmail = async e => {
+  submitEmail = async (e) => {
     e.preventDefault()
     const { email, isPersonalDevice } = this.state
     const { sendEmail } = this.props
@@ -53,7 +53,7 @@ export default class SubmitEmailForm extends Component {
     }
   }
 
-  updateEmail = e => {
+  updateEmail = (e) => {
     this.setState({ email: e.target.value })
   }
 
@@ -63,7 +63,7 @@ export default class SubmitEmailForm extends Component {
     if (!success) {
       const { error, isPersonalDevice } = this.state
 
-      const emailValid = VALID_DOMAINS.some(domain =>
+      const emailValid = VALID_DOMAINS.some((domain) =>
         email.toLowerCase().endsWith(domain)
       )
 
@@ -115,7 +115,7 @@ export default class SubmitEmailForm extends Component {
             </p>
             <p>The following are the allowed email domains:</p>
 
-            {VALID_DOMAINS.map(domain => (
+            {VALID_DOMAINS.map((domain) => (
               <div key={domain}>{domain.replace('@', '')}</div>
             ))}
             <p>

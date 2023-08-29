@@ -6,28 +6,30 @@ import RoleSpecificFacultyProfileView from './RoleSpecificFacultyProfileView'
 import RoleSpecificFacultyCheckboxes from './RoleSpecificFacultyCheckboxes'
 import RoleSpecificFacultyExpectations from './RoleSpecificFacultyExpectations'
 
-const FacultyProfileForm = ({
+function FacultyProfileForm({
   loadInitial,
   saveProfile,
   profileId,
   setProfileId,
   history,
   firstTimePublish,
-}) => (
-  <ProfileForm
-    firstTimePublish={firstTimePublish}
-    history={history}
-    loadInitial={loadInitial}
-    profileId={profileId}
-    saveProfile={saveProfile}
-    setProfileId={setProfileId}
-    profileBaseUrl="profiles"
-    RoleSpecificFields={RoleSpecificFacultyFields}
-    RoleSpecificProfileView={RoleSpecificFacultyProfileView}
-    RoleSpecificCheckboxes={RoleSpecificFacultyCheckboxes}
-    RoleSpecificExpectations={RoleSpecificFacultyExpectations}
-    isStudent={false}
-  />
-)
+}) {
+  return (
+    <ProfileForm
+      firstTimePublish={firstTimePublish}
+      history={history}
+      loadInitial={loadInitial}
+      profileId={profileId}
+      saveProfile={saveProfile}
+      setProfileId={setProfileId}
+      profileBaseUrl="profiles"
+      RoleSpecificFields={RoleSpecificFacultyFields}
+      RoleSpecificProfileView={RoleSpecificFacultyProfileView}
+      RoleSpecificCheckboxes={RoleSpecificFacultyCheckboxes}
+      RoleSpecificExpectations={RoleSpecificFacultyExpectations}
+      isStudent={false}
+    />
+  )
+}
 
 export default FacultyProfileForm

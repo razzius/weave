@@ -5,15 +5,17 @@ import AppScreen from './AppScreen'
 import { createStudentProfile } from './api'
 import StudentProfileForm from './StudentProfileForm'
 
-const CreatePeerProfile = ({ setProfileId, history }) => (
-  <AppScreen>
-    <StudentProfileForm
-      firstTimePublish
-      saveProfile={createStudentProfile}
-      setProfileId={setProfileId}
-      history={history}
-    />
-  </AppScreen>
-)
+function CreatePeerProfile({ setProfileId, history }) {
+  return (
+    <AppScreen>
+      <StudentProfileForm
+        firstTimePublish
+        saveProfile={createStudentProfile}
+        setProfileId={setProfileId}
+        history={history}
+      />
+    </AppScreen>
+  )
+}
 
 export default withRouter(CreatePeerProfile)

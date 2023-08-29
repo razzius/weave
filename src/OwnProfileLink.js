@@ -14,7 +14,7 @@ function getLinkUrl(account) {
   return 'create-peer-profile'
 }
 
-const OwnProfileLink = ({ account }) => {
+function OwnProfileLink({ account }) {
   const linkText = account.profileId ? 'My Profile' : 'Create Profile'
   const linkUrl = getLinkUrl(account)
   return (

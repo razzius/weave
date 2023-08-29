@@ -1,9 +1,15 @@
 module.exports = {
-  parser: 'babel-eslint',
+  parser: '@babel/eslint-parser',
   extends: [
     'airbnb',
     'prettier',
   ],
+  parserOptions: {
+    requireConfigFile: false,
+    babelOptions: {
+      presets: ["@babel/preset-react"],
+    },
+  },
   rules: {
     semi: 0,
     'react/jsx-filename-extension': 0,

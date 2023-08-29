@@ -9,7 +9,7 @@ import ProfileAvatar from './ProfileAvatar'
 import ProfileStar from './ProfileStar'
 import { CADENCE_LABELS } from './CadenceOption'
 
-const Buttons = ({
+function Buttons({
   ownProfile,
   firstTimePublish,
   editing,
@@ -17,22 +17,24 @@ const Buttons = ({
   adminButton,
   browseUrl,
   editUrl,
-}) => (
-  <Fragment>
-    {ownProfile && editUrl && <Button to={editUrl}>Edit Profile</Button>}
-    {adminButton}
-    {!firstTimePublish && !editing && (
-      <Button
-        to={{
-          pathname: browseUrl,
-          state: location.state,
-        }}
-      >
-        Back to list
-      </Button>
-    )}
-  </Fragment>
-)
+}) {
+  return (
+    <Fragment>
+      {ownProfile && editUrl && <Button to={editUrl}>Edit Profile</Button>}
+      {adminButton}
+      {!firstTimePublish && !editing && (
+        <Button
+          to={{
+            pathname: browseUrl,
+            state: location.state,
+          }}
+        >
+          Back to list
+        </Button>
+      )}
+    </Fragment>
+  )
+}
 
 function displayCadence(cadence, otherCadence) {
   if (cadence === 'other') {
@@ -42,21 +44,25 @@ function displayCadence(cadence, otherCadence) {
   return CADENCE_LABELS[cadence]
 }
 
-const Cadence = ({ cadence, otherCadence }) => (
-  <div style={{ marginTop: '1.2em' }}>
-    <h4>Meeting Cadence</h4>
-    {displayCadence(cadence, otherCadence)}
-  </div>
-)
+function Cadence({ cadence, otherCadence }) {
+  return (
+    <div style={{ marginTop: '1.2em' }}>
+      <h4>Meeting Cadence</h4>
+      {displayCadence(cadence, otherCadence)}
+    </div>
+  )
+}
 
-const ClinicalInterests = ({ interests }) => (
-  <div>
-    <h4>Clinical Interests</h4>
-    <p style={{ paddingBottom: '1em' }}>{interests.join(', ')}</p>
-  </div>
-)
+function ClinicalInterests({ interests }) {
+  return (
+    <div>
+      <h4>Clinical Interests</h4>
+      <p style={{ paddingBottom: '1em' }}>{interests.join(', ')}</p>
+    </div>
+  )
+}
 
-const AboutInfo = ({
+function AboutInfo({
   degrees,
   affiliations,
   clinicalSpecialties,
@@ -68,48 +74,50 @@ const AboutInfo = ({
   pceSite,
   currentYear,
   RoleSpecificProfileView,
-}) => (
-  <Fragment>
-    <RoleSpecificProfileView
-      degrees={degrees}
-      program={program}
-      pceSite={pceSite}
-      currentYear={currentYear}
-      affiliations={affiliations}
-    />
-    {clinicalSpecialties.length > 0 && (
-      <ClinicalInterests interests={clinicalSpecialties} />
-    )}
-    {professionalInterests.length > 0 && (
-      <div>
-        <h4>Professional Interests</h4>
-        <p style={{ paddingBottom: '1em' }}>
-          {professionalInterests.join(', ')}
-        </p>
-      </div>
-    )}
-    {partsOfMe.length > 0 && (
-      <div>
-        <h4>Parts Of Me</h4>
-        <p style={{ paddingBottom: '1em' }}>{partsOfMe.join(', ')}</p>
-      </div>
-    )}
-    {activities.length > 0 && (
-      <div>
-        <h4>Activities I Enjoy</h4>
-        <p style={{ paddingBottom: '1em' }}>{activities.join(', ')}</p>
-      </div>
-    )}
-    {additionalInformation && (
-      <div>
-        <h4>Additional Information</h4>
-        <p>{additionalInformation}</p>
-      </div>
-    )}
-  </Fragment>
-)
+}) {
+  return (
+    <Fragment>
+      <RoleSpecificProfileView
+        degrees={degrees}
+        program={program}
+        pceSite={pceSite}
+        currentYear={currentYear}
+        affiliations={affiliations}
+      />
+      {clinicalSpecialties.length > 0 && (
+        <ClinicalInterests interests={clinicalSpecialties} />
+      )}
+      {professionalInterests.length > 0 && (
+        <div>
+          <h4>Professional Interests</h4>
+          <p style={{ paddingBottom: '1em' }}>
+            {professionalInterests.join(', ')}
+          </p>
+        </div>
+      )}
+      {partsOfMe.length > 0 && (
+        <div>
+          <h4>Parts Of Me</h4>
+          <p style={{ paddingBottom: '1em' }}>{partsOfMe.join(', ')}</p>
+        </div>
+      )}
+      {activities.length > 0 && (
+        <div>
+          <h4>Activities I Enjoy</h4>
+          <p style={{ paddingBottom: '1em' }}>{activities.join(', ')}</p>
+        </div>
+      )}
+      {additionalInformation && (
+        <div>
+          <h4>Additional Information</h4>
+          <p>{additionalInformation}</p>
+        </div>
+      )}
+    </Fragment>
+  )
+}
 
-const ContactInformation = ({ contactEmail }) => {
+function ContactInformation({ contactEmail }) {
   const [username, domain] = contactEmail.split('@')
   return (
     <Fragment>
@@ -123,7 +131,7 @@ const ContactInformation = ({ contactEmail }) => {
   )
 }
 
-const ProfileView = ({
+function ProfileView({
   data,
   ownProfile = false,
   firstTimePublish = false,
@@ -139,7 +147,7 @@ const ProfileView = ({
   editUrl,
   adminEditBaseUrl,
   RoleSpecificExpectations,
-}) => {
+}) {
   const [starredState, setStarred] = useState(Boolean(starred))
 
   const adminButton =

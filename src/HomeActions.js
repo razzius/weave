@@ -15,26 +15,28 @@ function getFacultyText(account, profileId) {
   return 'View my profile'
 }
 
-const FacultyLanding = ({ account, profileId, isMentor }) => (
-  <div>
-    <h1>Faculty</h1>
-    <Button to={getFacultyLink(profileId)}>
-      {getFacultyText(account, profileId)}
-    </Button>
-    {isMentor && (
-      <div>
-        <Button to="/browse">Browse all profiles</Button>
-      </div>
-    )}
-    <p>
-      <Link to="/help#how-do-i-create-a-profile">
-        Read how to create a profile
-      </Link>
-    </p>
-  </div>
-)
+function FacultyLanding({ account, profileId, isMentor }) {
+  return (
+    <div>
+      <h1>Faculty</h1>
+      <Button to={getFacultyLink(profileId)}>
+        {getFacultyText(account, profileId)}
+      </Button>
+      {isMentor && (
+        <div>
+          <Button to="/browse">Browse all profiles</Button>
+        </div>
+      )}
+      <p>
+        <Link to="/help#how-do-i-create-a-profile">
+          Read how to create a profile
+        </Link>
+      </p>
+    </div>
+  )
+}
 
-export default ({ account, isMentor, profileId }) => {
+export default function HomeActions({ account, isMentor, profileId }) {
   if (account === null) {
     return (
       <div>

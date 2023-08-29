@@ -6,18 +6,20 @@ import RoleSpecificStudentFields from './RoleSpecificStudentFields'
 import RoleSpecificStudentExpectations from './RoleSpecificStudentExpectations'
 import { getStudentProfile } from './api'
 
-const StudentProfile = ({ account, match }) => (
-  <Profile
-    account={account}
-    profileId={match.params.id}
-    getProfile={getStudentProfile}
-    RoleSpecificProfileView={RoleSpecificStudentProfileView}
-    RoleSpecificFields={RoleSpecificStudentFields}
-    RoleSpecificExpectations={RoleSpecificStudentExpectations}
-    browseUrl="/peer-mentorship"
-    editUrl="/edit-student-profile"
-    adminEditBaseUrl="admin-edit-student-profile"
-  />
-)
+function StudentProfile({ account, match }) {
+  return (
+    <Profile
+      account={account}
+      profileId={match.params.id}
+      getProfile={getStudentProfile}
+      RoleSpecificProfileView={RoleSpecificStudentProfileView}
+      RoleSpecificFields={RoleSpecificStudentFields}
+      RoleSpecificExpectations={RoleSpecificStudentExpectations}
+      browseUrl="/peer-mentorship"
+      editUrl="/edit-student-profile"
+      adminEditBaseUrl="admin-edit-student-profile"
+    />
+  )
+}
 
 export default StudentProfile

@@ -2,7 +2,7 @@ import React from 'react'
 import MediaQuery from 'react-responsive'
 import { Tooltip } from 'react-tooltip'
 
-const CheckboxIndicator = ({ title, checked }) => {
+function CheckboxIndicator({ title, checked }) {
   const checkbox = (
     <input
       style={{
@@ -28,7 +28,7 @@ const CheckboxIndicator = ({ title, checked }) => {
       <MediaQuery query="(max-device-width: 750px)">
         <button
           type="button"
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault()
             Tooltip.show()
           }}

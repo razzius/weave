@@ -4,7 +4,7 @@ import { useBeforeunload } from 'react-beforeunload'
 import AppScreen from './AppScreen'
 import ProfileForm from './ProfileForm'
 
-const EditProfile = ({
+function EditProfile({
   account,
   history,
   setProfileId,
@@ -18,7 +18,7 @@ const EditProfile = ({
   RoleSpecificExpectations,
   profileBaseUrl,
   isStudent,
-}) => {
+}) {
   const unchangedWarning = 'Your changes to your profile have not been saved.'
   useBeforeunload(() => unchangedWarning)
 

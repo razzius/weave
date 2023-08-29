@@ -4,8 +4,10 @@ import ResultsView from './ResultsView'
 
 import StudentProfileResult from './StudentProfileResult'
 
-const StudentResultsView = props => (
-  <ResultsView {...props} RoleSpecificProfileResult={StudentProfileResult} />
-)
+function StudentResultsView(props) {
+  return (
+    <ResultsView {...props} RoleSpecificProfileResult={StudentProfileResult} />
+  )
+}
 
 export default StudentResultsView

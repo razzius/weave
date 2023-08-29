@@ -3,7 +3,7 @@ import Button from './Button'
 
 import AppScreen from './AppScreen'
 
-const Logout = ({ logout }) => {
+function Logout({ logout }) {
   useEffect(() => {
     logout()
   }, [logout])

@@ -10,7 +10,7 @@ function pluralizeResults(length) {
   return 'results'
 }
 
-const ResultsView = ({
+function ResultsView({
   results,
   queried,
   loading,
@@ -19,7 +19,7 @@ const ResultsView = ({
   savedState,
   profileBaseUrl,
   RoleSpecificProfileResult,
-}) => {
+}) {
   if (results === null) {
     return <p>Loading...</p>
   }
@@ -46,7 +46,7 @@ const ResultsView = ({
       {nextButton} {scrollToTopButton}
     </div>
   )
-  const profileElements = results.profiles.map(result => (
+  const profileElements = results.profiles.map((result) => (
     <ProfileResult
       key={result.id}
       browseState={savedState}

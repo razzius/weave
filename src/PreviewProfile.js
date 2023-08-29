@@ -2,7 +2,7 @@ import React from 'react'
 
 import ProfileView from './ProfileView'
 
-const PreviewProfile = props => {
+function PreviewProfile(props) {
   const {
     data,
     firstTimePublish,

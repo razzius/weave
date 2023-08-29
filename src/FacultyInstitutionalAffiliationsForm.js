@@ -2,9 +2,11 @@ import React from 'react'
 
 import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
-export default props => (
-  <InstitutionalAffiliationsForm
-    {...props}
-    fieldName="Institutional Affiliations"
-  />
-)
+export default function FacultyInstitutionalAffiliationsForm(props) {
+  return (
+    <InstitutionalAffiliationsForm
+      {...props}
+      fieldName="Institutional Affiliations"
+    />
+  )
+}

@@ -6,7 +6,7 @@ export const CADENCE_LABELS = {
   '2-3 conversations/year': '2-3 conversations/year',
 }
 
-const CadenceOption = ({ value, onChange, selectedCadence }) => {
+function CadenceOption({ value, onChange, selectedCadence }) {
   const id = `${value}-cadence`
 
   const label = CADENCE_LABELS[value]

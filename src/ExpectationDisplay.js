@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ExpectationDisplay = ({ name, value }) => {
+function ExpectationDisplay({ name, value }) {
   const id = name.split().join('-')
 
   return (

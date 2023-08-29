@@ -36,6 +36,10 @@ import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
 import { logout, getAccount, setAvailabilityForMentoring } from './api'
 
+function NotFound() {
+  return <p>404 Not found</p>
+}
+
 class App extends Component {
   state = {
     account: null,
@@ -49,7 +53,7 @@ class App extends Component {
     }
   }
 
-  authenticate = ({ account }: { account: Account }) => {
+  authenticate = ({ account }) => {
     this.setState({ account })
   }
 
@@ -67,7 +71,7 @@ class App extends Component {
     }
   }
 
-  setProfileId = profileId => {
+  setProfileId = (profileId) => {
     const { account } = this.state
     const newAccount = { ...account, profileId, availableForMentoring: true }
     this.setState({ account: newAccount })
@@ -76,17 +80,6 @@ class App extends Component {
   logout = () => {
     this.setState({ account: null })
     logout()
-  }
-
-  setAvailableForMentoring = () => {
-    const { account } = this.state
-
-    const updatedAccount = {
-      ...account,
-      availableForMentoring: true,
-    }
-
-    this.setState({ account: updatedAccount })
   }
 
   render() {
@@ -341,7 +334,7 @@ class App extends Component {
                 <StudentProfile account={account} match={match} />
               )}
             />
-            <Route component={() => <p>404 Not found</p>} />
+            <Route component={NotFound} />
           </Switch>
         </div>
       </Router>

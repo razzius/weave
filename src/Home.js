@@ -3,7 +3,7 @@ import React from 'react'
 import { getParam } from './utils'
 import HomeActions from './HomeActions'
 
-const Home = ({ account }) => {
+function Home({ account }) {
   const isMentor = Boolean(account && account.isMentor)
   const profileId = account && account.profileId
 

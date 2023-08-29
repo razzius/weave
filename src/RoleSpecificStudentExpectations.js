@@ -2,44 +2,46 @@ import React, { Fragment } from 'react'
 
 import ExpectationDisplay from './ExpectationDisplay'
 
-const RoleSpecificStudentExpectations = ({
+function RoleSpecificStudentExpectations({
   willingDiscussPersonal,
   willingAdviceClinicalRotations,
   willingDualDegrees,
   willingResearch,
   willingResidency,
   willingStudentGroup,
-}) => (
-  <Fragment>
-    <h4>I am available to help in the following ways:</h4>
+}) {
+  return (
+    <Fragment>
+      <h4>I am available to help in the following ways:</h4>
 
-    <ExpectationDisplay
-      value={willingDiscussPersonal}
-      name="Discuss personal and professional identities / interests"
-    />
+      <ExpectationDisplay
+        value={willingDiscussPersonal}
+        name="Discuss personal and professional identities / interests"
+      />
 
-    <ExpectationDisplay
-      value={willingAdviceClinicalRotations}
-      name="Advice about classes / clinical rotations"
-    />
+      <ExpectationDisplay
+        value={willingAdviceClinicalRotations}
+        name="Advice about classes / clinical rotations"
+      />
 
-    <ExpectationDisplay value={willingResearch} name="Research" />
+      <ExpectationDisplay value={willingResearch} name="Research" />
 
-    <ExpectationDisplay
-      value={willingResidency}
-      name="Specialty selection / residency applications"
-    />
+      <ExpectationDisplay
+        value={willingResidency}
+        name="Specialty selection / residency applications"
+      />
 
-    <ExpectationDisplay
-      value={willingDualDegrees}
-      name="Fifth year / dual degrees"
-    />
+      <ExpectationDisplay
+        value={willingDualDegrees}
+        name="Fifth year / dual degrees"
+      />
 
-    <ExpectationDisplay
-      value={willingStudentGroup}
-      name="Student interest group support"
-    />
-  </Fragment>
-)
+      <ExpectationDisplay
+        value={willingStudentGroup}
+        name="Student interest group support"
+      />
+    </Fragment>
+  )
+}
 
 export default RoleSpecificStudentExpectations

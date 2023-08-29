@@ -120,7 +120,7 @@ export default class ProfileForm extends Component {
     })
   }
 
-  handleCreate = (key: string) => (selected: string) => {
+  handleCreate = (key) => (selected) => {
     const { [key]: current } = this.state
 
     const trimmed = selected.trim()
@@ -134,11 +134,13 @@ export default class ProfileForm extends Component {
     })
   }
 
-  handleChangeField = (key: string) => ({ value }: Object) => {
-    this.setState({ [key]: value })
-  }
+  handleChangeField =
+    (key) =>
+    ({ value }) => {
+      this.setState({ [key]: value })
+    }
 
-  handleChange = key => (selected, meta) => {
+  handleChange = (key) => (selected, meta) => {
     if (selected == null) {
       this.setState({ [key]: [] })
       return
@@ -165,28 +167,27 @@ export default class ProfileForm extends Component {
     this.setState({ [key]: values })
   }
 
-  update = (field: string) => ({ target }) => {
-    this.setState({ [field]: target.value })
-  }
+  update =
+    (field) =>
+    ({ target }) => {
+      this.setState({ [field]: target.value })
+    }
 
-  updateBoolean = field => ({ target }) => {
-    this.setState({ [field]: target.checked })
-  }
+  updateBoolean =
+    (field) =>
+    ({ target }) => {
+      this.setState({ [field]: target.checked })
+    }
 
   submit = async () => {
-    const {
-      saveProfile,
-      profileId,
-      setProfileId,
-      history,
-      profileBaseUrl,
-    } = this.props
+    const { saveProfile, profileId, setProfileId, history, profileBaseUrl } =
+      this.props
     const { cadence } = this.state
 
     await when(
       cadence !== 'other',
       () =>
-        new Promise(resolve => {
+        new Promise((resolve) => {
           this.setState(
             {
               otherCadence: '',
@@ -207,15 +208,15 @@ export default class ProfileForm extends Component {
     })
   }
 
-  handleDrop = acceptedFiles => {
+  handleDrop = (acceptedFiles) => {
     this.setState({ image: acceptedFiles[0], imageEdited: true })
   }
 
-  handleNewImage = e => {
+  handleNewImage = (e) => {
     this.setState({ image: e.target.files[0], imageEdited: true })
   }
 
-  handleScale = e => {
+  handleScale = (e) => {
     const scale = parseFloat(e.target.value)
     this.setState({ scale, imageEdited: true })
   }
@@ -227,8 +228,8 @@ export default class ProfileForm extends Component {
 
     const scaled = scaleCanvas(canvas)
 
-    return new Promise(resolve => {
-      scaled.toBlob(async blob => {
+    return new Promise((resolve) => {
+      scaled.toBlob(async (blob) => {
         const response = await uploadPicture(blob)
 
         this.setState(
@@ -244,7 +245,7 @@ export default class ProfileForm extends Component {
     })
   }
 
-  setEditorRef = editor => {
+  setEditorRef = (editor) => {
     this.editor = editor
   }
 
@@ -565,7 +566,7 @@ export default class ProfileForm extends Component {
                 checked={cadence === 'other'}
                 type="radio"
                 value="other"
-                ref={el => {
+                ref={(el) => {
                   this.otherCadenceInput = el
                 }}
               />

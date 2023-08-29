@@ -1,8 +1,8 @@
 import React from 'react'
 import Avatar from 'react-avatar'
 
-const ProfileAvatar = ({ imageUrl, name, size }) =>
-  imageUrl ? (
+function ProfileAvatar({ imageUrl, name, size }) {
+  return imageUrl ? (
     <img
       alt="Profile"
       className="profile-image column"
@@ -18,5 +18,6 @@ const ProfileAvatar = ({ imageUrl, name, size }) =>
       textSizeRatio={3}
     />
   )
+}
 
 export default ProfileAvatar

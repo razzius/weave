@@ -7,28 +7,30 @@ import RoleSpecificFacultyProfileView from './RoleSpecificFacultyProfileView'
 import RoleSpecificFacultyCheckboxes from './RoleSpecificFacultyCheckboxes'
 import RoleSpecificFacultyExpectations from './RoleSpecificFacultyExpectations'
 
-const EditFacultyProfile = ({
+function EditFacultyProfile({
   account,
   profileId,
   isAdmin,
   setProfileId,
   history,
-}) => (
-  <EditProfile
-    account={account}
-    profileId={profileId}
-    isAdmin={isAdmin}
-    setProfileId={setProfileId}
-    history={history}
-    getProfile={getFacultyProfile}
-    updateProfile={updateFacultyProfile}
-    RoleSpecificFields={RoleSpecificFacultyFields}
-    RoleSpecificProfileView={RoleSpecificFacultyProfileView}
-    RoleSpecificCheckboxes={RoleSpecificFacultyCheckboxes}
-    RoleSpecificExpectations={RoleSpecificFacultyExpectations}
-    profileBaseUrl="profiles"
-    isStudent={false}
-  />
-)
+}) {
+  return (
+    <EditProfile
+      account={account}
+      profileId={profileId}
+      isAdmin={isAdmin}
+      setProfileId={setProfileId}
+      history={history}
+      getProfile={getFacultyProfile}
+      updateProfile={updateFacultyProfile}
+      RoleSpecificFields={RoleSpecificFacultyFields}
+      RoleSpecificProfileView={RoleSpecificFacultyProfileView}
+      RoleSpecificCheckboxes={RoleSpecificFacultyCheckboxes}
+      RoleSpecificExpectations={RoleSpecificFacultyExpectations}
+      profileBaseUrl="profiles"
+      isStudent={false}
+    />
+  )
+}
 
 export default EditFacultyProfile
