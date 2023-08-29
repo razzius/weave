@@ -1,17 +1,11 @@
-// @flow
 import React from 'react'
-import { withRouter, type RouterHistory } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
 import { createStudentProfile } from './api'
 import StudentProfileForm from './StudentProfileForm'
 
-type Props = {
-  setProfileId: (string) => void,
-  history: RouterHistory,
-}
-
-const CreatePeerProfile = ({ setProfileId, history }: Props) => (
+const CreatePeerProfile = ({ setProfileId, history }) => (
   <AppScreen>
     <StudentProfileForm
       firstTimePublish

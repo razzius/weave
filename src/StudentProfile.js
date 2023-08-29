@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 import Profile from './Profile'
 
@@ -7,7 +6,7 @@ import RoleSpecificStudentFields from './RoleSpecificStudentFields'
 import RoleSpecificStudentExpectations from './RoleSpecificStudentExpectations'
 import { getStudentProfile } from './api'
 
-const StudentProfile = ({ account, match }: Object) => (
+const StudentProfile = ({ account, match }) => (
   <Profile
     account={account}
     profileId={match.params.id}

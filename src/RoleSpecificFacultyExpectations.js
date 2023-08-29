@@ -1,4 +1,3 @@
-// @flow
 import React, { Fragment } from 'react'
 
 import ExpectationDisplay from './ExpectationDisplay'
@@ -10,13 +9,6 @@ const RoleSpecificFacultyExpectations = ({
   willingDiscussPersonal,
   willingCareerGuidance,
   willingStudentGroup,
-}: {
-  willingShadowing: boolean,
-  willingNetworking: boolean,
-  willingGoalSetting: boolean,
-  willingDiscussPersonal: boolean,
-  willingCareerGuidance: boolean,
-  willingStudentGroup: boolean,
 }) => (
   <Fragment>
     <h4>I am available to help in the following ways:</h4>

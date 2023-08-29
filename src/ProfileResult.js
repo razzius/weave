@@ -1,22 +1,10 @@
-// @flow
 import React, { Component } from 'react'
 import { withRouter, Link } from 'react-router-dom'
 
 import ProfileAvatar from './ProfileAvatar'
 import ProfileStar from './ProfileStar'
 
-type Props = {
-  result: Object,
-  browseState: Object,
-  profileBaseUrl: string,
-  RoleSpecificProfileResult: Object,
-}
-
-type State = {
-  scrollY: number,
-}
-
-class ProfileResult extends Component<Props, State> {
+class ProfileResult extends Component {
   state = {
     scrollY: 0,
   }

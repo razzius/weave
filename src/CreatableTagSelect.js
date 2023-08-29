@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react'
 import CreatableSelect from 'react-select/creatable'
 
@@ -31,7 +30,7 @@ export default class CreatableTagSelect extends Component {
     this.setState({ menuOpen: false })
   }
 
-  handleKeyDown = (e) => {
+  handleKeyDown = e => {
     if ([',', ';'].includes(e.key)) {
       e.preventDefault()
 
@@ -71,15 +70,20 @@ export default class CreatableTagSelect extends Component {
 
   render() {
     const { inputValue, menuOpen } = this.state
-    const { handleChange, values, options, placeholder, noOptionsMessage } =
-      this.props
+    const {
+      handleChange,
+      values,
+      options,
+      placeholder,
+      noOptionsMessage,
+    } = this.props
     return (
       <CreatableSelect
         styles={{
-          control: (base) => ({ ...base, backgroundColor: 'white' }),
-          multiValue: (styles) => ({ ...styles, backgroundColor: '#edf4fe' }),
+          control: base => ({ ...base, backgroundColor: 'white' }),
+          multiValue: styles => ({ ...styles, backgroundColor: '#edf4fe' }),
         }}
-        value={values.map((value) => ({ label: value, value }))}
+        value={values.map(value => ({ label: value, value }))}
         onInputChange={this.handleInputChange}
         menuIsOpen={menuOpen}
         inputValue={inputValue}

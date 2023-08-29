@@ -1,13 +1,6 @@
-// @flow
 import React from 'react'
 
-export default ({
-  onClick,
-  active,
-}: {
-  onClick?: Function,
-  active: boolean,
-}) => (
+export default ({ onClick, active }) => (
   <input
     type="image"
     alt="Star"

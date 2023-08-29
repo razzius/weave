@@ -1,5 +1,4 @@
-// @flow
-import React, { Component, type Node } from 'react'
+import React, { Component } from 'react'
 
 import { Redirect } from 'react-router'
 import { Link } from 'react-router-dom'
@@ -8,10 +7,7 @@ import AppScreen from './AppScreen'
 import { getParam } from './utils'
 import { verifyToken } from './api'
 
-type Props = Object
-type State = {| error: string | Node | null |}
-
-export default class VerifyEmail extends Component<Props, State> {
+export default class VerifyEmail extends Component {
   state = {
     error: null,
   }

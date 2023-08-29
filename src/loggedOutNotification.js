@@ -1,4 +1,3 @@
-// @flow
 import settings from './settings'
 
 function pluralizeHour() {

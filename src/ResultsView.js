@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 import { Tooltip } from 'react-tooltip'
 import ProfileResult from './ProfileResult'
@@ -11,20 +10,6 @@ function pluralizeResults(length) {
   return 'results'
 }
 
-export type Props = {
-  results: {
-    profile_count: number,
-    profiles: Array<Object>,
-  } | null,
-  queried: boolean,
-  loading: boolean,
-  nextPage: (Event) => void,
-  resetSearch: (Event) => void,
-  savedState: Object,
-  profileBaseUrl: string,
-  RoleSpecificProfileResult: Object,
-}
-
 const ResultsView = ({
   results,
   queried,
@@ -34,7 +19,7 @@ const ResultsView = ({
   savedState,
   profileBaseUrl,
   RoleSpecificProfileResult,
-}: Props) => {
+}) => {
   if (results === null) {
     return <p>Loading...</p>
   }
@@ -61,7 +46,7 @@ const ResultsView = ({
       {nextButton} {scrollToTopButton}
     </div>
   )
-  const profileElements = results.profiles.map((result) => (
+  const profileElements = results.profiles.map(result => (
     <ProfileResult
       key={result.id}
       browseState={savedState}

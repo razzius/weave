@@ -1,15 +1,14 @@
-// @flow
 import loggedOutNotification from './loggedOutNotification'
 import { availableForMentoringFromVerifyTokenResponse } from './utils'
 
 // -_-
-function addQueryString(url, params: Object) {
-  return Object.keys(params).forEach((key) => {
+function addQueryString(url, params) {
+  return Object.keys(params).forEach(key => {
     url.searchParams.append(key, String(params[key]))
   })
 }
 
-function buildURL(path: string, params: ?Object = null) {
+function buildURL(path, params = null) {
   const url = new URL(`/${path}`, window.location.origin)
 
   if (params !== null) {
@@ -48,14 +47,14 @@ async function get(path, params = null) {
   return http(url)
 }
 
-async function post(path: string, payload) {
+async function post(path, payload) {
   return http(buildURL(`api/${path}`), {
     method: 'POST',
     body: JSON.stringify(payload),
   })
 }
 
-async function put(path: string, payload) {
+async function put(path, payload) {
   return http(buildURL(`api/${path}`), {
     method: 'PUT',
     body: JSON.stringify(payload),
@@ -214,7 +213,7 @@ export function profileToPayload(profile) {
   }
 }
 
-export function profileToStudentPayload(profile: Object): Object {
+export function profileToStudentPayload(profile) {
   return {
     name: profile.name,
     contact_email: profile.contactEmail,
@@ -256,7 +255,7 @@ export async function createStudentProfile(profile) {
   return post('student-profile', payload)
 }
 
-export async function updateFacultyProfile( profile, profileId) {
+export async function updateFacultyProfile(profile, profileId) {
   const payload = profileToPayload(profile)
 
   return put(`profiles/${profileId}`, payload)
@@ -288,10 +287,7 @@ export async function sendStudentVerificationEmail({
   })
 }
 
-export async function sendLoginEmail({
-  email,
-  isPersonalDevice,
-}) {
+export async function sendLoginEmail({ email, isPersonalDevice }) {
   return post('login', { email, is_personal_device: isPersonalDevice })
 }
 
@@ -302,8 +298,9 @@ function accountResponseToAccount(response) {
     profileId: response.profile_id,
     email: response.email,
 
-    availableForMentoring:
-      availableForMentoringFromVerifyTokenResponse(response),
+    availableForMentoring: availableForMentoringFromVerifyTokenResponse(
+      response
+    ),
   }
 }
 

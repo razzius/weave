@@ -1,19 +1,11 @@
-// @flow
 import React from 'react'
-
-type Arguments = {
-  program: string,
-  currentYear: string,
-  pceSite: string,
-  affiliations: Array<string>,
-}
 
 const RoleSpecificStudentProfileView = ({
   program,
   currentYear,
   pceSite,
   affiliations,
-}: Arguments) => (
+}) => (
   <div>
     <h4>Program</h4>
     <p>{program}</p>

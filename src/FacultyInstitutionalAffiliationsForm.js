@@ -1,11 +1,8 @@
-// @flow
 import React from 'react'
 
-import InstitutionalAffiliationsForm, {
-  type InstitutionalAffiliationsFormProps,
-} from './InstitutionalAffiliationsForm'
+import InstitutionalAffiliationsForm from './InstitutionalAffiliationsForm'
 
-export default (props: InstitutionalAffiliationsFormProps) => (
+export default props => (
   <InstitutionalAffiliationsForm
     {...props}
     fieldName="Institutional Affiliations"

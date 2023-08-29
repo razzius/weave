@@ -1,11 +1,10 @@
-// @flow
 import React from 'react'
 
-import ResultsView, { type Props } from './ResultsView'
+import ResultsView from './ResultsView'
 
 import StudentProfileResult from './StudentProfileResult'
 
-const StudentResultsView = (props: Props) => (
+const StudentResultsView = props => (
   <ResultsView {...props} RoleSpecificProfileResult={StudentProfileResult} />
 )
 

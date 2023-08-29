@@ -1,19 +1,8 @@
-// @flow
 import React from 'react'
 
 import ProfileView from './ProfileView'
 
-type Props = {
-  data: Object,
-  RoleSpecificProfileView: Object,
-  firstTimePublish: boolean,
-  onEdit: (any) => void,
-  onPublish: (any) => any,
-  RoleSpecificProfileView: Object,
-  RoleSpecificExpectations: Object,
-}
-
-const PreviewProfile = (props: Props) => {
+const PreviewProfile = props => {
   const {
     data,
     firstTimePublish,

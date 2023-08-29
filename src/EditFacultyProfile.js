@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 
 import EditProfile from './EditProfile'
@@ -14,7 +13,7 @@ const EditFacultyProfile = ({
   isAdmin,
   setProfileId,
   history,
-}: Object) => (
+}) => (
   <EditProfile
     account={account}
     profileId={profileId}

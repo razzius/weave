@@ -1,10 +1,9 @@
-// @flow
 import React from 'react'
 
 import CheckboxIndicator from './CheckboxIndicator'
 import { capitalize } from './utils'
 
-const FacultyProfileResult = ({ result }: { result: Object }) => {
+const FacultyProfileResult = ({ result }) => {
   const formattedAffiliations = (
     <p>
       {result.affiliations.map((affiliation, index) => (
@@ -38,7 +37,7 @@ const FacultyProfileResult = ({ result }: { result: Object }) => {
         </h2>
         {formattedAffiliations}
         <p className="clinical-interests">
-          {result.clinicalSpecialties.map((interest) => (
+          {result.clinicalSpecialties.map(interest => (
             <span key={interest} className="clinical interest">
               {' '}
               {interest}{' '}
@@ -46,7 +45,7 @@ const FacultyProfileResult = ({ result }: { result: Object }) => {
           ))}
         </p>
         <p>
-          {result.professionalInterests.map((interest) => (
+          {result.professionalInterests.map(interest => (
             <span key={interest} className="professional interest">
               {' '}
               {interest}{' '}

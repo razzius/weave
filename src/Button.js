@@ -1,10 +1,7 @@
-// @flow
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-type Props = any
-
-const Button = ({ to, onClick, children, style, disabled }: Props) => {
+const Button = ({ to, onClick, children, style, disabled }) => {
   if (to) {
     return (
       <Link className="button" to={to}>

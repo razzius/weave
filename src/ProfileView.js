@@ -1,7 +1,6 @@
-// @flow
-import React, { Fragment, useState, type Node } from 'react'
+import React, { Fragment, useState } from 'react'
 import MediaQuery from 'react-responsive'
-import { withRouter, type RouterHistory } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { Tooltip } from 'react-tooltip'
 
 import { starProfile, unstarProfile } from './api'
@@ -18,14 +17,6 @@ const Buttons = ({
   adminButton,
   browseUrl,
   editUrl,
-}: {
-  ownProfile: boolean,
-  firstTimePublish: boolean,
-  editing: boolean,
-  location: Object,
-  adminButton: Node | null,
-  browseUrl?: string,
-  editUrl?: string,
 }) => (
   <Fragment>
     {ownProfile && editUrl && <Button to={editUrl}>Edit Profile</Button>}
@@ -43,45 +34,7 @@ const Buttons = ({
   </Fragment>
 )
 
-export type BaseProfileData = {|
-  id?: ?string,
-  isFaculty?: boolean,
-
-  name: string,
-  contactEmail: string,
-  imageUrl: ?string,
-
-  affiliations: Array<string>,
-  clinicalSpecialties: Array<string>,
-  professionalInterests: Array<string>,
-  partsOfMe: Array<string>,
-  activities: Array<string>,
-  degrees: Array<string>,
-
-  additionalInformation: string,
-
-  willingStudentGroup: boolean,
-  willingDiscussPersonal: boolean,
-
-  willingShadowing?: boolean,
-  willingNetworking?: boolean,
-  willingGoalSetting?: boolean,
-  willingCareerGuidance?: boolean,
-
-  willingDualDegrees?: boolean,
-  willingAdviceClinicalRotations?: boolean,
-  willingResearch?: boolean,
-  willingResidency?: boolean,
-
-  program?: ?string,
-  pceSite?: ?string,
-  currentYear?: ?string,
-
-  cadence: string,
-  otherCadence: ?string,
-|}
-
-function displayCadence(cadence: string, otherCadence: ?string) {
+function displayCadence(cadence, otherCadence) {
   if (cadence === 'other') {
     return otherCadence
   }
@@ -89,23 +42,17 @@ function displayCadence(cadence: string, otherCadence: ?string) {
   return CADENCE_LABELS[cadence]
 }
 
-const Cadence = ({
-  cadence,
-  otherCadence,
-}: {
-  cadence: string,
-  otherCadence: ?string,
-}) => (
+const Cadence = ({ cadence, otherCadence }) => (
   <div style={{ marginTop: '1.2em' }}>
     <h4>Meeting Cadence</h4>
     {displayCadence(cadence, otherCadence)}
   </div>
 )
 
-const ClinicalInterests = ({ interests }: { interests: string }) => (
+const ClinicalInterests = ({ interests }) => (
   <div>
     <h4>Clinical Interests</h4>
-    <p style={{ paddingBottom: '1em' }}>{interests}</p>
+    <p style={{ paddingBottom: '1em' }}>{interests.join(', ')}</p>
   </div>
 )
 
@@ -121,7 +68,7 @@ const AboutInfo = ({
   pceSite,
   currentYear,
   RoleSpecificProfileView,
-}: Object) => (
+}) => (
   <Fragment>
     <RoleSpecificProfileView
       degrees={degrees}
@@ -131,7 +78,7 @@ const AboutInfo = ({
       affiliations={affiliations}
     />
     {clinicalSpecialties.length > 0 && (
-      <ClinicalInterests interests={clinicalSpecialties.join(', ')} />
+      <ClinicalInterests interests={clinicalSpecialties} />
     )}
     {professionalInterests.length > 0 && (
       <div>
@@ -162,7 +109,7 @@ const AboutInfo = ({
   </Fragment>
 )
 
-const ContactInformation = ({ contactEmail }: { contactEmail: string }) => {
+const ContactInformation = ({ contactEmail }) => {
   const [username, domain] = contactEmail.split('@')
   return (
     <Fragment>
@@ -192,22 +139,6 @@ const ProfileView = ({
   editUrl,
   adminEditBaseUrl,
   RoleSpecificExpectations,
-}: {
-  data: Object,
-  ownProfile?: boolean,
-  firstTimePublish?: boolean,
-  editing?: boolean,
-  isAdmin?: boolean,
-  location: Object,
-  profileId?: ?string,
-  dateUpdated?: Date,
-  starred?: ?boolean,
-  history: RouterHistory,
-  RoleSpecificProfileView: Object,
-  browseUrl?: string,
-  editUrl?: string,
-  adminEditBaseUrl?: string,
-  RoleSpecificExpectations: Object,
 }) => {
   const [starredState, setStarred] = useState(Boolean(starred))
 

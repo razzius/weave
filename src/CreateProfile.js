@@ -1,18 +1,11 @@
-// @flow
 import React from 'react'
-import { withRouter, type RouterHistory } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 
 import AppScreen from './AppScreen'
-import { createProfile, type Account } from './api'
+import { createProfile } from './api'
 import FacultyProfileForm from './FacultyProfileForm'
 
-type Props = {
-  setProfileId: (string) => void,
-  account: Account | null,
-  history: RouterHistory,
-}
-
-const CreateProfile = ({ setProfileId, account, history }: Props) => {
+const CreateProfile = ({ setProfileId, account, history }) => {
   if (account === null) {
     return 'You are not logged in. Click "Login" above to log in.'
   }

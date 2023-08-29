@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 import { Link } from 'react-router-dom'
 
@@ -15,7 +14,7 @@ function getLinkUrl(account) {
   return 'create-peer-profile'
 }
 
-const OwnProfileLink = ({ account }: Object) => {
+const OwnProfileLink = ({ account }) => {
   const linkText = account.profileId ? 'My Profile' : 'Create Profile'
   const linkUrl = getLinkUrl(account)
   return (

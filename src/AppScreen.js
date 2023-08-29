@@ -1,10 +1,5 @@
-// @flow
-import React, { type Node } from 'react'
+import React from 'react'
 
-export default ({
-  children,
-  className = '',
-}: {
-  children: Node,
-  className?: string,
-}) => <div className={`App-body ${className}`}>{children}</div>
+export default ({ children, className = '' }) => (
+  <div className={`App-body ${className}`}>{children}</div>
+)

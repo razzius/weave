@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 import Select from 'react-select'
 
@@ -9,7 +8,7 @@ const RoleSpecificStudentFields = ({
   options,
   handleChange,
   handleChangeField,
-}: Object) => (
+}) => (
   <div>
     <p>Program</p>
     <Select

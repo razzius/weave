@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 
 import ExpectationCheckbox from './ExpectationCheckbox'
@@ -11,14 +10,6 @@ const RoleSpecificStudentCheckboxes = ({
   willingResidency,
   willingStudentGroup,
   updateBoolean,
-}: {
-  willingDiscussPersonal: boolean,
-  willingAdviceClinicalRotations: boolean,
-  willingDualDegrees: boolean,
-  willingResearch: boolean,
-  willingResidency: boolean,
-  willingStudentGroup: boolean,
-  updateBoolean: Function,
 }) => (
   <>
     <ExpectationCheckbox

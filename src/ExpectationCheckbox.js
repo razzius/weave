@@ -1,17 +1,6 @@
-// @flow
-import React, { type Node } from 'react'
+import React from 'react'
 
-const ExpectationCheckbox = ({
-  id,
-  value,
-  onChange,
-  children,
-}: {
-  id: string,
-  value: boolean,
-  onChange: Function,
-  children: Node,
-}) => (
+const ExpectationCheckbox = ({ id, value, onChange, children }) => (
   <div className="expectation">
     <label htmlFor={id}>
       <input id={id} type="checkbox" checked={value} onChange={onChange} />

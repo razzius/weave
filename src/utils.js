@@ -1,25 +1,20 @@
-// @flow
-import React, { type Node } from 'react'
+import React from 'react'
 import Promise from 'promise-polyfill'
 
-export function capitalize(text: string) {
+export function capitalize(text) {
   return text[0].toUpperCase() + text.slice(1)
 }
 
-export function getParam(param: string): string | null {
+export function getParam(param) {
   const url = new URL(window.location.href)
   return url.searchParams.get(param)
 }
 
-export function when(condition: boolean, promiseCallable: () => Promise) {
+export function when(condition, promiseCallable) {
   if (condition) {
     return promiseCallable()
   }
   return Promise.resolve(true)
-}
-
-export function any(values: Array<mixed>): boolean {
-  return values.reduce((acc, value) => Boolean(acc || value), false)
 }
 
 export function caseInsensitiveFind(
@@ -27,7 +22,7 @@ export function caseInsensitiveFind(
   values: Array<string>
 ): ?string {
   const lowercaseSearch = search.toLowerCase()
-  return values.find((value) => value.toLowerCase() === lowercaseSearch)
+  return values.find(value => value.toLowerCase() === lowercaseSearch)
 }
 
 export function availableForMentoringFromVerifyTokenResponse(
@@ -36,33 +31,24 @@ export function availableForMentoringFromVerifyTokenResponse(
   return response.profile_id !== null && response.available_for_mentoring
 }
 
-export const ExternalLink = ({
-  href,
-  children,
-}: {
-  href: string,
-  children: Node,
-}) => (
+export const ExternalLink = ({ href, children }) => (
   <a href={href} target="_blank" rel="noopener noreferrer">
     {children}
   </a>
 )
 
-export function LiteralLink({ href }: { href: string }) {
+export function LiteralLink({ href }) {
   return <ExternalLink href={href}>{href}</ExternalLink>
 }
 
-export function last<T>(values: Array<T>): ?T {
+export function last(values) {
   return values[values.length - 1]
 }
 
-export function partition<T>(
-  predicate: Function,
-  values: Array<T>
-): Array<Array<T>> {
+export function partition(predicate, values) {
   const satisfies = []
   const fails = []
-  values.forEach((value) => {
+  values.forEach(value => {
     if (predicate(value)) {
       satisfies.push(value)
     } else {
@@ -73,9 +59,6 @@ export function partition<T>(
   return [satisfies, fails]
 }
 
-export function arrayCaseInsensitiveContains(
-  array: Array<string>,
-  value: string
-) {
-  return array.map((item) => item.toLowerCase()).includes(value.toLowerCase())
+export function arrayCaseInsensitiveContains(array, value) {
+  return array.map(item => item.toLowerCase()).includes(value.toLowerCase())
 }

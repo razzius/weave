@@ -1,10 +1,9 @@
-// @flow
 import React, { useEffect } from 'react'
 import Button from './Button'
 
 import AppScreen from './AppScreen'
 
-const Logout = ({ logout }: { logout: Function }) => {
+const Logout = ({ logout }) => {
   useEffect(() => {
     logout()
   }, [logout])

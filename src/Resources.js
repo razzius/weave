@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 import AppScreen from './AppScreen'
 import { ExternalLink, LiteralLink } from './utils'

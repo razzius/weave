@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 
 import { HashLink as Link } from 'react-router-hash-link'
@@ -16,11 +15,7 @@ function getFacultyText(account, profileId) {
   return 'View my profile'
 }
 
-const FacultyLanding = ({
-  account,
-  profileId,
-  isMentor,
-}) => (
+const FacultyLanding = ({ account, profileId, isMentor }) => (
   <div>
     <h1>Faculty</h1>
     <Button to={getFacultyLink(profileId)}>
@@ -39,11 +34,7 @@ const FacultyLanding = ({
   </div>
 )
 
-export default ({
-  account,
-  isMentor,
-  profileId,
-}) => {
+export default ({ account, isMentor, profileId }) => {
   if (account === null) {
     return (
       <div>

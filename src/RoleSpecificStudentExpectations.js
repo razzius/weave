@@ -1,4 +1,3 @@
-// @flow
 import React, { Fragment } from 'react'
 
 import ExpectationDisplay from './ExpectationDisplay'

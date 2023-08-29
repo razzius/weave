@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react'
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 
@@ -35,21 +34,9 @@ import StudentExpectations from './StudentExpectations'
 import RegisterFacultyEmail from './RegisterFacultyEmail'
 import RegisterStudentEmail from './RegisterStudentEmail'
 import VerifyEmail from './VerifyEmail'
-import {
-  logout,
-  getAccount,
-  setAvailabilityForMentoring,
-  type Account,
-} from './api'
+import { logout, getAccount, setAvailabilityForMentoring } from './api'
 
-type Props = empty
-type State = {|
-  account: Account | null,
-  loading: boolean,
-  error: boolean,
-|}
-
-class App extends Component<Props, State> {
+class App extends Component {
   state = {
     account: null,
     loading: true,
@@ -80,7 +67,7 @@ class App extends Component<Props, State> {
     }
   }
 
-  setProfileId = (profileId: string) => {
+  setProfileId = profileId => {
     const { account } = this.state
     const newAccount = { ...account, profileId, availableForMentoring: true }
     this.setState({ account: newAccount })

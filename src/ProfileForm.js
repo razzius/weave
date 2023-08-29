@@ -1,4 +1,3 @@
-// @flow
 import React, { Component } from 'react'
 import { Link, Prompt } from 'react-router-dom'
 import AvatarEditor from 'react-avatar-editor'
@@ -24,7 +23,7 @@ function scaleCanvas(canvas) {
   return scaled
 }
 
-function displayError({ name, email }: { name: string, email: string }) {
+function displayError({ name, email }) {
   let missing
   if (name === '' && email === '') {
     missing = 'name and email'
@@ -135,13 +134,11 @@ export default class ProfileForm extends Component {
     })
   }
 
-  handleChangeField =
-    (key: string) =>
-    ({ value }: Object) => {
-      this.setState({ [key]: value })
-    }
+  handleChangeField = (key: string) => ({ value }: Object) => {
+    this.setState({ [key]: value })
+  }
 
-  handleChange = (key) => (selected, meta) => {
+  handleChange = key => (selected, meta) => {
     if (selected == null) {
       this.setState({ [key]: [] })
       return
@@ -150,7 +147,7 @@ export default class ProfileForm extends Component {
     const values = selected.map(({ value }) => value)
 
     if (meta.action === 'create-option') {
-      const newValue = ((last(values): any): string).trim()
+      const newValue = last(values).trim()
       const otherValues = values.slice(0, -1)
 
       if (
@@ -168,27 +165,28 @@ export default class ProfileForm extends Component {
     this.setState({ [key]: values })
   }
 
-  update =
-    (field: string) =>
-    ({ target }: { target: HTMLInputElement }) => {
-      this.setState({ [field]: target.value })
-    }
+  update = (field: string) => ({ target }) => {
+    this.setState({ [field]: target.value })
+  }
 
-  updateBoolean =
-    (field: string) =>
-    ({ target }) => {
-      this.setState({ [field]: target.checked })
-    }
+  updateBoolean = field => ({ target }) => {
+    this.setState({ [field]: target.checked })
+  }
 
   submit = async () => {
-    const { saveProfile, profileId, setProfileId, history, profileBaseUrl } =
-      this.props
+    const {
+      saveProfile,
+      profileId,
+      setProfileId,
+      history,
+      profileBaseUrl,
+    } = this.props
     const { cadence } = this.state
 
     await when(
       cadence !== 'other',
       () =>
-        new Promise((resolve) => {
+        new Promise(resolve => {
           this.setState(
             {
               otherCadence: '',
@@ -209,15 +207,15 @@ export default class ProfileForm extends Component {
     })
   }
 
-  handleDrop = (acceptedFiles: any) => {
+  handleDrop = acceptedFiles => {
     this.setState({ image: acceptedFiles[0], imageEdited: true })
   }
 
-  handleNewImage = (e) => {
+  handleNewImage = e => {
     this.setState({ image: e.target.files[0], imageEdited: true })
   }
 
-  handleScale = (e) => {
+  handleScale = e => {
     const scale = parseFloat(e.target.value)
     this.setState({ scale, imageEdited: true })
   }
@@ -229,26 +227,24 @@ export default class ProfileForm extends Component {
 
     const scaled = scaleCanvas(canvas)
 
-    return new Promise((resolve) => {
-      scaled.toBlob(
-        (async (blob) => {
-          const response = await uploadPicture(blob)
+    return new Promise(resolve => {
+      scaled.toBlob(async blob => {
+        const response = await uploadPicture(blob)
 
-          this.setState(
-            {
-              imageUrl: response.image_url,
-              imageSuccess: true,
-              uploadingImage: false,
-              imageEdited: false,
-            },
-            () => resolve(response)
-          )
-        })
-      ) // The callback returns a Promise but toBlob expects it to return undefined
+        this.setState(
+          {
+            imageUrl: response.image_url,
+            imageSuccess: true,
+            uploadingImage: false,
+            imageEdited: false,
+          },
+          () => resolve(response)
+        )
+      }) // The callback returns a Promise but toBlob expects it to return undefined
     })
   }
 
-  setEditorRef = (editor) => {
+  setEditorRef = editor => {
     this.editor = editor
   }
 
@@ -569,7 +565,7 @@ export default class ProfileForm extends Component {
                 checked={cadence === 'other'}
                 type="radio"
                 value="other"
-                ref={(el) => {
+                ref={el => {
                   this.otherCadenceInput = el
                 }}
               />

@@ -1,14 +1,7 @@
-// @flow
 import React from 'react'
 import Avatar from 'react-avatar'
 
-type Props = {
-  imageUrl: ?string,
-  name: string,
-  size: number,
-}
-
-const ProfileAvatar = ({ imageUrl, name, size }: Props) =>
+const ProfileAvatar = ({ imageUrl, name, size }) =>
   imageUrl ? (
     <img
       alt="Profile"

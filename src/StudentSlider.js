@@ -28,7 +28,7 @@ export default class StudentExpectationsSlider extends React.Component {
     return (
       <div>
         <Slider
-          ref={(c) => {
+          ref={c => {
             this.slider = c
           }}
           dots

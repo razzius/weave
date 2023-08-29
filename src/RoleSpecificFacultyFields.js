@@ -1,4 +1,3 @@
-// @flow
 import React from 'react'
 
 import CreatableTagSelect from './CreatableTagSelect'
@@ -10,7 +9,7 @@ const RoleSpecificFacultyFields = ({
   options,
   handleChange,
   handleCreate,
-}: Object) => (
+}) => (
   <div>
     <p>Academic Degrees</p>
     <CreatableTagSelect

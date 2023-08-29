@@ -1,13 +1,6 @@
-// @flow
 import React from 'react'
 
-const ExpectationDisplay = ({
-  name,
-  value,
-}: {
-  name: string,
-  value: boolean,
-}) => {
+const ExpectationDisplay = ({ name, value }) => {
   const id = name.split().join('-')
 
   return (
