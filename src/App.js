@@ -37,7 +37,10 @@ import VerifyEmail from './VerifyEmail'
 import { logout, getAccount, setAvailabilityForMentoring } from './api'
 
 function NotFound() {
-  return <p>404 Not found</p>
+  return <div>
+    <h1>404</h1>
+    <p>404 Not found</p>
+  </div>
 }
 
 class App extends Component {
@@ -101,18 +104,13 @@ class App extends Component {
 
     const loginAction = loggedOut ? loginButton : logoutButton
 
+    const logoImage = new URL('./assets/duke-health-logo.png', import.meta.url)
+
     return (
       <Router>
         <div className="App">
           <header className="App-header">
             <div className="header-inner">
-              <Link to="/" className="App-title left App-logo">
-                <img
-                  src="/assets/duke_health_logo.png"
-                  alt="Duke Health logo"
-                />
-              </Link>
-
               {account && (
                 <div
                   data-tip
@@ -144,25 +142,35 @@ class App extends Component {
               )}
 
               <nav>
-                <Link to="/about" className="App-title">
-                  About Weave
-                </Link>
+                <div className="nav-left">
+                  <Link to="/" className="App-title left App-logo">
+                    <img
+                      src={logoImage}
+                      alt="Duke Health logo"
+                    />
+                  </Link>
 
-                <Link to="/expectations" className="App-title">
-                  Expectations
-                </Link>
+                  <Link to="/about" className="App-title">
+                    About Weave
+                  </Link>
 
-                <Link to="/resources" className="App-title">
-                  Resources
-                </Link>
+                  <Link to="/expectations" className="App-title">
+                    Expectations
+                  </Link>
 
-                <Link to="/help" className="App-title">
-                  Help
-                </Link>
+                  <Link to="/resources" className="App-title">
+                    Resources
+                  </Link>
 
-                {account && <OwnProfileLink account={account} />}
+                  <Link to="/help" className="App-title">
+                    Help
+                  </Link>
 
-                {loginAction}
+                  {account && <OwnProfileLink account={account} />}
+                </div>
+                <div className="nav-right">
+                  {loginAction}
+                </div>
               </nav>
             </div>
           </header>

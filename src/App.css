@@ -61,11 +61,6 @@ section {
   cursor: default;
 }
 
-.header-inner {
-  margin: 0 auto;
-  height: 100px;
-}
-
 .App {
   height: 100%;
   width: 100%;
@@ -89,40 +84,23 @@ section {
   width: 100%;
 }
 
-.App-title img {
-  min-width: 60px;
-  height: 100px;
-  vertical-align: middle;
-}
-
 .App-title {
   color: white;
   text-decoration: none;
-  padding: 10px;
   margin-left: 20px;
+  margin-right: 20px;
 }
-.App-logo {
+.App-logo img {
+  padding: 10px;
   background: white;
-  position: relative;
-  height: 120px;
-  display: inline-block;
-  /* border-bottom: 2px solid black; */
+  height: 100px;
 }
 .App-title:hover {
-  color: lightgray;
+  color: #eee;
 }
-
-.App-title.auth-button {
-  float: right;
-  padding-right: 2em;
-  padding-top: 2em;
-}
-
-.App-title h1 {
-  font-size: 1.5em;
-  padding: 1em;
-  margin: 0px;
-  display: inline-block;
+nav a {
+  height: 100px;
+  line-height: 100px;
 }
 
 .profile-image {
@@ -393,6 +371,17 @@ nav {
   nav {
     display: inline;
   }
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+}
+
+.nav-left, .nav-right {
+  display: flex;
+  align-items: center;
+  height: 100%;
 }
 
 input[disabled] {
