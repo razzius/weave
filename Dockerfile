@@ -47,8 +47,8 @@ COPY app.py /app/
 ## Install frontend system dependencies
 
 RUN asdf plugin add nodejs
-RUN asdf install nodejs 16.20.2
-RUN asdf global nodejs 16.20.2
+RUN asdf install nodejs 20.5.1
+RUN asdf global nodejs 20.5.1
 
 RUN asdf plugin add yarn
 RUN asdf install yarn 1.22.19
@@ -56,7 +56,7 @@ RUN asdf global yarn 1.22.19
 
 ## Install frontend dependencies
 
-COPY package.json yarn.lock /app/
+COPY index.html package.json yarn.lock /app/
 RUN yarn install --frozen-lockfile
 
 COPY src /app/src
@@ -66,14 +66,12 @@ COPY public /app/public
 
 RUN yarn build
 
-ENV FLASK_ENV 'development'
 ENV REACT_APP_SERVER_URL 'http://localhost:5000'
 
+# ENV FLASK_ENV 'development'
 # ENV LANG 'C.UTF-8'
 # ENV LC_ALL C.UTF-8
 # ENV CLOUDINARY_URL ''
-
-WORKDIR /app
 
 EXPOSE 5000
 
