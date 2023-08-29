@@ -1,10 +1,6 @@
-// TODO use core-js ponyfill style instead
-import 'core-js/es/map'
-import 'core-js/es/set'
-import 'weakmap-polyfill'
-import 'polyfill-array-includes'
 import React from 'react'
 import { createRoot } from 'react-dom/client'
+import 'polyfill-array-includes'
 import 'url-polyfill'
 import { init } from '@sentry/browser'
 

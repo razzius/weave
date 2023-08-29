@@ -14,9 +14,6 @@
   "dependencies": {
     "@sentry/browser": "^7.64.0",
     "blueimp-canvas-to-blob": "^3.29.0",
-    "core-js": "^3.32.1",
-    "date-fns": "^2.30.0",
-    "nth-check": "^2.1.1",
     "polyfill-array-includes": "^2.0.0",
     "promise-polyfill": "^8.3.0",
     "react": "^18.2.0",
@@ -34,15 +31,12 @@
     "react-slick": "^0.29.0",
     "react-toggle-switch": "^3.0.4",
     "react-tooltip": "^5.21.1",
-    "react-waypoint": "^10.3.0",
     "slick-carousel": "^1.8.1",
-    "url-polyfill": "^1.1.12",
-    "weakmap-polyfill": "^2.0.4"
+    "url-polyfill": "^1.1.12"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.22.11",
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "babel-eslint": "^10.1.0",
     "eslint": "^8.48.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-config-prettier": "^9.0.0",
@@ -56,18 +50,8 @@
     "singleQuote": true,
     "semi": false
   },
-  "browserslist": {
-    "production": [
-      "ie >= 8",
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
+  "browserslist": [
+    "defaults"
+  ],
   "proxy": "http://localhost:5000"
 }
