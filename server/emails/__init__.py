@@ -12,7 +12,7 @@ from .sparkpost_email_backend import SparkPostEmailBackend
 log = get_logger()
 
 
-SERVER_URL = os.environ.get("REACT_APP_SERVER_URL", "http://localhost:5000")
+SERVER_URL = os.environ.get("WEAVE_SERVER_URL", "http://localhost:5000")
 CLIENT_URL = os.environ.get("WEAVE_CLIENT_URL", SERVER_URL)
 
 SPARKPOST_API_KEY = os.environ.get("SPARKPOST_API_KEY")

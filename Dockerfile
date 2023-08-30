@@ -66,7 +66,7 @@ COPY public /app/public
 
 RUN yarn build
 
-ENV REACT_APP_SERVER_URL 'http://localhost:5000'
+ENV WEAVE_SERVER_URL 'http://localhost:5000'
 
 # ENV FLASK_ENV 'development'
 # ENV LANG 'C.UTF-8'

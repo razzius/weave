@@ -293,7 +293,7 @@ class Browse extends Component {
             }}
             DegreeSelect={DegreeSelect}
           />
-          <div style={{ padding: '1em 0' }}>
+          <div style={{ padding: '0 2em' }}>
             {error || (
               <RoleSpecificResultsView
                 queried={queried}

@@ -87,8 +87,8 @@ section {
 .App-title {
   color: white;
   text-decoration: none;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 .App-logo img {
   padding: 10px;
@@ -97,10 +97,6 @@ section {
 }
 .App-title:hover {
   color: #eee;
-}
-nav a {
-  height: 100px;
-  line-height: 100px;
 }
 
 .profile-image {
@@ -159,7 +155,7 @@ input[type='email'].fullWidth {
 }
 
 .profile-result {
-  margin-bottom: 1em;
+  margin: auto;
 }
 
 .interest {
@@ -236,11 +232,10 @@ input[disabled]:checked {
 }
 
 .available-for-mentoring {
-  /* float: right; */
   color: white;
   text-align: center;
-  margin-bottom: 25px;
-  display: block;
+  margin: 25px;
+  display: inline-block;
 }
 
 .switch.on {
@@ -305,12 +300,6 @@ input::-webkit-contacts-auto-fill-button {
 }
 
 @media screen and (min-width: 625px) {
-  .available-for-mentoring {
-    margin-top: 25px;
-    margin-right: 25px;
-    float: right;
-  }
-
   .profile-result,
   .profile-result-link {
     display: flex;
@@ -367,21 +356,31 @@ input::-webkit-contacts-auto-fill-button {
 nav {
   line-height: 3em;
 }
-@media screen and (min-width: 920px) {
+
+nav {
+  display: inline;
+}
+
+@media screen and (min-width: 950px) {
   nav {
-    display: inline;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  nav a {
+    height: 100px;
+    line-height: 100px;
+    display: inline-block;
+  }
+
+  .nav-left {
+    display: flex;
   }
 }
 
-nav {
+.nav-right {
   display: flex;
   justify-content: space-between;
-}
-
-.nav-left, .nav-right {
-  display: flex;
-  align-items: center;
-  height: 100%;
 }
 
 input[disabled] {

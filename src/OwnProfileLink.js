@@ -15,7 +15,11 @@ function getLinkUrl(account) {
 }
 
 function OwnProfileLink({ account }) {
-  const linkText = account.profileId ? 'My Profile' : 'Create Profile'
+  const linkText = account.profileId ? (
+    <>My&nbsp;Profile</>
+  ) : (
+    <>Create&nbsp;Profile</>
+  )
   const linkUrl = getLinkUrl(account)
   return (
     <Link to={linkUrl} className="App-title">

@@ -37,10 +37,12 @@ import VerifyEmail from './VerifyEmail'
 import { logout, getAccount, setAvailabilityForMentoring } from './api'
 
 function NotFound() {
-  return <div>
-    <h1>404</h1>
-    <p>404 Not found</p>
-  </div>
+  return (
+    <div>
+      <h1>404</h1>
+      <p>404 Not found</p>
+    </div>
+  )
 }
 
 class App extends Component {
@@ -106,52 +108,48 @@ class App extends Component {
 
     const logoImage = new URL('./assets/duke-health-logo.png', import.meta.url)
 
+    const availableForMentoringToggle = account && (
+      <div
+        data-tip
+        className="available-for-mentoring"
+        data-for="toggleTooltip"
+      >
+        Available&nbsp;for&nbsp;mentoring:
+        <Tooltip id="toggleTooltip" place="bottom">
+          Controls whether your profile will be visible to mentees.
+          {account.profileId === null && ' You have not yet created a profile.'}
+        </Tooltip>
+        <Toggle
+          enabled={Boolean(account.profileId)}
+          on={account.availableForMentoring}
+          onClick={() => {
+            const newAvailable = !account.availableForMentoring
+            const newAccount = {
+              ...account,
+              availableForMentoring: newAvailable,
+            }
+            this.setState({ account: newAccount })
+            if (account.profileId !== null) {
+              setAvailabilityForMentoring(newAvailable)
+            }
+          }}
+        />
+      </div>
+    )
+
     return (
       <Router>
         <div className="App">
           <header className="App-header">
             <div className="header-inner">
-              {account && (
-                <div
-                  data-tip
-                  className="available-for-mentoring"
-                  data-for="toggleTooltip"
-                >
-                  Available for mentoring:
-                  <Tooltip id="toggleTooltip" place="bottom">
-                    Controls whether your profile will be visible to mentees.
-                    {account.profileId === null &&
-                      ' You have not yet created a profile.'}
-                  </Tooltip>
-                  <Toggle
-                    enabled={Boolean(account.profileId)}
-                    on={account.availableForMentoring}
-                    onClick={() => {
-                      const newAvailable = !account.availableForMentoring
-                      const newAccount = {
-                        ...account,
-                        availableForMentoring: newAvailable,
-                      }
-                      this.setState({ account: newAccount })
-                      if (account.profileId !== null) {
-                        setAvailabilityForMentoring(newAvailable)
-                      }
-                    }}
-                  />
-                </div>
-              )}
-
               <nav>
                 <div className="nav-left">
                   <Link to="/" className="App-title left App-logo">
-                    <img
-                      src={logoImage}
-                      alt="Duke Health logo"
-                    />
+                    <img src={logoImage} alt="Duke Health logo" />
                   </Link>
 
                   <Link to="/about" className="App-title">
-                    About Weave
+                    About&nbsp;Weave
                   </Link>
 
                   <Link to="/expectations" className="App-title">
@@ -169,6 +167,7 @@ class App extends Component {
                   {account && <OwnProfileLink account={account} />}
                 </div>
                 <div className="nav-right">
+                  {availableForMentoringToggle}
                   {loginAction}
                 </div>
               </nav>

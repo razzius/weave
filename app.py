@@ -31,7 +31,7 @@ def create_app():
     sentry_sdk.init(dsn=sentry_dsn, integrations=[FlaskIntegration()])
 
     app = NoCacheIndexFlask(
-        "server", static_url_path="/static", static_folder="../build/static"
+        "server", static_url_path="/static", static_folder="../dist/static"
     )
 
     app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
@@ -50,6 +50,12 @@ def create_app():
 
     if secret_key is None:
         log.warning('Sessions will not work because SECRET_KEY is not set')
+
+    cloudinary_url = os.environ.get("CLOUDINARY_URL")
+    app.config["CLOUDINARY_URL"] = cloudinary_url
+
+    if cloudinary_url is None:
+        log.warning('Image uploading will not work because CLOUDINARY_URL is not set')
 
     app.config["VALID_DOMAINS"] = json.load(open("src/valid_domains.json"))
 

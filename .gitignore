@@ -27,3 +27,5 @@ yarn-error.log*
 __pycache__/
 
 .parcel-cache
+
+/dist/

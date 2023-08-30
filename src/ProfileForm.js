@@ -368,20 +368,24 @@ export default class ProfileForm extends Component {
           <div className="column contact">
             <Dropzone
               onDrop={this.handleDrop}
-              disableClick
+              noClick
               multiple={false}
               style={{ width: '200px', height: '200px', marginBottom: '55px' }}
             >
-              <AvatarEditor
-                ref={this.setEditorRef}
-                borderRadius={100}
-                image={image || imageUrl}
-                crossOrigin="anonymous"
-                scale={parseFloat(scale)}
-                width={180}
-                height={180}
-                rotate={rotate}
-              />
+              {() => (
+                <section>
+                  <AvatarEditor
+                    ref={this.setEditorRef}
+                    borderRadius={100}
+                    image={image || imageUrl}
+                    crossOrigin="anonymous"
+                    scale={parseFloat(scale)}
+                    width={180}
+                    height={180}
+                    rotate={rotate}
+                  />
+                </section>
+              )}
             </Dropzone>
             <div>
               <input
