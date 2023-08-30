@@ -79,8 +79,10 @@ Both are configured to automatically reload.
 ```sh
 # Reset the db to install the schema (drops and reacreates base schema)
 $ flask reset-db
+
 # Run backend
 $ poetry run flask run
+
 # In another shell, start frontend with:
 $ pnpm start
 ```
@@ -158,7 +160,7 @@ The integration metadata will be hosted at `/saml/metadata.xml`.
 Docker as of now is only supported in development.
 The only current production deployment of Weave which is at HMS runs on Heroku.
 
-With that being said, a `Dockerfile` exists, but it only supports debug mode (`FLASK_ENV` set to `development`).
+With that being said, a `Dockerfile` exists, but it only supports debug mode.
 As such, it is **not suitable** for production deployments as-is.
 
 ```sh

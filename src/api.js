@@ -9,7 +9,7 @@ function addQueryString(url, params) {
 }
 
 function buildURL(path, params = null) {
-  const url = new URL(`/${path}`, window.location.origin)
+  const url = new URL(`/${path}`, 'http://localhost:5000') // window.location.origin)
 
   if (params !== null) {
     addQueryString(url, params)

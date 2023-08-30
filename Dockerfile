@@ -68,7 +68,6 @@ RUN pnpm build
 
 ENV REACT_APP_SERVER_URL 'http://localhost:5000'
 
-# ENV FLASK_ENV 'development'
 # ENV LANG 'C.UTF-8'
 # ENV LC_ALL C.UTF-8
 # ENV CLOUDINARY_URL ''
