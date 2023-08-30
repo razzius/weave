@@ -41,12 +41,12 @@ ASDF_INSTALLS="$HOME/.asdf/installs"
 export PATH="$PATH:$ASDF_INSTALLS/python/3.11.4/bin"
 export PATH="$PATH:$ASDF_INSTALLS/poetry/1.6.0/bin"
 export PATH="$PATH:$ASDF_INSTALLS/nodejs/16.20.2/bin"
-export PATH="$PATH:$ASDF_INSTALLS/yarn/1.22.19/bin"
+export PATH="$PATH:$ASDF_INSTALLS/pnpm/8.7.0/bin"
 
 poetry install
 
-yarn install --frozen-lockfile
-yarn build
+pnpm install
+pnpm build
 
 sudo su postgres -c 'createuser vagrant -s' || true
 

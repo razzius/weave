@@ -50,21 +50,21 @@ RUN asdf plugin add nodejs
 RUN asdf install nodejs 20.5.1
 RUN asdf global nodejs 20.5.1
 
-RUN asdf plugin add yarn
-RUN asdf install yarn 1.22.19
-RUN asdf global yarn 1.22.19
+RUN asdf plugin add pnpm
+RUN asdf install pnpm 8.7.0
+RUN asdf global pnpm 8.7.0
 
 ## Install frontend dependencies
 
-COPY index.html package.json yarn.lock /app/
-RUN yarn install --frozen-lockfile
+COPY index.html package.json pnpm-lock.yaml /app/
+RUN pnpm install
 
 COPY src /app/src
 COPY public /app/public
 
 ## Build the frontend
 
-RUN yarn build
+RUN pnpm build
 
 ENV REACT_APP_SERVER_URL 'http://localhost:5000'
 

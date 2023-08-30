@@ -15,7 +15,7 @@ but it is intended to be configurable to the needs of different medical schools.
 - [Node](https://nodejs.org/) [(version)](package.json#L4)
 - [Postgresql](https://www.postgresql.org/) [(version)](tests/conftest.py#L11)
 - [poetry](https://python-poetry.org/) 1.6.0
-- [yarn](https://yarnpkg.com/en/docs/install) [(version)](package.json#L5)
+- [pnpm](https://pnpm.io/installation) [(version)](package.json#L5)
 
 ### Developing with `vagrant`
 
@@ -42,7 +42,7 @@ if you are not using Vagrant or if you are making changes such as installing new
 ### Installing the frontend requirements
 
 ```sh
-$ yarn install
+$ pnpm install
 ```
 
 ### Install the backend requirements
@@ -82,7 +82,7 @@ $ flask reset-db
 # Run backend
 $ poetry run flask run
 # In another shell, start frontend with:
-$ yarn start
+$ pnpm start
 ```
 
 ### Accessing the app locally
@@ -119,7 +119,7 @@ This only works if the email is already registered. To create an account for you
 ### Building the frontend for production
 
 ```sh
-$ yarn build
+$ pnpm build
 ```
 
 Now the frontend can be served as a static file from `build/index.html`.
