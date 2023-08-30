@@ -510,7 +510,7 @@ export default class ProfileForm extends Component {
                 Englander, Christian, Latino, LGBTQ+
               </p>
             </div>
-            <div data-tip="Please feel free to create your own tags with identities or locations that are important to you.">
+            <div>
               <p>Parts Of Me</p>
               <CreatableInputOnly
                 values={partsOfMe}
@@ -518,7 +518,7 @@ export default class ProfileForm extends Component {
                 handleChange={this.handleChange('partsOfMe')}
               />
             </div>
-            <div data-tip="Please feel free to create your own tags with activities that you enjoy.">
+            <div>
               <p>Activities I Enjoy</p>
               <CreatableTagSelect
                 values={activities}

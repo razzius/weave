@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import { Tooltip } from 'react-tooltip'
 
 import { getParam } from './utils'
 import VALID_DOMAINS from './valid_domains.json'
@@ -80,9 +79,6 @@ export default class SubmitEmailForm extends Component {
                 value={email}
               />
             </p>
-            <Tooltip place="bottom" id="emailTooltip">
-              Please enter your Duke or hospital-affiliated email
-            </Tooltip>
 
             {error && <p className="error">{error}</p>}
             <div>
@@ -98,10 +94,8 @@ export default class SubmitEmailForm extends Component {
               This is a personal device (stay logged in for 2 weeks)
             </div>
             <div
+              title="Please enter your Duke-affililated email"
               id="toggle"
-              data-tip
-              data-for="emailTooltip"
-              data-tip-disable={email === '' || emailValid}
             >
               <button type="submit" disabled={!emailValid} className="button">
                 Send verification email

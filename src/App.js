@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { BrowserRouter as Router, Link, Route, Switch } from 'react-router-dom'
 
 import Toggle from 'react-toggle-switch'
-import { Tooltip } from 'react-tooltip'
 
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
@@ -110,15 +109,10 @@ class App extends Component {
 
     const availableForMentoringToggle = account && (
       <div
-        data-tip
+        title="Controls whether your profile will be visible to mentees."
         className="available-for-mentoring"
-        data-for="toggleTooltip"
       >
         Available&nbsp;for&nbsp;mentoring:
-        <Tooltip id="toggleTooltip" place="bottom">
-          Controls whether your profile will be visible to mentees.
-          {account.profileId === null && ' You have not yet created a profile.'}
-        </Tooltip>
         <Toggle
           enabled={Boolean(account.profileId)}
           on={account.availableForMentoring}

@@ -1,6 +1,5 @@
 import React from 'react'
 import MediaQuery from 'react-responsive'
-import { Tooltip } from 'react-tooltip'
 
 function CheckboxIndicator({ title, checked }) {
   const checkbox = (
@@ -30,10 +29,8 @@ function CheckboxIndicator({ title, checked }) {
           type="button"
           onClick={(e) => {
             e.preventDefault()
-            Tooltip.show()
           }}
-          data-tip={title}
-          data-for="indicator"
+          title={title}
         >
           {checkbox}
         </button>

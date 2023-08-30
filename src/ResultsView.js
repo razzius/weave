@@ -1,5 +1,4 @@
 import React from 'react'
-import { Tooltip } from 'react-tooltip'
 import ProfileResult from './ProfileResult'
 import Button from './Button'
 
@@ -68,7 +67,6 @@ function ResultsView({
           </button>
         )}
       </p>
-      <Tooltip id="indicator" place="bottom" />
       <div>{profileElements}</div>
       {navigationButtons}
     </div>
