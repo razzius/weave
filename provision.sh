@@ -31,8 +31,6 @@ install_asdf_plugins() {
 
 install_asdf
 
-cd /vagrant
-
 install_asdf_plugins
 
 asdf install
@@ -48,8 +46,8 @@ poetry install
 yarn install --frozen-lockfile
 yarn build
 
-sudo su postgres -c 'createuser vagrant -s' || true
+sudo su postgres -c 'createuser weave -s' || true
 
-sudo su vagrant -c 'createdb weave' || true
+sudo su weave -c 'createdb weave' || true
 
 poetry run flask reset-db
