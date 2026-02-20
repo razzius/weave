@@ -10,7 +10,7 @@ from server.models import db
 from app import create_app
 
 
-PG_VERSION = 15.3
+PG_VERSION = 18.2
 
 TEST_DATABASE_URL = os.environ.get(
     "TEST_DATABASE_URL",
@@ -33,11 +33,11 @@ def database(app):
     pg_db = parsed_url.path[1:]
 
     janitor = DatabaseJanitor(
-        pg_user,
-        pg_host,
-        pg_port,
-        pg_db,
-        PG_VERSION,
+        user=pg_user,
+        host=pg_host,
+        port=pg_port,
+        dbname=pg_db,
+        version=PG_VERSION,
         password=pg_password
     )
 

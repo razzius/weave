@@ -25,9 +25,9 @@ Here are the officially-supported Vagrant and VirtualBox versions:
 
 ```sh
 $ vagrant --version
-Vagrant 2.3.4
+Vagrant 2.4.9
 $ virsh --version
-9.0.0
+12.0.0
 ```
 
 Running `vagrant up` will install the dependencies and create a database,
