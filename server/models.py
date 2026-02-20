@@ -40,11 +40,8 @@ class IDMixin(GetByIDMixin):
 
 
 class TimeStamp(sqlalchemy.types.TypeDecorator):
-    impl = sqlalchemy.types.DateTime
+    impl = sqlalchemy.types.DateTime(timezone=True)
     cache_ok = True
-
-    def process_bind_param(self, value, _dialect):
-        return value.astimezone(datetime.timezone.utc)
 
     def process_result_value(self, value, _dialect):
         return value.astimezone(datetime.timezone.utc)
