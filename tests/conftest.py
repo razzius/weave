@@ -18,6 +18,11 @@ TEST_DATABASE_URL = os.environ.get(
 )
 
 
+@pytest.fixture(scope="session", autouse=True)
+def set_secret_key():
+    os.environ['SECRET_KEY'] = 'TEST_SECRET_KEY'
+
+
 @pytest.fixture(scope="session")
 def database(app):
     """
